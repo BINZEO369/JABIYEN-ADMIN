@@ -67,6 +67,7 @@
         .admin-layout {
             display: flex;
             min-height: 100vh;
+            min-height: 100dvh;
             position: relative;
         }
 
@@ -107,6 +108,7 @@
             flex: 1;
             width: 100%;
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             flex-direction: column;
             transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -490,90 +492,18 @@
             if (el) el.textContent = text;
         }
 
+        // টোকেন গেট করার ফাংশনটি রাখা হলো যেন API কল এর সময় টোকেন থাকলে পাঠাতে পারে 
         function getToken() {
-            return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+            return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || '';
         }
 
-        // Improved Auth Check to prevent login loops
-        async function checkAuth() {
-            const token = getToken();
-            if (!token) {
-                window.location.replace('/login');
-                return false;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json'
-                    }
-                });
-
-                // Check specifically for expired or invalid token
-                if (response.status === 401 || response.status === 403) {
-                    throw new Error('Session Expired');
-                }
-
-                if (!response.ok) throw new Error('Server Error');
-
-                const data = await response.json();
-                
-                if (!data.success || !data.data.isAdmin) {
-                    throw new Error('Not Admin');
-                }
-
-                // Setup User Data for Components
-                const user = data.data.user;
-                const adminData = data.data.adminData;
-                
-                if (window.JAYENWARE && window.JAYENWARE.Components) {
-                    JAYENWARE.Components.updateUserInfo({
-                        name: user.user_metadata?.full_name || user.email || 'Admin',
-                        email: user.email,
-                        role: adminData?.role || 'admin',
-                        avatarLetter: (user.user_metadata?.full_name || user.email || 'A').charAt(0).toUpperCase()
-                    });
-                }
-
-                return true;
-            } catch (error) {
-                console.error('Auth check failed:', error.message);
-                
-                // ONLY logout if token is definitely invalid or user lacks permissions
-                if (error.message === 'Session Expired' || error.message === 'Not Admin') {
-                    localStorage.removeItem('auth_token');
-                    sessionStorage.removeItem('auth_token');
-                    window.location.replace('/login');
-                } else {
-                    // Show a warning but DO NOT logout on simple network failures
-                    showToast('Network issue. Could not verify session silently.', 'error');
-                }
-                return false;
-            }
-        }
-
-        async function handleLogout() {
-            const token = getToken();
-            try {
-                if (token) {
-                    await fetch(`${API_BASE_URL}/api/auth/logout`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
-            } finally {
-                localStorage.removeItem('auth_token');
-                localStorage.removeItem('refresh_token');
-                sessionStorage.removeItem('auth_token');
-                sessionStorage.removeItem('refresh_token');
-                window.location.replace('/login');
-            }
+        // লগআউট ফাংশনটি শুধুমাত্র লোকাল স্টোরেজ ক্লিয়ার করার জন্য আপডেট করা হলো
+        function handleLogout() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('refresh_token');
+            sessionStorage.removeItem('auth_token');
+            sessionStorage.removeItem('refresh_token');
+            window.location.href = '/login.html'; // লগইন পেজের লিংক
         }
 
         function showToast(message, type = 'info') {
@@ -789,7 +719,7 @@
                 }
             } catch (error) {
                 console.error('Failed to load heroes:', error);
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;"><i class="fa-solid fa-exclamation-circle"></i> Failed to load banners. <button class="btn btn-outline" style="margin-left:10px;" onclick="loadHeroes()">Retry</button></td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;"><i class="fa-solid fa-exclamation-circle"></i> Failed to load banners. <button onclick="loadHeroes()">Retry</button></td></tr>`;
                 setSafeElementText('totalCount', '0');
             }
         }
@@ -885,11 +815,20 @@
             init();
         });
 
-        async function init() {
-            const isAuthenticated = await checkAuth();
-            if (isAuthenticated) {
-                loadHeroes();
+        // ইনিশিয়ালাইজ ফাংশনটি এখন সরাসরি কল করবে, কোনো লগইন ভ্যালিডেশন ছাড়াই
+        function init() {
+            // ডেমো ইউজার ডেটা সেট করা হলো যাতে সাইডবারে কোনো এরর না আসে
+            if (window.JAYENWARE && window.JAYENWARE.Components) {
+                JAYENWARE.Components.updateUserInfo({
+                    name: 'Admin',
+                    email: 'admin@jayenware.com',
+                    role: 'admin',
+                    avatarLetter: 'A'
+                });
             }
+            
+            // সরাসরি হিরো ব্যানারগুলো লোড করবে
+            loadHeroes();
         }
     </script>
 </body>
