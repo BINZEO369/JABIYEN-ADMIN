@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Hero Banner Management | JAYENWARE Admin</title>
-    <meta name="description" content="Manage primary hero banners for JAYENWARE">
+    <title>Hero 1 Management | JAYENWARE Admin</title>
+    <meta name="description" content="Manage Hero 1 banners for JAYENWARE">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#ffffff">
     <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
@@ -726,6 +726,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            max-width: calc(100% - 40px);
         }
 
         .toast {
@@ -740,6 +741,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            word-break: break-word;
         }
 
         .toast.success { background: #059669; }
@@ -809,6 +811,7 @@
             display: flex;
             gap: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         /* Empty State */
@@ -922,6 +925,23 @@
                 max-width: 100%;
                 border-radius: 20px 20px 0 0;
                 max-height: 85vh;
+                margin-top: auto;
+            }
+            .modal-overlay {
+                align-items: flex-end;
+            }
+            .toast-container {
+                top: auto;
+                bottom: 20px;
+                right: 10px;
+                left: 10px;
+                max-width: 100%;
+            }
+            .toast {
+                max-width: 100%;
+            }
+            table {
+                min-width: 700px;
             }
         }
 
@@ -937,97 +957,47 @@
                 padding: 8px 16px;
                 font-size: 12px;
             }
+            .top-bar-actions .btn span {
+                display: none;
+            }
+            .top-bar-actions .btn i {
+                margin: 0;
+            }
+            .top-bar-title {
+                font-size: 16px;
+            }
+            .confirm-actions {
+                flex-direction: column;
+            }
+            .confirm-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body class="antialiased">
     <div class="admin-layout">
         <!-- Sidebar Overlay -->
-        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <a href="/admin" class="sidebar-logo">
-                    <img src="/logo.png" alt="JAYENWARE" onerror="this.style.display='none'">
-                    <span class="sidebar-logo-text">JAYENWARE</span>
-                </a>
-            </div>
-
-            <nav class="sidebar-nav">
-                <a href="/admin" class="sidebar-link">
-                    <i class="fa-solid fa-grid-2"></i>
-                    <span>Dashboard</span>
-                </a>
-
-                <div class="sidebar-section-label">Content Management</div>
-
-                <a href="/admin/hero1.html" class="sidebar-link active">
-                    <i class="fa-solid fa-image"></i>
-                    <span>Hero Banner</span>
-                    <span class="badge" id="heroPrimaryCount">0</span>
-                </a>
-
-                <a href="/admin/hero2.html" class="sidebar-link">
-                    <i class="fa-solid fa-images"></i>
-                    <span>Secondary Banner</span>
-                    <span class="badge" id="heroSecondaryCount">0</span>
-                </a>
-
-                <div class="sidebar-section-label">Administration</div>
-
-                <a href="/admin/admins.html" class="sidebar-link">
-                    <i class="fa-solid fa-users-gear"></i>
-                    <span>Admin Users</span>
-                </a>
-
-                <a href="/admin/settings.html" class="sidebar-link">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Settings</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="sidebar-user">
-                    <div class="sidebar-user-avatar" id="userAvatar">A</div>
-                    <div class="sidebar-user-info">
-                        <div class="sidebar-user-name" id="userName">Admin</div>
-                        <div class="sidebar-user-role" id="userRole">Admin</div>
-                    </div>
-                    <button class="sidebar-logout" onclick="handleLogout()" title="Logout">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </div>
-            </div>
-        </aside>
+        <!-- Sidebar (Dynamically loaded by components.js) -->
+        <aside class="sidebar" id="sidebar"></aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Top Bar -->
-            <header class="top-bar">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                    <h1 class="top-bar-title">Hero Banner Management</h1>
-                </div>
-                <div class="top-bar-actions">
-                    <button class="btn btn-primary" onclick="openCreateModal()">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>Add New Banner</span>
-                    </button>
-                </div>
-            </header>
+            <!-- Top Bar (Dynamically loaded by components.js) -->
+            <header class="top-bar" id="topBar"></header>
 
             <!-- Content Area -->
             <div class="content-area">
                 <!-- Stats Bar -->
                 <div class="section-header">
                     <div>
-                        <h2 class="section-title">Primary Hero Banners</h2>
-                        <p class="section-subtitle">Manage your homepage hero slider banners</p>
+                        <h2 class="section-title">Hero 1 Banners</h2>
+                        <p class="section-subtitle">Manage your Hero 1 homepage banners</p>
                     </div>
-                    <div style="display:flex;gap:8px;align-items:center;">
+                    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                         <span style="font-size:13px;color:var(--accent);">Total:</span>
                         <span style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;" id="totalCount">0</span>
                     </div>
@@ -1059,15 +1029,6 @@
                                     <td><div class="skeleton" style="width:60px;height:22px;border-radius:20px;"></div></td>
                                     <td><div class="skeleton" style="width:100px;height:32px;"></div></td>
                                 </tr>
-                                <tr class="skeleton-row">
-                                    <td><div class="skeleton" style="width:60px;height:40px;"></div></td>
-                                    <td><div class="skeleton" style="width:120px;height:16px;"></div></td>
-                                    <td><div class="skeleton" style="width:100px;height:14px;"></div></td>
-                                    <td><div class="skeleton" style="width:80px;height:14px;"></div></td>
-                                    <td><div class="skeleton" style="width:30px;height:14px;"></div></td>
-                                    <td><div class="skeleton" style="width:60px;height:22px;border-radius:20px;"></div></td>
-                                    <td><div class="skeleton" style="width:100px;height:32px;"></div></td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -1077,8 +1038,8 @@
                         <div class="empty-state-icon">
                             <i class="fa-solid fa-image"></i>
                         </div>
-                        <h3>No Hero Banners Yet</h3>
-                        <p>Create your first hero banner to display on the homepage slider.</p>
+                        <h3>No Hero 1 Banners Yet</h3>
+                        <p>Create your first Hero 1 banner to display on the homepage.</p>
                         <button class="btn btn-primary" onclick="openCreateModal()">
                             <i class="fa-solid fa-plus"></i>
                             <span>Create First Banner</span>
@@ -1093,7 +1054,7 @@
     <div class="modal-overlay" id="heroModal">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Add New Hero Banner</h3>
+                <h3 class="modal-title" id="modalTitle">Add New Hero 1 Banner</h3>
                 <button class="modal-close" onclick="closeModal()">
                     <i class="fa-solid fa-times"></i>
                 </button>
@@ -1178,11 +1139,15 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- Components JS -->
+    <script src="/components.js"></script>
+
     <script>
         // ============================================
         // Configuration
         // ============================================
         const API_BASE_URL = window.location.origin;
+        const PAGE_NAME = 'hero1'; // hero1 or hero2
         let heroes = [];
         let deleteTargetId = null;
         let editingHeroId = null;
@@ -1217,17 +1182,18 @@
                     throw new Error('Not admin');
                 }
 
-                // Update user info
+                // Update user info in sidebar via Components API
                 const user = data.data.user;
                 const adminData = data.data.adminData;
                 
-                document.getElementById('userAvatar').textContent = 
-                    (user.user_metadata?.full_name || user.email || 'A').charAt(0).toUpperCase();
-                document.getElementById('userName').textContent = 
-                    user.user_metadata?.full_name || user.email || 'Admin';
-                
-                const roleMap = { super_admin: 'Super Admin', admin: 'Administrator', moderator: 'Moderator' };
-                document.getElementById('userRole').textContent = roleMap[adminData?.role] || 'Admin';
+                if (window.JAYENWARE && window.JAYENWARE.Components) {
+                    window.JAYENWARE.Components.updateUserInfo({
+                        name: user.user_metadata?.full_name || user.email || 'Admin',
+                        email: user.email,
+                        role: adminData?.role || 'admin',
+                        avatarLetter: (user.user_metadata?.full_name || user.email || 'A').charAt(0).toUpperCase()
+                    });
+                }
 
                 return true;
             } catch (error) {
@@ -1284,16 +1250,24 @@
         }
 
         // ============================================
-        // Sidebar
+        // Sidebar (Delegated to Components)
         // ============================================
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebarOverlay').classList.toggle('show');
+            if (window.JAYENWARE && window.JAYENWARE.Components) {
+                window.JAYENWARE.Components.toggleSidebar();
+            } else {
+                document.getElementById('sidebar').classList.toggle('open');
+                document.getElementById('sidebarOverlay').classList.toggle('show');
+            }
         }
 
         function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarOverlay').classList.remove('show');
+            if (window.JAYENWARE && window.JAYENWARE.Components) {
+                window.JAYENWARE.Components.closeSidebar();
+            } else {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebarOverlay').classList.remove('show');
+            }
         }
 
         // ============================================
@@ -1301,7 +1275,7 @@
         // ============================================
         function openCreateModal() {
             editingHeroId = null;
-            document.getElementById('modalTitle').textContent = 'Add New Hero Banner';
+            document.getElementById('modalTitle').textContent = 'Add New Hero 1 Banner';
             document.getElementById('heroId').value = '';
             document.getElementById('heroTitle').value = '';
             document.getElementById('heroSubtitle').value = '';
@@ -1313,11 +1287,12 @@
             document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-check"></i><span>Save Banner</span>';
             resetImagePreview();
             document.getElementById('heroModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
         }
 
         function openEditModal(hero) {
             editingHeroId = hero.id;
-            document.getElementById('modalTitle').textContent = 'Edit Hero Banner';
+            document.getElementById('modalTitle').textContent = 'Edit Hero 1 Banner';
             document.getElementById('heroId').value = hero.id;
             document.getElementById('heroTitle').value = hero.title || '';
             document.getElementById('heroSubtitle').value = hero.subtitle || '';
@@ -1329,10 +1304,12 @@
             document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-check"></i><span>Update Banner</span>';
             updateImagePreview(hero.img);
             document.getElementById('heroModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
             document.getElementById('heroModal').classList.remove('show');
+            document.body.style.overflow = '';
             resetImagePreview();
         }
 
@@ -1353,16 +1330,6 @@
             container.innerHTML = '<span style="color:#d1d1d6;font-size:13px;">Image preview</span>';
         }
 
-        // Image URL input listener
-        document.addEventListener('DOMContentLoaded', () => {
-            const imageInput = document.getElementById('heroImage');
-            if (imageInput) {
-                imageInput.addEventListener('input', () => {
-                    updateImagePreview(imageInput.value);
-                });
-            }
-        });
-
         // ============================================
         // Delete Confirmation
         // ============================================
@@ -1370,11 +1337,13 @@
             deleteTargetId = id;
             document.getElementById('deleteItemName').textContent = title || 'Untitled Banner';
             document.getElementById('deleteConfirm').classList.add('show');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeDeleteConfirm() {
             deleteTargetId = null;
             document.getElementById('deleteConfirm').classList.remove('show');
+            document.body.style.overflow = '';
         }
 
         async function confirmDelete() {
@@ -1382,7 +1351,7 @@
             
             const token = getToken();
             try {
-                const response = await fetch(`${API_BASE_URL}/api/admin/heroes/${deleteTargetId}`, {
+                const response = await fetch(`${API_BASE_URL}/api/admin/heroes/${PAGE_NAME}/${deleteTargetId}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1395,6 +1364,7 @@
                 if (response.ok && data.success) {
                     showToast('Banner deleted successfully', 'success');
                     closeDeleteConfirm();
+                    document.body.style.overflow = '';
                     loadHeroes();
                 } else {
                     throw new Error(data.error || 'Failed to delete');
@@ -1402,6 +1372,7 @@
             } catch (error) {
                 showToast(error.message || 'Failed to delete banner', 'error');
                 closeDeleteConfirm();
+                document.body.style.overflow = '';
             }
         }
 
@@ -1411,7 +1382,7 @@
         async function toggleHeroStatus(id) {
             const token = getToken();
             try {
-                const response = await fetch(`${API_BASE_URL}/api/admin/heroes/${id}/toggle`, {
+                const response = await fetch(`${API_BASE_URL}/api/admin/heroes/${PAGE_NAME}/${id}/toggle`, {
                     method: 'PATCH',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1458,14 +1429,15 @@
                 cta_text: document.getElementById('heroCtaText').value.trim(),
                 cta_link: document.getElementById('heroCtaLink').value.trim(),
                 sort_order: parseInt(document.getElementById('heroSortOrder').value) || 0,
-                is_active: document.getElementById('heroIsActive').checked
+                is_active: document.getElementById('heroIsActive').checked,
+                page: PAGE_NAME
             };
 
             const token = getToken();
             const isEditing = !!editingHeroId;
             const url = isEditing 
-                ? `${API_BASE_URL}/api/admin/heroes/${editingHeroId}`
-                : `${API_BASE_URL}/api/admin/heroes`;
+                ? `${API_BASE_URL}/api/admin/heroes/${PAGE_NAME}/${editingHeroId}`
+                : `${API_BASE_URL}/api/admin/heroes/${PAGE_NAME}`;
             
             const method = isEditing ? 'PUT' : 'POST';
 
@@ -1485,6 +1457,7 @@
                 if (response.ok && data.success) {
                     showToast(isEditing ? 'Banner updated successfully' : 'Banner created successfully', 'success');
                     closeModal();
+                    document.body.style.overflow = '';
                     loadHeroes();
                 } else {
                     throw new Error(data.error || 'Failed to save banner');
@@ -1518,7 +1491,7 @@
             emptyState.style.display = 'none';
 
             try {
-                const response = await fetch(`${API_BASE_URL}/api/admin/heroes`, {
+                const response = await fetch(`${API_BASE_URL}/api/admin/heroes/${PAGE_NAME}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json'
@@ -1547,7 +1520,7 @@
                     </tr>
                 `;
                 totalCount.textContent = '0';
-                document.getElementById('heroPrimaryCount').textContent = '0';
+                updateSidebarCount(0);
             }
         }
 
@@ -1560,19 +1533,21 @@
                 tbody.innerHTML = '';
                 emptyState.style.display = 'block';
                 totalCount.textContent = '0';
-                document.getElementById('heroPrimaryCount').textContent = '0';
+                updateSidebarCount(0);
                 return;
             }
 
             emptyState.style.display = 'none';
             totalCount.textContent = heroes.length;
-            document.getElementById('heroPrimaryCount').textContent = heroes.length;
+            updateSidebarCount(heroes.length);
 
-            tbody.innerHTML = heroes.map(hero => `
+            tbody.innerHTML = heroes.map(hero => {
+                const heroJson = JSON.stringify(hero).replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+                return `
                 <tr>
                     <td>
                         ${hero.img 
-                            ? `<img src="${escapeHTML(hero.img)}" alt="${escapeHTML(hero.title)}" class="hero-thumb" onerror="this.style.display='none'">`
+                            ? `<img src="${escapeHTML(hero.img)}" alt="${escapeHTML(hero.title)}" class="hero-thumb" loading="lazy" onerror="this.style.display='none'">`
                             : `<div style="width:60px;height:40px;border-radius:6px;background:#e5e5ea;display:flex;align-items:center;justify-content:center;color:#999;font-size:10px;">No img</div>`
                         }
                     </td>
@@ -1599,7 +1574,7 @@
                     </td>
                     <td>
                         <div class="actions-cell">
-                            <button class="action-btn edit" onclick='openEditModal(${JSON.stringify(hero).replace(/'/g, "&#39;")})' title="Edit">
+                            <button class="action-btn edit" onclick="handleEditClick('${heroJson}')" title="Edit">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
                             <button class="action-btn toggle" onclick="toggleHeroStatus(${hero.id})" title="${hero.is_active ? 'Deactivate' : 'Activate'}">
@@ -1611,12 +1586,29 @@
                         </div>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
+        }
+
+        function handleEditClick(heroJson) {
+            try {
+                const hero = JSON.parse(heroJson.replace(/&quot;/g, '"').replace(/&#39;/g, "'"));
+                openEditModal(hero);
+            } catch (e) {
+                console.error('Failed to parse hero data', e);
+            }
         }
 
         function updateCounts() {
             document.getElementById('totalCount').textContent = heroes.length;
-            document.getElementById('heroPrimaryCount').textContent = heroes.length;
+            updateSidebarCount(heroes.length);
+        }
+
+        function updateSidebarCount(count) {
+            if (window.JAYENWARE && window.JAYENWARE.Components) {
+                const counts = {};
+                counts[PAGE_NAME] = count;
+                window.JAYENWARE.Components.updateSidebarCounts(counts);
+            }
         }
 
         function escapeHTML(str) {
@@ -1627,9 +1619,59 @@
         }
 
         // ============================================
-        // Modal Close on Overlay Click
+        // Initialize Components & Events
+        // ============================================
+        function initComponents() {
+            // Initialize JAYENWARE Components if available
+            if (window.JAYENWARE && window.JAYENWARE.Components) {
+                window.JAYENWARE.Components.initAll({
+                    sidebarSelector: '#sidebar',
+                    topBarSelector: '#topBar'
+                });
+
+                // Set active page
+                window.JAYENWARE.Components.navigateTo(PAGE_NAME);
+
+                // Bind refresh
+                window.JAYENWARE.Components.onRefresh(() => {
+                    loadHeroes();
+                    showToast('Data refreshed', 'info');
+                });
+
+                // Bind logout
+                window.JAYENWARE.Components.onLogout(() => {
+                    handleLogout();
+                });
+
+                // Listen for page changes
+                window.addEventListener('JAYENWARE:navigate', (e) => {
+                    const page = e.detail.page;
+                    if (page === 'hero1' && PAGE_NAME !== 'hero1') {
+                        window.location.href = '/admin/hero1.html';
+                    } else if (page === 'hero2' && PAGE_NAME !== 'hero2') {
+                        window.location.href = '/admin/hero2.html';
+                    } else if (page === 'dashboard') {
+                        window.location.href = '/admin';
+                    } else if (page === 'hero-primary') {
+                        window.location.href = '/admin/hero1.html';
+                    } else if (page === 'hero-secondary') {
+                        window.location.href = '/admin/hero2.html';
+                    } else if (page === 'admins') {
+                        window.location.href = '/admin/admins.html';
+                    } else if (page === 'settings') {
+                        window.location.href = '/admin/settings.html';
+                    }
+                });
+            } else {
+                console.warn('JAYENWARE Components not loaded. Sidebar will be empty.');
+            }
+        }
+
+        // ============================================
+        // Event Listeners
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
+            // Modal overlay click to close
             document.getElementById('heroModal').addEventListener('click', function(e) {
                 if (e.target === this) closeModal();
             });
@@ -1638,6 +1680,14 @@
                 if (e.target === this) closeDeleteConfirm();
             });
 
+            // Image URL input listener
+            const imageInput = document.getElementById('heroImage');
+            if (imageInput) {
+                imageInput.addEventListener('input', () => {
+                    updateImagePreview(imageInput.value);
+                });
+            }
+
             // Escape key to close modals
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
@@ -1645,10 +1695,13 @@
                     closeDeleteConfirm();
                 }
             });
+
+            // Initialize components
+            initComponents();
         });
 
         // ============================================
-        // Initialize
+        // Initialize App
         // ============================================
         async function init() {
             const isAuthenticated = await checkAuth();
@@ -1657,7 +1710,29 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', init);
+        // Start app when DOM and components are ready
+        function bootstrap() {
+            if (window.JAYENWARE && window.JAYENWARE.Components) {
+                init();
+            } else {
+                // Wait for components to load
+                let attempts = 0;
+                const maxAttempts = 50;
+                const checkInterval = setInterval(() => {
+                    attempts++;
+                    if (window.JAYENWARE && window.JAYENWARE.Components) {
+                        clearInterval(checkInterval);
+                        init();
+                    } else if (attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                        console.warn('Components not loaded after waiting. Starting app without components.');
+                        init();
+                    }
+                }, 100);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', bootstrap);
     </script>
 </body>
 </html>
