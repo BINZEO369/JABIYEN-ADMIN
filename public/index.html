@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>JABIYEN Admin</title></head>
+<body style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;">
+<div style="text-align:center"><h1>JABIYEN</h1><p>Admin Panel</p><p id="s">Loading...</p></div>
+<script>fetch('/api/test').then(r=>r.json()).then(d=>document.getElementById('s').textContent=d.status).catch(()=>document.getElementById('s').textContent='Offline')</script>
+</body></html>
