@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -462,18 +464,6 @@
             margin: 0;
         }
 
-        .stat-change {
-            font-size: 11px;
-            font-weight: 600;
-            margin-top: 6px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .stat-change.up { color: #059669; }
-        .stat-change.down { color: #dc2626; }
-
         /* Quick Actions */
         .section-title {
             font-family: 'Manrope', sans-serif;
@@ -675,25 +665,19 @@
 </head>
 <body class="antialiased">
     <div class="admin-layout">
-        <!-- Sidebar - Will be loaded dynamically by components.js -->
         <aside class="sidebar" id="sidebar"></aside>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Top Bar / Header - Will be loaded dynamically by components.js -->
             <header class="top-bar" id="topBar"></header>
 
             <div class="dashboard-content" id="dashboardContent">
-                <!-- Dashboard Home -->
                 <div id="dashboardHome">
-                    <!-- Welcome Card -->
                     <div class="welcome-card">
                         <h2 id="greetingText">Good Morning</h2>
                         <p>Welcome back to your admin dashboard.</p>
                         <p class="time-greeting">Manage your hero banners and site content from here.</p>
                     </div>
 
-                    <!-- Stats Grid -->
                     <div class="stats-grid" id="statsGrid">
                         <div class="stat-card">
                             <div class="stat-icon purple">
@@ -733,7 +717,6 @@
                         </div>
                     </div>
 
-                    <!-- Quick Actions -->
                     <h3 class="section-title">Quick Actions</h3>
                     <div class="quick-actions">
                         <button class="quick-action-btn" onclick="JAYENWARE.Components.navigateTo('hero-primary')">
@@ -754,7 +737,6 @@
                         </button>
                     </div>
 
-                    <!-- Placeholder for future content -->
                     <div class="empty-state-container" style="min-height:200px;margin-top:20px;">
                         <div class="empty-state-icon">
                             <i class="fa-solid fa-cube"></i>
@@ -767,57 +749,47 @@
         </main>
     </div>
 
-    <!-- Load Components -->
     <script src="/components.js"></script>
 
     <script>
-        // API Configuration
-        const API_BASE_URL = window.location.origin;
+        // Supabase Initialization
+        const { createClient } = supabase;
+        const SUPABASE_URL = "https://eiueitoxxqzkolsouuzy.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpdWVpdG94eHF6a29sc291dXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3NjIxNjIsImV4cCI6MjA5OTMzODE2Mn0.zsmN5P-AXeKT-XLgqkq0Bjx8EfjupJs1mjC26l-g7uA";
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // State
         let currentUser = null;
         let dashboardStats = null;
 
         // ============================================
-        // Authentication Check
+        // Authentication Check (Direct via Supabase)
         // ============================================
-        function getToken() {
-            return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
-        }
-
         async function checkAuth() {
-            const token = getToken();
-            if (!token) {
-                window.location.href = '/login';
-                return;
-            }
-
             try {
-                const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Auth failed');
-                }
-
-                const data = await response.json();
+                // Get active session from Supabase
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
                 
-                if (!data.success || !data.data.isAdmin) {
-                    throw new Error('Not admin');
+                if (error || !session) {
+                    window.location.replace('/login.html');
+                    return;
                 }
 
-                currentUser = data.data;
+                const user = session.user;
+                
+                // If you have a separate admins table for roles, you can fetch it here:
+                // const { data: adminData } = await supabaseClient.from('admins').select('role').eq('id', user.id).single();
+
+                currentUser = {
+                    user: user,
+                    adminData: { role: 'admin' } // fallback or replace with adminData fetched above
+                };
+
                 updateUserInfo();
                 loadDashboardStats();
             } catch (error) {
                 console.error('Auth check failed:', error);
-                localStorage.removeItem('auth_token');
-                sessionStorage.removeItem('auth_token');
-                window.location.href = '/login';
+                window.location.replace('/login.html');
             }
         }
 
@@ -825,7 +797,7 @@
         // User Interface Updates
         // ============================================
         function updateUserInfo() {
-            if (!currentUser) return;
+            if (!currentUser || !JAYENWARE.Components) return;
 
             const user = currentUser.user;
             const adminData = currentUser.adminData;
@@ -852,32 +824,30 @@
         }
 
         // ============================================
-        // Dashboard Stats
+        // Dashboard Stats (Direct Database Queries)
         // ============================================
         async function loadDashboardStats() {
-            const token = getToken();
-            if (!token) return;
-
             try {
-                const response = await fetch(`${API_BASE_URL}/api/admin/stats`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json'
-                    }
-                });
-
-                if (!response.ok) throw new Error('Failed to load stats');
-
-                const data = await response.json();
+                // Notice: Table names ('hero_primary', 'hero_secondary', 'admins') are assumptions.
+                // Replace them with your actual Supabase table names if they are different.
                 
-                if (data.success) {
-                    dashboardStats = data.data;
-                    updateStatsDisplay();
-                    updateSidebarCounts();
-                }
+                const [heroRes, secHeroRes, adminRes] = await Promise.all([
+                    supabaseClient.from('hero_primary').select('*', { count: 'exact', head: true }),
+                    supabaseClient.from('hero_secondary').select('*', { count: 'exact', head: true }),
+                    supabaseClient.from('admins').select('*', { count: 'exact', head: true }) // Your admins table
+                ]);
+
+                dashboardStats = {
+                    totalHeroes: heroRes.count || 0,
+                    totalSecondaryHeroes: secHeroRes.count || 0,
+                    totalActiveAdmins: adminRes.count || 0
+                };
+                
+                updateStatsDisplay();
+                updateSidebarCounts();
             } catch (error) {
                 console.error('Failed to load stats:', error);
-                // Set default values
+                // Set default values on error
                 document.getElementById('statHeroPrimary').textContent = '0';
                 document.getElementById('statHeroSecondary').textContent = '0';
                 document.getElementById('statAdmins').textContent = '0';
@@ -888,27 +858,27 @@
         function updateStatsDisplay() {
             if (!dashboardStats) return;
 
-            document.getElementById('statHeroPrimary').textContent = dashboardStats.totalHeroes || 0;
+            document.getElementById('statHeroPrimary').textContent = dashboardStats.totalHeroes;
             document.getElementById('statHeroPrimary').classList.remove('skeleton');
             
-            document.getElementById('statHeroSecondary').textContent = dashboardStats.totalSecondaryHeroes || 0;
+            document.getElementById('statHeroSecondary').textContent = dashboardStats.totalSecondaryHeroes;
             document.getElementById('statHeroSecondary').classList.remove('skeleton');
             
-            document.getElementById('statAdmins').textContent = dashboardStats.totalActiveAdmins || 0;
+            document.getElementById('statAdmins').textContent = dashboardStats.totalActiveAdmins;
             document.getElementById('statAdmins').classList.remove('skeleton');
             
-            const totalActive = (dashboardStats.totalHeroes || 0) + (dashboardStats.totalSecondaryHeroes || 0);
+            const totalActive = (dashboardStats.totalHeroes) + (dashboardStats.totalSecondaryHeroes);
             document.getElementById('statActive').textContent = totalActive;
         }
 
         function updateSidebarCounts() {
-            if (!dashboardStats) return;
+            if (!dashboardStats || !JAYENWARE.Components) return;
             
             // Update sidebar counts via Components
             JAYENWARE.Components.updateSidebarCounts({
-                heroPrimary: dashboardStats.totalHeroes || 0,
-                heroSecondary: dashboardStats.totalSecondaryHeroes || 0,
-                admins: dashboardStats.totalActiveAdmins || 0
+                heroPrimary: dashboardStats.totalHeroes,
+                heroSecondary: dashboardStats.totalSecondaryHeroes,
+                admins: dashboardStats.totalActiveAdmins
             });
         }
 
@@ -919,43 +889,27 @@
             const page = event.detail.page;
             console.log(`Page changed to: ${page}`);
             
-            // Handle page-specific content loading here
-            const dashboardContent = document.getElementById('dashboardContent');
             const dashboardHome = document.getElementById('dashboardHome');
             
             if (page === 'dashboard') {
                 if (dashboardHome) dashboardHome.style.display = 'block';
                 if (currentUser) loadDashboardStats();
             } else {
-                // Hide dashboard content for other pages (future implementation)
+                // Hide dashboard content for other pages
                 // if (dashboardHome) dashboardHome.style.display = 'none';
             }
         });
 
         // ============================================
-        // Logout
+        // Logout (Direct via Supabase)
         // ============================================
         async function handleLogout() {
-            const token = getToken();
-            
             try {
-                if (token) {
-                    await fetch(`${API_BASE_URL}/api/auth/logout`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                }
+                await supabaseClient.auth.signOut();
             } catch (error) {
                 console.error('Logout error:', error);
             } finally {
-                localStorage.removeItem('auth_token');
-                localStorage.removeItem('refresh_token');
-                sessionStorage.removeItem('auth_token');
-                sessionStorage.removeItem('refresh_token');
-                window.location.href = '/login';
+                window.location.replace('/login.html');
             }
         }
 
@@ -963,30 +917,26 @@
         // Initialize
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Components
-            JAYENWARE.Components.initAll({
-                sidebarSelector: '#sidebar',
-                topBarSelector: '#topBar'
-            });
+            // Initialize Components (Make sure components.js supports this)
+            if (window.JAYENWARE && window.JAYENWARE.Components) {
+                JAYENWARE.Components.initAll({
+                    sidebarSelector: '#sidebar',
+                    topBarSelector: '#topBar'
+                });
 
-            // Set refresh callback
-            JAYENWARE.Components.onRefresh(function() {
-                if (currentUser) {
-                    loadDashboardStats();
-                }
-                updateGreeting();
-            });
+                JAYENWARE.Components.onRefresh(function() {
+                    if (currentUser) loadDashboardStats();
+                    updateGreeting();
+                });
 
-            // Set logout callback
-            JAYENWARE.Components.onLogout(function() {
-                handleLogout();
-            });
+                JAYENWARE.Components.onLogout(function() {
+                    handleLogout();
+                });
 
-            // Set notification callback
-            JAYENWARE.Components.onNotification(function() {
-                console.log('Notifications clicked');
-                // Future: Implement notification panel
-            });
+                JAYENWARE.Components.onNotification(function() {
+                    console.log('Notifications clicked');
+                });
+            }
 
             // Initialize dashboard
             updateGreeting();
