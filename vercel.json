@@ -108,6 +108,14 @@
       "dest": "/public/store-locator.html"
     },
     {
+      "src": "/hero1",
+      "dest": "/public/hero1.html"
+    },
+    {
+      "src": "/hero2",
+      "dest": "/public/hero2.html"
+    },
+    {
       "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))",
       "dest": "/public/$1"
     },
@@ -130,34 +138,6 @@
     {
       "src": "/search",
       "dest": "/public/index.html"
-    },
-    {
-      "src": "/admin",
-      "dest": "/public/admin/index.html"
-    },
-    {
-      "src": "/admin/",
-      "dest": "/public/admin/index.html"
-    },
-    {
-      "src": "/admin/hero1",
-      "dest": "/public/admin/hero1.html"
-    },
-    {
-      "src": "/admin/hero2",
-      "dest": "/public/admin/hero2.html"
-    },
-    {
-      "src": "/admin/admins",
-      "dest": "/public/admin/admins.html"
-    },
-    {
-      "src": "/admin/settings",
-      "dest": "/public/admin/settings.html"
-    },
-    {
-      "src": "/admin/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))",
-      "dest": "/public/admin/$1"
     },
     {
       "src": "/",
