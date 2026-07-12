@@ -20,6 +20,8 @@ JAYENWARE.Components = (function() {
         mobileBreakpoint: 1024,
         pageTitles: {
             'dashboard': 'Dashboard',
+            'hero1': 'Hero 1',
+            'hero2': 'Hero 2',
             'hero-primary': 'Hero Banner Management',
             'hero-secondary': 'Secondary Banner Management',
             'admins': 'Admin Users',
@@ -57,6 +59,18 @@ JAYENWARE.Components = (function() {
                 </a>
 
                 <div class="sidebar-section-label">Content Management</div>
+
+                <a href="#" class="sidebar-link" data-page="hero1" data-url="/hero1">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Hero 1</span>
+                    <span class="badge hero1-count">0</span>
+                </a>
+
+                <a href="#" class="sidebar-link" data-page="hero2" data-url="/hero2">
+                    <i class="fa-solid fa-images"></i>
+                    <span>Hero 2</span>
+                    <span class="badge hero2-count">0</span>
+                </a>
 
                 <a href="#" class="sidebar-link" data-page="hero-primary">
                     <i class="fa-solid fa-image"></i>
@@ -230,6 +244,12 @@ JAYENWARE.Components = (function() {
             titleElement.textContent = CONFIG.pageTitles[page] || 'Dashboard';
         }
 
+        // Update URL if page has a data-url attribute
+        const activeLink = document.querySelector(`.sidebar-link[data-page="${page}"]`);
+        if (activeLink && activeLink.dataset.url) {
+            history.pushState(null, '', activeLink.dataset.url);
+        }
+
         // Close mobile sidebar
         closeSidebar();
 
@@ -311,15 +331,21 @@ JAYENWARE.Components = (function() {
     /**
      * Update sidebar badge counts
      * @param {Object} counts - Count object
+     * @param {number} counts.hero1 - Hero 1 count
+     * @param {number} counts.hero2 - Hero 2 count
      * @param {number} counts.heroPrimary - Hero banner count
      * @param {number} counts.heroSecondary - Secondary banner count
      * @param {number} counts.admins - Admin users count
      */
     function updateSidebarCounts(counts = {}) {
+        const hero1El = document.querySelector('.hero1-count');
+        const hero2El = document.querySelector('.hero2-count');
         const heroPrimaryEl = document.querySelector('.hero-primary-count');
         const heroSecondaryEl = document.querySelector('.hero-secondary-count');
         const adminEl = document.querySelector('.admin-count');
 
+        if (hero1El) hero1El.textContent = counts.hero1 || 0;
+        if (hero2El) hero2El.textContent = counts.hero2 || 0;
         if (heroPrimaryEl) heroPrimaryEl.textContent = counts.heroPrimary || 0;
         if (heroSecondaryEl) heroSecondaryEl.textContent = counts.heroSecondary || 0;
         if (adminEl) adminEl.textContent = counts.admins || 0;
