@@ -64,12 +64,14 @@
             padding: 0;
         }
 
+        /* Admin Layout */
         .admin-layout {
             display: flex;
             min-height: 100vh;
             min-height: 100dvh;
         }
 
+        /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
             background: #fafafa;
@@ -150,6 +152,7 @@
             width: 100%;
             text-align: left;
             font-family: 'Inter', sans-serif;
+            position: relative;
         }
 
         .sidebar-link i {
@@ -160,6 +163,7 @@
             justify-content: center;
             font-size: 16px;
             flex-shrink: 0;
+            transition: color 0.25s ease;
         }
 
         .sidebar-link:hover {
@@ -172,6 +176,10 @@
             color: #ffffff;
             font-weight: 600;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-link.active i {
+            color: #ffffff;
         }
 
         .sidebar-link .badge {
@@ -202,7 +210,12 @@
             gap: 12px;
             padding: 8px 12px;
             border-radius: 12px;
+            transition: background 0.25s ease;
             cursor: pointer;
+        }
+
+        .sidebar-user:hover {
+            background: #f0f0f5;
         }
 
         .sidebar-user-avatar {
@@ -236,6 +249,9 @@
         .sidebar-user-role {
             font-size: 11px;
             color: var(--accent);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .sidebar-logout {
@@ -259,6 +275,7 @@
             color: #c33;
         }
 
+        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -268,6 +285,7 @@
             flex-direction: column;
         }
 
+        /* Top Bar */
         .top-bar {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
@@ -283,12 +301,24 @@
             gap: 16px;
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .top-bar-title {
             font-family: 'Manrope', sans-serif;
             font-size: 20px;
             font-weight: 700;
             color: var(--primary);
             letter-spacing: -0.01em;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .top-bar-btn {
@@ -303,6 +333,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.25s ease;
+            position: relative;
             font-size: 16px;
         }
 
@@ -311,12 +342,25 @@
             color: var(--primary);
         }
 
-        .dashboard-content {
+        .top-bar-btn .notification-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: #ff3b30;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        /* Content Area */
+        .content-area {
             flex: 1;
             padding: 28px;
             background: #ffffff;
         }
 
+        /* Welcome Card */
         .welcome-card {
             background: linear-gradient(135deg, #1d1d1f 0%, #333 100%);
             border-radius: 20px;
@@ -358,6 +402,14 @@
             line-height: 1.6;
         }
 
+        .welcome-card .time-greeting {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -398,6 +450,11 @@
         .stat-icon.green { background: #e6fff0; color: #059669; }
         .stat-icon.orange { background: #fff8e6; color: #d97706; }
 
+        .stat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
         .stat-number {
             font-family: 'Manrope', sans-serif;
             font-size: 28px;
@@ -413,6 +470,7 @@
             margin: 0;
         }
 
+        /* Quick Actions */
         .section-title {
             font-family: 'Manrope', sans-serif;
             font-size: 18px;
@@ -454,6 +512,101 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
 
+        .quick-action-btn i {
+            font-size: 15px;
+            width: 18px;
+            text-align: center;
+        }
+
+        /* Empty State */
+        .empty-state-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #f5f5f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #d1d1d6;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-container h3 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 8px;
+        }
+
+        .empty-state-container p {
+            font-size: 14px;
+            color: var(--accent);
+            max-width: 400px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #fff;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            max-width: 380px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.success { background: #059669; }
+        .toast.error { background: #dc2626; }
+        .toast.info { background: #2563eb; }
+        .toast.warning { background: #d97706; }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
             width: 40px;
@@ -485,37 +638,48 @@
             pointer-events: auto;
         }
 
+        /* Responsive */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
             }
+
             .sidebar.open {
                 transform: translateX(0);
             }
+
             .sidebar-overlay {
                 display: block;
             }
+
             .main-content {
                 margin-left: 0;
             }
+
             .mobile-menu-toggle {
                 display: flex;
             }
-            .dashboard-content {
+
+            .content-area {
                 padding: 20px 16px;
             }
+
             .top-bar {
                 padding: 12px 16px;
             }
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+
             .quick-actions {
                 grid-template-columns: 1fr 1fr;
             }
+
             .welcome-card {
                 padding: 24px;
             }
+
             .welcome-card h2 {
                 font-size: 22px;
             }
@@ -525,207 +689,124 @@
             .quick-actions {
                 grid-template-columns: 1fr;
             }
+
             .top-bar-title {
                 font-size: 16px;
             }
-            .dashboard-content {
+
+            .content-area {
                 padding: 16px 12px;
             }
         }
     </style>
 </head>
 <body class="antialiased">
-    <div class="admin-layout">
-        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <!-- Layout will be rendered by components.js -->
+    <!-- Content will be inserted into #adminContentArea -->
 
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <a href="/" class="sidebar-logo">
-                    <img src="/logo.png" alt="JAYENWARE" onerror="this.style.display='none'">
-                    <span class="sidebar-logo-text">JAYENWARE</span>
-                </a>
-            </div>
-
-            <nav class="sidebar-nav">
-                <a href="#" class="sidebar-link active" data-page="dashboard" onclick="navigateTo('dashboard')">
-                    <i class="fa-solid fa-grid-2"></i>
-                    <span>Dashboard</span>
-                </a>
-
-                <div class="sidebar-section-label">Content Management</div>
-
-                <a href="#" class="sidebar-link" data-page="hero-primary" onclick="navigateTo('hero-primary')">
-                    <i class="fa-solid fa-image"></i>
-                    <span>Hero Banner</span>
-                    <span class="badge" id="heroPrimaryCount">0</span>
-                </a>
-
-                <a href="#" class="sidebar-link" data-page="hero-secondary" onclick="navigateTo('hero-secondary')">
-                    <i class="fa-solid fa-images"></i>
-                    <span>Secondary Banner</span>
-                    <span class="badge" id="heroSecondaryCount">0</span>
-                </a>
-
-                <div class="sidebar-section-label">Administration</div>
-
-                <a href="#" class="sidebar-link" data-page="admins" onclick="navigateTo('admins')">
-                    <i class="fa-solid fa-users-gear"></i>
-                    <span>Admin Users</span>
-                    <span class="badge" id="adminCount">0</span>
-                </a>
-
-                <a href="#" class="sidebar-link" data-page="settings" onclick="navigateTo('settings')">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Settings</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="sidebar-user">
-                    <div class="sidebar-user-avatar" id="userAvatar">A</div>
-                    <div class="sidebar-user-info">
-                        <div class="sidebar-user-name" id="userName">Admin User</div>
-                        <div class="sidebar-user-role" id="userRole">Administrator</div>
-                    </div>
-                    <button class="sidebar-logout" onclick="handleLogout()" title="Logout">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </div>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <header class="top-bar">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                    <h1 class="top-bar-title" id="pageTitle">Dashboard</h1>
-                </div>
-                <div class="top-bar-actions" style="display:flex;align-items:center;gap:12px;">
-                    <button class="top-bar-btn" onclick="window.location.reload()" title="Refresh">
-                        <i class="fa-solid fa-rotate"></i>
-                    </button>
-                </div>
-            </header>
-
-            <div class="dashboard-content">
-                <div class="welcome-card">
-                    <h2 id="greetingText">Good Morning</h2>
-                    <p>Welcome back to your admin dashboard.</p>
-                    <p style="font-size:13px;color:rgba(255,255,255,0.5);position:relative;z-index:1;">Manage your hero banners and site content from here.</p>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon purple"><i class="fa-solid fa-image"></i></div>
-                        <div class="stat-info">
-                            <p class="stat-number" id="statHeroPrimary">-</p>
-                            <p class="stat-label">Hero Banners</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon blue"><i class="fa-solid fa-images"></i></div>
-                        <div class="stat-info">
-                            <p class="stat-number" id="statHeroSecondary">-</p>
-                            <p class="stat-label">Secondary Banners</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green"><i class="fa-solid fa-users-gear"></i></div>
-                        <div class="stat-info">
-                            <p class="stat-number" id="statAdmins">-</p>
-                            <p class="stat-label">Active Admins</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange"><i class="fa-solid fa-check-circle"></i></div>
-                        <div class="stat-info">
-                            <p class="stat-number" id="statActive">-</p>
-                            <p class="stat-label">Active Banners</p>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 class="section-title">Quick Actions</h3>
-                <div class="quick-actions">
-                    <button class="quick-action-btn" onclick="navigateTo('hero-primary')">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>New Hero Banner</span>
-                    </button>
-                    <button class="quick-action-btn" onclick="navigateTo('hero-secondary')">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>New Secondary Banner</span>
-                    </button>
-                    <button class="quick-action-btn" onclick="navigateTo('admins')">
-                        <i class="fa-solid fa-user-plus"></i>
-                        <span>Manage Admins</span>
-                    </button>
-                    <button class="quick-action-btn" onclick="navigateTo('settings')">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>Settings</span>
-                    </button>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Load Components -->
     <script src="/components.js"></script>
-    
     <script>
-        // ============================================
-        // Dashboard Initialization
-        // ============================================
-        let currentUser = null;
-        let dashboardStats = null;
-
-        async function initDashboard() {
-            // Check authentication
-            currentUser = await checkAuth(true);
-            if (!currentUser) return;
-
-            // Update UI
-            updateAdminUserInfo(currentUser);
-            updateAdminGreeting();
+        // Dashboard specific initialization
+        document.addEventListener('admin-ready', function(e) {
+            const { page, user } = e.detail;
             
-            // Load stats
-            await refreshStats();
-        }
+            // Insert dashboard content
+            const contentArea = document.getElementById('adminContentArea');
+            if (contentArea) {
+                contentArea.innerHTML = `
+                    <!-- Welcome Card -->
+                    <div class="welcome-card">
+                        <h2 id="greetingText">Good Morning</h2>
+                        <p>Welcome back to your admin dashboard.</p>
+                        <p class="time-greeting">Manage your hero banners and site content from here.</p>
+                    </div>
 
-        async function refreshStats() {
-            try {
-                const stats = await loadDashboardStats();
-                if (stats) {
-                    dashboardStats = stats;
-                    updateStatsDisplay(stats);
-                    updateSidebarCounts(stats);
-                }
-            } catch (error) {
-                console.error('Failed to load stats:', error);
-                // Set defaults
-                document.getElementById('statHeroPrimary').textContent = '0';
-                document.getElementById('statHeroSecondary').textContent = '0';
-                document.getElementById('statAdmins').textContent = '0';
-                document.getElementById('statActive').textContent = '0';
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p class="stat-number skeleton" id="statHeroPrimary">&nbsp;</p>
+                                <p class="stat-label">Hero Banners</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fa-solid fa-images"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p class="stat-number skeleton" id="statHeroSecondary">&nbsp;</p>
+                                <p class="stat-label">Secondary Banners</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fa-solid fa-users-gear"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p class="stat-number skeleton" id="statAdmins">&nbsp;</p>
+                                <p class="stat-label">Active Admins</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon orange">
+                                <i class="fa-solid fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p class="stat-number" id="statActive">-</p>
+                                <p class="stat-label">Active Banners</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <h3 class="section-title">Quick Actions</h3>
+                    <div class="quick-actions">
+                        <a href="/hero1" class="quick-action-btn">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>New Hero Banner</span>
+                        </a>
+                        <a href="/hero2" class="quick-action-btn">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>New Secondary Banner</span>
+                        </a>
+                        <a href="/admin/admins" class="quick-action-btn">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Manage Admins</span>
+                        </a>
+                        <a href="/admin/settings" class="quick-action-btn">
+                            <i class="fa-solid fa-gear"></i>
+                            <span>Settings</span>
+                        </a>
+                    </div>
+
+                    <!-- Placeholder -->
+                    <div class="empty-state-container" style="margin-top:20px;">
+                        <div class="empty-state-icon">
+                            <i class="fa-solid fa-cube"></i>
+                        </div>
+                        <h3>Content Area Ready</h3>
+                        <p>This section is ready for future content modules and features.</p>
+                    </div>
+                `;
             }
-        }
 
-        function updateStatsDisplay(stats) {
-            document.getElementById('statHeroPrimary').textContent = stats.totalHeroes || 0;
-            document.getElementById('statHeroSecondary').textContent = stats.totalSecondaryHeroes || 0;
-            document.getElementById('statAdmins').textContent = stats.totalActiveAdmins || 0;
-            document.getElementById('statActive').textContent = 
-                (stats.totalHeroes || 0) + (stats.totalSecondaryHeroes || 0);
-        }
+            // Update greeting
+            if (window.AdminHeader) {
+                window.AdminHeader.updateGreeting();
+            }
+        });
 
-        // Initialize on DOM ready
-        document.addEventListener('DOMContentLoaded', initDashboard);
-
-        // Auto-refresh stats every 30 seconds
-        setInterval(() => {
-            if (currentUser) refreshStats();
-        }, 30000);
+        // Initialize with components
+        window.AdminInit.init({
+            pageTitle: 'Dashboard',
+            loadStats: true,
+            onReady: function() {
+                console.log('Admin Dashboard ready');
+            }
+        });
     </script>
 </body>
 </html>
