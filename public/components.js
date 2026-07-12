@@ -1,457 +1,468 @@
-// ============================================
-// JAYENWARE Admin Components
-// Shared header, sidebar, and authentication
-// ============================================
+// public/components.js
+// JAYENWARE Admin Dashboard - Reusable UI Components
+// This file contains all the sidebar, header, and layout components
+// No authentication logic is included here
 
-(function() {
+const JAYENWARE = window.JAYENWARE || {};
+
+/**
+ * Admin Layout Components
+ * Handles sidebar, header, refresh button, and page navigation
+ */
+JAYENWARE.Components = (function() {
     'use strict';
 
     // ============================================
     // Configuration
     // ============================================
-    const API_BASE_URL = window.location.origin;
-
-    // ============================================
-    // Auth Helpers
-    // ============================================
-    window.JWAdmin = window.JWAdmin || {};
-
-    window.JWAdmin.getToken = function() {
-        return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
-    };
-
-    window.JWAdmin.getRefreshToken = function() {
-        return localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
-    };
-
-    window.JWAdmin.saveToken = function(token, refreshToken, remember) {
-        if (remember) {
-            localStorage.setItem('auth_token', token);
-            localStorage.setItem('refresh_token', refreshToken);
-        } else {
-            sessionStorage.setItem('auth_token', token);
-            sessionStorage.setItem('refresh_token', refreshToken);
-        }
-    };
-
-    window.JWAdmin.clearTokens = function() {
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('refresh_token');
-        sessionStorage.removeItem('auth_token');
-        sessionStorage.removeItem('refresh_token');
-    };
-
-    window.JWAdmin.isAuthenticated = async function() {
-        const token = window.JWAdmin.getToken();
-        if (!token) return false;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (!response.ok) return false;
-
-            const data = await response.json();
-            return data.success && data.data && data.data.isAdmin;
-        } catch (error) {
-            return false;
-        }
-    };
-
-    window.JWAdmin.getCurrentUser = async function() {
-        const token = window.JWAdmin.getToken();
-        if (!token) return null;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (!response.ok) throw new Error('Failed to get user');
-
-            const data = await response.json();
-            if (data.success) {
-                return data.data;
-            }
-            return null;
-        } catch (error) {
-            console.error('Get user error:', error);
-            return null;
-        }
-    };
-
-    window.JWAdmin.logout = async function() {
-        const token = window.JWAdmin.getToken();
-        try {
-            if (token) {
-                await fetch(`${API_BASE_URL}/api/auth/logout`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-            }
-        } catch (error) {
-            console.error('Logout error:', error);
-        } finally {
-            window.JWAdmin.clearTokens();
-            window.location.href = '/login';
-        }
-    };
-
-    window.JWAdmin.checkAuthAndRedirect = async function() {
-        const isAuth = await window.JWAdmin.isAuthenticated();
-        if (!isAuth) {
-            window.JWAdmin.clearTokens();
-            window.location.href = '/login';
-            return false;
-        }
-        return true;
-    };
-
-    // ============================================
-    // API Helpers
-    // ============================================
-    window.JWAdmin.api = {
-        fetchWithAuth: async function(url, options = {}) {
-            const token = window.JWAdmin.getToken();
-            if (!token) throw new Error('No auth token');
-
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json',
-                ...options.headers
-            };
-
-            const response = await fetch(`${API_BASE_URL}${url}`, {
-                ...options,
-                headers
-            });
-
-            if (response.status === 401) {
-                window.JWAdmin.clearTokens();
-                window.location.href = '/login';
-                throw new Error('Session expired');
-            }
-
-            return response;
+    const CONFIG = {
+        sidebarWidth: '280px',
+        mobileBreakpoint: 1024,
+        pageTitles: {
+            'dashboard': 'Dashboard',
+            'hero-primary': 'Hero Banner Management',
+            'hero-secondary': 'Secondary Banner Management',
+            'admins': 'Admin Users',
+            'settings': 'Settings'
         },
-
-        get: async function(url) {
-            const response = await this.fetchWithAuth(url);
-            return response.json();
-        },
-
-        post: async function(url, data) {
-            const response = await this.fetchWithAuth(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return response.json();
-        },
-
-        put: async function(url, data) {
-            const response = await this.fetchWithAuth(url, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return response.json();
-        },
-
-        patch: async function(url, data) {
-            const response = await this.fetchWithAuth(url, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return response.json();
-        },
-
-        delete: async function(url) {
-            const response = await this.fetchWithAuth(url, {
-                method: 'DELETE'
-            });
-            return response.json();
+        roleMap: {
+            'super_admin': 'Super Admin',
+            'admin': 'Administrator',
+            'moderator': 'Moderator'
         }
     };
 
     // ============================================
-    // Toast Notifications
+    // Private State
     // ============================================
-    window.JWAdmin.showToast = function(message, type = 'info') {
-        // Create container if it doesn't exist
-        let container = document.getElementById('jw-toast-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'jw-toast-container';
-            container.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 9999;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            `;
-            document.body.appendChild(container);
-        }
+    let _currentPage = 'dashboard';
+    let _userData = null;
 
-        const toast = document.createElement('div');
-        
-        const colors = {
-            success: { bg: '#059669', icon: 'fa-check-circle' },
-            error: { bg: '#dc2626', icon: 'fa-exclamation-circle' },
-            info: { bg: '#2563eb', icon: 'fa-info-circle' },
-            warning: { bg: '#d97706', icon: 'fa-exclamation-triangle' }
-        };
+    // ============================================
+    // Sidebar HTML Template
+    // ============================================
+    function getSidebarHTML() {
+        return `
+            <div class="sidebar-header">
+                <a href="/" class="sidebar-logo">
+                    <img src="/logo.png" alt="JAYENWARE" onerror="this.style.display='none'">
+                    <span class="sidebar-logo-text">JAYENWARE</span>
+                </a>
+            </div>
 
-        const color = colors[type] || colors.info;
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link active" data-page="dashboard">
+                    <i class="fa-solid fa-grid-2"></i>
+                    <span>Dashboard</span>
+                </a>
 
-        toast.style.cssText = `
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #fff;
-            background: ${color.bg};
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            max-width: 380px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: jwSlideInRight 0.3s ease;
-            font-family: 'Inter', sans-serif;
+                <div class="sidebar-section-label">Content Management</div>
+
+                <a href="#" class="sidebar-link" data-page="hero-primary">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Hero Banner</span>
+                    <span class="badge hero-primary-count">0</span>
+                </a>
+
+                <a href="#" class="sidebar-link" data-page="hero-secondary">
+                    <i class="fa-solid fa-images"></i>
+                    <span>Secondary Banner</span>
+                    <span class="badge hero-secondary-count">0</span>
+                </a>
+
+                <div class="sidebar-section-label">Administration</div>
+
+                <a href="#" class="sidebar-link" data-page="admins">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>Admin Users</span>
+                    <span class="badge admin-count">0</span>
+                </a>
+
+                <a href="#" class="sidebar-link" data-page="settings">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar user-avatar-display">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name user-name-display">Admin User</div>
+                        <div class="sidebar-user-role user-role-display">Administrator</div>
+                    </div>
+                    <button class="sidebar-logout" id="sidebarLogoutBtn" title="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
         `;
-
-        toast.innerHTML = `<i class="fa-solid ${color.icon}"></i> ${message}`;
-        container.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(50px)';
-            toast.style.transition = 'all 0.3s ease';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    };
-
-    // Add animation keyframes
-    if (!document.getElementById('jw-toast-styles')) {
-        const styleEl = document.createElement('style');
-        styleEl.id = 'jw-toast-styles';
-        styleEl.textContent = `
-            @keyframes jwSlideInRight {
-                from { opacity: 0; transform: translateX(50px); }
-                to { opacity: 1; transform: translateX(0); }
-            }
-        `;
-        document.head.appendChild(styleEl);
     }
 
     // ============================================
-    // Confirm Dialog
+    // Top Bar / Header HTML Template
     // ============================================
-    window.JWAdmin.showConfirm = function(options) {
-        return new Promise((resolve) => {
-            const {
-                title = 'Confirm Action',
-                message = 'Are you sure?',
-                confirmText = 'Confirm',
-                cancelText = 'Cancel',
-                type = 'danger' // danger, warning, info
-            } = options;
-
-            // Create overlay
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.6);
-                z-index: 9998;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 20px;
-                animation: jwFadeIn 0.2s ease;
-            `;
-
-            const icons = {
-                danger: { bg: '#fef2f2', color: '#dc2626', icon: 'fa-trash-can' },
-                warning: { bg: '#fffbeb', color: '#d97706', icon: 'fa-exclamation-triangle' },
-                info: { bg: '#eff6ff', color: '#2563eb', icon: 'fa-circle-info' }
-            };
-
-            const iconStyle = icons[type] || icons.info;
-
-            overlay.innerHTML = `
-                <div style="
-                    background: #fff;
-                    border-radius: 16px;
-                    padding: 28px;
-                    max-width: 400px;
-                    width: 100%;
-                    text-align: center;
-                    animation: jwSlideUp 0.3s ease;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-                ">
-                    <div style="
-                        width: 56px;
-                        height: 56px;
-                        border-radius: 50%;
-                        background: ${iconStyle.bg};
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        margin: 0 auto 16px;
-                        font-size: 24px;
-                        color: ${iconStyle.color};
-                    ">
-                        <i class="fa-solid ${iconStyle.icon}"></i>
-                    </div>
-                    <h3 style="
-                        font-family: 'Manrope', sans-serif;
-                        font-size: 18px;
-                        font-weight: 700;
-                        color: #1d1d1f;
-                        margin: 0 0 8px;
-                    ">${title}</h3>
-                    <p style="
-                        font-size: 14px;
-                        color: #86868b;
-                        margin: 0 0 20px;
-                        line-height: 1.6;
-                    ">${message}</p>
-                    <div style="display: flex; gap: 10px; justify-content: center;">
-                        <button class="jw-confirm-cancel" style="
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 8px;
-                            padding: 10px 20px;
-                            border-radius: 50px;
-                            font-size: 13px;
-                            font-weight: 600;
-                            cursor: pointer;
-                            border: 1.5px solid #d1d1d6;
-                            background: transparent;
-                            color: #1d1d1f;
-                            font-family: 'Inter', sans-serif;
-                            transition: all 0.25s ease;
-                        ">${cancelText}</button>
-                        <button class="jw-confirm-ok" style="
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 8px;
-                            padding: 10px 20px;
-                            border-radius: 50px;
-                            font-size: 13px;
-                            font-weight: 600;
-                            cursor: pointer;
-                            border: none;
-                            background: ${iconStyle.color};
-                            color: #fff;
-                            font-family: 'Inter', sans-serif;
-                            transition: all 0.25s ease;
-                        ">${confirmText}</button>
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(overlay);
-
-            // Add animation styles
-            if (!document.getElementById('jw-confirm-styles')) {
-                const styleEl = document.createElement('style');
-                styleEl.id = 'jw-confirm-styles';
-                styleEl.textContent = `
-                    @keyframes jwFadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
-                    @keyframes jwSlideUp {
-                        from { opacity: 0; transform: translateY(20px) scale(0.97); }
-                        to { opacity: 1; transform: translateY(0) scale(1); }
-                    }
-                `;
-                document.head.appendChild(styleEl);
-            }
-
-            // Event listeners
-            overlay.querySelector('.jw-confirm-cancel').addEventListener('click', () => {
-                overlay.remove();
-                resolve(false);
-            });
-
-            overlay.querySelector('.jw-confirm-ok').addEventListener('click', () => {
-                overlay.remove();
-                resolve(true);
-            });
-
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    overlay.remove();
-                    resolve(false);
-                }
-            });
-
-            // Escape key
-            const escHandler = (e) => {
-                if (e.key === 'Escape') {
-                    overlay.remove();
-                    document.removeEventListener('keydown', escHandler);
-                    resolve(false);
-                }
-            };
-            document.addEventListener('keydown', escHandler);
-        });
-    };
+    function getTopBarHTML() {
+        return `
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1 class="top-bar-title page-title-display">Dashboard</h1>
+            </div>
+            <div class="top-bar-actions">
+                <button class="top-bar-btn" id="notificationBtn" title="Notifications">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+                <button class="top-bar-btn" id="refreshBtn" title="Refresh">
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+            </div>
+        `;
+    }
 
     // ============================================
-    // Escape HTML
+    // Sidebar Overlay HTML
     // ============================================
-    window.JWAdmin.escapeHTML = function(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    };
+    function getSidebarOverlayHTML() {
+        return `<div class="sidebar-overlay" id="sidebarOverlay"></div>`;
+    }
 
     // ============================================
-    // Format Date
+    // Public Methods
     // ============================================
-    window.JWAdmin.formatDate = function(dateString) {
-        if (!dateString) return '';
-        try {
-            const date = new Date(dateString);
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
-        } catch (e) {
-            return dateString;
+
+    /**
+     * Initialize the sidebar component
+     * @param {string} containerSelector - CSS selector for sidebar container
+     */
+    function initSidebar(containerSelector = '#sidebar') {
+        const container = document.querySelector(containerSelector);
+        if (!container) {
+            console.error('Sidebar container not found:', containerSelector);
+            return;
         }
-    };
+
+        container.innerHTML = getSidebarHTML();
+        _bindSidebarEvents();
+    }
+
+    /**
+     * Initialize the top bar / header
+     * @param {string} containerSelector - CSS selector for header container
+     */
+    function initTopBar(containerSelector = '.top-bar') {
+        const container = document.querySelector(containerSelector);
+        if (!container) {
+            console.error('Top bar container not found:', containerSelector);
+            return;
+        }
+
+        container.innerHTML = getTopBarHTML();
+        _bindTopBarEvents();
+    }
+
+    /**
+     * Initialize the sidebar overlay
+     * @param {string} containerSelector - CSS selector for overlay container
+     */
+    function initOverlay(containerSelector = '#sidebarOverlay') {
+        // Check if overlay already exists
+        let overlay = document.querySelector(containerSelector);
+        if (!overlay) {
+            // Create overlay if it doesn't exist
+            overlay = document.createElement('div');
+            overlay.id = 'sidebarOverlay';
+            overlay.className = 'sidebar-overlay';
+            
+            // Insert after sidebar
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.insertAdjacentElement('afterend', overlay);
+            } else {
+                document.body.appendChild(overlay);
+            }
+        }
+
+        _bindOverlayEvents(overlay);
+    }
+
+    /**
+     * Initialize all layout components at once
+     * @param {Object} options - Initialization options
+     * @param {string} options.sidebarSelector - Sidebar container selector
+     * @param {string} options.topBarSelector - Top bar container selector
+     */
+    function initAll(options = {}) {
+        const {
+            sidebarSelector = '#sidebar',
+            topBarSelector = '.top-bar'
+        } = options;
+
+        initSidebar(sidebarSelector);
+        initTopBar(topBarSelector);
+        initOverlay();
+        _updateGreeting();
+    }
+
+    /**
+     * Navigate to a specific page
+     * @param {string} page - Page identifier
+     * @fires JAYENWARE:pageChange - Custom event when page changes
+     */
+    function navigateTo(page) {
+        if (!page) return;
+
+        _currentPage = page;
+
+        // Update sidebar active link
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.dataset.page === page) {
+                link.classList.add('active');
+            }
+        });
+
+        // Update page title in header
+        const titleElement = document.querySelector('.page-title-display');
+        if (titleElement) {
+            titleElement.textContent = CONFIG.pageTitles[page] || 'Dashboard';
+        }
+
+        // Close mobile sidebar
+        closeSidebar();
+
+        // Dispatch custom event for page change
+        window.dispatchEvent(new CustomEvent('JAYENWARE:pageChange', {
+            detail: { page: page }
+        }));
+
+        // Dispatch navigation event
+        window.dispatchEvent(new CustomEvent('JAYENWARE:navigate', {
+            detail: { page: page }
+        }));
+    }
+
+    /**
+     * Toggle mobile sidebar
+     */
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        if (sidebar) {
+            sidebar.classList.toggle('open');
+        }
+        
+        if (overlay) {
+            overlay.classList.toggle('show');
+        }
+    }
+
+    /**
+     * Close mobile sidebar
+     */
+    function closeSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        if (sidebar) {
+            sidebar.classList.remove('open');
+        }
+        
+        if (overlay) {
+            overlay.classList.remove('show');
+        }
+    }
+
+    /**
+     * Update user info in sidebar
+     * @param {Object} userData - User data object
+     * @param {string} userData.name - User display name
+     * @param {string} userData.email - User email
+     * @param {string} userData.role - User role (super_admin, admin, moderator)
+     * @param {string} userData.avatarLetter - First letter for avatar
+     */
+    function updateUserInfo(userData) {
+        if (!userData) return;
+        _userData = userData;
+
+        const avatarEl = document.querySelector('.user-avatar-display');
+        const nameEl = document.querySelector('.user-name-display');
+        const roleEl = document.querySelector('.user-role-display');
+
+        if (avatarEl) {
+            const letter = userData.avatarLetter || 
+                          (userData.name ? userData.name.charAt(0).toUpperCase() : 
+                          (userData.email ? userData.email.charAt(0).toUpperCase() : 'A'));
+            avatarEl.textContent = letter;
+        }
+
+        if (nameEl) {
+            nameEl.textContent = userData.name || userData.email || 'Admin User';
+        }
+
+        if (roleEl) {
+            roleEl.textContent = CONFIG.roleMap[userData.role] || 'Administrator';
+        }
+    }
+
+    /**
+     * Update sidebar badge counts
+     * @param {Object} counts - Count object
+     * @param {number} counts.heroPrimary - Hero banner count
+     * @param {number} counts.heroSecondary - Secondary banner count
+     * @param {number} counts.admins - Admin users count
+     */
+    function updateSidebarCounts(counts = {}) {
+        const heroPrimaryEl = document.querySelector('.hero-primary-count');
+        const heroSecondaryEl = document.querySelector('.hero-secondary-count');
+        const adminEl = document.querySelector('.admin-count');
+
+        if (heroPrimaryEl) heroPrimaryEl.textContent = counts.heroPrimary || 0;
+        if (heroSecondaryEl) heroSecondaryEl.textContent = counts.heroSecondary || 0;
+        if (adminEl) adminEl.textContent = counts.admins || 0;
+    }
+
+    /**
+     * Get current active page
+     * @returns {string} Current page identifier
+     */
+    function getCurrentPage() {
+        return _currentPage;
+    }
+
+    /**
+     * Set refresh button callback
+     * @param {Function} callback - Function to call on refresh click
+     */
+    function onRefresh(callback) {
+        if (typeof callback !== 'function') return;
+
+        const refreshBtn = document.getElementById('refreshBtn');
+        if (refreshBtn) {
+            // Remove old listeners by cloning
+            const newBtn = refreshBtn.cloneNode(true);
+            refreshBtn.parentNode.replaceChild(newBtn, refreshBtn);
+            
+            newBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Add spinning animation
+                const icon = newBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.add('fa-spin');
+                    setTimeout(() => icon.classList.remove('fa-spin'), 1000);
+                }
+                callback();
+            });
+        }
+    }
+
+    /**
+     * Set logout button callback
+     * @param {Function} callback - Function to call on logout click
+     */
+    function onLogout(callback) {
+        if (typeof callback !== 'function') return;
+
+        const logoutBtn = document.getElementById('sidebarLogoutBtn');
+        if (logoutBtn) {
+            // Remove old listeners by cloning
+            const newBtn = logoutBtn.cloneNode(true);
+            logoutBtn.parentNode.replaceChild(newBtn, logoutBtn);
+            
+            newBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                callback();
+            });
+        }
+    }
+
+    /**
+     * Set notification button callback
+     * @param {Function} callback - Function to call on notification click
+     */
+    function onNotification(callback) {
+        if (typeof callback !== 'function') return;
+
+        const notifBtn = document.getElementById('notificationBtn');
+        if (notifBtn) {
+            const newBtn = notifBtn.cloneNode(true);
+            notifBtn.parentNode.replaceChild(newBtn, notifBtn);
+            
+            newBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                callback();
+            });
+        }
+    }
 
     // ============================================
-    // Debounce
+    // Private Event Binding Methods
     // ============================================
-    window.JWAdmin.debounce = function(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
+    function _bindSidebarEvents() {
+        // Navigation links
+        document.querySelectorAll('.sidebar-link[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.dataset.page;
+                navigateTo(page);
+            });
+        });
+    }
+
+    function _bindTopBarEvents() {
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileMenuToggle');
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', toggleSidebar);
+        }
+    }
+
+    function _bindOverlayEvents(overlay) {
+        if (overlay) {
+            overlay.addEventListener('click', closeSidebar);
+        }
+    }
+
+    function _updateGreeting() {
+        const hour = new Date().getHours();
+        let greeting;
+        if (hour < 12) greeting = 'Good Morning';
+        else if (hour < 17) greeting = 'Good Afternoon';
+        else greeting = 'Good Evening';
+
+        const greetingEl = document.getElementById('greetingText');
+        if (greetingEl) {
+            greetingEl.textContent = greeting;
+        }
+    }
+
+    // ============================================
+    // Public API
+    // ============================================
+    return {
+        initSidebar: initSidebar,
+        initTopBar: initTopBar,
+        initOverlay: initOverlay,
+        initAll: initAll,
+        navigateTo: navigateTo,
+        toggleSidebar: toggleSidebar,
+        closeSidebar: closeSidebar,
+        updateUserInfo: updateUserInfo,
+        updateSidebarCounts: updateSidebarCounts,
+        getCurrentPage: getCurrentPage,
+        onRefresh: onRefresh,
+        onLogout: onLogout,
+        onNotification: onNotification,
+        CONFIG: CONFIG
     };
 
-    console.log(' JAYENWARE Admin Components loaded');
 })();
+
+// Export for use in other scripts
+window.JAYENWARE = window.JAYENWARE || {};
+window.JAYENWARE.Components = JAYENWARE.Components;
+
+console.log('JAYENWARE Components loaded successfully');
