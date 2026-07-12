@@ -64,12 +64,14 @@
             padding: 0;
         }
 
+        /* Admin Layout */
         .admin-layout {
             display: flex;
             min-height: 100vh;
             min-height: 100dvh;
         }
 
+        /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
             background: #fafafa;
@@ -273,6 +275,7 @@
             color: #c33;
         }
 
+        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -332,6 +335,18 @@
             color: var(--primary);
         }
 
+        .top-bar-btn .notification-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: #ff3b30;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        /* Dashboard Content Area */
         .dashboard-content {
             flex: 1;
             padding: 28px;
@@ -386,6 +401,7 @@
             z-index: 1;
         }
 
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -446,6 +462,19 @@
             margin: 0;
         }
 
+        .stat-change {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.up { color: #059669; }
+        .stat-change.down { color: #dc2626; }
+
+        /* Quick Actions */
         .section-title {
             font-family: 'Manrope', sans-serif;
             font-size: 18px;
@@ -493,15 +522,15 @@
             text-align: center;
         }
 
+        /* Empty State */
         .empty-state-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 200px;
+            min-height: 400px;
             text-align: center;
             padding: 40px 20px;
-            margin-top: 20px;
         }
 
         .empty-state-icon {
@@ -533,6 +562,7 @@
             margin: 0;
         }
 
+        /* Loading Skeleton */
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -545,6 +575,7 @@
             100% { background-position: 200% 0; }
         }
 
+        /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
             width: 40px;
@@ -576,37 +607,52 @@
             pointer-events: auto;
         }
 
+        /* Responsive */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
             }
+
             .sidebar.open {
                 transform: translateX(0);
             }
+
             .sidebar-overlay {
                 display: block;
             }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
             .main-content {
                 margin-left: 0;
             }
+
             .mobile-menu-toggle {
                 display: flex;
             }
+
             .dashboard-content {
                 padding: 20px 16px;
             }
+
             .top-bar {
                 padding: 12px 16px;
             }
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+
             .quick-actions {
                 grid-template-columns: 1fr 1fr;
             }
+
             .welcome-card {
                 padding: 24px;
             }
+
             .welcome-card h2 {
                 font-size: 22px;
             }
@@ -616,9 +662,11 @@
             .quick-actions {
                 grid-template-columns: 1fr;
             }
+
             .top-bar-title {
                 font-size: 16px;
             }
+
             .dashboard-content {
                 padding: 16px 12px;
             }
@@ -627,45 +675,16 @@
 </head>
 <body class="antialiased">
     <div class="admin-layout">
-        <!-- Sidebar Overlay -->
-        <div class="sidebar-overlay" id="sidebarOverlay" onclick="JWAdmin.sidebar.close()"></div>
-
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <a href="/" class="sidebar-logo">
-                    <img src="/logo.png" alt="JAYENWARE" onerror="this.style.display='none'">
-                    <span class="sidebar-logo-text">JAYENWARE</span>
-                </a>
-            </div>
-
-            <nav class="sidebar-nav" id="sidebarNav">
-                <!-- Loaded dynamically by components.js -->
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="sidebar-user">
-                    <div class="sidebar-user-avatar" id="userAvatar">A</div>
-                    <div class="sidebar-user-info">
-                        <div class="sidebar-user-name" id="userName">Admin</div>
-                        <div class="sidebar-user-role" id="userRole">Admin</div>
-                    </div>
-                    <button class="sidebar-logout" onclick="JWAdmin.logout()" title="Logout">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </div>
-            </div>
-        </aside>
+        <!-- Sidebar - Will be loaded dynamically by components.js -->
+        <aside class="sidebar" id="sidebar"></aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Top Bar -->
-            <header class="top-bar" id="topBar">
-                <!-- Loaded dynamically by components.js -->
-            </header>
+            <!-- Top Bar / Header - Will be loaded dynamically by components.js -->
+            <header class="top-bar" id="topBar"></header>
 
-            <!-- Dashboard Content -->
             <div class="dashboard-content" id="dashboardContent">
+                <!-- Dashboard Home -->
                 <div id="dashboardHome">
                     <!-- Welcome Card -->
                     <div class="welcome-card">
@@ -717,26 +736,26 @@
                     <!-- Quick Actions -->
                     <h3 class="section-title">Quick Actions</h3>
                     <div class="quick-actions">
-                        <a href="/hero1" class="quick-action-btn">
+                        <button class="quick-action-btn" onclick="JAYENWARE.Components.navigateTo('hero-primary')">
                             <i class="fa-solid fa-plus"></i>
                             <span>New Hero Banner</span>
-                        </a>
-                        <a href="/hero2" class="quick-action-btn">
+                        </button>
+                        <button class="quick-action-btn" onclick="JAYENWARE.Components.navigateTo('hero-secondary')">
                             <i class="fa-solid fa-plus"></i>
                             <span>New Secondary Banner</span>
-                        </a>
-                        <button class="quick-action-btn" onclick="JWAdmin.navigateTo('admins')">
+                        </button>
+                        <button class="quick-action-btn" onclick="JAYENWARE.Components.navigateTo('admins')">
                             <i class="fa-solid fa-user-plus"></i>
                             <span>Manage Admins</span>
                         </button>
-                        <button class="quick-action-btn" onclick="JWAdmin.navigateTo('settings')">
+                        <button class="quick-action-btn" onclick="JAYENWARE.Components.navigateTo('settings')">
                             <i class="fa-solid fa-gear"></i>
                             <span>Settings</span>
                         </button>
                     </div>
 
-                    <!-- Placeholder -->
-                    <div class="empty-state-container">
+                    <!-- Placeholder for future content -->
+                    <div class="empty-state-container" style="min-height:200px;margin-top:20px;">
                         <div class="empty-state-icon">
                             <i class="fa-solid fa-cube"></i>
                         </div>
@@ -750,35 +769,115 @@
 
     <!-- Load Components -->
     <script src="/components.js"></script>
-    
+
     <script>
-        // ============================================
-        // Dashboard Initialization
-        // ============================================
-        
+        // API Configuration
+        const API_BASE_URL = window.location.origin;
+
+        // State
+        let currentUser = null;
         let dashboardStats = null;
 
-        // Update greeting based on time
+        // ============================================
+        // Authentication Check
+        // ============================================
+        function getToken() {
+            return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+        }
+
+        async function checkAuth() {
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Auth failed');
+                }
+
+                const data = await response.json();
+                
+                if (!data.success || !data.data.isAdmin) {
+                    throw new Error('Not admin');
+                }
+
+                currentUser = data.data;
+                updateUserInfo();
+                loadDashboardStats();
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                localStorage.removeItem('auth_token');
+                sessionStorage.removeItem('auth_token');
+                window.location.href = '/login';
+            }
+        }
+
+        // ============================================
+        // User Interface Updates
+        // ============================================
+        function updateUserInfo() {
+            if (!currentUser) return;
+
+            const user = currentUser.user;
+            const adminData = currentUser.adminData;
+
+            // Update sidebar user info via Components
+            JAYENWARE.Components.updateUserInfo({
+                name: user.user_metadata?.full_name || user.email || 'Admin User',
+                email: user.email,
+                role: adminData?.role || 'admin',
+                avatarLetter: user.user_metadata?.full_name 
+                    ? user.user_metadata.full_name.charAt(0).toUpperCase() 
+                    : (user.email ? user.email.charAt(0).toUpperCase() : 'A')
+            });
+        }
+
         function updateGreeting() {
             const hour = new Date().getHours();
             let greeting;
             if (hour < 12) greeting = 'Good Morning';
             else if (hour < 17) greeting = 'Good Afternoon';
             else greeting = 'Good Evening';
+            
             document.getElementById('greetingText').textContent = greeting;
         }
 
-        // Load dashboard stats
+        // ============================================
+        // Dashboard Stats
+        // ============================================
         async function loadDashboardStats() {
+            const token = getToken();
+            if (!token) return;
+
             try {
-                const data = await JWAdmin.api.get('/api/admin/stats');
+                const response = await fetch(`${API_BASE_URL}/api/admin/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to load stats');
+
+                const data = await response.json();
                 
                 if (data.success) {
                     dashboardStats = data.data;
                     updateStatsDisplay();
+                    updateSidebarCounts();
                 }
             } catch (error) {
                 console.error('Failed to load stats:', error);
+                // Set default values
                 document.getElementById('statHeroPrimary').textContent = '0';
                 document.getElementById('statHeroSecondary').textContent = '0';
                 document.getElementById('statAdmins').textContent = '0';
@@ -802,44 +901,101 @@
             document.getElementById('statActive').textContent = totalActive;
         }
 
-        // Initialize
-        async function init() {
-            updateGreeting();
+        function updateSidebarCounts() {
+            if (!dashboardStats) return;
             
-            // Check authentication
-            const isAuth = await JWAdmin.checkAuthAndRedirect();
-            if (!isAuth) return;
-
-            // Load sidebar navigation
-            JWAdmin.sidebar.init({
-                activePage: 'dashboard',
-                containerId: 'sidebarNav'
+            // Update sidebar counts via Components
+            JAYENWARE.Components.updateSidebarCounts({
+                heroPrimary: dashboardStats.totalHeroes || 0,
+                heroSecondary: dashboardStats.totalSecondaryHeroes || 0,
+                admins: dashboardStats.totalActiveAdmins || 0
             });
-
-            // Load top bar
-            JWAdmin.header.init({
-                containerId: 'topBar',
-                title: 'Dashboard',
-                showRefresh: true,
-                showNotifications: true
-            });
-
-            // Load user info
-            const user = await JWAdmin.getCurrentUser();
-            if (user) {
-                JWAdmin.updateUserDisplay(user);
-            }
-
-            // Load stats
-            loadDashboardStats();
         }
 
-        // Start when DOM is ready
-        document.addEventListener('DOMContentLoaded', init);
+        // ============================================
+        // Page Change Handler
+        // ============================================
+        window.addEventListener('JAYENWARE:pageChange', function(event) {
+            const page = event.detail.page;
+            console.log(`Page changed to: ${page}`);
+            
+            // Handle page-specific content loading here
+            const dashboardContent = document.getElementById('dashboardContent');
+            const dashboardHome = document.getElementById('dashboardHome');
+            
+            if (page === 'dashboard') {
+                if (dashboardHome) dashboardHome.style.display = 'block';
+                if (currentUser) loadDashboardStats();
+            } else {
+                // Hide dashboard content for other pages (future implementation)
+                // if (dashboardHome) dashboardHome.style.display = 'none';
+            }
+        });
 
-        // Refresh stats periodically
+        // ============================================
+        // Logout
+        // ============================================
+        async function handleLogout() {
+            const token = getToken();
+            
+            try {
+                if (token) {
+                    await fetch(`${API_BASE_URL}/api/auth/logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            } finally {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('refresh_token');
+                sessionStorage.removeItem('auth_token');
+                sessionStorage.removeItem('refresh_token');
+                window.location.href = '/login';
+            }
+        }
+
+        // ============================================
+        // Initialize
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Components
+            JAYENWARE.Components.initAll({
+                sidebarSelector: '#sidebar',
+                topBarSelector: '#topBar'
+            });
+
+            // Set refresh callback
+            JAYENWARE.Components.onRefresh(function() {
+                if (currentUser) {
+                    loadDashboardStats();
+                }
+                updateGreeting();
+            });
+
+            // Set logout callback
+            JAYENWARE.Components.onLogout(function() {
+                handleLogout();
+            });
+
+            // Set notification callback
+            JAYENWARE.Components.onNotification(function() {
+                console.log('Notifications clicked');
+                // Future: Implement notification panel
+            });
+
+            // Initialize dashboard
+            updateGreeting();
+            checkAuth();
+        });
+
+        // Refresh stats periodically (every 30 seconds)
         setInterval(() => {
-            if (JWAdmin.getToken()) {
+            if (currentUser) {
                 loadDashboardStats();
             }
         }, 30000);
