@@ -1,11 +1,144 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/index.js", "use": "@vercel/node" },
-    { "src": "public/**/*", "use": "@vercel/static" }
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "public/**/*",
+      "use": "@vercel/static"
+    }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/index.js" },
-    { "src": "/(.*)", "dest": "/public/index.html" }
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/components.js",
+      "dest": "/public/components.js"
+    },
+    {
+      "src": "/fonts.js",
+      "dest": "/public/fonts.js"
+    },
+    {
+      "src": "/hero-banner.js",
+      "dest": "/public/hero-banner.js"
+    },
+    {
+      "src": "/hero-video.js",
+      "dest": "/public/hero-video.js"
+    },
+    {
+      "src": "/hero-secondary-banner.js",
+      "dest": "/public/hero-secondary-banner.js"
+    },
+    {
+      "src": "/logo.png",
+      "dest": "/public/logo.png"
+    },
+    {
+      "src": "/signup",
+      "dest": "/public/signup.html"
+    },
+    {
+      "src": "/signin",
+      "dest": "/public/signin.html"
+    },
+    {
+      "src": "/login",
+      "dest": "/public/signin.html"
+    },
+    {
+      "src": "/account",
+      "dest": "/public/account.html"
+    },
+    {
+      "src": "/product/(.*)",
+      "dest": "/public/product.html"
+    },
+    {
+      "src": "/category/(.*)",
+      "dest": "/public/category.html"
+    },
+    {
+      "src": "/story",
+      "dest": "/public/story.html"
+    },
+    {
+      "src": "/faq",
+      "dest": "/public/faq.html"
+    },
+    {
+      "src": "/about",
+      "dest": "/public/about.html"
+    },
+    {
+      "src": "/shipping-policy",
+      "dest": "/public/shipping-policy.html"
+    },
+    {
+      "src": "/return-policy",
+      "dest": "/public/return-policy.html"
+    },
+    {
+      "src": "/blog",
+      "dest": "/public/blog.html"
+    },
+    {
+      "src": "/privacy-policy",
+      "dest": "/public/privacy-policy.html"
+    },
+    {
+      "src": "/terms-and-conditions",
+      "dest": "/public/terms-and-conditions.html"
+    },
+    {
+      "src": "/refund-policy",
+      "dest": "/public/refund-policy.html"
+    },
+    {
+      "src": "/cookie-policy",
+      "dest": "/public/cookie-policy.html"
+    },
+    {
+      "src": "/store-locator",
+      "dest": "/public/store-locator.html"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/products",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/wishlist",
+      "dest": "/public/index.html"
+    },    
+    {
+      "src": "/checkout",
+      "dest": "/public/checkout.html"
+    },
+    {
+      "src": "/journal",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/search",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/index.html"
+    }
   ]
 }
+
