@@ -120,21 +120,24 @@
             }
         }
 
-        /* Page Action Header */
+        /* Page Action Header - UPDATED */
         .page-header-bar {
             background: #ffffff;
             border-bottom: 1px solid #e5e5ea;
-            padding: 16px 24px;
+            /* Top padding increased to push it below the header */
+            padding: 70px 24px 30px 24px; 
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            flex-wrap: wrap;
+            /* Column layout to center items horizontally */
+            flex-direction: column; 
+            align-items: center; /* Horizontally centered */
+            justify-content: center;
+            gap: 20px;
+            text-align: center;
         }
 
         .page-header-title {
             font-family: 'Manrope', sans-serif;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--primary);
             letter-spacing: -0.01em;
@@ -147,9 +150,9 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 10px 20px;
+            padding: 10px 24px;
             border-radius: 50px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -170,7 +173,7 @@
         /* Content Area */
         .content-area {
             flex: 1;
-            padding: 24px;
+            padding: 30px 24px;
             max-width: 1400px;
             width: 100%;
             margin: 0 auto;
@@ -180,7 +183,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
             gap: 12px;
         }
@@ -309,8 +312,8 @@
 
         @media (max-width: 639px) {
             .content-area { padding: 16px 12px; }
-            .page-header-bar { padding: 16px; flex-direction: column; align-items: stretch; }
-            .page-header-bar .btn { width: 100%; }
+            .page-header-bar { padding: 80px 16px 24px; }
+            .page-header-bar .btn { width: 100%; max-width: 300px; }
             .modal-overlay { align-items: flex-end; padding: 0; }
             .modal { max-width: 100%; border-radius: 24px 24px 0 0; max-height: 85vh; margin: 0; }
             .modal-footer { flex-direction: column-reverse; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
