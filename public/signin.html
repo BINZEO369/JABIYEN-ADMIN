@@ -18,8 +18,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
     tailwind.config = {
       theme: {
@@ -156,8 +154,10 @@
 <body class="antialiased bg-soft">
 
   <div class="w-full max-w-md mx-auto px-5 py-10">
+    <!-- Login Card -->
     <div class="login-card bg-white rounded-[32px] shadow-xl shadow-gray-200/70 p-8 md:p-10" id="loginCard">
       
+      <!-- Logo & Title -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary text-white shadow-lg shadow-gray-300/50 mb-5">
           <i class="fa-solid fa-layer-group text-2xl"></i>
@@ -166,6 +166,7 @@
         <p class="text-accent text-sm mt-2 font-medium">Hero Banner Management</p>
       </div>
 
+      <!-- Alert Messages -->
       <div id="errorMessage" class="hidden bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-5 text-sm font-medium flex items-start gap-3">
         <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
         <span id="errorText"></span>
@@ -175,6 +176,7 @@
         <span id="successText"></span>
       </div>
 
+      <!-- Login Form -->
       <form id="loginForm" class="space-y-5">
         <div>
           <label for="email" class="block text-sm font-semibold text-primary mb-1.5">Email Address</label>
@@ -230,6 +232,7 @@
     </div>
   </div>
 
+  <!-- Forgot Password Modal -->
   <div class="modal-overlay" id="forgotPasswordModal">
     <div class="modal-content">
       <div class="flex justify-between items-start mb-5">
@@ -262,11 +265,7 @@
 
   <script>
     (function() {
-      // Supabase Initialization
-      const { createClient } = supabase;
-      const SUPABASE_URL = "https://eiueitoxxqzkolsouuzy.supabase.co";
-      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpdWVpdG94eHF6a29sc291dXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3NjIxNjIsImV4cCI6MjA5OTMzODE2Mn0.zsmN5P-AXeKT-XLgqkq0Bjx8EfjupJs1mjC26l-g7uA";
-      const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+      const API_BASE_URL = window.location.origin;
       
       // DOM Elements
       const loginForm = document.getElementById('loginForm');
@@ -279,12 +278,50 @@
       const forgotPasswordModal = document.getElementById('forgotPasswordModal');
       const closeModal = document.getElementById('closeModal');
       const resetPasswordForm = document.getElementById('resetPasswordForm');
+      const rememberMe = document.getElementById('rememberMe');
       const loginCard = document.getElementById('loginCard');
 
       // Card entrance animation
       setTimeout(() => {
         loginCard.classList.add('visible');
       }, 80);
+
+      // --- Cookie Management Helper Functions ---
+      function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+          const date = new Date();
+          date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+          expires = "; expires=" + date.toUTCString();
+        }
+        // SameSite=Lax helps prevent CSRF while allowing proper navigation
+        document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+      }
+
+      function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+
+      function eraseCookie(name) {
+        document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      }
+
+      function clearAllAuth() {
+        eraseCookie('auth_token');
+        eraseCookie('refresh_token');
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('refresh_token');
+        sessionStorage.removeItem('auth_token');
+        sessionStorage.removeItem('refresh_token');
+      }
+      // ------------------------------------------
 
       // Show Error
       function showError(message) {
@@ -315,13 +352,54 @@
         }
       }
 
-      // Check existing auth session using Supabase
-      async function checkAuth() {
-        const { data: { session } } = await supabaseClient.auth.getSession();
+      // Token management with Cookies & Fallbacks
+      function saveToken(token, refreshToken) {
+        // If 'Remember Me' is checked, store for 30 days. Otherwise, store as session cookie.
+        const expiryDays = rememberMe.checked ? 30 : null;
         
-        if (session) {
-          // User is already logged in
-          window.location.replace('/dashboard.html');
+        // Save to Cookies (More reliable across refreshes and tabs)
+        setCookie('auth_token', token, expiryDays);
+        if (refreshToken) setCookie('refresh_token', refreshToken, expiryDays);
+
+        // Also save to Local/Session storage as a frontend fallback
+        if (rememberMe.checked) {
+          localStorage.setItem('auth_token', token);
+          if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
+        } else {
+          sessionStorage.setItem('auth_token', token);
+          if (refreshToken) sessionStorage.setItem('refresh_token', refreshToken);
+        }
+      }
+
+      function getToken() {
+        // Priority: 1. Cookie -> 2. LocalStorage -> 3. SessionStorage
+        return getCookie('auth_token') || localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+      }
+
+      // Check existing auth smoothly
+      async function checkAuth() {
+        const token = getToken();
+        if (!token) return;
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            if (data.data && data.data.isAdmin) {
+              window.location.replace('/dashboard.html');
+            } else {
+              // Not an admin, clear the auth data safely
+              clearAllAuth();
+            }
+          } else if (response.status === 401 || response.status === 403) {
+            // Token expired or invalid
+            clearAllAuth();
+          }
+        } catch (error) {
+          console.warn('Network issue during auth check. Staying on login page.');
         }
       }
 
@@ -340,19 +418,33 @@
         setLoading(true);
 
         try {
-          // Direct login using Supabase Auth
-          const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password,
+          const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
           });
 
-          if (error) {
-            showError(error.message || 'Invalid credentials. Please try again.');
-          } else if (data.session) {
-            showSuccess('Login successful! Redirecting...');
-            setTimeout(() => {
-              window.location.replace('/dashboard.html');
-            }, 800);
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            saveToken(data.data.session.access_token, data.data.session.refresh_token);
+            
+            if (data.data.isAdmin) {
+              showSuccess('Login successful! Redirecting...');
+              setTimeout(() => {
+                window.location.replace('/dashboard.html');
+              }, 800);
+            } else {
+              showError('You do not have admin privileges.');
+              await fetch(`${API_BASE_URL}/api/auth/logout`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${data.data.session.access_token}` }
+              }).catch(() => {});
+              
+              clearAllAuth();
+            }
+          } else {
+            showError(data.error || 'Invalid credentials. Please try again.');
           }
         } catch (error) {
           showError('Network error. Please check your connection.');
@@ -376,7 +468,7 @@
         if (e.target === forgotPasswordModal) closeForgotModal();
       });
 
-      // Reset password handler using Supabase
+      // Reset password handler
       resetPasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('resetEmail').value.trim();
@@ -386,16 +478,18 @@
         }
 
         try {
-          const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/reset-password.html', // Update this route based on your frontend
+          const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
           });
-
-          if (error) {
-            alert(error.message || 'Failed to send reset link.');
-          } else {
+          const data = await response.json();
+          if (response.ok && data.success) {
             alert('Password reset link sent to your email.');
             closeForgotModal();
             document.getElementById('resetEmail').value = '';
+          } else {
+            alert(data.error || 'Failed to send reset link.');
           }
         } catch (error) {
           alert('Network error. Please try again.');
@@ -409,3 +503,6 @@
   </script>
 </body>
 </html>
+
+
+
