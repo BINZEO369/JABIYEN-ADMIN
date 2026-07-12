@@ -108,8 +108,8 @@
       "dest": "/public/store-locator.html"
     },
     {
-      "src": "/hero1",
-      "dest": "/public/hero1.html"
+      "src": "/herobanner",
+      "dest": "/public/herobanner.html"
     },
     {
       "src": "/hero2",
