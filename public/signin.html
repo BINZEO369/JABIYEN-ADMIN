@@ -315,7 +315,7 @@
         }
       }
 
-      // Token management (persistent with remember me)
+      // Token management
       function saveToken(token, refreshToken) {
         if (rememberMe.checked) {
           localStorage.setItem('auth_token', token);
@@ -330,7 +330,7 @@
         return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
       }
 
-      // Check existing auth
+      // Check existing auth smoothly
       async function checkAuth() {
         const token = getToken();
         if (!token) return;
@@ -339,15 +339,20 @@
           const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
+          
           if (response.ok) {
             const data = await response.json();
             if (data.data && data.data.isAdmin) {
-              window.location.href = '/dashboard.html';
+              // Use replace to prevent back-button loops
+              window.location.replace('/dashboard.html');
             }
+          } else if (response.status === 401 || response.status === 403) {
+            // Only remove token if it's explicitly expired/invalid
+            localStorage.removeItem('auth_token');
+            sessionStorage.removeItem('auth_token');
           }
         } catch (error) {
-          localStorage.removeItem('auth_token');
-          sessionStorage.removeItem('auth_token');
+          console.warn('Network issue during auth check. Staying on login page.');
         }
       }
 
@@ -380,11 +385,10 @@
             if (data.data.isAdmin) {
               showSuccess('Login successful! Redirecting...');
               setTimeout(() => {
-                window.location.href = '/dashboard.html';
+                window.location.replace('/dashboard.html');
               }, 800);
             } else {
               showError('You do not have admin privileges.');
-              // Cleanup token if not admin
               await fetch(`${API_BASE_URL}/api/auth/logout`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${data.data.session.access_token}` }
@@ -397,7 +401,6 @@
           }
         } catch (error) {
           showError('Network error. Please check your connection.');
-          console.error('Login error:', error);
         } finally {
           setLoading(false);
         }
