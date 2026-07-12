@@ -64,14 +64,12 @@
             padding: 0;
         }
 
-        /* Admin Layout */
         .admin-layout {
             display: flex;
             min-height: 100vh;
             min-height: 100dvh;
         }
 
-        /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
             background: #fafafa;
@@ -152,7 +150,6 @@
             width: 100%;
             text-align: left;
             font-family: 'Inter', sans-serif;
-            position: relative;
         }
 
         .sidebar-link i {
@@ -163,7 +160,6 @@
             justify-content: center;
             font-size: 16px;
             flex-shrink: 0;
-            transition: color 0.25s ease;
         }
 
         .sidebar-link:hover {
@@ -176,10 +172,6 @@
             color: #ffffff;
             font-weight: 600;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar-link.active i {
-            color: #ffffff;
         }
 
         .sidebar-link .badge {
@@ -210,12 +202,7 @@
             gap: 12px;
             padding: 8px 12px;
             border-radius: 12px;
-            transition: background 0.25s ease;
             cursor: pointer;
-        }
-
-        .sidebar-user:hover {
-            background: #f0f0f5;
         }
 
         .sidebar-user-avatar {
@@ -249,9 +236,6 @@
         .sidebar-user-role {
             font-size: 11px;
             color: var(--accent);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .sidebar-logout {
@@ -275,7 +259,6 @@
             color: #c33;
         }
 
-        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -308,12 +291,6 @@
             letter-spacing: -0.01em;
         }
 
-        .top-bar-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .top-bar-btn {
             width: 40px;
             height: 40px;
@@ -326,7 +303,6 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.25s ease;
-            position: relative;
             font-size: 16px;
         }
 
@@ -335,18 +311,6 @@
             color: var(--primary);
         }
 
-        .top-bar-btn .notification-dot {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 8px;
-            height: 8px;
-            background: #ff3b30;
-            border-radius: 50%;
-            border: 2px solid #fff;
-        }
-
-        /* Dashboard Content Area */
         .dashboard-content {
             flex: 1;
             padding: 28px;
@@ -394,14 +358,6 @@
             line-height: 1.6;
         }
 
-        .welcome-card .time-greeting {
-            font-size: 13px;
-            color: rgba(255,255,255,0.5);
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -442,11 +398,6 @@
         .stat-icon.green { background: #e6fff0; color: #059669; }
         .stat-icon.orange { background: #fff8e6; color: #d97706; }
 
-        .stat-info {
-            flex: 1;
-            min-width: 0;
-        }
-
         .stat-number {
             font-family: 'Manrope', sans-serif;
             font-size: 28px;
@@ -462,19 +413,6 @@
             margin: 0;
         }
 
-        .stat-change {
-            font-size: 11px;
-            font-weight: 600;
-            margin-top: 6px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .stat-change.up { color: #059669; }
-        .stat-change.down { color: #dc2626; }
-
-        /* Quick Actions */
         .section-title {
             font-family: 'Manrope', sans-serif;
             font-size: 18px;
@@ -516,66 +454,6 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
 
-        .quick-action-btn i {
-            font-size: 15px;
-            width: 18px;
-            text-align: center;
-        }
-
-        /* Empty State */
-        .empty-state-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 400px;
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .empty-state-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #f5f5f7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: #d1d1d6;
-            margin-bottom: 20px;
-        }
-
-        .empty-state-container h3 {
-            font-family: 'Manrope', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 0 0 8px;
-        }
-
-        .empty-state-container p {
-            font-size: 14px;
-            color: var(--accent);
-            max-width: 400px;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* Loading Skeleton */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 8px;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
             width: 40px;
@@ -607,52 +485,37 @@
             pointer-events: auto;
         }
 
-        /* Responsive */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
             }
-
             .sidebar.open {
                 transform: translateX(0);
             }
-
             .sidebar-overlay {
                 display: block;
             }
-
-            .sidebar-overlay.show {
-                display: block;
-            }
-
             .main-content {
                 margin-left: 0;
             }
-
             .mobile-menu-toggle {
                 display: flex;
             }
-
             .dashboard-content {
                 padding: 20px 16px;
             }
-
             .top-bar {
                 padding: 12px 16px;
             }
-
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-
             .quick-actions {
                 grid-template-columns: 1fr 1fr;
             }
-
             .welcome-card {
                 padding: 24px;
             }
-
             .welcome-card h2 {
                 font-size: 22px;
             }
@@ -662,11 +525,9 @@
             .quick-actions {
                 grid-template-columns: 1fr;
             }
-
             .top-bar-title {
                 font-size: 16px;
             }
-
             .dashboard-content {
                 padding: 16px 12px;
             }
@@ -675,10 +536,8 @@
 </head>
 <body class="antialiased">
     <div class="admin-layout">
-        <!-- Sidebar Overlay -->
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <a href="/" class="sidebar-logo">
@@ -722,7 +581,7 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="sidebar-user" id="sidebarUser">
+                <div class="sidebar-user">
                     <div class="sidebar-user-avatar" id="userAvatar">A</div>
                     <div class="sidebar-user-info">
                         <div class="sidebar-user-name" id="userName">Admin User</div>
@@ -735,7 +594,6 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <header class="top-bar">
                 <div style="display:flex;align-items:center;gap:12px;">
@@ -744,220 +602,108 @@
                     </button>
                     <h1 class="top-bar-title" id="pageTitle">Dashboard</h1>
                 </div>
-                <div class="top-bar-actions">
-                    <button class="top-bar-btn" title="Notifications">
-                        <i class="fa-regular fa-bell"></i>
-                        <span class="notification-dot"></span>
-                    </button>
+                <div class="top-bar-actions" style="display:flex;align-items:center;gap:12px;">
                     <button class="top-bar-btn" onclick="window.location.reload()" title="Refresh">
                         <i class="fa-solid fa-rotate"></i>
                     </button>
                 </div>
             </header>
 
-            <div class="dashboard-content" id="dashboardContent">
-                <!-- Dashboard Home -->
-                <div id="dashboardHome">
-                    <!-- Welcome Card -->
-                    <div class="welcome-card">
-                        <h2 id="greetingText">Good Morning</h2>
-                        <p>Welcome back to your admin dashboard.</p>
-                        <p class="time-greeting">Manage your hero banners and site content from here.</p>
-                    </div>
+            <div class="dashboard-content">
+                <div class="welcome-card">
+                    <h2 id="greetingText">Good Morning</h2>
+                    <p>Welcome back to your admin dashboard.</p>
+                    <p style="font-size:13px;color:rgba(255,255,255,0.5);position:relative;z-index:1;">Manage your hero banners and site content from here.</p>
+                </div>
 
-                    <!-- Stats Grid -->
-                    <div class="stats-grid" id="statsGrid">
-                        <div class="stat-card">
-                            <div class="stat-icon purple">
-                                <i class="fa-solid fa-image"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p class="stat-number skeleton" id="statHeroPrimary" style="width:60px;height:28px;">&nbsp;</p>
-                                <p class="stat-label">Hero Banners</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon blue">
-                                <i class="fa-solid fa-images"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p class="stat-number skeleton" id="statHeroSecondary" style="width:60px;height:28px;">&nbsp;</p>
-                                <p class="stat-label">Secondary Banners</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon green">
-                                <i class="fa-solid fa-users-gear"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p class="stat-number skeleton" id="statAdmins" style="width:60px;height:28px;">&nbsp;</p>
-                                <p class="stat-label">Active Admins</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon orange">
-                                <i class="fa-solid fa-check-circle"></i>
-                            </div>
-                            <div class="stat-info">
-                                <p class="stat-number" id="statActive">-</p>
-                                <p class="stat-label">Active Banners</p>
-                            </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><i class="fa-solid fa-image"></i></div>
+                        <div class="stat-info">
+                            <p class="stat-number" id="statHeroPrimary">-</p>
+                            <p class="stat-label">Hero Banners</p>
                         </div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fa-solid fa-images"></i></div>
+                        <div class="stat-info">
+                            <p class="stat-number" id="statHeroSecondary">-</p>
+                            <p class="stat-label">Secondary Banners</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-users-gear"></i></div>
+                        <div class="stat-info">
+                            <p class="stat-number" id="statAdmins">-</p>
+                            <p class="stat-label">Active Admins</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="stat-info">
+                            <p class="stat-number" id="statActive">-</p>
+                            <p class="stat-label">Active Banners</p>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- Quick Actions -->
-                    <h3 class="section-title">Quick Actions</h3>
-                    <div class="quick-actions">
-                        <button class="quick-action-btn" onclick="navigateTo('hero-primary')">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>New Hero Banner</span>
-                        </button>
-                        <button class="quick-action-btn" onclick="navigateTo('hero-secondary')">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>New Secondary Banner</span>
-                        </button>
-                        <button class="quick-action-btn" onclick="navigateTo('admins')">
-                            <i class="fa-solid fa-user-plus"></i>
-                            <span>Manage Admins</span>
-                        </button>
-                        <button class="quick-action-btn" onclick="navigateTo('settings')">
-                            <i class="fa-solid fa-gear"></i>
-                            <span>Settings</span>
-                        </button>
-                    </div>
-
-                    <!-- Placeholder for future content -->
-                    <div class="empty-state-container" style="min-height:200px;margin-top:20px;">
-                        <div class="empty-state-icon">
-                            <i class="fa-solid fa-cube"></i>
-                        </div>
-                        <h3>Content Area Ready</h3>
-                        <p>This section is ready for future content modules and features.</p>
-                    </div>
+                <h3 class="section-title">Quick Actions</h3>
+                <div class="quick-actions">
+                    <button class="quick-action-btn" onclick="navigateTo('hero-primary')">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Hero Banner</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="navigateTo('hero-secondary')">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Secondary Banner</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="navigateTo('admins')">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Manage Admins</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="navigateTo('settings')">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Settings</span>
+                    </button>
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- Load Components -->
+    <script src="/components.js"></script>
+    
     <script>
-        // API Configuration
-        const API_BASE_URL = window.location.origin;
-
-        // State
+        // ============================================
+        // Dashboard Initialization
+        // ============================================
         let currentUser = null;
         let dashboardStats = null;
 
-        // ============================================
-        // Authentication Check
-        // ============================================
-        function getToken() {
-            return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
-        }
-
-        async function checkAuth() {
-            const token = getToken();
-            if (!token) {
-                window.location.href = '/login';
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Auth failed');
-                }
-
-                const data = await response.json();
-                
-                if (!data.success || !data.data.isAdmin) {
-                    throw new Error('Not admin');
-                }
-
-                currentUser = data.data;
-                updateUserInfo();
-                loadDashboardStats();
-            } catch (error) {
-                console.error('Auth check failed:', error);
-                localStorage.removeItem('auth_token');
-                sessionStorage.removeItem('auth_token');
-                window.location.href = '/login';
-            }
-        }
-
-        // ============================================
-        // User Interface Updates
-        // ============================================
-        function updateUserInfo() {
+        async function initDashboard() {
+            // Check authentication
+            currentUser = await checkAuth(true);
             if (!currentUser) return;
 
-            const user = currentUser.user;
-            const adminData = currentUser.adminData;
-
-            // Update avatar
-            const avatar = document.getElementById('userAvatar');
-            if (user.user_metadata?.full_name) {
-                avatar.textContent = user.user_metadata.full_name.charAt(0).toUpperCase();
-            } else if (user.email) {
-                avatar.textContent = user.email.charAt(0).toUpperCase();
-            }
-
-            // Update name
-            const userName = document.getElementById('userName');
-            userName.textContent = user.user_metadata?.full_name || user.email || 'Admin User';
-
-            // Update role
-            const userRole = document.getElementById('userRole');
-            const roleMap = {
-                'super_admin': 'Super Admin',
-                'admin': 'Administrator',
-                'moderator': 'Moderator'
-            };
-            userRole.textContent = roleMap[adminData?.role] || 'Administrator';
-        }
-
-        function updateGreeting() {
-            const hour = new Date().getHours();
-            let greeting;
-            if (hour < 12) greeting = 'Good Morning';
-            else if (hour < 17) greeting = 'Good Afternoon';
-            else greeting = 'Good Evening';
+            // Update UI
+            updateAdminUserInfo(currentUser);
+            updateAdminGreeting();
             
-            document.getElementById('greetingText').textContent = greeting;
+            // Load stats
+            await refreshStats();
         }
 
-        // ============================================
-        // Dashboard Stats
-        // ============================================
-        async function loadDashboardStats() {
-            const token = getToken();
-            if (!token) return;
-
+        async function refreshStats() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/admin/stats`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json'
-                    }
-                });
-
-                if (!response.ok) throw new Error('Failed to load stats');
-
-                const data = await response.json();
-                
-                if (data.success) {
-                    dashboardStats = data.data;
-                    updateStatsDisplay();
-                    updateSidebarCounts();
+                const stats = await loadDashboardStats();
+                if (stats) {
+                    dashboardStats = stats;
+                    updateStatsDisplay(stats);
+                    updateSidebarCounts(stats);
                 }
             } catch (error) {
                 console.error('Failed to load stats:', error);
-                // Set default values
+                // Set defaults
                 document.getElementById('statHeroPrimary').textContent = '0';
                 document.getElementById('statHeroSecondary').textContent = '0';
                 document.getElementById('statAdmins').textContent = '0';
@@ -965,121 +711,20 @@
             }
         }
 
-        function updateStatsDisplay() {
-            if (!dashboardStats) return;
-
-            document.getElementById('statHeroPrimary').textContent = dashboardStats.totalHeroes || 0;
-            document.getElementById('statHeroPrimary').classList.remove('skeleton');
-            
-            document.getElementById('statHeroSecondary').textContent = dashboardStats.totalSecondaryHeroes || 0;
-            document.getElementById('statHeroSecondary').classList.remove('skeleton');
-            
-            document.getElementById('statAdmins').textContent = dashboardStats.totalActiveAdmins || 0;
-            document.getElementById('statAdmins').classList.remove('skeleton');
-            
-            const totalActive = (dashboardStats.totalHeroes || 0) + (dashboardStats.totalSecondaryHeroes || 0);
-            document.getElementById('statActive').textContent = totalActive;
+        function updateStatsDisplay(stats) {
+            document.getElementById('statHeroPrimary').textContent = stats.totalHeroes || 0;
+            document.getElementById('statHeroSecondary').textContent = stats.totalSecondaryHeroes || 0;
+            document.getElementById('statAdmins').textContent = stats.totalActiveAdmins || 0;
+            document.getElementById('statActive').textContent = 
+                (stats.totalHeroes || 0) + (stats.totalSecondaryHeroes || 0);
         }
 
-        function updateSidebarCounts() {
-            if (!dashboardStats) return;
-            
-            document.getElementById('heroPrimaryCount').textContent = dashboardStats.totalHeroes || 0;
-            document.getElementById('heroSecondaryCount').textContent = dashboardStats.totalSecondaryHeroes || 0;
-            document.getElementById('adminCount').textContent = dashboardStats.totalActiveAdmins || 0;
-        }
+        // Initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', initDashboard);
 
-        // ============================================
-        // Navigation
-        // ============================================
-        function navigateTo(page) {
-            // Update active link
-            document.querySelectorAll('.sidebar-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            const activeLink = document.querySelector(`[data-page="${page}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-            }
-
-            // Update page title
-            const titles = {
-                'dashboard': 'Dashboard',
-                'hero-primary': 'Hero Banner Management',
-                'hero-secondary': 'Secondary Banner Management',
-                'admins': 'Admin Users',
-                'settings': 'Settings'
-            };
-            
-            document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
-
-            // Close mobile sidebar
-            closeSidebar();
-
-            // Placeholder for future page content switching
-            console.log(`Navigated to: ${page}`);
-        }
-
-        // ============================================
-        // Sidebar Toggle (Mobile)
-        // ============================================
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('show');
-        }
-
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            sidebar.classList.remove('open');
-            overlay.classList.remove('show');
-        }
-
-        // ============================================
-        // Logout
-        // ============================================
-        async function handleLogout() {
-            const token = getToken();
-            
-            try {
-                if (token) {
-                    await fetch(`${API_BASE_URL}/api/auth/logout`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
-            } finally {
-                localStorage.removeItem('auth_token');
-                localStorage.removeItem('refresh_token');
-                sessionStorage.removeItem('auth_token');
-                sessionStorage.removeItem('refresh_token');
-                window.location.href = '/login';
-            }
-        }
-
-        // ============================================
-        // Initialize
-        // ============================================
-        document.addEventListener('DOMContentLoaded', () => {
-            updateGreeting();
-            checkAuth();
-        });
-
-        // Refresh stats periodically (every 30 seconds)
+        // Auto-refresh stats every 30 seconds
         setInterval(() => {
-            if (currentUser) {
-                loadDashboardStats();
-            }
+            if (currentUser) refreshStats();
         }, 30000);
     </script>
 </body>
