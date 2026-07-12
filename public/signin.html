@@ -1,674 +1,455 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Hero Banner Management</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Admin Login | JAYENWARE</title>
+  <meta name="description" content="Secure admin panel login for Hero Banner Management." />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+  <script src="/fonts.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1d1d1f',
+            accent: '#86868b',
+            soft: '#f5f5f7',
+            blue: '#007aff'
+          },
+          fontFamily: {
+            sans: ["'Inter', 'sans-serif'"],
+            serif: ["'Manrope', 'sans-serif'"],
+            mono: ["'Sora', 'sans-serif'"]
+          }
         }
+      }
+    }
+  </script>
 
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 450px;
-            overflow: hidden;
-            animation: slideUp 0.5s ease;
-        }
+  <style>
+    :root {
+      --primary: #1d1d1f;
+      --accent: #86868b;
+      --soft: #f5f5f7;
+      --blue: #007aff;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #ffffff;
+      color: #1d1d1f;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    /* Card Animation */
+    .login-card {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+      will-change: transform, opacity;
+    }
+    .login-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-        .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px 30px;
-            text-align: center;
-            color: white;
-        }
+    /* Custom focus styles */
+    .custom-input:focus {
+      border-color: #1d1d1f;
+      box-shadow: 0 0 0 3px rgba(29,29,31,0.08);
+    }
 
-        .login-header .logo {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
+    /* Shake animation */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
 
-        .login-header .logo svg {
-            width: 50px;
-            height: 50px;
-            fill: #667eea;
-        }
+    /* Spinner */
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading .spinner {
+      display: inline-block;
+    }
+    .loading .btn-text {
+      display: none;
+    }
 
-        .login-header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .login-header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .login-body {
-            padding: 40px 30px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .form-group .input-icon {
-            position: relative;
-        }
-
-        .form-group .input-icon svg {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            fill: #999;
-            transition: fill 0.3s;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 15px 14px 45px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px;
-            transition: all 0.3s;
-            outline: none;
-            background: #f8f9fa;
-        }
-
-        .form-group input:focus {
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-group input:focus + svg,
-        .form-group input:focus ~ svg {
-            fill: #667eea;
-        }
-
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            font-size: 14px;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #666;
-        }
-
-        .remember-me input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: #667eea;
-        }
-
-        .forgot-password {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .forgot-password:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .login-btn:active {
-            transform: translateY(0);
-        }
-
-        .login-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .login-btn .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .login-btn.loading .spinner {
-            display: inline-block;
-        }
-
-        .login-btn.loading .btn-text {
-            display: none;
-        }
-
-        .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
-            border-left: 4px solid #c33;
-        }
-
-        .error-message.show {
-            display: block;
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .success-message {
-            background: #efe;
-            color: #3c3;
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
-            border-left: 4px solid #3c3;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
-        .login-footer {
-            text-align: center;
-            padding: 20px;
-            background: #f8f9fa;
-            border-top: 1px solid #e0e0e0;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .login-footer a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .login-footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-            animation: slideDown 0.3s;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h2 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .modal-close {
-            float: right;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .login-container {
-                border-radius: 0;
-                min-height: 100vh;
-            }
-            
-            .login-header {
-                padding: 30px 20px;
-            }
-            
-            .login-body {
-                padding: 30px 20px;
-            }
-        }
-    </style>
+    /* Modal backdrop */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 28px;
+      padding: 32px 28px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+      transform: translateY(10px);
+      transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+  </style>
 </head>
-<body>
-    <div class="login-container">
-        <!-- Login Header -->
-        <div class="login-header">
-            <div class="logo">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                </svg>
+<body class="antialiased bg-soft">
+
+  <div class="w-full max-w-md mx-auto px-5 py-10">
+    <!-- Login Card -->
+    <div class="login-card bg-white rounded-[32px] shadow-xl shadow-gray-200/70 p-8 md:p-10" id="loginCard">
+      
+      <!-- Logo & Title -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary text-white shadow-lg shadow-gray-300/50 mb-5">
+          <i class="fa-solid fa-layer-group text-2xl"></i>
+        </div>
+        <h1 class="font-serif text-3xl md:text-4xl font-extrabold text-primary tracking-tight">Admin Panel</h1>
+        <p class="text-accent text-sm mt-2 font-medium">Hero Banner Management</p>
+      </div>
+
+      <!-- Alert Messages -->
+      <div id="errorMessage" class="hidden bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-5 text-sm font-medium flex items-start gap-3">
+        <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
+        <span id="errorText"></span>
+      </div>
+      <div id="successMessage" class="hidden bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded-xl mb-5 text-sm font-medium flex items-start gap-3">
+        <i class="fa-solid fa-circle-check mt-0.5"></i>
+        <span id="successText"></span>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="space-y-5">
+        <div>
+          <label for="email" class="block text-sm font-semibold text-primary mb-1.5">Email Address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-accent">
+              <i class="fa-regular fa-envelope"></i>
             </div>
-            <h1>Admin Panel</h1>
-            <p>Hero Banner Management System</p>
+            <input 
+              type="email" 
+              id="email" 
+              placeholder="admin@example.com" 
+              required 
+              autocomplete="email"
+              class="custom-input w-full pl-10 pr-4 py-3 bg-soft border-2 border-gray-200 rounded-xl text-sm font-medium text-primary placeholder:text-gray-400 outline-none transition-all duration-200"
+            >
+          </div>
         </div>
 
-        <!-- Login Body -->
-        <div class="login-body">
-            <!-- Error Message -->
-            <div class="error-message" id="errorMessage">
-                <strong>Error:</strong> <span id="errorText"></span>
+        <div>
+          <label for="password" class="block text-sm font-semibold text-primary mb-1.5">Password</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-accent">
+              <i class="fa-solid fa-lock"></i>
             </div>
-
-            <!-- Success Message -->
-            <div class="success-message" id="successMessage">
-                <span id="successText"></span>
-            </div>
-
-            <!-- Login Form -->
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <div class="input-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        </svg>
-                        <input 
-                            type="email" 
-                            id="email" 
-                            placeholder="admin@example.com" 
-                            required 
-                            autocomplete="email"
-                        >
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="input-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-                        </svg>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            placeholder="••••••••" 
-                            required 
-                            autocomplete="current-password"
-                        >
-                    </div>
-                </div>
-
-                <div class="remember-forgot">
-                    <label class="remember-me">
-                        <input type="checkbox" id="rememberMe">
-                        Remember me
-                    </label>
-                    <a href="#" class="forgot-password" id="forgotPasswordLink">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="login-btn" id="loginBtn">
-                    <span class="spinner"></span>
-                    <span class="btn-text">Sign In</span>
-                </button>
-            </form>
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="••••••••" 
+              required 
+              autocomplete="current-password"
+              class="custom-input w-full pl-10 pr-4 py-3 bg-soft border-2 border-gray-200 rounded-xl text-sm font-medium text-primary placeholder:text-gray-400 outline-none transition-all duration-200"
+            >
+          </div>
         </div>
 
-        <!-- Login Footer -->
-        <div class="login-footer">
-            <p>© 2024 Hero Banner Management. All rights reserved.</p>
-            <p>Need help? <a href="#">Contact Support</a></p>
+        <div class="flex items-center justify-between text-sm">
+          <label class="flex items-center gap-2 text-accent cursor-pointer hover:text-primary transition-colors">
+            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary accent-primary">
+            <span>Remember me</span>
+          </label>
+          <button type="button" id="forgotPasswordLink" class="font-semibold text-primary hover:text-black transition-colors underline-offset-2 hover:underline">Forgot password?</button>
         </div>
+
+        <button type="submit" id="loginBtn" class="w-full flex items-center justify-center bg-primary text-white font-semibold py-3.5 rounded-xl hover:bg-black transition-all duration-300 active:scale-[0.98] shadow-lg shadow-gray-300/40 mt-2">
+          <span class="spinner"></span>
+          <span class="btn-text flex items-center gap-2">Sign In <i class="fa-solid fa-arrow-right text-xs"></i></span>
+        </button>
+      </form>
+
+      <div class="mt-7 text-center text-sm text-accent">
+        <p>© 2024 JAYENWARE · <a href="#" class="text-primary font-medium hover:underline">Contact Support</a></p>
+      </div>
     </div>
+  </div>
 
-    <!-- Forgot Password Modal -->
-    <div class="modal" id="forgotPasswordModal">
-        <div class="modal-content">
-            <button class="modal-close" id="closeModal">&times;</button>
-            <div class="modal-header">
-                <h2>Reset Password</h2>
-                <p>Enter your email to receive reset instructions</p>
+  <!-- Forgot Password Modal -->
+  <div class="modal-overlay" id="forgotPasswordModal">
+    <div class="modal-content">
+      <div class="flex justify-between items-start mb-5">
+        <h2 class="font-serif text-2xl font-bold text-primary">Reset Password</h2>
+        <button id="closeModal" class="text-accent hover:text-primary transition-colors text-xl leading-none">&times;</button>
+      </div>
+      <p class="text-sm text-accent mb-6">Enter your email to receive reset instructions.</p>
+      <form id="resetPasswordForm" class="space-y-4">
+        <div>
+          <label for="resetEmail" class="block text-sm font-semibold text-primary mb-1.5">Email Address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-accent">
+              <i class="fa-regular fa-envelope"></i>
             </div>
-            <form id="resetPasswordForm">
-                <div class="form-group">
-                    <label for="resetEmail">Email Address</label>
-                    <div class="input-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        </svg>
-                        <input 
-                            type="email" 
-                            id="resetEmail" 
-                            placeholder="admin@example.com" 
-                            required
-                        >
-                    </div>
-                </div>
-                <button type="submit" class="login-btn">
-                    Send Reset Link
-                </button>
-            </form>
+            <input 
+              type="email" 
+              id="resetEmail" 
+              placeholder="admin@example.com" 
+              required
+              class="custom-input w-full pl-10 pr-4 py-3 bg-soft border-2 border-gray-200 rounded-xl text-sm font-medium outline-none"
+            >
+          </div>
         </div>
+        <button type="submit" class="w-full bg-primary text-white font-semibold py-3 rounded-xl hover:bg-black transition-all active:scale-[0.98]">
+          Send Reset Link
+        </button>
+      </form>
     </div>
+  </div>
 
-    <script>
-        // API Configuration
-        const API_BASE_URL = window.location.origin;
+  <script>
+    (function() {
+      const API_BASE_URL = window.location.origin;
+      
+      // DOM Elements
+      const loginForm = document.getElementById('loginForm');
+      const loginBtn = document.getElementById('loginBtn');
+      const errorMessage = document.getElementById('errorMessage');
+      const errorText = document.getElementById('errorText');
+      const successMessage = document.getElementById('successMessage');
+      const successText = document.getElementById('successText');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+      const closeModal = document.getElementById('closeModal');
+      const resetPasswordForm = document.getElementById('resetPasswordForm');
+      const rememberMe = document.getElementById('rememberMe');
+      const loginCard = document.getElementById('loginCard');
+
+      // Card entrance animation
+      setTimeout(() => {
+        loginCard.classList.add('visible');
+      }, 80);
+
+      // Show Error
+      function showError(message) {
+        errorText.textContent = message;
+        errorMessage.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+        loginCard.classList.add('shake');
+        setTimeout(() => loginCard.classList.remove('shake'), 500);
+        setTimeout(() => errorMessage.classList.add('hidden'), 6000);
+      }
+
+      // Show Success
+      function showSuccess(message) {
+        successText.textContent = message;
+        successMessage.classList.remove('hidden');
+        errorMessage.classList.add('hidden');
+        setTimeout(() => successMessage.classList.add('hidden'), 5000);
+      }
+
+      // Loading state
+      function setLoading(isLoading) {
+        if (isLoading) {
+          loginBtn.classList.add('loading');
+          loginBtn.disabled = true;
+        } else {
+          loginBtn.classList.remove('loading');
+          loginBtn.disabled = false;
+        }
+      }
+
+      // Token management (persistent with remember me)
+      function saveToken(token, refreshToken) {
+        if (rememberMe.checked) {
+          localStorage.setItem('auth_token', token);
+          if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
+        } else {
+          sessionStorage.setItem('auth_token', token);
+          if (refreshToken) sessionStorage.setItem('refresh_token', refreshToken);
+        }
+      }
+
+      function getToken() {
+        return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+      }
+
+      // Check existing auth
+      async function checkAuth() {
+        const token = getToken();
+        if (!token) return;
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.data && data.data.isAdmin) {
+              window.location.href = '/dashboard.html';
+            }
+          }
+        } catch (error) {
+          localStorage.removeItem('auth_token');
+          sessionStorage.removeItem('auth_token');
+        }
+      }
+
+      // Login handler
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        // DOM Elements
-        const loginForm = document.getElementById('loginForm');
-        const loginBtn = document.getElementById('loginBtn');
-        const errorMessage = document.getElementById('errorMessage');
-        const errorText = document.getElementById('errorText');
-        const successMessage = document.getElementById('successMessage');
-        const successText = document.getElementById('successText');
-        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
-        const closeModal = document.getElementById('closeModal');
-        const resetPasswordForm = document.getElementById('resetPasswordForm');
-        const rememberMe = document.getElementById('rememberMe');
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
 
-        // Show Error Message
-        function showError(message) {
-            errorText.textContent = message;
-            errorMessage.classList.add('show');
-            successMessage.classList.remove('show');
-            setTimeout(() => {
-                errorMessage.classList.remove('show');
-            }, 5000);
+        if (!email || !password) {
+          showError('Please enter both email and password.');
+          return;
         }
 
-        // Show Success Message
-        function showSuccess(message) {
-            successText.textContent = message;
-            successMessage.classList.add('show');
-            errorMessage.classList.remove('show');
-            setTimeout(() => {
-                successMessage.classList.remove('show');
-            }, 5000);
-        }
+        setLoading(true);
 
-        // Set Loading State
-        function setLoading(isLoading) {
-            if (isLoading) {
-                loginBtn.classList.add('loading');
-                loginBtn.disabled = true;
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            saveToken(data.data.session.access_token, data.data.session.refresh_token);
+            
+            if (data.data.isAdmin) {
+              showSuccess('Login successful! Redirecting...');
+              setTimeout(() => {
+                window.location.href = '/dashboard.html';
+              }, 800);
             } else {
-                loginBtn.classList.remove('loading');
-                loginBtn.disabled = false;
+              showError('You do not have admin privileges.');
+              // Cleanup token if not admin
+              await fetch(`${API_BASE_URL}/api/auth/logout`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${data.data.session.access_token}` }
+              }).catch(() => {});
+              localStorage.removeItem('auth_token');
+              sessionStorage.removeItem('auth_token');
             }
+          } else {
+            showError(data.error || 'Invalid credentials. Please try again.');
+          }
+        } catch (error) {
+          showError('Network error. Please check your connection.');
+          console.error('Login error:', error);
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      // Modal controls
+      forgotPasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        forgotPasswordModal.classList.add('active');
+      });
+
+      function closeForgotModal() {
+        forgotPasswordModal.classList.remove('active');
+      }
+
+      closeModal.addEventListener('click', closeForgotModal);
+      forgotPasswordModal.addEventListener('click', (e) => {
+        if (e.target === forgotPasswordModal) closeForgotModal();
+      });
+
+      // Reset password handler
+      resetPasswordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('resetEmail').value.trim();
+        if (!email) {
+          alert('Please enter your email address.');
+          return;
         }
 
-        // Save Token
-        function saveToken(token, refreshToken) {
-            if (rememberMe.checked) {
-                localStorage.setItem('auth_token', token);
-                localStorage.setItem('refresh_token', refreshToken);
-            } else {
-                sessionStorage.setItem('auth_token', token);
-                sessionStorage.setItem('refresh_token', refreshToken);
-            }
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          const data = await response.json();
+          if (response.ok && data.success) {
+            alert('Password reset link sent to your email.');
+            closeForgotModal();
+            document.getElementById('resetEmail').value = '';
+          } else {
+            alert(data.error || 'Failed to send reset link.');
+          }
+        } catch (error) {
+          alert('Network error. Please try again.');
         }
+      });
 
-        // Get Token
-        function getToken() {
-            return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
-        }
-
-        // Check if already logged in
-        async function checkAuth() {
-            const token = getToken();
-            if (!token) return;
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.data.isAdmin) {
-                        window.location.href = '/dashboard.html';
-                    }
-                }
-            } catch (error) {
-                // Token invalid, continue to login page
-                localStorage.removeItem('auth_token');
-                sessionStorage.removeItem('auth_token');
-            }
-        }
-
-        // Handle Login
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-
-            if (!email || !password) {
-                showError('Please enter both email and password');
-                return;
-            }
-
-            setLoading(true);
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    // Save tokens
-                    saveToken(data.data.session.access_token, data.data.session.refresh_token);
-                    
-                    // Check if user is admin
-                    if (data.data.isAdmin) {
-                        showSuccess('Login successful! Redirecting...');
-                        setTimeout(() => {
-                            window.location.href = '/dashboard.html';
-                        }, 1000);
-                    } else {
-                        showError('You do not have admin privileges. Please contact the administrator.');
-                        // Logout if not admin
-                        await fetch(`${API_BASE_URL}/api/auth/logout`, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${data.data.session.access_token}`
-                            }
-                        });
-                        localStorage.removeItem('auth_token');
-                        sessionStorage.removeItem('auth_token');
-                    }
-                } else {
-                    showError(data.error || 'Login failed. Please check your credentials.');
-                }
-            } catch (error) {
-                showError('Network error. Please check your connection and try again.');
-                console.error('Login error:', error);
-            } finally {
-                setLoading(false);
-            }
-        });
-
-        // Forgot Password Modal
-        forgotPasswordLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            forgotPasswordModal.classList.add('show');
-        });
-
-        closeModal.addEventListener('click', () => {
-            forgotPasswordModal.classList.remove('show');
-        });
-
-        // Close modal when clicking outside
-        forgotPasswordModal.addEventListener('click', (e) => {
-            if (e.target === forgotPasswordModal) {
-                forgotPasswordModal.classList.remove('show');
-            }
-        });
-
-        // Handle Reset Password
-        resetPasswordForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('resetEmail').value.trim();
-            
-            if (!email) {
-                alert('Please enter your email address');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email })
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    alert('Password reset link has been sent to your email.');
-                    forgotPasswordModal.classList.remove('show');
-                    document.getElementById('resetEmail').value = '';
-                } else {
-                    alert(data.error || 'Failed to send reset link.');
-                }
-            } catch (error) {
-                alert('Network error. Please try again.');
-                console.error('Reset password error:', error);
-            }
-        });
-
-        // Check authentication on page load
-        checkAuth();
-
-        // Auto-focus email field
-        document.getElementById('email').focus();
-    </script>
+      // Initial auth check & focus
+      checkAuth();
+      document.getElementById('email').focus();
+    })();
+  </script>
 </body>
 </html>
