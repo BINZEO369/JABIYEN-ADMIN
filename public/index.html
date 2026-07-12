@@ -64,14 +64,12 @@
             padding: 0;
         }
 
-        /* Admin Layout */
         .admin-layout {
             display: flex;
             min-height: 100vh;
             min-height: 100dvh;
         }
 
-        /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
             background: #fafafa;
@@ -275,7 +273,6 @@
             color: #c33;
         }
 
-        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -285,7 +282,6 @@
             flex-direction: column;
         }
 
-        /* Top Bar */
         .top-bar {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
@@ -299,12 +295,6 @@
             top: 0;
             z-index: 30;
             gap: 16px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
         }
 
         .top-bar-title {
@@ -342,25 +332,12 @@
             color: var(--primary);
         }
 
-        .top-bar-btn .notification-dot {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 8px;
-            height: 8px;
-            background: #ff3b30;
-            border-radius: 50%;
-            border: 2px solid #fff;
-        }
-
-        /* Content Area */
-        .content-area {
+        .dashboard-content {
             flex: 1;
             padding: 28px;
             background: #ffffff;
         }
 
-        /* Welcome Card */
         .welcome-card {
             background: linear-gradient(135deg, #1d1d1f 0%, #333 100%);
             border-radius: 20px;
@@ -409,7 +386,6 @@
             z-index: 1;
         }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -470,7 +446,6 @@
             margin: 0;
         }
 
-        /* Quick Actions */
         .section-title {
             font-family: 'Manrope', sans-serif;
             font-size: 18px;
@@ -518,7 +493,6 @@
             text-align: center;
         }
 
-        /* Empty State */
         .empty-state-container {
             display: flex;
             flex-direction: column;
@@ -527,6 +501,7 @@
             min-height: 200px;
             text-align: center;
             padding: 40px 20px;
+            margin-top: 20px;
         }
 
         .empty-state-icon {
@@ -558,7 +533,6 @@
             margin: 0;
         }
 
-        /* Loading Skeleton */
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -571,42 +545,6 @@
             100% { background-position: 200% 0; }
         }
 
-        /* Toast */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 200;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast {
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #fff;
-            animation: slideInRight 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            max-width: 380px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toast.success { background: #059669; }
-        .toast.error { background: #dc2626; }
-        .toast.info { background: #2563eb; }
-        .toast.warning { background: #d97706; }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
             width: 40px;
@@ -638,48 +576,37 @@
             pointer-events: auto;
         }
 
-        /* Responsive */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
             }
-
             .sidebar.open {
                 transform: translateX(0);
             }
-
             .sidebar-overlay {
                 display: block;
             }
-
             .main-content {
                 margin-left: 0;
             }
-
             .mobile-menu-toggle {
                 display: flex;
             }
-
-            .content-area {
+            .dashboard-content {
                 padding: 20px 16px;
             }
-
             .top-bar {
                 padding: 12px 16px;
             }
-
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-
             .quick-actions {
                 grid-template-columns: 1fr 1fr;
             }
-
             .welcome-card {
                 padding: 24px;
             }
-
             .welcome-card h2 {
                 font-size: 22px;
             }
@@ -689,31 +616,57 @@
             .quick-actions {
                 grid-template-columns: 1fr;
             }
-
             .top-bar-title {
                 font-size: 16px;
             }
-
-            .content-area {
+            .dashboard-content {
                 padding: 16px 12px;
             }
         }
     </style>
 </head>
 <body class="antialiased">
-    <!-- Layout will be rendered by components.js -->
-    <!-- Content will be inserted into #adminContentArea -->
+    <div class="admin-layout">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="JWAdmin.sidebar.close()"></div>
 
-    <script src="/components.js"></script>
-    <script>
-        // Dashboard specific initialization
-        document.addEventListener('admin-ready', function(e) {
-            const { page, user } = e.detail;
-            
-            // Insert dashboard content
-            const contentArea = document.getElementById('adminContentArea');
-            if (contentArea) {
-                contentArea.innerHTML = `
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="/" class="sidebar-logo">
+                    <img src="/logo.png" alt="JAYENWARE" onerror="this.style.display='none'">
+                    <span class="sidebar-logo-text">JAYENWARE</span>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav" id="sidebarNav">
+                <!-- Loaded dynamically by components.js -->
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar" id="userAvatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="userName">Admin</div>
+                        <div class="sidebar-user-role" id="userRole">Admin</div>
+                    </div>
+                    <button class="sidebar-logout" onclick="JWAdmin.logout()" title="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar" id="topBar">
+                <!-- Loaded dynamically by components.js -->
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content" id="dashboardContent">
+                <div id="dashboardHome">
                     <!-- Welcome Card -->
                     <div class="welcome-card">
                         <h2 id="greetingText">Good Morning</h2>
@@ -722,13 +675,13 @@
                     </div>
 
                     <!-- Stats Grid -->
-                    <div class="stats-grid">
+                    <div class="stats-grid" id="statsGrid">
                         <div class="stat-card">
                             <div class="stat-icon purple">
                                 <i class="fa-solid fa-image"></i>
                             </div>
                             <div class="stat-info">
-                                <p class="stat-number skeleton" id="statHeroPrimary">&nbsp;</p>
+                                <p class="stat-number skeleton" id="statHeroPrimary" style="width:60px;height:28px;">&nbsp;</p>
                                 <p class="stat-label">Hero Banners</p>
                             </div>
                         </div>
@@ -737,7 +690,7 @@
                                 <i class="fa-solid fa-images"></i>
                             </div>
                             <div class="stat-info">
-                                <p class="stat-number skeleton" id="statHeroSecondary">&nbsp;</p>
+                                <p class="stat-number skeleton" id="statHeroSecondary" style="width:60px;height:28px;">&nbsp;</p>
                                 <p class="stat-label">Secondary Banners</p>
                             </div>
                         </div>
@@ -746,7 +699,7 @@
                                 <i class="fa-solid fa-users-gear"></i>
                             </div>
                             <div class="stat-info">
-                                <p class="stat-number skeleton" id="statAdmins">&nbsp;</p>
+                                <p class="stat-number skeleton" id="statAdmins" style="width:60px;height:28px;">&nbsp;</p>
                                 <p class="stat-label">Active Admins</p>
                             </div>
                         </div>
@@ -772,41 +725,124 @@
                             <i class="fa-solid fa-plus"></i>
                             <span>New Secondary Banner</span>
                         </a>
-                        <a href="/admin/admins" class="quick-action-btn">
+                        <button class="quick-action-btn" onclick="JWAdmin.navigateTo('admins')">
                             <i class="fa-solid fa-user-plus"></i>
                             <span>Manage Admins</span>
-                        </a>
-                        <a href="/admin/settings" class="quick-action-btn">
+                        </button>
+                        <button class="quick-action-btn" onclick="JWAdmin.navigateTo('settings')">
                             <i class="fa-solid fa-gear"></i>
                             <span>Settings</span>
-                        </a>
+                        </button>
                     </div>
 
                     <!-- Placeholder -->
-                    <div class="empty-state-container" style="margin-top:20px;">
+                    <div class="empty-state-container">
                         <div class="empty-state-icon">
                             <i class="fa-solid fa-cube"></i>
                         </div>
                         <h3>Content Area Ready</h3>
                         <p>This section is ready for future content modules and features.</p>
                     </div>
-                `;
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load Components -->
+    <script src="/components.js"></script>
+    
+    <script>
+        // ============================================
+        // Dashboard Initialization
+        // ============================================
+        
+        let dashboardStats = null;
+
+        // Update greeting based on time
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            let greeting;
+            if (hour < 12) greeting = 'Good Morning';
+            else if (hour < 17) greeting = 'Good Afternoon';
+            else greeting = 'Good Evening';
+            document.getElementById('greetingText').textContent = greeting;
+        }
+
+        // Load dashboard stats
+        async function loadDashboardStats() {
+            try {
+                const data = await JWAdmin.api.get('/api/admin/stats');
+                
+                if (data.success) {
+                    dashboardStats = data.data;
+                    updateStatsDisplay();
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+                document.getElementById('statHeroPrimary').textContent = '0';
+                document.getElementById('statHeroSecondary').textContent = '0';
+                document.getElementById('statAdmins').textContent = '0';
+                document.getElementById('statActive').textContent = '0';
+            }
+        }
+
+        function updateStatsDisplay() {
+            if (!dashboardStats) return;
+
+            document.getElementById('statHeroPrimary').textContent = dashboardStats.totalHeroes || 0;
+            document.getElementById('statHeroPrimary').classList.remove('skeleton');
+            
+            document.getElementById('statHeroSecondary').textContent = dashboardStats.totalSecondaryHeroes || 0;
+            document.getElementById('statHeroSecondary').classList.remove('skeleton');
+            
+            document.getElementById('statAdmins').textContent = dashboardStats.totalActiveAdmins || 0;
+            document.getElementById('statAdmins').classList.remove('skeleton');
+            
+            const totalActive = (dashboardStats.totalHeroes || 0) + (dashboardStats.totalSecondaryHeroes || 0);
+            document.getElementById('statActive').textContent = totalActive;
+        }
+
+        // Initialize
+        async function init() {
+            updateGreeting();
+            
+            // Check authentication
+            const isAuth = await JWAdmin.checkAuthAndRedirect();
+            if (!isAuth) return;
+
+            // Load sidebar navigation
+            JWAdmin.sidebar.init({
+                activePage: 'dashboard',
+                containerId: 'sidebarNav'
+            });
+
+            // Load top bar
+            JWAdmin.header.init({
+                containerId: 'topBar',
+                title: 'Dashboard',
+                showRefresh: true,
+                showNotifications: true
+            });
+
+            // Load user info
+            const user = await JWAdmin.getCurrentUser();
+            if (user) {
+                JWAdmin.updateUserDisplay(user);
             }
 
-            // Update greeting
-            if (window.AdminHeader) {
-                window.AdminHeader.updateGreeting();
-            }
-        });
+            // Load stats
+            loadDashboardStats();
+        }
 
-        // Initialize with components
-        window.AdminInit.init({
-            pageTitle: 'Dashboard',
-            loadStats: true,
-            onReady: function() {
-                console.log('Admin Dashboard ready');
+        // Start when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Refresh stats periodically
+        setInterval(() => {
+            if (JWAdmin.getToken()) {
+                loadDashboardStats();
             }
-        });
+        }, 30000);
     </script>
 </body>
 </html>
