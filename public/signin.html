@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Sign In | JAYENWARE</title>
+  <meta name="description" content="Sign in to your JAYENWARE account" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <script src="/fonts.js"></script>
+  <script src="/footer.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1d1d1f',
+            accent: '#86868b',
+            soft: '#f5f5f7',
+            blue: '#007aff'
+          },
+          fontFamily: {
+            sans: ["'Inter', 'sans-serif'"],
+            serif: ["'Manrope', 'sans-serif'"],
+            mono: ["'Sora', 'sans-serif'"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary: #1d1d1f;
+      --accent: #86868b;
+      --soft: #f5f5f7;
+      --blue: #007aff;
+      --error: #ff3b30;
+      --success: #34c759;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #ffffff;
+      color: #1d1d1f;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Auth Container */
+    .auth-container {
+      min-height: calc(100vh - 180px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 40px 36px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: cardSlideUp 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    @keyframes cardSlideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @media (max-width: 480px) {
+      .auth-card {
+        padding: 28px 20px;
+        border-radius: 20px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.05);
+      }
+    }
+
+    /* Branding */
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .auth-brand img {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      border-radius: 12px;
+    }
+    .auth-brand h1 {
+      font-family: 'Manrope', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0 0 4px 0;
+      letter-spacing: -0.02em;
+    }
+    .auth-brand p {
+      font-size: 14px;
+      color: var(--accent);
+      margin: 0;
+      font-weight: 400;
+    }
+
+    /* Form Groups */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+    .form-group label .required-star {
+      color: var(--error);
+      margin-left: 2px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      color: var(--primary);
+      background: #ffffff;
+      transition: all 0.25s ease;
+      outline: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+    .form-group input::placeholder {
+      color: #c7c7cc;
+    }
+    .form-group input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    }
+    .form-group input.error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.08);
+    }
+    .form-group input.success {
+      border-color: var(--success);
+    }
+
+    /* Password wrapper */
+    .password-wrapper {
+      position: relative;
+    }
+    .password-wrapper input {
+      padding-right: 48px;
+    }
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 6px;
+      transition: color 0.2s ease;
+      z-index: 2;
+    }
+    .password-toggle:hover {
+      color: var(--primary);
+    }
+
+    /* Error message */
+    .field-error {
+      font-size: 12px;
+      color: var(--error);
+      margin-top: 4px;
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+    .field-error.visible {
+      display: flex;
+    }
+    .field-error i {
+      font-size: 11px;
+    }
+
+    /* General error alert */
+    .alert-error {
+      background: #fff0ef;
+      border: 1.5px solid #ffd1cf;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #cc1a14;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .alert-error.visible {
+      display: flex;
+    }
+    .alert-error i {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Forgot password */
+    .forgot-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+      margin-top: -8px;
+    }
+    .forgot-link {
+      font-size: 13px;
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .forgot-link:hover {
+      color: #0056b3;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--primary);
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+    .btn-submit:hover {
+      background: #333;
+      transform: translateY(-2px) translateZ(0);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .btn-submit:active {
+      transform: scale(0.98) translateZ(0);
+    }
+    .btn-submit:disabled {
+      background: #a1a1a6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-submit .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    .btn-submit.loading .spinner {
+      display: inline-block;
+    }
+    .btn-submit.loading .btn-text {
+      display: none;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e5ea;
+    }
+    .auth-divider span {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Footer link */
+    .auth-footer {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .auth-footer p {
+      font-size: 14px;
+      color: var(--accent);
+      margin: 0;
+    }
+    .auth-footer a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    .auth-footer a:hover {
+      color: #0056b3;
+    }
+
+    /* Toast / Alert */
+    .toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      background: #1d1d1f;
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 999;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 90vw;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast.error {
+      background: #ff3b30;
+    }
+    .toast.success {
+      background: #1d1d1f;
+    }
+    .toast i {
+      font-size: 16px;
+    }
+
+    /* Remember me */
+    .remember-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .remember-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+    .remember-row label {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <div id="dynamic-header"></div>
+
+  <main>
+    <div class="auth-container">
+      <div class="auth-card" id="auth-card">
+        
+        <!-- Branding -->
+        <div class="auth-brand">
+          <img src="/logo.png" alt="JAYENWARE" onerror="this.style.display='none';" />
+          <h1>Welcome Back</h1>
+          <p>Sign in to continue your journey</p>
+        </div>
+
+        <!-- General Error Alert -->
+        <div class="alert-error" id="alert-error">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span id="alert-message">Invalid email or password</span>
+        </div>
+
+        <!-- Form -->
+        <form id="login-form" novalidate autocomplete="on">
+          
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email Address <span class="required-star">*</span></label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              placeholder="you@example.com" 
+              required 
+              autocomplete="email"
+              inputmode="email"
+            />
+            <div class="field-error" id="error-email">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>Valid email is required</span>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password">Password <span class="required-star">*</span></label>
+            <div class="password-wrapper">
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                placeholder="Enter your password" 
+                required 
+                autocomplete="current-password"
+                minlength="8"
+              />
+              <button type="button" class="password-toggle" id="password-toggle" tabindex="-1" aria-label="Show password">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+            <div class="field-error" id="error-password">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>Password is required</span>
+            </div>
+          </div>
+
+          <!-- Forgot Password -->
+          <div class="forgot-row">
+            <a href="/forgot-password" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <!-- Remember Me -->
+          <div class="remember-row">
+            <input type="checkbox" id="remember" name="remember" />
+            <label for="remember">Remember me for 30 days</label>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-submit" id="submit-btn">
+            <span class="btn-text">Sign In</span>
+            <span class="spinner"></span>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="auth-divider">
+          <span>New to JAYENWARE?</span>
+        </div>
+
+        <!-- Footer Link -->
+        <div class="auth-footer">
+          <p>
+            <a href="/signup">Create a new account</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-circle-check" id="toast-icon"></i>
+    <span id="toast-message"></span>
+  </div>
+
+  <div id="dynamic-footer"></div>
+
+  <script src="/components.js"></script>
+
+  <script>
+    (function() {
+      var API_BASE = window.location.origin;
+
+      // DOM Elements
+      var form = document.getElementById('login-form');
+      var submitBtn = document.getElementById('submit-btn');
+      var alertError = document.getElementById('alert-error');
+      var alertMessage = document.getElementById('alert-message');
+      var toast = document.getElementById('toast');
+      var toastIcon = document.getElementById('toast-icon');
+      var toastMessage = document.getElementById('toast-message');
+      var passwordToggle = document.getElementById('password-toggle');
+      var passwordInput = document.getElementById('password');
+      var emailInput = document.getElementById('email');
+
+      // Show toast notification
+      function showToast(message, type) {
+        toastMessage.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        
+        if (type === 'success') {
+          toastIcon.className = 'fa-solid fa-circle-check';
+        } else {
+          toastIcon.className = 'fa-solid fa-circle-exclamation';
+        }
+
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(function() {
+          toast.classList.remove('show');
+        }, 4000);
+      }
+
+      // Show field error
+      function showFieldError(fieldId, message) {
+        var input = document.getElementById(fieldId);
+        var errorEl = document.getElementById('error-' + fieldId);
+        
+        if (input) {
+          input.classList.add('error');
+          input.classList.remove('success');
+        }
+        if (errorEl) {
+          errorEl.querySelector('span').textContent = message;
+          errorEl.classList.add('visible');
+        }
+      }
+
+      // Clear field error
+      function clearFieldError(fieldId) {
+        var input = document.getElementById(fieldId);
+        var errorEl = document.getElementById('error-' + fieldId);
+        
+        if (input) {
+          input.classList.remove('error');
+        }
+        if (errorEl) {
+          errorEl.classList.remove('visible');
+        }
+      }
+
+      // Mark field as success
+      function markFieldSuccess(fieldId) {
+        var input = document.getElementById(fieldId);
+        if (input) {
+          input.classList.remove('error');
+          input.classList.add('success');
+        }
+        var errorEl = document.getElementById('error-' + fieldId);
+        if (errorEl) {
+          errorEl.classList.remove('visible');
+        }
+      }
+
+      // Hide general alert
+      function hideAlert() {
+        alertError.classList.remove('visible');
+      }
+
+      // Show general alert
+      function showAlert(message) {
+        alertMessage.textContent = message;
+        alertError.classList.add('visible');
+      }
+
+      // Validate email
+      function validateEmail() {
+        var value = emailInput.value.trim();
+        if (!value) {
+          showFieldError('email', 'Email is required');
+          return false;
+        }
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          showFieldError('email', 'Please enter a valid email address');
+          return false;
+        }
+        markFieldSuccess('email');
+        return true;
+      }
+
+      // Validate password
+      function validatePassword() {
+        var value = passwordInput.value;
+        if (!value) {
+          showFieldError('password', 'Password is required');
+          return false;
+        }
+        if (value.length < 8) {
+          showFieldError('password', 'Password must be at least 8 characters');
+          return false;
+        }
+        markFieldSuccess('password');
+        return true;
+      }
+
+      // Validate all fields
+      function validateAll() {
+        var emailValid = validateEmail();
+        var passwordValid = validatePassword();
+        return emailValid && passwordValid;
+      }
+
+      // Set loading state
+      function setLoading(isLoading) {
+        if (isLoading) {
+          submitBtn.classList.add('loading');
+          submitBtn.disabled = true;
+        } else {
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+        }
+      }
+
+      // ✅ Save session to localStorage
+      function saveSession(session) {
+        if (session && session.access_token) {
+          localStorage.setItem('jayenware_session', JSON.stringify({
+            access_token: session.access_token,
+            expires_at: session.expires_at || null,
+            user_id: session.user?.id || null
+          }));
+        }
+      }
+
+      // Password toggle
+      passwordToggle.addEventListener('click', function() {
+        var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        var icon = passwordToggle.querySelector('i');
+        if (type === 'text') {
+          icon.className = 'fa-solid fa-eye-slash';
+          passwordToggle.setAttribute('aria-label', 'Hide password');
+        } else {
+          icon.className = 'fa-solid fa-eye';
+          passwordToggle.setAttribute('aria-label', 'Show password');
+        }
+      });
+
+      // Handle form submission
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Hide previous alert
+        hideAlert();
+
+        // Validate all fields
+        if (!validateAll()) {
+          showToast('Please fill in all required fields', 'error');
+          var firstError = form.querySelector('.error');
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstError.focus();
+          }
+          return;
+        }
+
+        // Collect form data
+        var formData = {
+          email: emailInput.value.trim(),
+          password: passwordInput.value
+        };
+
+        setLoading(true);
+
+        try {
+          var response = await fetch(API_BASE + '/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          var result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.error || result.message || 'Invalid email or password');
+          }
+
+          // ✅ Save session token to localStorage
+          if (result.session) {
+            saveSession(result.session);
+          }
+
+          // Success
+          showToast('Signed in successfully! Redirecting...', 'success');
+          
+          // Mark fields as success
+          markFieldSuccess('email');
+          markFieldSuccess('password');
+
+          // Redirect after short delay
+          var redirectUrl = result.redirect || '/account';
+          setTimeout(function() {
+            window.location.href = redirectUrl;
+          }, 1000);
+
+        } catch (error) {
+          console.error('Login error:', error);
+          
+          // Show inline alert for auth errors
+          var errorMsg = error.message || 'Something went wrong';
+          if (errorMsg.toLowerCase().includes('invalid') || 
+              errorMsg.toLowerCase().includes('credentials') ||
+              errorMsg.toLowerCase().includes('password') ||
+              errorMsg.toLowerCase().includes('email')) {
+            showAlert(errorMsg);
+            showFieldError('email', '');
+            showFieldError('password', '');
+          } else {
+            showToast(errorMsg, 'error');
+          }
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      // Real-time validation on blur
+      emailInput.addEventListener('blur', function() {
+        if (emailInput.value.trim()) {
+          validateEmail();
+        }
+      });
+
+      passwordInput.addEventListener('blur', function() {
+        if (passwordInput.value) {
+          validatePassword();
+        }
+      });
+
+      // Clear errors on input
+      emailInput.addEventListener('input', function() {
+        clearFieldError('email');
+        hideAlert();
+      });
+
+      passwordInput.addEventListener('input', function() {
+        clearFieldError('password');
+        hideAlert();
+      });
+
+      // Check for redirected message (e.g., after signup)
+      document.addEventListener('DOMContentLoaded', function() {
+        // Load fonts CSS variables if available
+        if (window.JAYENWARE_FONTS) {
+          var root = document.documentElement;
+          var vars = window.JAYENWARE_FONTS.cssVariables;
+          for (var key in vars) {
+            if (vars.hasOwnProperty(key)) {
+              root.style.setProperty(key, vars[key]);
+            }
+          }
+        }
+
+        // Check URL params for messages
+        var urlParams = new URLSearchParams(window.location.search);
+        var msg = urlParams.get('message');
+        if (msg === 'signup_success') {
+          showToast('Account created successfully! Please sign in.', 'success');
+        } else if (msg === 'password_reset') {
+          showToast('Password reset successfully! Please sign in.', 'success');
+        } else if (msg === 'session_expired') {
+          showToast('Your session has expired. Please sign in again.', 'error');
+        }
+
+        // Focus email field
+        setTimeout(function() {
+          emailInput.focus();
+        }, 500);
+      });
+
+      // Global error handler for unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(event) {
+        console.error('Unhandled rejection:', event.reason);
+      });
+
+    })();
+  </script>
+</body>
+</html>
