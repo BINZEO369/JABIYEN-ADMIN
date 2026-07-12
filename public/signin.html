@@ -20,6 +20,7 @@
             --text-muted: #6b7280;
             --border-color: #d1d5db;
             --error-color: #ef4444;
+            --success-color: #10b981;
         }
 
         body {
@@ -111,16 +112,26 @@
             cursor: not-allowed;
         }
 
-        #errorMessage {
+        .alert-message {
             display: none;
-            background-color: #fee2e2;
-            color: var(--error-color);
             padding: 0.75rem;
             border-radius: 6px;
             font-size: 0.875rem;
             margin-bottom: 1rem;
             text-align: center;
-            border: 1px solid #f87171;
+            border: 1px solid transparent;
+        }
+        
+        .alert-danger {
+            background-color: #fee2e2;
+            color: var(--error-color);
+            border-color: #f87171;
+        }
+
+        .alert-success {
+            background-color: #d1fae5;
+            color: var(--success-color);
+            border-color: #34d399;
         }
     </style>
 </head>
@@ -132,7 +143,7 @@
             <p>Access the Hero Section Dashboard</p>
         </div>
 
-        <div id="errorMessage"></div>
+        <div id="alertBox" class="alert-message"></div>
 
         <form id="loginForm">
             <div class="form-group">
@@ -156,35 +167,47 @@
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ২. সেশন চেক করা (ইউজার আগে থেকেই লগ ইন করা থাকলে ড্যাশবোর্ডে পাঠিয়ে দিবে)
+        // ২. সেশন চেক করা (ইউজার অলরেডি লগইন থাকলে মেইন রুটে রিডাইরেক্ট করবে)
         async function checkSession() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
-                window.location.href = 'dashboard.html';
+                // আপনার RLS পলিসি অনুযায়ী রোল ভ্যালিডেশন
+                const role = session.user.app_metadata?.role;
+                if (role === 'admin' || role === 'super_admin') {
+                    window.location.href = 'index.html';
+                }
             }
         }
         checkSession();
 
-        // ৩. লগ ইন ফাংশনালিটি
+        // ৩. ডম এলিমেন্ট সিলেকশন
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const submitBtn = document.getElementById('submitBtn');
-        const errorMessage = document.getElementById('errorMessage');
+        const alertBox = document.getElementById('alertBox');
 
+        // এলার্ট দেখানোর হেল্পার ফাংশন
+        function showAlert(message, type = 'danger') {
+            alertBox.textContent = message;
+            alertBox.className = `alert-message alert-${type}`;
+            alertBox.style.display = 'block';
+        }
+
+        // ৪. লগ ইন সাবমিট হ্যান্ডেলার
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // UI State আপডেট করা
-            errorMessage.style.display = 'none';
-            submitBtn.textContent = 'Signing in...';
+            // UI রিসেট ও লোডিং স্টেট
+            alertBox.style.display = 'none';
+            submitBtn.textContent = 'Verifying Credentials...';
             submitBtn.disabled = true;
 
-            const email = emailInput.value;
+            const email = emailInput.value.trim();
             const password = passwordInput.value;
 
             try {
-                // Supabase Auth কল
+                // Supabase Auth এ সাইন-ইন রিকোয়েস্ট
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: password,
@@ -192,15 +215,26 @@
 
                 if (error) throw error;
 
-                // লগ ইন সফল হলে ড্যাশবোর্ডে রিডাইরেক্ট
-                window.location.href = 'dashboard.html';
+                // সেশন থেকে ইউজারের রোল (Role) বের করা
+                const userRole = data.session?.user?.app_metadata?.role;
+
+                // ৫. রোল অথরাইজেশন চেক (আপনার SQL স্ক্রিপ্টের RLS অনুযায়ী)
+                if (userRole === 'admin' || userRole === 'super_admin') {
+                    showAlert('Login Successful! Redirecting to dashboard...', 'success');
+                    
+                    // মসৃণ রিডাইরেকশনের জন্য সামান্য ডিলে
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 800);
+                } else {
+                    // যদি ইউজার অথেনটিকেটেড হয় কিন্তু এডমিন রোল না থাকে, তাহলে সেশন ক্লিয়ার করে এরর মেসেজ দেবে
+                    await supabase.auth.signOut();
+                    throw new Error("Access Denied: You do not have administrator privileges.");
+                }
 
             } catch (error) {
-                // এরর হ্যান্ডেলিং
-                errorMessage.textContent = error.message;
-                errorMessage.style.display = 'block';
-            } finally {
-                // বাটন স্টেট রিসেট
+                // যেকোনো এরর বা ভুল ক্রেডেনশিয়ালের ক্ষেত্রে মেসেজ শো করবে
+                showAlert(error.message || "Invalid login credentials.", 'danger');
                 submitBtn.textContent = 'Sign In';
                 submitBtn.disabled = false;
             }
