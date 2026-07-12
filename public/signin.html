@@ -286,6 +286,43 @@
         loginCard.classList.add('visible');
       }, 80);
 
+      // --- Cookie Management Helper Functions ---
+      function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+          const date = new Date();
+          date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+          expires = "; expires=" + date.toUTCString();
+        }
+        // SameSite=Lax helps prevent CSRF while allowing proper navigation
+        document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+      }
+
+      function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+
+      function eraseCookie(name) {
+        document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      }
+
+      function clearAllAuth() {
+        eraseCookie('auth_token');
+        eraseCookie('refresh_token');
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('refresh_token');
+        sessionStorage.removeItem('auth_token');
+        sessionStorage.removeItem('refresh_token');
+      }
+      // ------------------------------------------
+
       // Show Error
       function showError(message) {
         errorText.textContent = message;
@@ -315,8 +352,16 @@
         }
       }
 
-      // Token management
+      // Token management with Cookies & Fallbacks
       function saveToken(token, refreshToken) {
+        // If 'Remember Me' is checked, store for 30 days. Otherwise, store as session cookie.
+        const expiryDays = rememberMe.checked ? 30 : null;
+        
+        // Save to Cookies (More reliable across refreshes and tabs)
+        setCookie('auth_token', token, expiryDays);
+        if (refreshToken) setCookie('refresh_token', refreshToken, expiryDays);
+
+        // Also save to Local/Session storage as a frontend fallback
         if (rememberMe.checked) {
           localStorage.setItem('auth_token', token);
           if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
@@ -327,7 +372,8 @@
       }
 
       function getToken() {
-        return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+        // Priority: 1. Cookie -> 2. LocalStorage -> 3. SessionStorage
+        return getCookie('auth_token') || localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
       }
 
       // Check existing auth smoothly
@@ -343,13 +389,14 @@
           if (response.ok) {
             const data = await response.json();
             if (data.data && data.data.isAdmin) {
-              // Use replace to prevent back-button loops
               window.location.replace('/dashboard.html');
+            } else {
+              // Not an admin, clear the auth data safely
+              clearAllAuth();
             }
           } else if (response.status === 401 || response.status === 403) {
-            // Only remove token if it's explicitly expired/invalid
-            localStorage.removeItem('auth_token');
-            sessionStorage.removeItem('auth_token');
+            // Token expired or invalid
+            clearAllAuth();
           }
         } catch (error) {
           console.warn('Network issue during auth check. Staying on login page.');
@@ -393,8 +440,8 @@
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${data.data.session.access_token}` }
               }).catch(() => {});
-              localStorage.removeItem('auth_token');
-              sessionStorage.removeItem('auth_token');
+              
+              clearAllAuth();
             }
           } else {
             showError(data.error || 'Invalid credentials. Please try again.');
