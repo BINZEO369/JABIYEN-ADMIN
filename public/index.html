@@ -105,23 +105,38 @@
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ২. সেশন সিকিউরিটি চেক (লগইন না থাকলে সরাসরি login.html এ পাঠাবে)
+        // ২. ইনস্ট্যান্ট সিকিউরিটি চেক (Immediate Execution)
         async function checkAuth() {
             const { data: { session } } = await supabase.auth.getSession();
+            
             if (!session) {
+                // সেশন না থাকলে সরাসরি login.html এ পাঠিয়ে দেওয়া হবে
                 window.location.href = 'login.html';
-            } else {
+                return;
+            }
+
+            // রোল-বেসড সিকিউরিটি চেক (RLS পলিসি অনুযায়ী admin বা super_admin হতে হবে)
+            const role = session.user.app_metadata?.role;
+            if (role !== 'admin' && role !== 'super_admin') {
+                await supabase.auth.signOut();
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // সেশন এবং রোল ভ্যালিড থাকলে UI ভিজিবল করা এবং ডেটা লোড করা
+            document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById('userEmail').textContent = session.user.email;
                 document.getElementById('bodyCtx').classList.remove('opacity-0');
                 fetchHeroes();
-            }
+            });
         }
-        window.onload = checkAuth;
+        
+        // ফাংশনটি সাথে সাথে এক্সিকিউট করা হচ্ছে যাতে DOM লোডের জন্য অপেক্ষা করতে না হয়
+        checkAuth();
 
         // ৩. ড্যাশবোর্ডে ডেটা রিড (Read) করা
         async function fetchHeroes() {
             const tableBody = document.getElementById('heroTableBody');
-            
             try {
                 const { data, error } = await supabase
                     .from('hero')
@@ -185,11 +200,9 @@
 
             try {
                 if (id) {
-                    // Update Operation
                     const { error } = await supabase.from('hero').update(payload).eq('id', id);
                     if (error) throw error;
                 } else {
-                    // Insert Operation
                     const { error } = await supabase.from('hero').insert([payload]);
                     if (error) throw error;
                 }
