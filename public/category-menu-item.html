@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Categories & Menu Management | JAYENWARE Admin</title>
-    <meta name="description" content="Manage categories, subcategories and menu items for JAYENWARE">
+    <title>Categories, Subcategories & Menu Items | JAYENWARE Admin</title>
+    <meta name="description" content="Manage categories, subcategories, and menu items for JAYENWARE">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#1d1d1f">
     <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
@@ -64,14 +63,12 @@
             padding: 0;
         }
 
-        /* Admin Layout */
         .admin-layout {
             display: flex;
             min-height: 100vh;
             position: relative;
         }
 
-        /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
             background: #fafafa;
@@ -101,7 +98,6 @@
             gap: 16px;
         }
 
-        /* Main Content */
         .main-content {
             flex: 1;
             width: 100%;
@@ -115,7 +111,6 @@
             .main-content { margin-left: var(--sidebar-width); }
         }
 
-        /* Page Action Header */
         .page-header-bar {
             background: #ffffff;
             border-bottom: 1px solid #e5e5ea;
@@ -144,6 +139,49 @@
             font-weight: 400;
         }
 
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            gap: 4px;
+            background: #f5f5f7;
+            padding: 4px;
+            border-radius: 50px;
+            margin-top: 8px;
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            border-radius: 50px;
+            border: none;
+            background: transparent;
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: #fff;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--primary);
+            background: rgba(255,255,255,0.5);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         /* Buttons */
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
@@ -161,7 +199,6 @@
         .btn-danger:hover, .btn-danger:active { background: #b91c1c; }
         .btn-sm { padding: 6px 14px; font-size: 12px; min-height: 32px; }
 
-        /* Content Area */
         .content-area {
             flex: 1; padding: 30px 24px; max-width: 1400px;
             width: 100%; margin: 0 auto;
@@ -179,31 +216,6 @@
             font-size: 13px; color: var(--accent); margin: 4px 0 0;
         }
 
-        /* Tab Navigation */
-        .tab-nav {
-            display: flex; gap: 4px; background: #f5f5f7;
-            padding: 4px; border-radius: 12px; margin-bottom: 24px;
-            overflow-x: auto; -webkit-overflow-scrolling: touch;
-        }
-        .tab-btn {
-            padding: 10px 20px; border-radius: 10px; border: none;
-            background: transparent; color: var(--accent); font-size: 13px;
-            font-weight: 600; cursor: pointer; transition: all 0.2s ease;
-            white-space: nowrap; font-family: 'Inter', sans-serif;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .tab-btn.active {
-            background: #fff; color: var(--primary);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-        .tab-btn:hover:not(.active) { color: var(--primary); }
-        .tab-badge {
-            background: #e5e5ea; color: var(--accent); padding: 2px 8px;
-            border-radius: 12px; font-size: 11px; font-weight: 700;
-        }
-        .tab-btn.active .tab-badge { background: var(--primary); color: #fff; }
-
-        /* Table Components */
         .table-container {
             background: #ffffff; border: 1px solid #e5e5ea;
             border-radius: 16px; overflow: hidden; margin-bottom: 24px;
@@ -217,21 +229,17 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #fafafa; }
 
-        .image-thumb {
-            width: 48px; height: 48px; border-radius: 10px;
-            background: #f5f5f7; display: flex; align-items: center;
-            justify-content: center; border: 1px solid #e5e5ea;
+        .img-thumb {
+            width: 48px; height: 48px; border-radius: 10px; 
+            background: #f5f5f7; display: flex; align-items: center; 
+            justify-content: center; border: 1px solid #e5e5ea; 
             overflow: hidden; flex-shrink: 0;
         }
-        .image-thumb img {
+        .img-thumb img {
             width: 100%; height: 100%; object-fit: cover;
         }
-        .image-thumb i { color: #d1d1d6; font-size: 18px; }
-
-        .slug-display {
-            font-family: 'Sora', monospace; font-size: 11px; color: var(--accent);
-            display: block; background: #f5f5f7; padding: 3px 8px; border-radius: 5px;
-            margin-top: 4px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        .img-thumb i {
+            color: #d1d1d6; font-size: 18px;
         }
         
         .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
@@ -241,16 +249,6 @@
         .status-dot.active { background: #059669; }
         .status-dot.inactive { background: #dc2626; }
 
-        .menu-type-badge {
-            display: inline-block; padding: 3px 10px; border-radius: 6px;
-            font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
-        }
-        .menu-type-badge.link { background: #eff6ff; color: #2563eb; }
-        .menu-type-badge.category { background: #f0fdf4; color: #059669; }
-        .menu-type-badge.subcategory { background: #fefce8; color: #ca8a04; }
-        .menu-type-badge.external { background: #fdf2f8; color: #be185d; }
-        .menu-type-badge.mega_menu { background: #f5f3ff; color: #7c3aed; }
-
         .actions-cell { display: flex; gap: 8px; align-items: center; }
         .action-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid #e5e5ea; background: #fff; color: #555; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 13px; flex-shrink: 0; }
         .action-btn:hover, .action-btn:active { background: #f5f5f7; border-color: #d1d1d6; color: var(--primary); transform: scale(1.05); }
@@ -259,7 +257,6 @@
         .action-btn.toggle:hover { background: #f0fdf4; border-color: #bbf7d0; color: #059669; }
         .action-btn.meta:hover { background: #fefce8; border-color: #fef08a; color: #ca8a04; }
 
-        /* Modal Settings */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.25s ease; }
         .modal-overlay.show { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -274,7 +271,6 @@
         .modal-body { padding: 24px; flex: 1; }
         .modal-footer { padding: 16px 24px; display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #e5e5ea; position: sticky; bottom: 0; background: #fff; z-index: 10; }
 
-        /* Form Controls */
         .form-group { margin-bottom: 18px; }
         .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
         .form-input, .form-textarea, .form-select { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5ea; border-radius: 12px; font-size: 16px; font-family: 'Inter', sans-serif; color: var(--primary); background: #fafafa; transition: all 0.2s ease; outline: none; -webkit-appearance: none; }
@@ -289,7 +285,6 @@
         .form-check input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; border-radius: 6px; }
         .form-check label { font-size: 14px; font-weight: 500; color: var(--primary); cursor: pointer; }
 
-        /* Collapsible Section */
         .collapsible-header {
             display: flex; align-items: center; justify-content: space-between;
             padding: 14px 0; cursor: pointer; user-select: none;
@@ -304,7 +299,6 @@
         .collapsible-content { display: none; }
         .collapsible-content.open { display: block; }
 
-        /* Toasts, Overlays & Empty States */
         .toast-container { position: fixed; top: 20px; right: 20px; left: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; pointer-events: none; align-items: center; }
         @media (min-width: 640px) { .toast-container { left: auto; align-items: flex-end; } }
         .toast { padding: 14px 20px; border-radius: 14px; font-size: 13px; font-weight: 600; color: #fff; animation: slideInDown 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); max-width: 380px; width: 100%; display: flex; align-items: center; gap: 12px; pointer-events: auto; }
@@ -330,7 +324,17 @@
         .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: inline-block; }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-        /* Responsive Settings */
+        .slug-display {
+            font-family: 'Sora', monospace; font-size: 11px; color: var(--accent);
+            max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            display: block; background: #f5f5f7; padding: 4px 8px; border-radius: 6px;
+        }
+
+        .badge-tag {
+            display: inline-block; padding: 3px 8px; border-radius: 12px;
+            font-size: 11px; font-weight: 600; white-space: nowrap;
+        }
+
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
@@ -339,7 +343,8 @@
         @media (max-width: 639px) {
             .content-area { padding: 16px 12px; }
             .page-header-bar { padding: 40px 16px 24px; }
-            .page-header-bar .btn { width: 100%; max-width: 300px; }
+            .tab-navigation { flex-wrap: wrap; justify-content: center; }
+            .tab-btn { font-size: 12px; padding: 8px 16px; }
             .modal-overlay { align-items: flex-end; padding: 0; }
             .modal { max-width: 100%; border-radius: 24px 24px 0 0; max-height: 85vh; margin: 0; }
             .modal-footer { flex-direction: column-reverse; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
@@ -359,156 +364,170 @@
 
             <div class="page-header-bar">
                 <h1 class="page-header-title">Categories & Menu</h1>
-                <p class="page-header-subtitle">Manage categories, subcategories and navigation menu items</p>
+                <p class="page-header-subtitle">Manage categories, subcategories, and navigation menu items</p>
 
-                <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
-                    <button class="btn btn-primary" onclick="openCategoryModal()">
-                        <i class="fa-solid fa-folder-plus"></i>
-                        <span>Add Category</span>
+                <div class="tab-navigation" id="tabNavigation">
+                    <button class="tab-btn active" data-tab="categories">
+                        <i class="fa-solid fa-layer-group"></i> Categories
                     </button>
-                    <button class="btn btn-outline" onclick="openSubcategoryModal()">
-                        <i class="fa-solid fa-folder-tree"></i>
-                        <span>Add Subcategory</span>
+                    <button class="tab-btn" data-tab="subcategories">
+                        <i class="fa-solid fa-folder-tree"></i> Subcategories
                     </button>
-                    <button class="btn btn-outline" onclick="openMenuItemModal()">
-                        <i class="fa-solid fa-bars"></i>
-                        <span>Add Menu Item</span>
+                    <button class="tab-btn" data-tab="menuitems">
+                        <i class="fa-solid fa-bars"></i> Menu Items
                     </button>
                 </div>
             </div>
 
             <div class="content-area">
-                <!-- Tab Navigation -->
-                <div class="tab-nav" id="tabNav">
-                    <button class="tab-btn active" data-tab="categories" onclick="switchTab('categories')">
-                        <i class="fa-solid fa-folder"></i>
-                        Categories
-                        <span class="tab-badge" id="catCount">0</span>
-                    </button>
-                    <button class="tab-btn" data-tab="subcategories" onclick="switchTab('subcategories')">
-                        <i class="fa-solid fa-folder-tree"></i>
-                        Subcategories
-                        <span class="tab-badge" id="subcatCount">0</span>
-                    </button>
-                    <button class="tab-btn" data-tab="menuitems" onclick="switchTab('menuitems')">
-                        <i class="fa-solid fa-bars-staggered"></i>
-                        Menu Items
-                        <span class="tab-badge" id="menuCount">0</span>
-                    </button>
-                </div>
-
-                <!-- Categories Table -->
-                <div class="table-container tab-content" id="categoriesTab">
-                    <div class="section-header" style="padding:20px 20px 0;">
+                <!-- Categories Tab -->
+                <div class="tab-content active" id="tab-categories">
+                    <div class="section-header">
                         <div>
                             <h2 class="section-title">All Categories</h2>
-                            <p class="section-subtitle">Manage main product/service categories</p>
+                            <p class="section-subtitle">Manage product categories with SEO metadata and media</p>
+                        </div>
+                        <div style="display:flex;gap:12px;align-items:center;">
+                            <div style="display:flex;align-items:center;background:#f5f5f7;padding:6px 14px;border-radius:30px;">
+                                <span style="font-size:13px;font-weight:600;color:var(--accent);">Total:</span>
+                                <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:var(--primary);margin-left:6px;" id="categoryTotalCount">0</span>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="openCategoryModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Category</span>
+                            </button>
                         </div>
                     </div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Slug</th>
-                                    <th>Subcategories</th>
-                                    <th>Order</th>
-                                    <th>Status</th>
-                                    <th style="text-align:right;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="categoriesTableBody"></tbody>
-                        </table>
-                    </div>
-                    <div class="empty-state" id="categoriesEmptyState">
-                        <div class="empty-state-icon">
-                            <i class="fa-solid fa-folder-open"></i>
+
+                    <div class="table-container">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Name / Slug</th>
+                                        <th>Media</th>
+                                        <th>Order</th>
+                                        <th>Status</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categoryTableBody"></tbody>
+                            </table>
                         </div>
-                        <h3>No Categories Yet</h3>
-                        <p>Create your first product category to get started.</p>
-                        <button class="btn btn-primary" onclick="openCategoryModal()">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Add First Category</span>
-                        </button>
+                        <div class="empty-state" id="categoryEmptyState">
+                            <div class="empty-state-icon">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </div>
+                            <h3>No Categories Yet</h3>
+                            <p>Create your first category to organize products.</p>
+                            <button class="btn btn-primary" onclick="openCategoryModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add First Category</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Subcategories Table -->
-                <div class="table-container tab-content" id="subcategoriesTab" style="display:none;">
-                    <div class="section-header" style="padding:20px 20px 0;">
+                <!-- Subcategories Tab -->
+                <div class="tab-content" id="tab-subcategories">
+                    <div class="section-header">
                         <div>
                             <h2 class="section-title">All Subcategories</h2>
-                            <p class="section-subtitle">Manage subcategories under main categories</p>
+                            <p class="section-subtitle">Manage subcategories under parent categories</p>
+                        </div>
+                        <div style="display:flex;gap:12px;align-items:center;">
+                            <select class="form-select" id="subcategoryFilterCategory" style="width:auto;min-width:180px;" onchange="loadSubcategories()">
+                                <option value="">All Categories</option>
+                            </select>
+                            <div style="display:flex;align-items:center;background:#f5f5f7;padding:6px 14px;border-radius:30px;">
+                                <span style="font-size:13px;font-weight:600;color:var(--accent);">Total:</span>
+                                <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:var(--primary);margin-left:6px;" id="subcategoryTotalCount">0</span>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="openSubcategoryModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Subcategory</span>
+                            </button>
                         </div>
                     </div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Parent Category</th>
-                                    <th>Slug</th>
-                                    <th>Order</th>
-                                    <th>Status</th>
-                                    <th style="text-align:right;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="subcategoriesTableBody"></tbody>
-                        </table>
-                    </div>
-                    <div class="empty-state" id="subcategoriesEmptyState">
-                        <div class="empty-state-icon">
-                            <i class="fa-solid fa-folder-tree"></i>
+
+                    <div class="table-container">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Name / Slug</th>
+                                        <th>Parent Category</th>
+                                        <th>Order</th>
+                                        <th>Status</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subcategoryTableBody"></tbody>
+                            </table>
                         </div>
-                        <h3>No Subcategories Yet</h3>
-                        <p>Add subcategories to organize your categories better.</p>
-                        <button class="btn btn-primary" onclick="openSubcategoryModal()">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Add First Subcategory</span>
-                        </button>
+                        <div class="empty-state" id="subcategoryEmptyState">
+                            <div class="empty-state-icon">
+                                <i class="fa-solid fa-folder-tree"></i>
+                            </div>
+                            <h3>No Subcategories Yet</h3>
+                            <p>Create subcategories to further organize your products.</p>
+                            <button class="btn btn-primary" onclick="openSubcategoryModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add First Subcategory</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Menu Items Table -->
-                <div class="table-container tab-content" id="menuitemsTab" style="display:none;">
-                    <div class="section-header" style="padding:20px 20px 0;">
+                <!-- Menu Items Tab -->
+                <div class="tab-content" id="tab-menuitems">
+                    <div class="section-header">
                         <div>
                             <h2 class="section-title">All Menu Items</h2>
-                            <p class="section-subtitle">Manage navigation menu structure</p>
+                            <p class="section-subtitle">Manage navigation menu items with badges, icons, and links</p>
                         </div>
-                        <button class="btn btn-sm btn-outline" onclick="loadMenuTree()" title="Refresh">
-                            <i class="fa-solid fa-arrows-rotate"></i>
-                        </button>
-                    </div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Type</th>
-                                    <th>Parent</th>
-                                    <th>Link</th>
-                                    <th>Badge</th>
-                                    <th>Order</th>
-                                    <th>Status</th>
-                                    <th style="text-align:right;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="menuItemsTableBody"></tbody>
-                        </table>
-                    </div>
-                    <div class="empty-state" id="menuItemsEmptyState">
-                        <div class="empty-state-icon">
-                            <i class="fa-solid fa-bars"></i>
+                        <div style="display:flex;gap:12px;align-items:center;">
+                            <div style="display:flex;align-items:center;background:#f5f5f7;padding:6px 14px;border-radius:30px;">
+                                <span style="font-size:13px;font-weight:600;color:var(--accent);">Total:</span>
+                                <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:var(--primary);margin-left:6px;" id="menuItemTotalCount">0</span>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="openMenuItemModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Menu Item</span>
+                            </button>
                         </div>
-                        <h3>No Menu Items Yet</h3>
-                        <p>Add navigation menu items for your site.</p>
-                        <button class="btn btn-primary" onclick="openMenuItemModal()">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Add First Menu Item</span>
-                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Type</th>
+                                        <th>Link</th>
+                                        <th>Badge</th>
+                                        <th>Order</th>
+                                        <th>Status</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="menuItemTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state" id="menuItemEmptyState">
+                            <div class="empty-state-icon">
+                                <i class="fa-solid fa-bars"></i>
+                            </div>
+                            <h3>No Menu Items Yet</h3>
+                            <p>Create menu items for your navigation.</p>
+                            <button class="btn btn-primary" onclick="openMenuItemModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add First Menu Item</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -531,12 +550,18 @@
                     <div class="form-group">
                         <label class="form-label">Category Name *</label>
                         <input type="text" class="form-input" id="categoryName" placeholder="e.g., Electronics, Fashion" maxlength="200" required>
+                        <p class="form-hint">Slug will be auto-generated: category/category-name</p>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Image URL</label>
-                        <input type="url" class="form-input" id="categoryImageUrl" placeholder="https://example.com/image.jpg">
-                        <p class="form-hint">Category image/banner URL</p>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Image URL</label>
+                            <input type="url" class="form-input" id="categoryImageUrl" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Video URL</label>
+                            <input type="url" class="form-input" id="categoryVideoUrl" placeholder="https://example.com/video.mp4">
+                        </div>
                     </div>
 
                     <div class="form-row">
@@ -550,26 +575,10 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Video URL</label>
-                        <input type="url" class="form-input" id="categoryVideoUrl" placeholder="https://example.com/video.mp4">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Video CTA Title</label>
-                            <input type="text" class="form-input" id="categoryVideoCtaTitle" placeholder="e.g., Watch Demo">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Video CTA Link</label>
-                            <input type="text" class="form-input" id="categoryVideoCtaLink" placeholder="/videos/demo">
-                        </div>
-                    </div>
-
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Sort Order</label>
-                            <input type="number" class="form-input" id="categorySortOrder" placeholder="0" value="0" min="0">
+                            <input type="number" class="form-input" id="categorySortOrder" placeholder="0" value="0" min="0" max="999">
                         </div>
                         <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
                             <div class="form-check">
@@ -580,11 +589,14 @@
                     </div>
 
                     <!-- SEO Metadata -->
-                    <div class="collapsible-header" onclick="toggleCategoryMeta()">
-                        <h4><i class="fa-solid fa-magnifying-glass"></i> SEO Metadata</h4>
-                        <i class="fa-solid fa-chevron-down" id="categoryMetaChevron"></i>
+                    <div class="collapsible-header" id="categoryMetaCollapsibleHeader" onclick="toggleCategoryMetaSection()">
+                        <h4>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            SEO Metadata
+                        </h4>
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
-                    <div class="collapsible-content" id="categoryMetaContent">
+                    <div class="collapsible-content" id="categoryMetaCollapsibleContent">
                         <div class="form-group">
                             <label class="form-label">Meta Title</label>
                             <input type="text" class="form-input" id="categoryMetaTitle" placeholder="SEO meta title" maxlength="200">
@@ -594,12 +606,8 @@
                             <textarea class="form-textarea" id="categoryMetaDescription" placeholder="SEO meta description" maxlength="300" rows="2"></textarea>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Video Schema (JSON-LD)</label>
-                            <textarea class="form-textarea" id="categoryVideoSchema" placeholder='{"@context":"https://schema.org",...}' rows="3" style="font-family:'Sora',monospace;font-size:12px;"></textarea>
-                        </div>
-                        <div class="form-group">
                             <label class="form-label">Keywords</label>
-                            <input type="text" class="form-input" id="categoryKeywords" placeholder="keyword1, keyword2" maxlength="500">
+                            <input type="text" class="form-input" id="categoryKeywords" placeholder="keyword1, keyword2, keyword3" maxlength="500">
                         </div>
                     </div>
                 </form>
@@ -629,52 +637,32 @@
                     
                     <div class="form-group">
                         <label class="form-label">Parent Category *</label>
-                        <select class="form-select" id="subcategoryParentId" required>
-                            <option value="">Select parent category</option>
+                        <select class="form-select" id="subcategoryParentCategory" required>
+                            <option value="">Select Parent Category</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Subcategory Name *</label>
-                        <input type="text" class="form-input" id="subcategoryName" placeholder="e.g., Smartphones" maxlength="200" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Image URL</label>
-                        <input type="url" class="form-input" id="subcategoryImageUrl" placeholder="https://example.com/image.jpg">
+                        <input type="text" class="form-input" id="subcategoryName" placeholder="e.g., Smartphones, T-Shirts" maxlength="200" required>
+                        <p class="form-hint">Slug will be auto-generated: category/parent-slug/subcategory-name</p>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Image CTA Title</label>
-                            <input type="text" class="form-input" id="subcategoryImageCtaTitle">
+                            <label class="form-label">Image URL</label>
+                            <input type="url" class="form-input" id="subcategoryImageUrl" placeholder="https://example.com/image.jpg">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Image CTA Link</label>
-                            <input type="text" class="form-input" id="subcategoryImageCtaLink">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Video URL</label>
-                        <input type="url" class="form-input" id="subcategoryVideoUrl">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Video CTA Title</label>
-                            <input type="text" class="form-input" id="subcategoryVideoCtaTitle">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Video CTA Link</label>
-                            <input type="text" class="form-input" id="subcategoryVideoCtaLink">
+                            <label class="form-label">Video URL</label>
+                            <input type="url" class="form-input" id="subcategoryVideoUrl" placeholder="https://example.com/video.mp4">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Sort Order</label>
-                            <input type="number" class="form-input" id="subcategorySortOrder" value="0" min="0">
+                            <input type="number" class="form-input" id="subcategorySortOrder" placeholder="0" value="0" min="0" max="999">
                         </div>
                         <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
                             <div class="form-check">
@@ -685,26 +673,25 @@
                     </div>
 
                     <!-- SEO Metadata -->
-                    <div class="collapsible-header" onclick="toggleSubcategoryMeta()">
-                        <h4><i class="fa-solid fa-magnifying-glass"></i> SEO Metadata</h4>
-                        <i class="fa-solid fa-chevron-down" id="subcategoryMetaChevron"></i>
+                    <div class="collapsible-header" id="subcategoryMetaCollapsibleHeader" onclick="toggleSubcategoryMetaSection()">
+                        <h4>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            SEO Metadata
+                        </h4>
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
-                    <div class="collapsible-content" id="subcategoryMetaContent">
+                    <div class="collapsible-content" id="subcategoryMetaCollapsibleContent">
                         <div class="form-group">
                             <label class="form-label">Meta Title</label>
-                            <input type="text" class="form-input" id="subcategoryMetaTitle" maxlength="200">
+                            <input type="text" class="form-input" id="subcategoryMetaTitle" placeholder="SEO meta title" maxlength="200">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Meta Description</label>
-                            <textarea class="form-textarea" id="subcategoryMetaDescription" maxlength="300" rows="2"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Video Schema</label>
-                            <textarea class="form-textarea" id="subcategoryVideoSchema" rows="3" style="font-family:'Sora',monospace;font-size:12px;"></textarea>
+                            <textarea class="form-textarea" id="subcategoryMetaDescription" placeholder="SEO meta description" maxlength="300" rows="2"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Keywords</label>
-                            <input type="text" class="form-input" id="subcategoryKeywords" maxlength="500">
+                            <input type="text" class="form-input" id="subcategoryKeywords" placeholder="keyword1, keyword2, keyword3" maxlength="500">
                         </div>
                     </div>
                 </form>
@@ -733,90 +720,89 @@
                     <input type="hidden" id="menuItemId" value="">
                     
                     <div class="form-group">
-                        <label class="form-label">Title *</label>
-                        <input type="text" class="form-input" id="menuItemTitle" placeholder="e.g., Home, Products" maxlength="200" required>
+                        <label class="form-label">Menu Title *</label>
+                        <input type="text" class="form-input" id="menuItemTitle" placeholder="e.g., Home, Products, About Us" maxlength="200" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Subtitle</label>
-                        <input type="text" class="form-input" id="menuItemSubtitle" placeholder="Optional subtitle" maxlength="200">
+                        <input type="text" class="form-input" id="menuItemSubtitle" placeholder="Optional subtitle for mega menu" maxlength="200">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Link *</label>
-                        <input type="text" class="form-input" id="menuItemLink" placeholder="/products or https://..." maxlength="500" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Menu Type</label>
-                        <select class="form-select" id="menuItemType">
-                            <option value="link">Link</option>
-                            <option value="category">Category</option>
-                            <option value="subcategory">Subcategory</option>
-                            <option value="external">External</option>
-                            <option value="mega_menu">Mega Menu</option>
-                        </select>
+                        <input type="text" class="form-input" id="menuItemLink" placeholder="/products or https://example.com" maxlength="500" required>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
+                            <label class="form-label">Menu Type</label>
+                            <select class="form-select" id="menuItemType" onchange="handleMenuTypeChange()">
+                                <option value="link">Link</option>
+                                <option value="category">Category</option>
+                                <option value="subcategory">Subcategory</option>
+                                <option value="external">External</option>
+                                <option value="mega_menu">Mega Menu</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="menuItemParentGroup">
                             <label class="form-label">Parent Menu Item</label>
                             <select class="form-select" id="menuItemParentId">
                                 <option value="">None (Top Level)</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="form-row" id="menuItemCategoryGroup" style="display:none;">
                         <div class="form-group">
                             <label class="form-label">Category</label>
                             <select class="form-select" id="menuItemCategoryId">
-                                <option value="">None</option>
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="menuItemSubcategoryGroup" style="display:none;">
+                            <label class="form-label">Subcategory</label>
+                            <select class="form-select" id="menuItemSubcategoryId">
+                                <option value="">Select Subcategory</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Subcategory</label>
-                        <select class="form-select" id="menuItemSubcategoryId">
-                            <option value="">None</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Image URL</label>
-                        <input type="url" class="form-input" id="menuItemImageUrl" placeholder="https://example.com/menu-image.jpg">
-                    </div>
-
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Image CTA Title</label>
-                            <input type="text" class="form-input" id="menuItemImageCtaTitle">
+                            <label class="form-label">Image URL</label>
+                            <input type="url" class="form-input" id="menuItemImageUrl" placeholder="https://example.com/image.jpg">
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Image CTA Link</label>
-                            <input type="text" class="form-input" id="menuItemImageCtaLink">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Icon Class</label>
                             <input type="text" class="form-input" id="menuItemIconClass" placeholder="fa-solid fa-home">
                             <p class="form-hint">Font Awesome icon class</p>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Badge Text</label>
-                            <input type="text" class="form-input" id="menuItemBadgeText" placeholder="e.g., NEW, SALE">
-                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Badge Color</label>
-                        <input type="text" class="form-input" id="menuItemBadgeColor" placeholder="#dc2626 or red">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Badge Text</label>
+                            <input type="text" class="form-input" id="menuItemBadgeText" placeholder="e.g., New, Sale, Hot" maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Badge Color</label>
+                            <select class="form-select" id="menuItemBadgeColor">
+                                <option value="">Default</option>
+                                <option value="#dc2626">Red</option>
+                                <option value="#059669">Green</option>
+                                <option value="#2563eb">Blue</option>
+                                <option value="#ca8a04">Yellow</option>
+                                <option value="#7c3aed">Purple</option>
+                                <option value="#db2777">Pink</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Sort Order</label>
-                            <input type="number" class="form-input" id="menuItemSortOrder" value="0" min="0">
+                            <input type="number" class="form-input" id="menuItemSortOrder" placeholder="0" value="0" min="0" max="999">
                         </div>
                         <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
                             <div class="form-check">
@@ -864,21 +850,25 @@
         (function() {
             const API_BASE_URL = window.location.origin;
             
-            // State
-            let currentTab = 'categories';
-            let categories = [];
-            let subcategories = [];
-            let menuItems = [];
-            let deleteTarget = null; // { type, id, name }
+            // State Management
+            let currentCategories = [];
+            let currentSubcategories = [];
+            let currentMenuItems = [];
+            let deleteTargetId = null;
+            let deleteTargetType = null; // 'category', 'subcategory', 'menuitem'
+            let editingCategoryId = null;
+            let editingSubcategoryId = null;
+            let editingMenuItemId = null;
+            let categoryMetaOpen = false;
+            let subcategoryMetaOpen = false;
+            let activeTab = 'categories';
 
             // API Endpoints
-            const ENDPOINTS = {
-                categories: '/api/admin/categories',
-                subcategories: '/api/admin/subcategories',
-                menuItems: '/api/admin/menu-items'
-            };
+            const categoriesEndpoint = '/api/admin/categories';
+            const subcategoriesEndpoint = '/api/admin/subcategories';
+            const menuItemsEndpoint = '/api/admin/menu-items';
 
-            // ✅ Get admin token
+            // ✅ Get admin token from localStorage
             function getAdminToken() {
                 const stored = localStorage.getItem('jayenware_admin_session');
                 if (stored) {
@@ -924,251 +914,61 @@
                 }, 3500);
             }
 
-            function escapeHTML(str) {
-                if (!str) return '';
-                const div = document.createElement('div');
-                div.textContent = str;
-                return div.innerHTML;
-            }
-
             // Tab Switching
-            function switchTab(tab) {
-                currentTab = tab;
+            function switchTab(tabName) {
+                activeTab = tabName;
                 document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-                document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
                 
-                const tabMap = {
-                    categories: 'categoriesTab',
-                    subcategories: 'subcategoriesTab',
-                    menuitems: 'menuItemsTab'
-                };
-                document.getElementById(tabMap[tab]).style.display = 'block';
+                const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+                if (activeBtn) activeBtn.classList.add('active');
                 
-                loadCurrentTabData();
+                const activeContent = document.getElementById(`tab-${tabName}`);
+                if (activeContent) activeContent.classList.add('active');
+
+                // Load data for the active tab
+                if (tabName === 'categories') loadCategories();
+                else if (tabName === 'subcategories') loadSubcategories();
+                else if (tabName === 'menuitems') loadMenuItems();
             }
 
-            async function loadCurrentTabData() {
-                if (currentTab === 'categories') await loadCategories();
-                else if (currentTab === 'subcategories') await loadSubcategories();
-                else if (currentTab === 'menuitems') await loadMenuItems();
+            // Toggle Meta Sections
+            function toggleCategoryMetaSection() {
+                categoryMetaOpen = !categoryMetaOpen;
+                const header = document.getElementById('categoryMetaCollapsibleHeader');
+                const content = document.getElementById('categoryMetaCollapsibleContent');
+                if (categoryMetaOpen) { header.classList.add('open'); content.classList.add('open'); }
+                else { header.classList.remove('open'); content.classList.remove('open'); }
             }
 
-            // Load Categories
-            async function loadCategories() {
-                const token = getAdminToken();
-                if (!token) return;
-                
-                const tbody = document.getElementById('categoriesTableBody');
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading...</td></tr>`;
-
-                try {
-                    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.categories}`, {
-                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-                    });
-                    if (!response.ok) throw new Error('Failed to load');
-                    const data = await response.json();
-                    if (data.success) {
-                        categories = data.categories || [];
-                        renderCategoriesTable();
-                        document.getElementById('catCount').textContent = categories.length;
-                    }
-                } catch (error) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadCategories()" style="color:#007aff;cursor:pointer;background:none;border:none;font-weight:600;">Retry</button></td></tr>`;
-                }
+            function toggleSubcategoryMetaSection() {
+                subcategoryMetaOpen = !subcategoryMetaOpen;
+                const header = document.getElementById('subcategoryMetaCollapsibleHeader');
+                const content = document.getElementById('subcategoryMetaCollapsibleContent');
+                if (subcategoryMetaOpen) { header.classList.add('open'); content.classList.add('open'); }
+                else { header.classList.remove('open'); content.classList.remove('open'); }
             }
 
-            function renderCategoriesTable() {
-                const tbody = document.getElementById('categoriesTableBody');
-                const emptyState = document.getElementById('categoriesEmptyState');
+            // ==================== CATEGORIES ====================
+            function openCategoryModal(category = null) {
+                editingCategoryId = category ? category.id : null;
+                categoryMetaOpen = false;
+                document.getElementById('categoryModalTitle').textContent = category ? 'Edit Category' : 'Add New Category';
+                document.getElementById('categoryId').value = category ? category.id : '';
+                document.getElementById('categoryName').value = category ? category.name : '';
+                document.getElementById('categoryImageUrl').value = category ? (category.image_url || '') : '';
+                document.getElementById('categoryVideoUrl').value = category ? (category.video_url || '') : '';
+                document.getElementById('categoryImageCtaTitle').value = category ? (category.image_cta_title || '') : '';
+                document.getElementById('categoryImageCtaLink').value = category ? (category.image_cta_link || '') : '';
+                document.getElementById('categorySortOrder').value = category ? (category.sort_order || 0) : 0;
+                document.getElementById('categoryIsActive').checked = category ? category.is_active : true;
+                document.getElementById('categoryMetaTitle').value = category ? (category.meta_title || '') : '';
+                document.getElementById('categoryMetaDescription').value = category ? (category.meta_description || '') : '';
+                document.getElementById('categoryKeywords').value = category ? (category.keywords || '') : '';
+                document.getElementById('categorySaveBtn').innerHTML = category ? '<i class="fa-solid fa-check"></i><span>Update Category</span>' : '<i class="fa-solid fa-check"></i><span>Save Category</span>';
                 
-                if (categories.length === 0) {
-                    tbody.innerHTML = '';
-                    emptyState.style.display = 'block';
-                    return;
-                }
-                emptyState.style.display = 'none';
-
-                tbody.innerHTML = categories.map(cat => `
-                    <tr>
-                        <td>
-                            <div class="image-thumb">
-                                ${cat.image_url ? `<img src="${escapeHTML(cat.image_url)}" alt="${escapeHTML(cat.name)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}
-                            </div>
-                        </td>
-                        <td>
-                            <span style="font-weight:600;">${escapeHTML(cat.name)}</span>
-                            ${cat.meta_title ? `<span style="font-size:11px;color:var(--accent);display:block;">SEO: ${escapeHTML(cat.meta_title)}</span>` : ''}
-                        </td>
-                        <td><span class="slug-display">${escapeHTML(cat.slug || 'auto-generated')}</span></td>
-                        <td><span style="font-weight:500;">-</span></td>
-                        <td><span style="font-family:'Sora',monospace;font-weight:600;">${cat.sort_order || 0}</span></td>
-                        <td>
-                            <span class="status-badge ${cat.is_active ? 'active' : 'inactive'}">
-                                <span class="status-dot ${cat.is_active ? 'active' : 'inactive'}"></span>
-                                ${cat.is_active ? 'Active' : 'Inactive'}
-                            </span>
-                        </td>
-                        <td style="text-align:right;">
-                            <div class="actions-cell" style="justify-content:flex-end;">
-                                <button class="action-btn edit" onclick="editCategory(${cat.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="action-btn toggle" onclick="toggleCategory(${cat.id})" title="${cat.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${cat.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                <button class="action-btn delete" onclick="deleteCategory(${cat.id}, '${escapeHTML(cat.name).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-
-            // Load Subcategories
-            async function loadSubcategories() {
-                const token = getAdminToken();
-                if (!token) return;
-                
-                const tbody = document.getElementById('subcategoriesTableBody');
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading...</td></tr>`;
-
-                try {
-                    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.subcategories}`, {
-                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-                    });
-                    if (!response.ok) throw new Error('Failed to load');
-                    const data = await response.json();
-                    if (data.success) {
-                        subcategories = data.subcategories || [];
-                        renderSubcategoriesTable();
-                        document.getElementById('subcatCount').textContent = subcategories.length;
-                    }
-                } catch (error) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadSubcategories()" style="color:#007aff;cursor:pointer;background:none;border:none;font-weight:600;">Retry</button></td></tr>`;
-                }
-            }
-
-            function renderSubcategoriesTable() {
-                const tbody = document.getElementById('subcategoriesTableBody');
-                const emptyState = document.getElementById('subcategoriesEmptyState');
-                
-                if (subcategories.length === 0) {
-                    tbody.innerHTML = '';
-                    emptyState.style.display = 'block';
-                    return;
-                }
-                emptyState.style.display = 'none';
-
-                tbody.innerHTML = subcategories.map(sub => `
-                    <tr>
-                        <td>
-                            <div class="image-thumb">
-                                ${sub.image_url ? `<img src="${escapeHTML(sub.image_url)}" alt="${escapeHTML(sub.name)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}
-                            </div>
-                        </td>
-                        <td><span style="font-weight:600;">${escapeHTML(sub.name)}</span></td>
-                        <td><span style="color:var(--accent);">${sub.categories ? escapeHTML(sub.categories.name) : '-'}</span></td>
-                        <td><span class="slug-display">${escapeHTML(sub.slug || 'auto-generated')}</span></td>
-                        <td><span style="font-family:'Sora',monospace;font-weight:600;">${sub.sort_order || 0}</span></td>
-                        <td>
-                            <span class="status-badge ${sub.is_active ? 'active' : 'inactive'}">
-                                <span class="status-dot ${sub.is_active ? 'active' : 'inactive'}"></span>
-                                ${sub.is_active ? 'Active' : 'Inactive'}
-                            </span>
-                        </td>
-                        <td style="text-align:right;">
-                            <div class="actions-cell" style="justify-content:flex-end;">
-                                <button class="action-btn edit" onclick="editSubcategory(${sub.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="action-btn toggle" onclick="toggleSubcategory(${sub.id})" title="${sub.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${sub.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                <button class="action-btn delete" onclick="deleteSubcategory(${sub.id}, '${escapeHTML(sub.name).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-
-            // Load Menu Items
-            async function loadMenuItems() {
-                const token = getAdminToken();
-                if (!token) return;
-                
-                const tbody = document.getElementById('menuItemsTableBody');
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading...</td></tr>`;
-
-                try {
-                    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.menuItems}`, {
-                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-                    });
-                    if (!response.ok) throw new Error('Failed to load');
-                    const data = await response.json();
-                    if (data.success) {
-                        menuItems = data.menu_items || [];
-                        renderMenuItemsTable();
-                        document.getElementById('menuCount').textContent = menuItems.length;
-                    }
-                } catch (error) {
-                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadMenuItems()" style="color:#007aff;cursor:pointer;background:none;border:none;font-weight:600;">Retry</button></td></tr>`;
-                }
-            }
-
-            function renderMenuItemsTable() {
-                const tbody = document.getElementById('menuItemsTableBody');
-                const emptyState = document.getElementById('menuItemsEmptyState');
-                
-                if (menuItems.length === 0) {
-                    tbody.innerHTML = '';
-                    emptyState.style.display = 'block';
-                    return;
-                }
-                emptyState.style.display = 'none';
-
-                tbody.innerHTML = menuItems.map(item => `
-                    <tr>
-                        <td>
-                            <span style="font-weight:600;">${escapeHTML(item.title)}</span>
-                            ${item.subtitle ? `<span style="font-size:11px;color:var(--accent);display:block;">${escapeHTML(item.subtitle)}</span>` : ''}
-                        </td>
-                        <td><span class="menu-type-badge ${item.menu_type || 'link'}">${(item.menu_type || 'link').replace('_', ' ')}</span></td>
-                        <td><span style="font-size:12px;color:var(--accent);">${item.parent ? escapeHTML(item.parent.title) : '-'}</span></td>
-                        <td><span style="font-size:12px;color:var(--blue);">${escapeHTML(item.link || '-')}</span></td>
-                        <td>
-                            ${item.badge_text ? `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:${escapeHTML(item.badge_color || '#f5f5f7')};color:${item.badge_color ? '#fff' : 'var(--primary)'};">${escapeHTML(item.badge_text)}</span>` : '-'}
-                        </td>
-                        <td><span style="font-family:'Sora',monospace;font-weight:600;">${item.sort_order || 0}</span></td>
-                        <td>
-                            <span class="status-badge ${item.is_active ? 'active' : 'inactive'}">
-                                <span class="status-dot ${item.is_active ? 'active' : 'inactive'}"></span>
-                                ${item.is_active ? 'Active' : 'Inactive'}
-                            </span>
-                        </td>
-                        <td style="text-align:right;">
-                            <div class="actions-cell" style="justify-content:flex-end;">
-                                <button class="action-btn edit" onclick="editMenuItem(${item.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="action-btn toggle" onclick="toggleMenuItem(${item.id})" title="${item.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${item.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                <button class="action-btn delete" onclick="deleteMenuItem(${item.id}, '${escapeHTML(item.title).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-
-            // Category Modal
-            function openCategoryModal(cat = null) {
-                document.getElementById('categoryId').value = cat ? cat.id : '';
-                document.getElementById('categoryModalTitle').textContent = cat ? 'Edit Category' : 'Add New Category';
-                document.getElementById('categoryName').value = cat ? cat.name : '';
-                document.getElementById('categoryImageUrl').value = cat ? (cat.image_url || '') : '';
-                document.getElementById('categoryImageCtaTitle').value = cat ? (cat.image_cta_title || '') : '';
-                document.getElementById('categoryImageCtaLink').value = cat ? (cat.image_cta_link || '') : '';
-                document.getElementById('categoryVideoUrl').value = cat ? (cat.video_url || '') : '';
-                document.getElementById('categoryVideoCtaTitle').value = cat ? (cat.video_cta_title || '') : '';
-                document.getElementById('categoryVideoCtaLink').value = cat ? (cat.video_cta_link || '') : '';
-                document.getElementById('categorySortOrder').value = cat ? (cat.sort_order || 0) : 0;
-                document.getElementById('categoryIsActive').checked = cat ? cat.is_active : true;
-                document.getElementById('categoryMetaTitle').value = cat ? (cat.meta_title || '') : '';
-                document.getElementById('categoryMetaDescription').value = cat ? (cat.meta_description || '') : '';
-                document.getElementById('categoryVideoSchema').value = cat ? (cat.video_schema || '') : '';
-                document.getElementById('categoryKeywords').value = cat ? (cat.keywords || '') : '';
-                document.getElementById('categorySaveBtn').innerHTML = cat ? '<i class="fa-solid fa-check"></i><span>Update Category</span>' : '<i class="fa-solid fa-check"></i><span>Save Category</span>';
-                
-                document.getElementById('categoryMetaContent').classList.remove('open');
-                document.getElementById('categoryMetaChevron').style.transform = 'rotate(0deg)';
+                document.getElementById('categoryMetaCollapsibleHeader').classList.remove('open');
+                document.getElementById('categoryMetaCollapsibleContent').classList.remove('open');
                 
                 document.getElementById('categoryModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
@@ -1177,37 +977,31 @@
             function closeCategoryModal() {
                 document.getElementById('categoryModal').classList.remove('show');
                 document.body.style.overflow = '';
+                categoryMetaOpen = false;
             }
 
             async function saveCategory() {
+                const name = document.getElementById('categoryName').value.trim();
+                if (!name) { showToast('Category name is required', 'error'); return; }
+
                 const token = getAdminToken();
-                if (!token) return;
-                
-                const id = document.getElementById('categoryId').value;
-                const isEditing = !!id;
-                
+                if (!token) { showToast('Session expired. Please login again.', 'error'); window.location.href = '/signin?type=admin'; return; }
+
                 const categoryData = {
-                    name: document.getElementById('categoryName').value.trim(),
+                    name: name,
                     image_url: document.getElementById('categoryImageUrl').value.trim() || null,
+                    video_url: document.getElementById('categoryVideoUrl').value.trim() || null,
                     image_cta_title: document.getElementById('categoryImageCtaTitle').value.trim() || null,
                     image_cta_link: document.getElementById('categoryImageCtaLink').value.trim() || null,
-                    video_url: document.getElementById('categoryVideoUrl').value.trim() || null,
-                    video_cta_title: document.getElementById('categoryVideoCtaTitle').value.trim() || null,
-                    video_cta_link: document.getElementById('categoryVideoCtaLink').value.trim() || null,
                     sort_order: parseInt(document.getElementById('categorySortOrder').value) || 0,
                     is_active: document.getElementById('categoryIsActive').checked,
                     meta_title: document.getElementById('categoryMetaTitle').value.trim() || null,
                     meta_description: document.getElementById('categoryMetaDescription').value.trim() || null,
-                    video_schema: document.getElementById('categoryVideoSchema').value.trim() || null,
                     keywords: document.getElementById('categoryKeywords').value.trim() || null
                 };
 
-                if (!categoryData.name) {
-                    showToast('Category name is required', 'error');
-                    return;
-                }
-
-                const url = isEditing ? `${API_BASE_URL}${ENDPOINTS.categories}/${id}` : `${API_BASE_URL}${ENDPOINTS.categories}`;
+                const isEditing = !!editingCategoryId;
+                const url = isEditing ? `${API_BASE_URL}${categoriesEndpoint}/${editingCategoryId}` : `${API_BASE_URL}${categoriesEndpoint}`;
                 const method = isEditing ? 'PUT' : 'POST';
 
                 const saveBtn = document.getElementById('categorySaveBtn');
@@ -1216,136 +1010,189 @@
 
                 try {
                     const response = await fetch(url, {
-                        method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        method: method,
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify(categoryData)
                     });
                     const data = await response.json();
                     if (response.ok && data.success) {
-                        showToast(isEditing ? 'Category updated' : 'Category created', 'success');
+                        showToast(isEditing ? 'Category updated successfully' : 'Category created successfully', 'success');
                         closeCategoryModal();
                         loadCategories();
+                    } else if (response.status === 401 || response.status === 403) {
+                        showToast('Session expired. Please login again.', 'error');
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
                     } else {
-                        throw new Error(data.error || 'Failed to save');
+                        throw new Error(data.error || 'Failed to save category');
                     }
                 } catch (error) {
-                    showToast(error.message, 'error');
+                    showToast(error.message || 'Failed to save category', 'error');
                 } finally {
                     saveBtn.disabled = false;
-                    saveBtn.innerHTML = isEditing ? '<i class="fa-solid fa-check"></i><span>Update Category</span>' : '<i class="fa-solid fa-check"></i><span>Save Category</span>';
+                    saveBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>' + (isEditing ? 'Update Category' : 'Save Category') + '</span>';
                 }
             }
 
-            function editCategory(id) {
-                const cat = categories.find(c => c.id === id);
-                if (cat) openCategoryModal(cat);
+            async function loadCategories() {
+                const token = getAdminToken();
+                if (!token) return;
+
+                const tbody = document.getElementById('categoryTableBody');
+                const emptyState = document.getElementById('categoryEmptyState');
+                
+                tbody.innerHTML = `<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>`;
+                emptyState.style.display = 'none';
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}${categoriesEndpoint}`, {
+                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+                    });
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
+                        return;
+                    }
+                    const data = await response.json();
+                    if (data.success) {
+                        currentCategories = data.categories || [];
+                        renderCategoriesTable();
+                        document.getElementById('categoryTotalCount').textContent = currentCategories.length;
+                        // Also update subcategory filter dropdown
+                        updateCategoryFilterDropdown();
+                    }
+                } catch (error) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:#dc2626;">Failed to load categories. <button onclick="loadCategories()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>`;
+                }
             }
 
-            async function toggleCategory(id) {
+            function renderCategoriesTable() {
+                const tbody = document.getElementById('categoryTableBody');
+                const emptyState = document.getElementById('categoryEmptyState');
+                if (currentCategories.length === 0) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
+                emptyState.style.display = 'none';
+                
+                tbody.innerHTML = currentCategories.map(cat => `
+                    <tr>
+                        <td>
+                            <div class="img-thumb">
+                                ${cat.image_url ? `<img src="${escapeHTML(cat.image_url)}" alt="${escapeHTML(cat.name)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}
+                            </div>
+                        </td>
+                        <td>
+                            <span style="font-weight:600;color:var(--primary);display:block;">${escapeHTML(cat.name)}</span>
+                            ${cat.slug ? `<span class="slug-display">${escapeHTML(cat.slug)}</span>` : ''}
+                        </td>
+                        <td>
+                            ${cat.video_url ? '<i class="fa-solid fa-video" style="color:#007aff;font-size:14px;" title="Has video"></i>' : '<span style="color:#d1d1d6;">-</span>'}
+                            ${cat.image_cta_title ? `<span style="font-size:12px;margin-left:6px;background:#f5f5f7;padding:3px 8px;border-radius:6px;">${escapeHTML(cat.image_cta_title)}</span>` : ''}
+                        </td>
+                        <td><span style="font-family:'Sora',monospace;font-size:13px;font-weight:600;">${cat.sort_order || 0}</span></td>
+                        <td>
+                            <span class="status-badge ${cat.is_active ? 'active' : 'inactive'}">
+                                <span class="status-dot ${cat.is_active ? 'active' : 'inactive'}"></span>
+                                ${cat.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td style="text-align:right;">
+                            <div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn edit" onclick="openCategoryModal(${JSON.stringify(cat).replace(/"/g, '&quot;')})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="toggleCategoryStatus(${cat.id})" title="${cat.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${cat.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${cat.id}, 'category', '${escapeHTML(cat.name).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            async function toggleCategoryStatus(id) {
                 const token = getAdminToken();
                 if (!token) return;
                 try {
-                    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.categories}/${id}/toggle`, {
-                        method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` }
+                    const response = await fetch(`${API_BASE_URL}${categoriesEndpoint}/${id}/toggle`, {
+                        method: 'PATCH',
+                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
                     });
                     const data = await response.json();
                     if (response.ok && data.success) {
-                        showToast(`Category ${data.category.is_active ? 'activated' : 'deactivated'}`, 'success');
+                        showToast(`Category ${data.category.is_active ? 'activated' : 'deactivated'} successfully`, 'success');
                         loadCategories();
-                    }
+                    } else throw new Error(data.error || 'Failed to toggle status');
                 } catch (error) {
-                    showToast('Failed to toggle', 'error');
+                    showToast(error.message, 'error');
                 }
             }
 
-            function deleteCategory(id, name) {
-                deleteTarget = { type: 'category', id, name };
-                document.getElementById('deleteConfirmTitle').textContent = 'Delete Category?';
-                document.getElementById('deleteConfirmText').textContent = `Are you sure you want to delete "${name}"? This will also delete all subcategories.`;
-                document.getElementById('deleteConfirm').classList.add('show');
-                document.body.style.overflow = 'hidden';
+            function updateCategoryFilterDropdown() {
+                const select = document.getElementById('subcategoryFilterCategory');
+                const subcategoryParentSelect = document.getElementById('subcategoryParentCategory');
+                const menuCategorySelect = document.getElementById('menuItemCategoryId');
+                
+                const options = '<option value="">All Categories</option>' + currentCategories.map(cat => 
+                    `<option value="${cat.id}">${escapeHTML(cat.name)}</option>`
+                ).join('');
+                
+                if (select) select.innerHTML = options;
+                if (subcategoryParentSelect) subcategoryParentSelect.innerHTML = '<option value="">Select Parent Category</option>' + currentCategories.map(cat => 
+                    `<option value="${cat.id}">${escapeHTML(cat.name)}</option>`
+                ).join('');
+                if (menuCategorySelect) menuCategorySelect.innerHTML = '<option value="">Select Category</option>' + currentCategories.map(cat => 
+                    `<option value="${cat.id}">${escapeHTML(cat.name)}</option>`
+                ).join('');
             }
 
-            // Subcategory Modal
-            async function openSubcategoryModal(sub = null) {
-                // Load categories for dropdown
-                await loadCategoriesForDropdown();
+            // ==================== SUBCATEGORIES ====================
+            function openSubcategoryModal(subcategory = null) {
+                editingSubcategoryId = subcategory ? subcategory.id : null;
+                subcategoryMetaOpen = false;
+                document.getElementById('subcategoryModalTitle').textContent = subcategory ? 'Edit Subcategory' : 'Add New Subcategory';
+                document.getElementById('subcategoryId').value = subcategory ? subcategory.id : '';
+                document.getElementById('subcategoryParentCategory').value = subcategory ? subcategory.category_id : '';
+                document.getElementById('subcategoryName').value = subcategory ? subcategory.name : '';
+                document.getElementById('subcategoryImageUrl').value = subcategory ? (subcategory.image_url || '') : '';
+                document.getElementById('subcategoryVideoUrl').value = subcategory ? (subcategory.video_url || '') : '';
+                document.getElementById('subcategorySortOrder').value = subcategory ? (subcategory.sort_order || 0) : 0;
+                document.getElementById('subcategoryIsActive').checked = subcategory ? subcategory.is_active : true;
+                document.getElementById('subcategoryMetaTitle').value = subcategory ? (subcategory.meta_title || '') : '';
+                document.getElementById('subcategoryMetaDescription').value = subcategory ? (subcategory.meta_description || '') : '';
+                document.getElementById('subcategoryKeywords').value = subcategory ? (subcategory.keywords || '') : '';
+                document.getElementById('subcategorySaveBtn').innerHTML = subcategory ? '<i class="fa-solid fa-check"></i><span>Update Subcategory</span>' : '<i class="fa-solid fa-check"></i><span>Save Subcategory</span>';
                 
-                document.getElementById('subcategoryId').value = sub ? sub.id : '';
-                document.getElementById('subcategoryModalTitle').textContent = sub ? 'Edit Subcategory' : 'Add New Subcategory';
-                document.getElementById('subcategoryParentId').value = sub ? (sub.category_id || '') : '';
-                document.getElementById('subcategoryName').value = sub ? sub.name : '';
-                document.getElementById('subcategoryImageUrl').value = sub ? (sub.image_url || '') : '';
-                document.getElementById('subcategoryImageCtaTitle').value = sub ? (sub.image_cta_title || '') : '';
-                document.getElementById('subcategoryImageCtaLink').value = sub ? (sub.image_cta_link || '') : '';
-                document.getElementById('subcategoryVideoUrl').value = sub ? (sub.video_url || '') : '';
-                document.getElementById('subcategoryVideoCtaTitle').value = sub ? (sub.video_cta_title || '') : '';
-                document.getElementById('subcategoryVideoCtaLink').value = sub ? (sub.video_cta_link || '') : '';
-                document.getElementById('subcategorySortOrder').value = sub ? (sub.sort_order || 0) : 0;
-                document.getElementById('subcategoryIsActive').checked = sub ? sub.is_active : true;
-                document.getElementById('subcategoryMetaTitle').value = sub ? (sub.meta_title || '') : '';
-                document.getElementById('subcategoryMetaDescription').value = sub ? (sub.meta_description || '') : '';
-                document.getElementById('subcategoryVideoSchema').value = sub ? (sub.video_schema || '') : '';
-                document.getElementById('subcategoryKeywords').value = sub ? (sub.keywords || '') : '';
-                document.getElementById('subcategorySaveBtn').innerHTML = sub ? '<i class="fa-solid fa-check"></i><span>Update Subcategory</span>' : '<i class="fa-solid fa-check"></i><span>Save Subcategory</span>';
-                
-                document.getElementById('subcategoryMetaContent').classList.remove('open');
-                document.getElementById('subcategoryMetaChevron').style.transform = 'rotate(0deg)';
+                document.getElementById('subcategoryMetaCollapsibleHeader').classList.remove('open');
+                document.getElementById('subcategoryMetaCollapsibleContent').classList.remove('open');
                 
                 document.getElementById('subcategoryModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
 
-            async function loadCategoriesForDropdown() {
-                const token = getAdminToken();
-                if (!token) return;
-                try {
-                    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.categories}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    const data = await response.json();
-                    if (data.success) {
-                        const select = document.getElementById('subcategoryParentId');
-                        select.innerHTML = '<option value="">Select parent category</option>' + 
-                            (data.categories || []).map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('');
-                    }
-                } catch(e) {}
-            }
-
             function closeSubcategoryModal() {
                 document.getElementById('subcategoryModal').classList.remove('show');
                 document.body.style.overflow = '';
+                subcategoryMetaOpen = false;
             }
 
             async function saveSubcategory() {
+                const categoryId = document.getElementById('subcategoryParentCategory').value;
+                const name = document.getElementById('subcategoryName').value.trim();
+                if (!categoryId || !name) { showToast('Category and name are required', 'error'); return; }
+
                 const token = getAdminToken();
-                if (!token) return;
-                
-                const id = document.getElementById('subcategoryId').value;
-                const isEditing = !!id;
-                
+                if (!token) { showToast('Session expired. Please login again.', 'error'); window.location.href = '/signin?type=admin'; return; }
+
                 const subcategoryData = {
-                    category_id: parseInt(document.getElementById('subcategoryParentId').value),
-                    name: document.getElementById('subcategoryName').value.trim(),
+                    category_id: parseInt(categoryId),
+                    name: name,
                     image_url: document.getElementById('subcategoryImageUrl').value.trim() || null,
-                    image_cta_title: document.getElementById('subcategoryImageCtaTitle').value.trim() || null,
-                    image_cta_link: document.getElementById('subcategoryImageCtaLink').value.trim() || null,
                     video_url: document.getElementById('subcategoryVideoUrl').value.trim() || null,
-                    video_cta_title: document.getElementById('subcategoryVideoCtaTitle').value.trim() || null,
-                    video_cta_link: document.getElementById('subcategoryVideoCtaLink').value.trim() || null,
                     sort_order: parseInt(document.getElementById('subcategorySortOrder').value) || 0,
                     is_active: document.getElementById('subcategoryIsActive').checked,
                     meta_title: document.getElementById('subcategoryMetaTitle').value.trim() || null,
                     meta_description: document.getElementById('subcategoryMetaDescription').value.trim() || null,
-                    video_schema: document.getElementById('subcategoryVideoSchema').value.trim() || null,
                     keywords: document.getElementById('subcategoryKeywords').value.trim() || null
                 };
 
-                if (!subcategoryData.category_id || !subcategoryData.name) {
-                    showToast('Category and name are required', 'error');
-                    return;
-                }
-
-                const url = isEditing ? `${API_BASE_URL}${ENDPOINTS.subcategories}/${id}` : `${API_BASE_URL}${ENDPOINTS.subcategories}`;
+                const isEditing = !!editingSubcategoryId;
+                const url = isEditing ? `${API_BASE_URL}${subcategoriesEndpoint}/${editingSubcategoryId}` : `${API_BASE_URL}${subcategoriesEndpoint}`;
                 const method = isEditing ? 'PUT' : 'POST';
 
                 const saveBtn = document.getElementById('subcategorySaveBtn');
@@ -1354,119 +1201,164 @@
 
                 try {
                     const response = await fetch(url, {
-                        method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        method: method,
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify(subcategoryData)
                     });
                     const data = await response.json();
                     if (response.ok && data.success) {
-                        showToast(isEditing ? 'Subcategory updated' : 'Subcategory created', 'success');
+                        showToast(isEditing ? 'Subcategory updated successfully' : 'Subcategory created successfully', 'success');
                         closeSubcategoryModal();
                         loadSubcategories();
+                    } else if (response.status === 401 || response.status === 403) {
+                        showToast('Session expired. Please login again.', 'error');
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
                     } else {
-                        throw new Error(data.error || 'Failed to save');
+                        throw new Error(data.error || 'Failed to save subcategory');
                     }
                 } catch (error) {
-                    showToast(error.message, 'error');
+                    showToast(error.message || 'Failed to save subcategory', 'error');
                 } finally {
                     saveBtn.disabled = false;
-                    saveBtn.innerHTML = isEditing ? '<i class="fa-solid fa-check"></i><span>Update Subcategory</span>' : '<i class="fa-solid fa-check"></i><span>Save Subcategory</span>';
+                    saveBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>' + (isEditing ? 'Update Subcategory' : 'Save Subcategory') + '</span>';
                 }
             }
 
-            function editSubcategory(id) {
-                const sub = subcategories.find(s => s.id === id);
-                if (sub) openSubcategoryModal(sub);
+            async function loadSubcategories() {
+                const token = getAdminToken();
+                if (!token) return;
+
+                const tbody = document.getElementById('subcategoryTableBody');
+                const emptyState = document.getElementById('subcategoryEmptyState');
+                const categoryFilter = document.getElementById('subcategoryFilterCategory').value;
+                
+                tbody.innerHTML = `<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>`;
+                emptyState.style.display = 'none';
+
+                let queryUrl = `${API_BASE_URL}${subcategoriesEndpoint}`;
+                if (categoryFilter) queryUrl += `?category_id=${categoryFilter}`;
+
+                try {
+                    const response = await fetch(queryUrl, {
+                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+                    });
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
+                        return;
+                    }
+                    const data = await response.json();
+                    if (data.success) {
+                        currentSubcategories = data.subcategories || [];
+                        renderSubcategoriesTable();
+                        document.getElementById('subcategoryTotalCount').textContent = currentSubcategories.length;
+                    }
+                } catch (error) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:#dc2626;">Failed to load subcategories. <button onclick="loadSubcategories()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>`;
+                }
             }
 
-            async function toggleSubcategory(id) {
+            function renderSubcategoriesTable() {
+                const tbody = document.getElementById('subcategoryTableBody');
+                const emptyState = document.getElementById('subcategoryEmptyState');
+                if (currentSubcategories.length === 0) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
+                emptyState.style.display = 'none';
+                
+                tbody.innerHTML = currentSubcategories.map(sub => `
+                    <tr>
+                        <td>
+                            <div class="img-thumb">
+                                ${sub.image_url ? `<img src="${escapeHTML(sub.image_url)}" alt="${escapeHTML(sub.name)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}
+                            </div>
+                        </td>
+                        <td>
+                            <span style="font-weight:600;color:var(--primary);display:block;">${escapeHTML(sub.name)}</span>
+                            ${sub.slug ? `<span class="slug-display">${escapeHTML(sub.slug)}</span>` : ''}
+                        </td>
+                        <td>
+                            <span style="font-size:12px;color:var(--accent);">${sub.categories ? escapeHTML(sub.categories.name) : 'Unknown'}</span>
+                        </td>
+                        <td><span style="font-family:'Sora',monospace;font-size:13px;font-weight:600;">${sub.sort_order || 0}</span></td>
+                        <td>
+                            <span class="status-badge ${sub.is_active ? 'active' : 'inactive'}">
+                                <span class="status-dot ${sub.is_active ? 'active' : 'inactive'}"></span>
+                                ${sub.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td style="text-align:right;">
+                            <div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn edit" onclick="openSubcategoryModal(${JSON.stringify(sub).replace(/"/g, '&quot;')})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="toggleSubcategoryStatus(${sub.id})" title="${sub.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${sub.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${sub.id}, 'subcategory', '${escapeHTML(sub.name).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            async function toggleSubcategoryStatus(id) {
                 const token = getAdminToken();
                 if (!token) return;
                 try {
-                    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.subcategories}/${id}/toggle`, {
-                        method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` }
+                    const response = await fetch(`${API_BASE_URL}${subcategoriesEndpoint}/${id}/toggle`, {
+                        method: 'PATCH',
+                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
                     });
                     const data = await response.json();
                     if (response.ok && data.success) {
-                        showToast(`Subcategory ${data.subcategory.is_active ? 'activated' : 'deactivated'}`, 'success');
+                        showToast(`Subcategory ${data.subcategory.is_active ? 'activated' : 'deactivated'} successfully`, 'success');
                         loadSubcategories();
-                    }
+                    } else throw new Error(data.error || 'Failed to toggle status');
                 } catch (error) {
-                    showToast('Failed to toggle', 'error');
+                    showToast(error.message, 'error');
                 }
             }
 
-            function deleteSubcategory(id, name) {
-                deleteTarget = { type: 'subcategory', id, name };
-                document.getElementById('deleteConfirmTitle').textContent = 'Delete Subcategory?';
-                document.getElementById('deleteConfirmText').textContent = `Are you sure you want to delete "${name}"?`;
-                document.getElementById('deleteConfirm').classList.add('show');
-                document.body.style.overflow = 'hidden';
+            // ==================== MENU ITEMS ====================
+            function handleMenuTypeChange() {
+                const menuType = document.getElementById('menuItemType').value;
+                const categoryGroup = document.getElementById('menuItemCategoryGroup');
+                const subcategoryGroup = document.getElementById('menuItemSubcategoryGroup');
+                
+                if (menuType === 'category') {
+                    categoryGroup.style.display = 'grid';
+                    subcategoryGroup.style.display = 'none';
+                } else if (menuType === 'subcategory') {
+                    categoryGroup.style.display = 'grid';
+                    subcategoryGroup.style.display = 'block';
+                } else {
+                    categoryGroup.style.display = 'none';
+                    subcategoryGroup.style.display = 'none';
+                }
             }
 
-            // Menu Item Modal
-            async function openMenuItemModal(item = null) {
-                await loadDropdownsForMenuItem();
+            async function openMenuItemModal(menuItem = null) {
+                editingMenuItemId = menuItem ? menuItem.id : null;
+                document.getElementById('menuItemModalTitle').textContent = menuItem ? 'Edit Menu Item' : 'Add New Menu Item';
+                document.getElementById('menuItemId').value = menuItem ? menuItem.id : '';
+                document.getElementById('menuItemTitle').value = menuItem ? menuItem.title : '';
+                document.getElementById('menuItemSubtitle').value = menuItem ? (menuItem.subtitle || '') : '';
+                document.getElementById('menuItemLink').value = menuItem ? menuItem.link : '';
+                document.getElementById('menuItemType').value = menuItem ? (menuItem.menu_type || 'link') : 'link';
+                document.getElementById('menuItemParentId').value = menuItem ? (menuItem.parent_id || '') : '';
+                document.getElementById('menuItemCategoryId').value = menuItem ? (menuItem.category_id || '') : '';
+                document.getElementById('menuItemSubcategoryId').value = menuItem ? (menuItem.subcategory_id || '') : '';
+                document.getElementById('menuItemImageUrl').value = menuItem ? (menuItem.image_url || '') : '';
+                document.getElementById('menuItemIconClass').value = menuItem ? (menuItem.icon_class || '') : '';
+                document.getElementById('menuItemBadgeText').value = menuItem ? (menuItem.badge_text || '') : '';
+                document.getElementById('menuItemBadgeColor').value = menuItem ? (menuItem.badge_color || '') : '';
+                document.getElementById('menuItemSortOrder').value = menuItem ? (menuItem.sort_order || 0) : 0;
+                document.getElementById('menuItemIsActive').checked = menuItem ? menuItem.is_active : true;
+                document.getElementById('menuItemSaveBtn').innerHTML = menuItem ? '<i class="fa-solid fa-check"></i><span>Update Menu Item</span>' : '<i class="fa-solid fa-check"></i><span>Save Menu Item</span>';
                 
-                document.getElementById('menuItemId').value = item ? item.id : '';
-                document.getElementById('menuItemModalTitle').textContent = item ? 'Edit Menu Item' : 'Add New Menu Item';
-                document.getElementById('menuItemTitle').value = item ? item.title : '';
-                document.getElementById('menuItemSubtitle').value = item ? (item.subtitle || '') : '';
-                document.getElementById('menuItemLink').value = item ? item.link : '';
-                document.getElementById('menuItemType').value = item ? (item.menu_type || 'link') : 'link';
-                document.getElementById('menuItemParentId').value = item ? (item.parent_id || '') : '';
-                document.getElementById('menuItemCategoryId').value = item ? (item.category_id || '') : '';
-                document.getElementById('menuItemSubcategoryId').value = item ? (item.subcategory_id || '') : '';
-                document.getElementById('menuItemImageUrl').value = item ? (item.image_url || '') : '';
-                document.getElementById('menuItemImageCtaTitle').value = item ? (item.image_cta_title || '') : '';
-                document.getElementById('menuItemImageCtaLink').value = item ? (item.image_cta_link || '') : '';
-                document.getElementById('menuItemIconClass').value = item ? (item.icon_class || '') : '';
-                document.getElementById('menuItemBadgeText').value = item ? (item.badge_text || '') : '';
-                document.getElementById('menuItemBadgeColor').value = item ? (item.badge_color || '') : '';
-                document.getElementById('menuItemSortOrder').value = item ? (item.sort_order || 0) : 0;
-                document.getElementById('menuItemIsActive').checked = item ? item.is_active : true;
-                document.getElementById('menuItemSaveBtn').innerHTML = item ? '<i class="fa-solid fa-check"></i><span>Update Menu Item</span>' : '<i class="fa-solid fa-check"></i><span>Save Menu Item</span>';
+                handleMenuTypeChange();
+                
+                // Load parent menu items for dropdown
+                await loadMenuItemsForDropdown();
                 
                 document.getElementById('menuItemModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
-            }
-
-            async function loadDropdownsForMenuItem() {
-                const token = getAdminToken();
-                if (!token) return;
-                try {
-                    // Load parent menu items
-                    const menuRes = await fetch(`${API_BASE_URL}${ENDPOINTS.menuItems}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    const menuData = await menuRes.json();
-                    if (menuData.success) {
-                        const parentSelect = document.getElementById('menuItemParentId');
-                        parentSelect.innerHTML = '<option value="">None (Top Level)</option>' + 
-                            (menuData.menu_items || []).map(m => `<option value="${m.id}">${escapeHTML(m.title)}</option>`).join('');
-                    }
-                    
-                    // Load categories
-                    const catRes = await fetch(`${API_BASE_URL}${ENDPOINTS.categories}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    const catData = await catRes.json();
-                    if (catData.success) {
-                        const catSelect = document.getElementById('menuItemCategoryId');
-                        catSelect.innerHTML = '<option value="">None</option>' + 
-                            (catData.categories || []).map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('');
-                    }
-                    
-                    // Load subcategories
-                    const subRes = await fetch(`${API_BASE_URL}${ENDPOINTS.subcategories}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    const subData = await subRes.json();
-                    if (subData.success) {
-                        const subSelect = document.getElementById('menuItemSubcategoryId');
-                        subSelect.innerHTML = '<option value="">None</option>' + 
-                            (subData.subcategories || []).map(s => `<option value="${s.id}">${escapeHTML(s.name)}</option>`).join('');
-                    }
-                } catch(e) {}
             }
 
             function closeMenuItemModal() {
@@ -1474,37 +1366,51 @@
                 document.body.style.overflow = '';
             }
 
-            async function saveMenuItem() {
+            async function loadMenuItemsForDropdown() {
                 const token = getAdminToken();
                 if (!token) return;
-                
-                const id = document.getElementById('menuItemId').value;
-                const isEditing = !!id;
-                
+                try {
+                    const response = await fetch(`${API_BASE_URL}${menuItemsEndpoint}`, {
+                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        const select = document.getElementById('menuItemParentId');
+                        select.innerHTML = '<option value="">None (Top Level)</option>' + (data.menu_items || []).map(item => 
+                            `<option value="${item.id}">${escapeHTML(item.title)} (${item.menu_type || 'link'})</option>`
+                        ).join('');
+                    }
+                } catch (error) {
+                    console.error('Failed to load menu items for dropdown:', error);
+                }
+            }
+
+            async function saveMenuItem() {
+                const title = document.getElementById('menuItemTitle').value.trim();
+                const link = document.getElementById('menuItemLink').value.trim();
+                if (!title || !link) { showToast('Title and link are required', 'error'); return; }
+
+                const token = getAdminToken();
+                if (!token) { showToast('Session expired. Please login again.', 'error'); window.location.href = '/signin?type=admin'; return; }
+
                 const menuItemData = {
-                    title: document.getElementById('menuItemTitle').value.trim(),
+                    title: title,
                     subtitle: document.getElementById('menuItemSubtitle').value.trim() || null,
-                    link: document.getElementById('menuItemLink').value.trim(),
+                    link: link,
                     menu_type: document.getElementById('menuItemType').value,
                     parent_id: document.getElementById('menuItemParentId').value ? parseInt(document.getElementById('menuItemParentId').value) : null,
                     category_id: document.getElementById('menuItemCategoryId').value ? parseInt(document.getElementById('menuItemCategoryId').value) : null,
                     subcategory_id: document.getElementById('menuItemSubcategoryId').value ? parseInt(document.getElementById('menuItemSubcategoryId').value) : null,
                     image_url: document.getElementById('menuItemImageUrl').value.trim() || null,
-                    image_cta_title: document.getElementById('menuItemImageCtaTitle').value.trim() || null,
-                    image_cta_link: document.getElementById('menuItemImageCtaLink').value.trim() || null,
                     icon_class: document.getElementById('menuItemIconClass').value.trim() || null,
                     badge_text: document.getElementById('menuItemBadgeText').value.trim() || null,
-                    badge_color: document.getElementById('menuItemBadgeColor').value.trim() || null,
+                    badge_color: document.getElementById('menuItemBadgeColor').value || null,
                     sort_order: parseInt(document.getElementById('menuItemSortOrder').value) || 0,
                     is_active: document.getElementById('menuItemIsActive').checked
                 };
 
-                if (!menuItemData.title || !menuItemData.link) {
-                    showToast('Title and link are required', 'error');
-                    return;
-                }
-
-                const url = isEditing ? `${API_BASE_URL}${ENDPOINTS.menuItems}/${id}` : `${API_BASE_URL}${ENDPOINTS.menuItems}`;
+                const isEditing = !!editingMenuItemId;
+                const url = isEditing ? `${API_BASE_URL}${menuItemsEndpoint}/${editingMenuItemId}` : `${API_BASE_URL}${menuItemsEndpoint}`;
                 const method = isEditing ? 'PUT' : 'POST';
 
                 const saveBtn = document.getElementById('menuItemSaveBtn');
@@ -1513,167 +1419,233 @@
 
                 try {
                     const response = await fetch(url, {
-                        method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        method: method,
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify(menuItemData)
                     });
                     const data = await response.json();
                     if (response.ok && data.success) {
-                        showToast(isEditing ? 'Menu item updated' : 'Menu item created', 'success');
+                        showToast(isEditing ? 'Menu item updated successfully' : 'Menu item created successfully', 'success');
                         closeMenuItemModal();
                         loadMenuItems();
+                    } else if (response.status === 401 || response.status === 403) {
+                        showToast('Session expired. Please login again.', 'error');
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
                     } else {
-                        throw new Error(data.error || 'Failed to save');
+                        throw new Error(data.error || 'Failed to save menu item');
                     }
                 } catch (error) {
-                    showToast(error.message, 'error');
+                    showToast(error.message || 'Failed to save menu item', 'error');
                 } finally {
                     saveBtn.disabled = false;
-                    saveBtn.innerHTML = isEditing ? '<i class="fa-solid fa-check"></i><span>Update Menu Item</span>' : '<i class="fa-solid fa-check"></i><span>Save Menu Item</span>';
+                    saveBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>' + (isEditing ? 'Update Menu Item' : 'Save Menu Item') + '</span>';
                 }
             }
 
-            function editMenuItem(id) {
-                const item = menuItems.find(m => m.id === id);
-                if (item) openMenuItemModal(item);
+            async function loadMenuItems() {
+                const token = getAdminToken();
+                if (!token) return;
+
+                const tbody = document.getElementById('menuItemTableBody');
+                const emptyState = document.getElementById('menuItemEmptyState');
+                
+                tbody.innerHTML = `<tr><td colspan="7"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>`;
+                emptyState.style.display = 'none';
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}${menuItemsEndpoint}`, {
+                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+                    });
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
+                        return;
+                    }
+                    const data = await response.json();
+                    if (data.success) {
+                        currentMenuItems = data.menu_items || [];
+                        renderMenuItemsTable();
+                        document.getElementById('menuItemTotalCount').textContent = currentMenuItems.length;
+                    }
+                } catch (error) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load menu items. <button onclick="loadMenuItems()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>`;
+                }
             }
 
-            async function toggleMenuItem(id) {
+            function renderMenuItemsTable() {
+                const tbody = document.getElementById('menuItemTableBody');
+                const emptyState = document.getElementById('menuItemEmptyState');
+                if (currentMenuItems.length === 0) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
+                emptyState.style.display = 'none';
+                
+                tbody.innerHTML = currentMenuItems.map(item => `
+                    <tr>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                ${item.icon_class ? `<i class="${escapeHTML(item.icon_class)}" style="font-size:16px;color:var(--accent);"></i>` : ''}
+                                <div>
+                                    <span style="font-weight:600;color:var(--primary);display:block;">${escapeHTML(item.title)}</span>
+                                    ${item.subtitle ? `<span style="font-size:11px;color:var(--accent);">${escapeHTML(item.subtitle)}</span>` : ''}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-tag" style="background:#f5f5f7;color:var(--accent);">${escapeHTML(item.menu_type || 'link')}</span>
+                        </td>
+                        <td><span style="font-size:12px;color:var(--accent);max-width:150px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(item.link)}</span></td>
+                        <td>
+                            ${item.badge_text ? `<span class="badge-tag" style="background:${escapeHTML(item.badge_color || '#f5f5f7')};color:#fff;">${escapeHTML(item.badge_text)}</span>` : '<span style="color:#d1d1d6;">-</span>'}
+                        </td>
+                        <td><span style="font-family:'Sora',monospace;font-size:13px;font-weight:600;">${item.sort_order || 0}</span></td>
+                        <td>
+                            <span class="status-badge ${item.is_active ? 'active' : 'inactive'}">
+                                <span class="status-dot ${item.is_active ? 'active' : 'inactive'}"></span>
+                                ${item.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td style="text-align:right;">
+                            <div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn edit" onclick="openMenuItemModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="toggleMenuItemStatus(${item.id})" title="${item.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${item.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${item.id}, 'menuitem', '${escapeHTML(item.title).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            async function toggleMenuItemStatus(id) {
                 const token = getAdminToken();
                 if (!token) return;
                 try {
-                    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.menuItems}/${id}/toggle`, {
-                        method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` }
+                    const response = await fetch(`${API_BASE_URL}${menuItemsEndpoint}/${id}/toggle`, {
+                        method: 'PATCH',
+                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
                     });
                     const data = await response.json();
                     if (response.ok && data.success) {
-                        showToast(`Menu item ${data.menu_item.is_active ? 'activated' : 'deactivated'}`, 'success');
+                        showToast(`Menu item ${data.menu_item.is_active ? 'activated' : 'deactivated'} successfully`, 'success');
                         loadMenuItems();
-                    }
+                    } else throw new Error(data.error || 'Failed to toggle status');
                 } catch (error) {
-                    showToast('Failed to toggle', 'error');
+                    showToast(error.message, 'error');
                 }
             }
 
-            function deleteMenuItem(id, name) {
-                deleteTarget = { type: 'menuitem', id, name };
-                document.getElementById('deleteConfirmTitle').textContent = 'Delete Menu Item?';
-                document.getElementById('deleteConfirmText').textContent = `Are you sure you want to delete "${name}"?`;
+            // ==================== DELETE ====================
+            function openDeleteConfirm(id, type, name) {
+                deleteTargetId = id;
+                deleteTargetType = type;
+                document.getElementById('deleteConfirmTitle').textContent = `Delete ${type === 'category' ? 'Category' : type === 'subcategory' ? 'Subcategory' : 'Menu Item'}?`;
+                document.getElementById('deleteConfirmText').innerHTML = `Are you sure you want to delete "<span style="font-weight:700;color:var(--primary);">${escapeHTML(name || 'Untitled')}</span>"? This action cannot be undone.`;
                 document.getElementById('deleteConfirm').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
 
-            // Delete Confirmation
             function closeDeleteConfirm() {
-                deleteTarget = null;
+                deleteTargetId = null;
+                deleteTargetType = null;
                 document.getElementById('deleteConfirm').classList.remove('show');
                 document.body.style.overflow = '';
             }
 
             async function confirmDelete() {
-                if (!deleteTarget) return;
+                if (!deleteTargetId || !deleteTargetType) return;
+                
                 const token = getAdminToken();
-                if (!token) return;
+                if (!token) { showToast('Session expired. Please login again.', 'error'); window.location.href = '/signin?type=admin'; return; }
 
-                const endpointMap = {
-                    category: ENDPOINTS.categories,
-                    subcategory: ENDPOINTS.subcategories,
-                    menuitem: ENDPOINTS.menuItems
-                };
+                let endpoint;
+                if (deleteTargetType === 'category') endpoint = categoriesEndpoint;
+                else if (deleteTargetType === 'subcategory') endpoint = subcategoriesEndpoint;
+                else endpoint = menuItemsEndpoint;
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}${endpointMap[deleteTarget.type]}/${deleteTarget.id}`, {
-                        method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
+                    const response = await fetch(`${API_BASE_URL}${endpoint}/${deleteTargetId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
                     });
                     const data = await response.json();
                     if (response.ok && data.success) {
-                        showToast(`${deleteTarget.type} deleted successfully`, 'success');
+                        showToast(`${deleteTargetType === 'category' ? 'Category' : deleteTargetType === 'subcategory' ? 'Subcategory' : 'Menu item'} deleted successfully`, 'success');
                         closeDeleteConfirm();
-                        loadCurrentTabData();
+                        if (deleteTargetType === 'category') loadCategories();
+                        else if (deleteTargetType === 'subcategory') loadSubcategories();
+                        else loadMenuItems();
                     } else {
-                        throw new Error(data.error || 'Failed to delete');
+                        throw new Error(data.error || 'Failed to delete item');
                     }
                 } catch (error) {
-                    showToast(error.message, 'error');
+                    showToast(error.message || 'Failed to delete item', 'error');
                     closeDeleteConfirm();
                 }
             }
 
-            // Collapsible toggles
-            function toggleCategoryMeta() {
-                const content = document.getElementById('categoryMetaContent');
-                const chevron = document.getElementById('categoryMetaChevron');
-                content.classList.toggle('open');
-                chevron.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-            }
-
-            function toggleSubcategoryMeta() {
-                const content = document.getElementById('subcategoryMetaContent');
-                const chevron = document.getElementById('subcategoryMetaChevron');
-                content.classList.toggle('open');
-                chevron.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-            }
-
-            // Load Menu Tree
-            async function loadMenuTree() {
-                await loadMenuItems();
-                showToast('Menu items refreshed', 'info');
+            function escapeHTML(str) {
+                if (!str) return '';
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
             }
 
             // Make functions globally accessible
-            window.switchTab = switchTab;
-            window.loadCategories = loadCategories;
-            window.loadSubcategories = loadSubcategories;
-            window.loadMenuItems = loadMenuItems;
-            window.loadMenuTree = loadMenuTree;
             window.openCategoryModal = openCategoryModal;
             window.closeCategoryModal = closeCategoryModal;
             window.saveCategory = saveCategory;
-            window.editCategory = editCategory;
-            window.toggleCategory = toggleCategory;
-            window.deleteCategory = deleteCategory;
+            window.loadCategories = loadCategories;
+            window.toggleCategoryStatus = toggleCategoryStatus;
+            window.toggleCategoryMetaSection = toggleCategoryMetaSection;
+            
             window.openSubcategoryModal = openSubcategoryModal;
             window.closeSubcategoryModal = closeSubcategoryModal;
             window.saveSubcategory = saveSubcategory;
-            window.editSubcategory = editSubcategory;
-            window.toggleSubcategory = toggleSubcategory;
-            window.deleteSubcategory = deleteSubcategory;
+            window.loadSubcategories = loadSubcategories;
+            window.toggleSubcategoryStatus = toggleSubcategoryStatus;
+            window.toggleSubcategoryMetaSection = toggleSubcategoryMetaSection;
+            
             window.openMenuItemModal = openMenuItemModal;
             window.closeMenuItemModal = closeMenuItemModal;
             window.saveMenuItem = saveMenuItem;
-            window.editMenuItem = editMenuItem;
-            window.toggleMenuItem = toggleMenuItem;
-            window.deleteMenuItem = deleteMenuItem;
+            window.loadMenuItems = loadMenuItems;
+            window.toggleMenuItemStatus = toggleMenuItemStatus;
+            window.handleMenuTypeChange = handleMenuTypeChange;
+            
+            window.openDeleteConfirm = openDeleteConfirm;
             window.closeDeleteConfirm = closeDeleteConfirm;
             window.confirmDelete = confirmDelete;
-            window.toggleCategoryMeta = toggleCategoryMeta;
-            window.toggleSubcategoryMeta = toggleSubcategoryMeta;
 
             // Initialize
             document.addEventListener('DOMContentLoaded', () => {
                 if (!checkAdminAuth()) return;
 
+                // Tab navigation
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+                });
+
                 // Close modals on overlay click
-                ['categoryModal', 'subcategoryModal', 'menuItemModal'].forEach(id => {
-                    document.getElementById(id).addEventListener('click', function(e) {
+                ['categoryModal', 'subcategoryModal', 'menuItemModal'].forEach(modalId => {
+                    document.getElementById(modalId).addEventListener('click', function(e) { 
                         if (e.target === this) {
-                            if (id === 'categoryModal') closeCategoryModal();
-                            else if (id === 'subcategoryModal') closeSubcategoryModal();
+                            if (modalId === 'categoryModal') closeCategoryModal();
+                            else if (modalId === 'subcategoryModal') closeSubcategoryModal();
                             else closeMenuItemModal();
                         }
                     });
                 });
-
-                document.getElementById('deleteConfirm').addEventListener('click', function(e) {
-                    if (e.target === this) closeDeleteConfirm();
+                
+                document.getElementById('deleteConfirm').addEventListener('click', function(e) { 
+                    if (e.target === this) closeDeleteConfirm(); 
                 });
 
                 // Close on Escape
                 document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape') {
-                        closeCategoryModal();
-                        closeSubcategoryModal();
-                        closeMenuItemModal();
-                        closeDeleteConfirm();
+                    if (e.key === 'Escape') { 
+                        closeCategoryModal(); 
+                        closeSubcategoryModal(); 
+                        closeMenuItemModal(); 
+                        closeDeleteConfirm(); 
                     }
                 });
 
@@ -1693,6 +1665,7 @@
                 // Load initial data
                 loadCategories();
             });
+
         })();
     </script>
 </body>
