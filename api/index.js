@@ -1,544 +1,440 @@
-Const express = require('express');
+
+// ============================================
+// server.js - Complete API Server
+// Supabase Integrated | Production Ready
+// Auth & OneID Removed | Products & UI APIs Only
+// ============================================
+
+const express = require('express');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Supabase Configuration
+// ============================================
+// SUPABASE CONFIGURATION
+// ============================================
 const SUPABASE_URL = "https://eiueitoxxqzkolsouuzy.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpdWVpdG94eHF6a29sc291dXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3NjIxNjIsImV4cCI6MjA5OTMzODE2Mn0.zsmN5P-AXeKT-XLgqkq0Bjx8EfjupJs1mjC26l-g7uA";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Middleware
+// ============================================
+// MIDDLEWARE
+// ============================================
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ============================================
-// Session Management
-// ============================================
-const activeSessions = new Map();
-
-// ============================================
-// Authentication Middleware
-// ============================================
-const authenticateUser = async (req, res, next) => {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ success: false, error: 'Authorization header missing' });
-        }
-
-        const token = authHeader.split(' ')[1];
-        if (!token) {
-            return res.status(401).json({ success: false, error: 'Token missing' });
-        }
-
-        const { data: { user }, error } = await supabase.auth.getUser(token);
-
-        if (error || !user) {
-            return res.status(401).json({ success: false, error: 'Invalid or expired token' });
-        }
-
-        req.user = user;
-        req.token = token;
-        next();
-    } catch (error) {
-        res.status(500).json({ success: false, error: 'Authentication failed' });
-    }
-};
-
-// Admin Authorization Middleware
-const authorizeAdmin = async (req, res, next) => {
-    try {
-        const role = req.user?.app_metadata?.role;
-        
-        if (!role || !['admin', 'super_admin', 'moderator'].includes(role)) {
-            return res.status(403).json({ 
-                success: false, 
-                error: 'Admin access required. You do not have admin privileges.' 
-            });
-        }
-
-        // Check if admin is active in admins table
-        const { data: adminData, error: adminError } = await supabase
-            .from('admins')
-            .select('is_active, role')
-            .eq('user_id', req.user.id)
-            .single();
-
-        if (adminError || !adminData || !adminData.is_active) {
-            return res.status(403).json({ 
-                success: false, 
-                error: 'Your admin account is inactive or not found.' 
-            });
-        }
-
-        req.adminRole = adminData.role;
-        next();
-    } catch (error) {
-        res.status(500).json({ success: false, error: 'Authorization failed' });
-    }
-};
-
-// Super Admin Authorization Middleware
-const authorizeSuperAdmin = (req, res, next) => {
-    if (req.adminRole !== 'super_admin') {
-        return res.status(403).json({ 
-            success: false, 
-            error: 'Super admin access required.' 
-        });
-    }
-    next();
-};
-
-// ============================================
-// Authentication Routes
+// HELPER FUNCTIONS
 // ============================================
 
-// Sign Up Route (for creating admin accounts)
-app.post('/api/auth/signup', async (req, res) => {
-    try {
-        const { email, password, full_name, phone } = req.body;
+// Create slug from string
+function createSlug(text) {
+    if (!text) return '';
+    return text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
 
-        if (!email || !password || !full_name) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Email, password, and full name are required' 
-            });
-        }
+// Format product with category/subcategory names
+function formatProduct(product) {
+    if (!product) return null;
+    return {
+        ...product,
+        category: product.categories?.name || null,
+        subcategory: product.subcategories?.name || null
+    };
+}
 
-        // Create user in Supabase Auth
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    full_name,
-                    phone
-                }
-            }
-        });
-
-        if (authError) throw authError;
-
-        res.status(201).json({
-            success: true,
-            message: 'Account created successfully. Please check your email for verification.',
-            data: authData
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Login Route
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Email and password are required' 
-            });
-        }
-
-        // Sign in with Supabase
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
-        });
-
-        if (error) {
-            if (error.message.includes('Invalid login credentials')) {
-                return res.status(401).json({ 
-                    success: false, 
-                    error: 'Invalid email or password' 
-                });
-            }
-            throw error;
-        }
-
-        // Check if user is admin
-        const { data: adminData, error: adminError } = await supabase
-            .from('admins')
-            .select('*')
-            .eq('user_id', data.user.id)
-            .single();
-
-        // Update last login if admin
-        if (adminData) {
-            await supabase
-                .from('admins')
-                .update({ last_login: new Date().toISOString() })
-                .eq('user_id', data.user.id);
-        }
-
-        // Store session
-        activeSessions.set(data.user.id, {
-            token: data.session.access_token,
-            user: data.user,
-            adminData: adminData
-        });
-
-        res.json({
-            success: true,
-            message: 'Login successful',
-            data: {
-                user: data.user,
-                session: data.session,
-                isAdmin: !!adminData,
-                adminRole: adminData?.role || null
-            }
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Logout Route
-app.post('/api/auth/logout', authenticateUser, async (req, res) => {
-    try {
-        const { error } = await supabase.auth.signOut();
-        
-        if (error) throw error;
-        
-        // Remove from active sessions
-        activeSessions.delete(req.user.id);
-        
-        res.json({ success: true, message: 'Logged out successfully' });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Get Current User
-app.get('/api/auth/user', authenticateUser, async (req, res) => {
-    try {
-        // Get admin data if exists
-        const { data: adminData } = await supabase
-            .from('admins')
-            .select('*')
-            .eq('user_id', req.user.id)
-            .single();
-
-        res.json({
-            success: true,
-            data: {
-                user: req.user,
-                adminData: adminData || null,
-                isAdmin: !!adminData
-            }
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Refresh Token
-app.post('/api/auth/refresh', async (req, res) => {
-    try {
-        const { refresh_token } = req.body;
-
-        if (!refresh_token) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Refresh token is required' 
-            });
-        }
-
-        const { data, error } = await supabase.auth.refreshSession({
-            refresh_token
-        });
-
-        if (error) throw error;
-
-        res.json({
-            success: true,
-            data: {
-                session: data.session,
-                user: data.user
-            }
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Reset Password Request
-app.post('/api/auth/reset-password', async (req, res) => {
-    try {
-        const { email } = req.body;
-
-        if (!email) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Email is required' 
-            });
-        }
-
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${req.protocol}://${req.get('host')}/reset-password`
-        });
-
-        if (error) throw error;
-
-        res.json({
-            success: true,
-            message: 'Password reset email sent successfully'
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
+function formatProducts(products) {
+    if (!products) return [];
+    return products.map(formatProduct);
+}
 
 // ============================================
-// Admin Management Routes
+// PRODUCTS API (Categories, Subcategories with Slug)
 // ============================================
 
-// Get all admins (Super admin only)
-app.get('/api/admin/users', authenticateUser, authorizeAdmin, authorizeSuperAdmin, async (req, res) => {
+// Get all products
+app.get('/api/products', async (req, res) => {
     try {
         const { data, error } = await supabase
-            .from('admins')
-            .select('*')
+            .from('products')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
             .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(formatProducts(data));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
-// Add new admin (Super admin only)
-app.post('/api/admin/users', authenticateUser, authorizeAdmin, authorizeSuperAdmin, async (req, res) => {
+// Get product by slug
+app.get('/api/product/:slug', async (req, res) => {
     try {
-        const { email, full_name, phone, role, notes } = req.body;
-
-        if (!email || !full_name) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Email and full name are required' 
-            });
-        }
-
-        // Call the add_admin function
+        const slug = req.params.slug;
         const { data, error } = await supabase
-            .rpc('add_admin', {
-                p_email: email,
-                p_full_name: full_name,
-                p_phone: phone,
-                p_role: role || 'admin',
-                p_notes: notes
-            });
-
-        if (error) throw error;
-
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+            .from('products')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const product = data.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.status(404).json({ error: 'Product not found' });
+        
+        res.json(formatProduct(product));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
-// Update admin (Super admin only)
-app.put('/api/admin/users/:id', authenticateUser, authorizeAdmin, authorizeSuperAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { role, is_active, notes } = req.body;
-
-        const { data, error } = await supabase
-            .rpc('update_admin', {
-                p_admin_id: parseInt(id),
-                p_role: role,
-                p_is_active: is_active,
-                p_notes: notes
-            });
-
-        if (error) throw error;
-
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Remove admin (Super admin only)
-app.delete('/api/admin/users/:id', authenticateUser, authorizeAdmin, authorizeSuperAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const { data, error } = await supabase
-            .rpc('remove_admin', {
-                p_admin_id: parseInt(id)
-            });
-
-        if (error) throw error;
-
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// ============================================
-// Hero Routes (Primary Banner Slider)
-// ============================================
-
-// Get all active heroes (Public)
-app.get('/api/heroes', async (req, res) => {
+// Get all categories (with slugs)
+app.get('/api/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
-            .from('hero')
+            .from('categories')
             .select('*')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-
-        if (error) throw error;
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const categoriesWithSlugs = data.map(cat => ({
+            ...cat,
+            slug: cat.slug ? cat.slug.replace(/^category\//, '') : createSlug(cat.name)
+        }));
+        
+        res.json(categoriesWithSlugs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
-// Get all heroes including inactive (Admin only)
-app.get('/api/admin/heroes', authenticateUser, authorizeAdmin, async (req, res) => {
+// Get category by slug
+app.get('/api/categories/:slug', async (req, res) => {
     try {
+        const { slug } = req.params;
+        
         const { data, error } = await supabase
-            .from('hero')
+            .from('categories')
             .select('*')
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const category = data.find(cat => {
+            const dbSlug = cat.slug || createSlug(cat.name);
+            return dbSlug.replace(/^category\//, '') === slug;
+        });
+        
+        if (!category) return res.status(404).json({ error: 'Category not found' });
+        
+        res.json({
+            ...category,
+            slug: category.slug ? category.slug.replace(/^category\//, '') : createSlug(category.name)
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get products by category slug
+app.get('/api/categories/:slug/products', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        const { data: categories } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('is_active', true);
+        
+        const category = categories.find(cat => {
+            const dbSlug = cat.slug || createSlug(cat.name);
+            return dbSlug.replace(/^category\//, '') === slug;
+        });
+        
+        if (!category) return res.status(404).json({ error: 'Category not found' });
+        
+        const { data, error } = await supabase
+            .from('products')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
+            .eq('category_id', category.id)
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json(formatProducts(data));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all subcategories
+app.get('/api/subcategories', async (req, res) => {
+    try {
+        const { category_slug } = req.query;
+        
+        let query = supabase
+            .from('subcategories')
+            .select('*, categories(name, id, slug)')
+            .eq('is_active', true)
             .order('sort_order', { ascending: true });
-
-        if (error) throw error;
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        
+        if (category_slug) {
+            const { data: categories } = await supabase
+                .from('categories')
+                .select('id, slug')
+                .eq('is_active', true);
+            
+            const category = categories.find(cat => {
+                const dbSlug = cat.slug || createSlug(cat.name);
+                return dbSlug.replace(/^category\//, '') === category_slug;
+            });
+            
+            if (category) {
+                query = query.eq('category_id', category.id);
+            } else {
+                return res.status(404).json({ error: 'Category not found' });
+            }
+        }
+        
+        const { data, error } = await query;
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const subcategoriesWithSlugs = data.map(sub => ({
+            ...sub,
+            slug: sub.slug ? sub.slug.replace(/^category\/[^/]+\//, '') : createSlug(sub.name),
+            category_slug: sub.categories ? createSlug(sub.categories.name) : ''
+        }));
+        
+        res.json(subcategoriesWithSlugs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
-// Get single hero by ID (Admin only)
-app.get('/api/admin/heroes/:id', authenticateUser, authorizeAdmin, async (req, res) => {
+// Get subcategory by slug
+app.get('/api/subcategories/:slug', async (req, res) => {
     try {
-        const { id } = req.params;
+        const { slug } = req.params;
+        const { category_slug } = req.query;
+        
+        const { data, error } = await supabase
+            .from('subcategories')
+            .select('*, categories(name, id, slug)')
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        let subcategory = data.find(sub => {
+            const dbSlug = sub.slug || createSlug(sub.name);
+            return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
+        });
+        
+        if (category_slug && subcategory) {
+            const catSlug = subcategory.categories?.slug || createSlug(subcategory.categories?.name || '');
+            const cleanCatSlug = catSlug.replace(/^category\//, '');
+            if (cleanCatSlug !== category_slug) {
+                subcategory = null;
+            }
+        }
+        
+        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
+        
+        res.json({
+            ...subcategory,
+            slug: subcategory.slug ? subcategory.slug.replace(/^category\/[^/]+\//, '') : createSlug(subcategory.name),
+            category_slug: subcategory.categories ? createSlug(subcategory.categories.name) : ''
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get products by subcategory slug
+app.get('/api/subcategories/:slug/products', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        const { data: subcategories } = await supabase
+            .from('subcategories')
+            .select('*')
+            .eq('is_active', true);
+        
+        const subcategory = subcategories.find(sub => {
+            const dbSlug = sub.slug || createSlug(sub.name);
+            return dbSlug.replace(/^category\/[^/]+\//, '') === slug;
+        });
+        
+        if (!subcategory) return res.status(404).json({ error: 'Subcategory not found' });
+        
+        const { data, error } = await supabase
+            .from('products')
+            .select(`
+                *,
+                categories:category_id (name),
+                subcategories:subcategory_id (name)
+            `)
+            .eq('subcategory_id', subcategory.id)
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        res.json(formatProducts(data));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// MENU API
+// ============================================
+
+// Get menu hierarchy
+app.get('/api/menu', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const buildMenuTree = (items, parentId = null) => {
+            return items
+                .filter(item => item.parent_id === parentId)
+                .map(item => ({
+                    ...item,
+                    slug: createSlug(item.title),
+                    category_slug: item.categories ? createSlug(item.categories.name) : null,
+                    subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null,
+                    children: buildMenuTree(items, item.id)
+                }));
+        };
+        
+        res.json(buildMenuTree(data));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get flat menu items
+app.get('/api/menu-items', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const menuItemsWithSlugs = data.map(item => ({
+            ...item,
+            slug: createSlug(item.title),
+            category_slug: item.categories ? createSlug(item.categories.name) : null,
+            subcategory_slug: item.subcategories ? createSlug(item.subcategories.name) : null
+        }));
+        
+        res.json(menuItemsWithSlugs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get menu item by slug
+app.get('/api/menu-items/:slug', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select(`
+                *,
+                categories:category_id (id, name),
+                subcategories:subcategory_id (id, name)
+            `)
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        const menuItem = data.find(item => createSlug(item.title) === slug);
+        if (!menuItem) return res.status(404).json({ error: 'Menu item not found' });
+        
+        res.json({
+            ...menuItem,
+            slug: createSlug(menuItem.title),
+            category_slug: menuItem.categories ? createSlug(menuItem.categories.name) : null,
+            subcategory_slug: menuItem.subcategories ? createSlug(menuItem.subcategories.name) : null
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// HERO SLIDES & VIDEOS API
+// ============================================
+
+// Get hero slides
+app.get('/api/hero', async (req, res) => {
+    try {
         const { data, error } = await supabase
             .from('hero')
             .select('*')
-            .eq('id', id)
-            .single();
-
-        if (error) throw error;
-        if (!data) {
-            return res.status(404).json({ success: false, error: 'Hero not found' });
-        }
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Create hero (Admin only)
-app.post('/api/admin/heroes', authenticateUser, authorizeAdmin, async (req, res) => {
-    try {
-        const { title, subtitle, img, cta_text, cta_link, is_active, sort_order } = req.body;
-
-        const heroData = {
-            title,
-            subtitle,
-            img,
-            cta_text,
-            cta_link,
-            is_active: is_active !== undefined ? is_active : true,
-            sort_order: sort_order || 0
-        };
-
-        const { data, error } = await supabase
-            .from('hero')
-            .insert([heroData])
-            .select()
-            .single();
-
-        if (error) throw error;
-        res.status(201).json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Update hero (Admin only)
-app.put('/api/admin/heroes/:id', authenticateUser, authorizeAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updateData = req.body;
-
-        const { data, error } = await supabase
-            .from('hero')
-            .update(updateData)
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) throw error;
-        if (!data) {
-            return res.status(404).json({ success: false, error: 'Hero not found' });
-        }
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Delete hero (Admin only)
-app.delete('/api/admin/heroes/:id', authenticateUser, authorizeAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { error } = await supabase
-            .from('hero')
-            .delete()
-            .eq('id', id);
-
-        if (error) throw error;
-        res.json({ success: true, message: 'Hero deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Toggle hero active status (Admin only)
-app.patch('/api/admin/heroes/:id/toggle', authenticateUser, authorizeAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
+            .order('created_at', { ascending: true });
         
-        const { data: current, error: fetchError } = await supabase
-            .from('hero')
-            .select('is_active')
-            .eq('id', id)
-            .single();
-
-        if (fetchError) throw fetchError;
-        
-        const { data, error } = await supabase
-            .from('hero')
-            .update({ is_active: !current.is_active })
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) throw error;
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
-// ============================================
-// Hero Secondary Routes (Secondary Banner Slider)
-// ============================================
+// Get hero videos
+app.get('/api/hero-videos', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero_videos')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
-// Get all active secondary heroes (Public)
+// Get hero secondary items
 app.get('/api/hero-secondary', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -546,203 +442,1192 @@ app.get('/api/hero-secondary', async (req, res) => {
             .select('*')
             .eq('is_active', true)
             .order('sort_order', { ascending: true });
-
-        if (error) throw error;
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
-// Get all secondary heroes including inactive (Admin only)
-app.get('/api/admin/hero-secondary', authenticateUser, authorizeAdmin, async (req, res) => {
+// ============================================
+// NEWS API
+// ============================================
+app.get('/api/news', async (req, res) => {
     try {
         const { data, error } = await supabase
-            .from('hero_secondary')
+            .from('news')
             .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// STORY API (আমাদের গল্প)
+// ============================================
+
+// Get all active stories (sorted by sort_order)
+app.get('/api/stories', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('story')
+            .select('*')
+            .eq('is_active', true)
             .order('sort_order', { ascending: true });
 
-        if (error) throw error;
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
-// Get single secondary hero by ID (Admin only)
-app.get('/api/admin/hero-secondary/:id', authenticateUser, authorizeAdmin, async (req, res) => {
+// Get single story by ID
+app.get('/api/stories/:id', async (req, res) => {
     try {
         const { id } = req.params;
+
         const { data, error } = await supabase
-            .from('hero_secondary')
+            .from('story')
             .select('*')
             .eq('id', id)
+            .eq('is_active', true)
             .single();
 
-        if (error) throw error;
-        if (!data) {
-            return res.status(404).json({ success: false, error: 'Secondary hero not found' });
-        }
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Story not found' });
 
-// Create secondary hero (Admin only)
-app.post('/api/admin/hero-secondary', authenticateUser, authorizeAdmin, async (req, res) => {
-    try {
-        const { title, subtitle, img, cta_text, cta_link, is_active, sort_order } = req.body;
-
-        const heroSecondaryData = {
-            title,
-            subtitle,
-            img,
-            cta_text,
-            cta_link,
-            is_active: is_active !== undefined ? is_active : true,
-            sort_order: sort_order || 0
-        };
-
-        const { data, error } = await supabase
-            .from('hero_secondary')
-            .insert([heroSecondaryData])
-            .select()
-            .single();
-
-        if (error) throw error;
-        res.status(201).json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Update secondary hero (Admin only)
-app.put('/api/admin/hero-secondary/:id', authenticateUser, authorizeAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updateData = req.body;
-
-        const { data, error } = await supabase
-            .from('hero_secondary')
-            .update(updateData)
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) throw error;
-        if (!data) {
-            return res.status(404).json({ success: false, error: 'Secondary hero not found' });
-        }
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Delete secondary hero (Admin only)
-app.delete('/api/admin/hero-secondary/:id', authenticateUser, authorizeAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { error } = await supabase
-            .from('hero_secondary')
-            .delete()
-            .eq('id', id);
-
-        if (error) throw error;
-        res.json({ success: true, message: 'Secondary hero deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Toggle secondary hero active status (Admin only)
-app.patch('/api/admin/hero-secondary/:id/toggle', authenticateUser, authorizeAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        const { data: current, error: fetchError } = await supabase
-            .from('hero_secondary')
-            .select('is_active')
-            .eq('id', id)
-            .single();
-
-        if (fetchError) throw fetchError;
-        
-        const { data, error } = await supabase
-            .from('hero_secondary')
-            .update({ is_active: !current.is_active })
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) throw error;
-        res.json({ success: true, data });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
 // ============================================
-// Dashboard Stats
+// PRODUCT DETAILS API (Colors, Variants, Reviews, Videos, Banners)
 // ============================================
-app.get('/api/admin/stats', authenticateUser, authorizeAdmin, async (req, res) => {
+
+// Get product colors
+app.get('/api/product-colors', async (req, res) => {
     try {
-        const [heroCount, secondaryCount, adminCount] = await Promise.all([
-            supabase.from('hero').select('*', { count: 'exact', head: true }),
-            supabase.from('hero_secondary').select('*', { count: 'exact', head: true }),
-            supabase.from('admins').select('*', { count: 'exact', head: true }).eq('is_active', true)
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_colors')
+            .select('*')
+            .eq('product_id', product.id)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product variants
+app.get('/api/product-variants', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_variants')
+            .select('*')
+            .eq('product_id', product.id)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product reviews
+app.get('/api/product-reviews', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_reviews')
+            .select('*')
+            .eq('product_id', product.id)
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Submit product review (Left active assuming guest reviews are allowed based on previous setup)
+app.post('/api/submit-review', async (req, res) => {
+    try {
+        const { product_id, user_name, rating, review_text } = req.body;
+        
+        if (!product_id || !rating || !review_text) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const { data, error } = await supabase
+            .from('product_reviews')
+            .insert([{
+                product_id,
+                user_name: user_name || 'Guest User',
+                rating: parseInt(rating),
+                review_text
+            }]);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json({ success: true, data });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product videos
+app.get('/api/product-videos', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_videos')
+            .select('*')
+            .eq('product_id', product.id)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get product banners
+app.get('/api/product-banners', async (req, res) => {
+    try {
+        const slug = req.query.slug;
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        
+        const { data: products } = await supabase.from('products').select('*');
+        const product = products.find(p => (p.slug || createSlug(p.title)) === slug);
+        if (!product) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('product_banners')
+            .select('*')
+            .eq('product_id', product.id)
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get color sizes
+app.get('/api/color-sizes', async (req, res) => {
+    try {
+        const ids = req.query.ids;
+        if (!ids) return res.json([]);
+        
+        const idArray = ids.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        if (!idArray.length) return res.json([]);
+        
+        const { data, error } = await supabase
+            .from('color_sizes')
+            .select('*')
+            .in('color_id', idArray)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// ANNOUNCEMENT BAR API
+// ============================================
+
+// Get active announcement (সবচেয়ে সক্রিয় একটি)
+app.get('/api/announcement', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('announcement_bar')
+            .select('*')
+            .eq('is_active', true)
+            .lte('start_date', new Date().toISOString())
+            .gte('end_date', new Date().toISOString())
+            .order('created_at', { ascending: false })
+            .limit(1);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        
+        // যদি ডাটা থাকে তাহলে প্রথমটি রিটার্ন করবে, নাহলে null
+        res.json(data && data.length > 0 ? data[0] : null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all active announcements (একাধিক থাকলে)
+app.get('/api/announcements', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('announcement_bar')
+            .select('*')
+            .eq('is_active', true)
+            .lte('start_date', new Date().toISOString())
+            .gte('end_date', new Date().toISOString())
+            .order('created_at', { ascending: false });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// ABOUT US API (আমাদের সম্পর্কে)
+// ============================================
+
+// ============================================
+// ABOUT US API (আমাদের সম্পর্কে)
+// ============================================
+
+// Get all active about us entries (sorted by sort_order)
+app.get('/api/about-us/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('about_us')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single about us entry by ID
+app.get('/api/about-us/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Skip if id is "all" (handled by route above)
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('about_us')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'About Us entry not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+// ============================================
+// FAQ API (প্রশ্ন ও উত্তর)
+// ============================================
+
+// Get all active FAQs (sorted by sort_order)
+app.get('/api/faqs', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('faq')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single FAQ by ID
+app.get('/api/faqs/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { data, error } = await supabase
+            .from('faq')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'FAQ not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// SHIPPING POLICY API (শিপিং নীতি)
+// ============================================
+
+// Get all active shipping policy entries (sorted by sort_order)
+app.get('/api/shipping-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('shipping_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single shipping policy entry by ID
+app.get('/api/shipping-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('shipping_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Shipping policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// RETURN POLICY API (রিটার্ন নীতি)
+// ============================================
+
+// Get all active return policy entries (sorted by sort_order)
+app.get('/api/return-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('return_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single return policy entry by ID
+app.get('/api/return-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('return_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Return policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// BLOG API (ব্লগ)
+// ============================================
+
+// Get all active blog entries (sorted by sort_order)
+app.get('/api/blog/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('blog')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single blog entry by ID
+app.get('/api/blog/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('blog')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Blog entry not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// PRIVACY POLICY API (গোপনীয়তা নীতি)
+// ============================================
+
+// Get all active privacy policy entries (sorted by sort_order)
+app.get('/api/privacy-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('privacy_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single privacy policy entry by ID
+app.get('/api/privacy-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('privacy_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Privacy policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// TERMS & CONDITIONS API (শর্তাবলী)
+// ============================================
+
+// Get all active terms entries (sorted by sort_order)
+app.get('/api/terms/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('terms_conditions')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single terms entry by ID
+app.get('/api/terms/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('terms_conditions')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Terms entry not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// REFUND POLICY API (ফেরত নীতি)
+// ============================================
+
+// Get all active refund policy entries (sorted by sort_order)
+app.get('/api/refund-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('refund_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single refund policy entry by ID
+app.get('/api/refund-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('refund_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Refund policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// COOKIE POLICY API (কুকি নীতি)
+// ============================================
+
+// Get all active cookie policy entries (sorted by sort_order)
+app.get('/api/cookie-policy/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('cookie_policy')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single cookie policy entry by ID
+app.get('/api/cookie-policy/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('cookie_policy')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Cookie policy not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================
+// STORE LOCATOR API (স্টোর লোকেটর)
+// ============================================
+
+// Get all active store locator entries (sorted by sort_order)
+app.get('/api/store-locator/all', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('store_locator')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get single store locator entry by ID
+app.get('/api/store-locator/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === 'all') return;
+
+        const { data, error } = await supabase
+            .from('store_locator')
+            .select('*')
+            .eq('id', id)
+            .eq('is_active', true)
+            .single();
+
+        if (error) return res.status(500).json({ error: error.message });
+        if (!data) return res.status(404).json({ error: 'Store locator entry not found' });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+// ============================================
+// FOOTER API (Complete Footer System)
+// ============================================
+
+// Get footer content by section name
+app.get('/api/footer-content/:section', async (req, res) => {
+    try {
+        const { section } = req.params;
+        const { data, error } = await supabase
+            .from('footer_content')
+            .select('*')
+            .eq('section_name', section)
+            .eq('is_active', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get all footer content
+app.get('/api/footer-content', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_content')
+            .select('*')
+            .eq('is_active', true);
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer social links
+app.get('/api/footer/social-links', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_social_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer menus with quick links
+app.get('/api/footer/menus', async (req, res) => {
+    try {
+        const { data: menus, error: menuError } = await supabase
+            .from('footer_menus')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (menuError) return res.status(500).json({ error: menuError.message });
+        
+        const { data: links, error: linkError } = await supabase
+            .from('footer_quick_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (linkError) return res.status(500).json({ error: linkError.message });
+        
+        const menuWithLinks = menus.map(menu => ({
+            ...menu,
+            links: links.filter(link => link.menu_id === menu.id)
+        }));
+        
+        res.json(menuWithLinks);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer quick links
+app.get('/api/footer/quick-links', async (req, res) => {
+    try {
+        const { menu_id } = req.query;
+        let query = supabase
+            .from('footer_quick_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (menu_id) {
+            query = query.eq('menu_id', menu_id);
+        }
+        
+        const { data, error } = await query;
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer payment methods
+app.get('/api/footer/payment-methods', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_payment_methods')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer shipping partners
+app.get('/api/footer/shipping-partners', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_shipping_partners')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer certifications
+app.get('/api/footer/certifications', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_certifications')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer app links
+app.get('/api/footer/app-links', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_app_links')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer country selector
+app.get('/api/footer/countries', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_country_selector')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get default country
+app.get('/api/footer/default-country', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_country_selector')
+            .select('*')
+            .eq('is_active', true)
+            .eq('is_default', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer trust badges
+app.get('/api/footer/trust-badges', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_trust_badges')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get footer settings
+app.get('/api/footer/settings', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('footer_settings')
+            .select('*')
+            .eq('is_active', true)
+            .single();
+        
+        if (error) return res.status(500).json({ error: error.message });
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get complete footer data (all components)
+app.get('/api/footer/complete', async (req, res) => {
+    try {
+        const [
+            { data: content },
+            { data: socialLinks },
+            { data: menus },
+            { data: quickLinks },
+            { data: paymentMethods },
+            { data: shippingPartners },
+            { data: certifications },
+            { data: appLinks },
+            { data: countries },
+            { data: trustBadges },
+            { data: settings }
+        ] = await Promise.all([
+            supabase.from('footer_content').select('*').eq('is_active', true),
+            supabase.from('footer_social_links').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_menus').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_quick_links').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_payment_methods').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_shipping_partners').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_certifications').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_app_links').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_country_selector').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_trust_badges').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+            supabase.from('footer_settings').select('*').eq('is_active', true).single()
         ]);
+
+        const menuWithLinks = (menus || []).map(menu => ({
+            ...menu,
+            links: (quickLinks || []).filter(link => link.menu_id === menu.id)
+        }));
+
+        res.json({
+            content: content || [],
+            socialLinks: socialLinks || [],
+            menus: menuWithLinks,
+            paymentMethods: paymentMethods || [],
+            shippingPartners: shippingPartners || [],
+            certifications: certifications || [],
+            appLinks: appLinks || [],
+            countries: countries || [],
+            trustBadges: trustBadges || [],
+            settings: settings || null
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+
+
+
+// ============================================
+// AUTH API (Final Clean Version)
+// ============================================
+
+// ============================================
+// AUTH API (Updated with new fields)
+// ============================================
+
+// SIGNUP
+app.post('/api/auth/signup', async (req, res) => {
+    try {
+        const {
+            email, password,
+            first_name, last_name,
+            phone,
+            address_line1, address_line2,
+            city, state, postal_code, country
+        } = req.body;
+
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    first_name: first_name || '',
+                    last_name: last_name || '',
+                    phone: phone || '',
+                    address_line1: address_line1 || '',
+                    address_line2: address_line2 || '',
+                    city: city || '',
+                    state: state || '',
+                    postal_code: postal_code || '',
+                    country: country || ''
+                }
+            }
+        });
+
+        if (error && Object.keys(error).length > 0 && error.message) {
+            throw error;
+        }
+
+        if (data.user) {
+            res.json({
+                success: true,
+                user: data.user,
+                session: data.session
+            });
+        } else {
+            throw new Error("User not created");
+        }
+
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: err.message || "Signup failed"
+        });
+    }
+});
+
+// LOGIN
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) throw error;
 
         res.json({
             success: true,
-            data: {
-                totalHeroes: heroCount.count,
-                totalSecondaryHeroes: secondaryCount.count,
-                totalActiveAdmins: adminCount.count
-            }
+            user: data.user,
+            session: data.session
         });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+
+    } catch (err) {
+        res.status(401).json({
+            success: false,
+            error: err.message
+        });
     }
 });
 
-// ============================================
-// Error Handling Middleware
-// ============================================
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ 
-        success: false, 
-        error: 'Internal server error' 
-    });
+// GET PROFILE
+app.get('/api/user/profile', async (req, res) => {
+    try {
+        const token = req.headers.authorization?.replace('Bearer ', '');
+        if (!token) throw new Error('Token required');
+
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+        if (authError || !user) throw new Error('Invalid token');
+
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        res.json({
+            success: true,
+            user,
+            profile
+        });
+
+    } catch (err) {
+        res.status(401).json({
+            success: false,
+            error: err.message
+        });
+    }
 });
 
-// 404 Handler
-app.use((req, res) => {
-    res.status(404).json({ 
-        success: false, 
-        error: 'Route not found' 
-    });
+// UPDATE PROFILE
+app.put('/api/user/profile', async (req, res) => {
+    try {
+        const token = req.headers.authorization?.replace('Bearer ', '');
+        if (!token) throw new Error('Token required');
+
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+        if (authError || !user) throw new Error('Invalid token');
+
+        const {
+            first_name, last_name, phone,
+            address_line1, address_line2,
+            city, state, postal_code, country
+        } = req.body;
+
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .upsert({
+                id: user.id,
+                first_name,
+                last_name,
+                phone,
+                address_line1,
+                address_line2,
+                city,
+                state,
+                postal_code,
+                country,
+                updated_at: new Date()
+            })
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        res.json({
+            success: true,
+            profile
+        });
+
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
+
+// LOGOUT
+app.post('/api/auth/logout', async (req, res) => {
+    try {
+        await supabase.auth.signOut();
+        res.json({ success: true });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+
+// ============================================
+// PAGE ROUTES
+// ============================================
+
+// Category page (with subcategory support)
+app.get('/category/:slug*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'category.html'));
 });
 
 // ============================================
-// Server Setup
+// SPA FALLBACK (Must be last)
 // ============================================
-app.listen(PORT, () => {
-    console.log(`✅ Server running on http://localhost:${PORT}`);
-    console.log(`📝 API Documentation:`);
-    console.log(`   - POST /api/auth/signup - Create new user account`);
-    console.log(`   - POST /api/auth/login - Login with email and password`);
-    console.log(`   - POST /api/auth/logout - Logout current user`);
-    console.log(`   - GET  /api/auth/user - Get current user info`);
-    console.log(`   - GET  /api/admin/stats - Get dashboard statistics`);
-    console.log(`   - GET  /api/admin/heroes - Get all heroes (Admin)`);
-    console.log(`   - POST /api/admin/heroes - Create hero (Admin)`);
-    console.log(`   - GET  /api/admin/hero-secondary - Get all secondary heroes (Admin)`);
-    console.log(`   - POST /api/admin/hero-secondary - Create secondary hero (Admin)`);
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 module.exports = app;
-
-
