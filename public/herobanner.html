@@ -63,53 +63,6 @@
             padding: 0;
         }
 
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            inset: 0;
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .loading-spinner {
-            width: 48px;
-            height: 48px;
-            border: 3px solid #e5e5ea;
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 20px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .loading-text {
-            font-family: 'Manrope', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-        .loading-subtext {
-            font-size: 13px;
-            color: var(--accent);
-        }
-        .loading-timer {
-            font-family: 'Sora', monospace;
-            font-size: 12px;
-            color: var(--accent);
-            margin-top: 16px;
-        }
-
         /* Admin Layout */
         .admin-layout {
             display: flex;
@@ -349,15 +302,6 @@
     </style>
 </head>
 <body class="antialiased">
-
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Loading Admin Panel</div>
-        <div class="loading-subtext">Verifying credentials and loading data...</div>
-        <div class="loading-timer" id="loadingTimer">Time remaining: 20s</div>
-    </div>
-
     <div class="admin-layout">
         
         <aside class="sidebar" id="sidebar"></aside>
@@ -520,15 +464,12 @@
     <script>
         (function() {
             const API_BASE_URL = window.location.origin;
-            const LOADING_TIMEOUT = 20000; // 20 seconds timeout
             
             // State Management
             let activeTab = 'primary';
             let currentHeroes = [];
             let deleteTargetId = null;
             let editingHeroId = null;
-            let loadingTimerInterval = null;
-            let pageLoadCompleted = false;
 
             // API Endpoints
             const endpoints = {
@@ -536,7 +477,7 @@
                 secondary: '/api/admin/hero-secondary'
             };
 
-            // ✅ Get admin token from localStorage - NEVER DELETE IT
+            // ✅ Get admin token from localStorage
             function getAdminToken() {
                 // Check admin session in localStorage
                 const stored = localStorage.getItem('jayenware_admin_session');
@@ -557,7 +498,6 @@
                     try {
                         const sessionParsed = JSON.parse(sessionStored);
                         if (sessionParsed && sessionParsed.access_token) {
-                            // Sync to localStorage but DON'T delete anything
                             localStorage.setItem('jayenware_admin_session', JSON.stringify(sessionParsed));
                             return sessionParsed.access_token;
                         }
@@ -569,58 +509,14 @@
                 return null;
             }
 
-            // ✅ Check if admin is authenticated - NO SESSION DELETION
+            // ✅ Check if admin is authenticated
             function checkAdminAuth() {
                 const token = getAdminToken();
                 if (!token) {
-                    // Token not found, redirect to home page after timeout
+                    window.location.href = '/signin?type=admin&message=admin_required';
                     return false;
                 }
                 return true;
-            }
-
-            // Hide loading screen
-            function hideLoadingScreen() {
-                if (pageLoadCompleted) return;
-                pageLoadCompleted = true;
-                
-                if (loadingTimerInterval) {
-                    clearInterval(loadingTimerInterval);
-                    loadingTimerInterval = null;
-                }
-                
-                const loadingScreen = document.getElementById('loadingScreen');
-                if (loadingScreen) {
-                    loadingScreen.classList.add('hidden');
-                }
-            }
-
-            // Start loading timer
-            function startLoadingTimer() {
-                let timeLeft = 20;
-                const timerEl = document.getElementById('loadingTimer');
-                
-                if (timerEl) {
-                    timerEl.textContent = `Time remaining: ${timeLeft}s`;
-                }
-                
-                loadingTimerInterval = setInterval(() => {
-                    timeLeft--;
-                    if (timerEl) {
-                        timerEl.textContent = `Time remaining: ${timeLeft}s`;
-                    }
-                    
-                    if (timeLeft <= 0) {
-                        clearInterval(loadingTimerInterval);
-                        loadingTimerInterval = null;
-                        
-                        if (!pageLoadCompleted) {
-                            console.warn('⚠️ Page load timeout - redirecting to home');
-                            // ✅ Redirect to home page, NOT login page
-                            window.location.href = '/';
-                        }
-                    }
-                }, 1000);
             }
 
             function showToast(message, type = 'info') {
@@ -735,7 +631,8 @@
                 
                 const token = getAdminToken();
                 if (!token) {
-                    showToast('Please login to continue', 'error');
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
                     return;
                 }
 
@@ -769,7 +666,8 @@
             async function toggleHeroStatus(id) {
                 const token = getAdminToken();
                 if (!token) {
-                    showToast('Please login to continue', 'error');
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
                     return;
                 }
 
@@ -813,7 +711,8 @@
 
                 const token = getAdminToken();
                 if (!token) {
-                    showToast('Please login to continue', 'error');
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
                     return;
                 }
 
@@ -855,11 +754,9 @@
                         closeModal();
                         loadHeroes();
                     } else if (response.status === 401 || response.status === 403) {
-                        showToast('Your session has expired. Please login again.', 'error');
-                        // ✅ DO NOT delete session, just redirect to home
-                        setTimeout(() => {
-                            window.location.href = '/';
-                        }, 2000);
+                        showToast('Session expired. Please login again.', 'error');
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
                     } else {
                         throw new Error(data.error || 'Failed to save banner');
                     }
@@ -875,16 +772,8 @@
             async function loadHeroes() {
                 const token = getAdminToken();
                 if (!token) {
-                    // ✅ Don't delete session, just show message
-                    document.getElementById('heroTableBody').innerHTML = `
-                        <tr>
-                            <td colspan="7" style="text-align:center;padding:40px;">
-                                <i class="fa-solid fa-lock" style="font-size:24px;color:var(--accent);margin-bottom:12px;display:block;"></i>
-                                <span style="color:var(--accent);">Admin session required to load banners.</span>
-                            </td>
-                        </tr>
-                    `;
-                    document.getElementById('totalCount').textContent = '0';
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
                     return;
                 }
 
@@ -913,6 +802,13 @@
                             'Accept': 'application/json' 
                         }
                     });
+
+                    if (response.status === 401 || response.status === 403) {
+                        showToast('Session expired. Please login again.', 'error');
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
+                        return;
+                    }
 
                     if (!response.ok) throw new Error('Failed to load banners');
 
@@ -1000,16 +896,8 @@
 
             // Initialize
             document.addEventListener('DOMContentLoaded', () => {
-                // Start loading timer
-                startLoadingTimer();
-
                 // Check admin authentication
-                if (!checkAdminAuth()) {
-                    console.warn('⚠️ No admin token found - waiting for timeout');
-                    // Don't redirect immediately, let the timer handle it
-                } else {
-                    console.log('✅ Admin token found');
-                }
+                if (!checkAdminAuth()) return;
 
                 // Image preview on input
                 const imageInput = document.getElementById('heroImage');
@@ -1040,7 +928,6 @@
                         topBarSelector: '#topBar' 
                     });
                     JAYENWARE.Components.onLogout(function() { 
-                        // ✅ Logout only clears session when user explicitly logs out
                         localStorage.removeItem('jayenware_admin_session');
                         sessionStorage.removeItem('jayenware_admin_session');
                         window.location.href = '/';
@@ -1049,14 +936,11 @@
 
                 // Load primary tab by default
                 switchTab('primary');
-                
-                // Hide loading screen after initialization
-                setTimeout(() => {
-                    hideLoadingScreen();
-                }, 500);
             });
 
         })();
     </script>
 </body>
 </html>
+
+
