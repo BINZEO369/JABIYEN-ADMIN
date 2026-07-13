@@ -28,8 +28,8 @@
       "dest": "/public/herobanner.html"
     },
     {
-      "src": "/hero-video.js",
-      "dest": "/public/hero-video.js"
+      "src": "/herovideo",
+      "dest": "/public/herovideo.html"
     },
     {
       "src": "/hero-secondary-banner.js",
