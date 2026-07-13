@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Hero Banners Management | JAYENWARE Admin</title>
-    <meta name="description" content="Manage primary and secondary hero banners">
+    <meta name="description" content="Manage primary and secondary hero banners for JAYENWARE">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#1d1d1f">
     <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
@@ -63,12 +63,14 @@
             padding: 0;
         }
 
+        /* Admin Layout */
         .admin-layout {
             display: flex;
             min-height: 100vh;
             position: relative;
         }
 
+        /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
             background: #fafafa;
@@ -98,6 +100,7 @@
             gap: 16px;
         }
 
+        /* Main Content */
         .main-content {
             flex: 1;
             width: 100%;
@@ -111,6 +114,7 @@
             .main-content { margin-left: var(--sidebar-width); }
         }
 
+        /* Page Action Header with Tabs */
         .page-header-bar {
             background: #ffffff;
             border-bottom: 1px solid #e5e5ea;
@@ -132,6 +136,7 @@
             margin: 0 0 10px 0;
         }
 
+        /* Segmented Control / Tabs */
         .segmented-control {
             display: inline-flex;
             background: #f5f5f7;
@@ -157,6 +162,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
+        /* Buttons */
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
             gap: 8px; padding: 10px 24px; border-radius: 50px;
@@ -166,12 +172,13 @@
             text-decoration: none; white-space: nowrap; min-height: 42px;
         }
         .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .btn-primary:hover { background: #333; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+        .btn-primary:hover, .btn-primary:active { background: #333; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
         .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid #d1d1d6; }
-        .btn-outline:hover { border-color: var(--primary); background: #f5f5f7; }
+        .btn-outline:hover, .btn-outline:active { border-color: var(--primary); background: #f5f5f7; }
         .btn-danger { background: #dc2626; color: #fff; }
-        .btn-danger:hover { background: #b91c1c; }
+        .btn-danger:hover, .btn-danger:active { background: #b91c1c; }
 
+        /* Content Area */
         .content-area {
             flex: 1; padding: 30px 24px; max-width: 1400px;
             width: 100%; margin: 0 auto;
@@ -189,6 +196,7 @@
             font-size: 13px; color: var(--accent); margin: 4px 0 0;
         }
 
+        /* Table Components */
         .table-container {
             background: #ffffff; border: 1px solid #e5e5ea;
             border-radius: 16px; overflow: hidden; margin-bottom: 24px;
@@ -213,11 +221,12 @@
 
         .actions-cell { display: flex; gap: 8px; align-items: center; }
         .action-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid #e5e5ea; background: #fff; color: #555; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 13px; flex-shrink: 0; }
-        .action-btn:hover { background: #f5f5f7; border-color: #d1d1d6; color: var(--primary); transform: scale(1.05); }
+        .action-btn:hover, .action-btn:active { background: #f5f5f7; border-color: #d1d1d6; color: var(--primary); transform: scale(1.05); }
         .action-btn.edit:hover { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
         .action-btn.delete:hover { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
         .action-btn.toggle:hover { background: #f0fdf4; border-color: #bbf7d0; color: #059669; }
 
+        /* Modal Settings */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.25s ease; }
         .modal-overlay.show { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -232,10 +241,11 @@
         .modal-body { padding: 24px; flex: 1; }
         .modal-footer { padding: 16px 24px; display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #e5e5ea; position: sticky; bottom: 0; background: #fff; z-index: 10; }
 
+        /* Form Controls */
         .form-group { margin-bottom: 18px; }
         .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .form-input, .form-textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5ea; border-radius: 12px; font-size: 16px; font-family: 'Inter', sans-serif; color: var(--primary); background: #fafafa; transition: all 0.2s ease; outline: none; -webkit-appearance: none; }
-        @media (min-width: 640px) { .form-input, .form-textarea { font-size: 14px; } }
+        .form-input, .form-textarea, .form-select { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5ea; border-radius: 12px; font-size: 16px; font-family: 'Inter', sans-serif; color: var(--primary); background: #fafafa; transition: all 0.2s ease; outline: none; -webkit-appearance: none; }
+        @media (min-width: 640px) { .form-input, .form-textarea, .form-select { font-size: 14px; } }
         .form-input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08); }
         .form-hint { font-size: 12px; color: var(--accent); margin-top: 6px; }
         .form-row { display: grid; grid-template-columns: 1fr; gap: 16px; }
@@ -245,6 +255,7 @@
         .form-check input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; border-radius: 6px; }
         .form-check label { font-size: 14px; font-weight: 500; color: var(--primary); cursor: pointer; }
 
+        /* Toasts, Overlays & Empty States */
         .toast-container { position: fixed; top: 20px; right: 20px; left: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; pointer-events: none; align-items: center; }
         @media (min-width: 640px) { .toast-container { left: auto; align-items: flex-end; } }
         .toast { padding: 14px 20px; border-radius: 14px; font-size: 13px; font-weight: 600; color: #fff; animation: slideInDown 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); max-width: 380px; width: 100%; display: flex; align-items: center; gap: 12px; pointer-events: auto; }
@@ -262,14 +273,15 @@
         .confirm-actions { display: flex; gap: 12px; justify-content: center; }
         .confirm-actions .btn { flex: 1; }
 
-        .empty-state { text-align: center; padding: 60px 20px; }
+        .empty-state { text-align: center; padding: 60px 20px; display: none; }
         .empty-state-icon { width: 72px; height: 72px; border-radius: 50%; background: #f5f5f7; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: #d1d1d6; }
         .empty-state h3 { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0 0 8px; }
         .empty-state p { font-size: 14px; color: var(--accent); margin: 0 0 24px; }
 
-        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: inline-block; }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
+        /* Responsive Settings */
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
@@ -285,6 +297,7 @@
             .modal { max-width: 100%; border-radius: 24px 24px 0 0; max-height: 85vh; margin: 0; }
             .modal-footer { flex-direction: column-reverse; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
             .modal-footer .btn { width: 100%; }
+            .actions-cell { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -341,7 +354,7 @@
                         </table>
                     </div>
 
-                    <div class="empty-state" id="emptyState" style="display:none;">
+                    <div class="empty-state" id="emptyState">
                         <div class="empty-state-icon">
                             <i class="fa-solid fa-images"></i>
                         </div>
@@ -357,6 +370,7 @@
         </main>
     </div>
 
+    <!-- Create/Edit Modal -->
     <div class="modal-overlay" id="heroModal">
         <div class="modal">
             <div class="modal-header">
@@ -366,7 +380,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="heroForm" onsubmit="event.preventDefault(); saveHero();">
+                <form id="heroForm" onsubmit="return false;">
                     <input type="hidden" id="heroId" value="">
                     
                     <div class="form-group">
@@ -424,6 +438,7 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
     <div class="confirm-overlay" id="deleteConfirm">
         <div class="confirm-dialog">
             <div class="confirm-icon">
@@ -441,6 +456,7 @@
         </div>
     </div>
 
+    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="/components.js"></script>
@@ -449,26 +465,26 @@
         (function() {
             const API_BASE_URL = window.location.origin;
             
+            // State Management
             let activeTab = 'primary';
             let currentHeroes = [];
             let deleteTargetId = null;
             let editingHeroId = null;
 
-            // ✅ CORRECT API ENDPOINTS
+            // API Endpoints
             const endpoints = {
                 primary: '/api/admin/hero',
                 secondary: '/api/admin/hero-secondary'
             };
 
-            // ✅ CORRECT TOKEN RETRIEVAL - using jayenware_admin_session
-            function getToken() {
-                // Check localStorage for admin session
+            // ✅ Get admin token from localStorage
+            function getAdminToken() {
+                // Check admin session in localStorage
                 const stored = localStorage.getItem('jayenware_admin_session');
                 if (stored) {
                     try {
                         const parsed = JSON.parse(stored);
                         if (parsed && parsed.access_token) {
-                            console.log('✅ Admin token found');
                             return parsed.access_token;
                         }
                     } catch(e) {
@@ -482,7 +498,6 @@
                     try {
                         const sessionParsed = JSON.parse(sessionStored);
                         if (sessionParsed && sessionParsed.access_token) {
-                            console.log('✅ Admin token found in sessionStorage');
                             localStorage.setItem('jayenware_admin_session', JSON.stringify(sessionParsed));
                             return sessionParsed.access_token;
                         }
@@ -491,14 +506,17 @@
                     }
                 }
 
-                console.error('❌ No admin token found');
                 return null;
             }
 
-            function handleLogout() {
-                localStorage.removeItem('jayenware_admin_session');
-                sessionStorage.removeItem('jayenware_admin_session');
-                window.location.href = '/signin?type=admin';
+            // ✅ Check if admin is authenticated
+            function checkAdminAuth() {
+                const token = getAdminToken();
+                if (!token) {
+                    window.location.href = '/signin?type=admin&message=admin_required';
+                    return false;
+                }
+                return true;
             }
 
             function showToast(message, type = 'info') {
@@ -506,8 +524,12 @@
                 const toast = document.createElement('div');
                 toast.className = `toast ${type}`;
                 
-                const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-                toast.innerHTML = `<i class="fa-solid ${icons[type]}"></i> <span>${message}</span>`;
+                const icons = { 
+                    success: 'fa-check-circle', 
+                    error: 'fa-exclamation-circle', 
+                    info: 'fa-info-circle' 
+                };
+                toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.info}"></i> <span>${escapeHTML(message)}</span>`;
                 
                 container.appendChild(toast);
                 
@@ -519,6 +541,7 @@
                 }, 3500);
             }
 
+            // Tab Switching
             function switchTab(tab) {
                 activeTab = tab;
                 
@@ -530,10 +553,12 @@
                 document.getElementById('sectionTitle').textContent = isPrimary ? 'Primary Hero Banners' : 'Secondary Hero Banners';
                 document.getElementById('sectionSubtitle').textContent = isPrimary ? 'Manage your homepage primary slider banners' : 'Manage your secondary banner slider content';
                 document.getElementById('emptyTitle').textContent = isPrimary ? 'No Primary Banners Yet' : 'No Secondary Banners Yet';
+                document.getElementById('imageHint').textContent = isPrimary ? 'Enter a direct image URL (recommended: 1920x800px)' : 'Enter a direct image URL (recommended: 1200x600px)';
 
                 loadHeroes();
             }
 
+            // Modal Functions
             function openCreateModal() {
                 editingHeroId = null;
                 document.getElementById('modalTitle').textContent = activeTab === 'primary' ? 'Add Primary Banner' : 'Add Secondary Banner';
@@ -584,10 +609,10 @@
             }
 
             function resetImagePreview() {
-                const container = document.getElementById('imagePreviewContainer');
-                container.innerHTML = '<span style="color:#a1a1a6;font-size:13px;">Image preview will appear here</span>';
+                document.getElementById('imagePreviewContainer').innerHTML = '<span style="color:#a1a1a6;font-size:13px;">Image preview will appear here</span>';
             }
 
+            // Delete Confirmation
             function openDeleteConfirm(id, title) {
                 deleteTargetId = id;
                 document.getElementById('deleteItemName').textContent = title || 'Untitled Banner';
@@ -604,10 +629,10 @@
             async function confirmDelete() {
                 if (!deleteTargetId) return;
                 
-                const token = getToken();
+                const token = getAdminToken();
                 if (!token) {
-                    showToast('Session expired. Please sign in again.', 'error');
-                    handleLogout();
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
                     return;
                 }
 
@@ -629,7 +654,7 @@
                         closeDeleteConfirm();
                         loadHeroes();
                     } else {
-                        throw new Error(data.error || 'Failed to delete');
+                        throw new Error(data.error || 'Failed to delete banner');
                     }
                 } catch (error) {
                     showToast(error.message || 'Failed to delete banner', 'error');
@@ -637,11 +662,12 @@
                 }
             }
 
+            // Toggle Status
             async function toggleHeroStatus(id) {
-                const token = getToken();
+                const token = getAdminToken();
                 if (!token) {
-                    showToast('Session expired. Please sign in again.', 'error');
-                    handleLogout();
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
                     return;
                 }
 
@@ -659,7 +685,7 @@
                     const data = await response.json();
 
                     if (response.ok && data.success) {
-                        showToast('Banner status updated', 'success');
+                        showToast(`Banner ${data.banner.is_active ? 'activated' : 'deactivated'} successfully`, 'success');
                         loadHeroes();
                     } else {
                         throw new Error(data.error || 'Failed to toggle status');
@@ -669,12 +695,26 @@
                 }
             }
 
+            // Save Hero (Create/Update)
             async function saveHero() {
                 const title = document.getElementById('heroTitle').value.trim();
                 const image = document.getElementById('heroImage').value.trim();
                 
-                if (!title) return showToast('Title is required', 'error');
-                if (!image) return showToast('Image URL is required', 'error');
+                if (!title) {
+                    showToast('Title is required', 'error');
+                    return;
+                }
+                if (!image) {
+                    showToast('Image URL is required', 'error');
+                    return;
+                }
+
+                const token = getAdminToken();
+                if (!token) {
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
+                    return;
+                }
 
                 const heroData = {
                     title: title,
@@ -686,17 +726,15 @@
                     is_active: document.getElementById('heroIsActive').checked
                 };
 
-                const token = getToken();
-                if (!token) {
-                    showToast('Session expired. Please sign in again.', 'error');
-                    handleLogout();
-                    return;
-                }
-
                 const isEditing = !!editingHeroId;
                 const baseEndpoint = endpoints[activeTab];
                 const url = isEditing ? `${API_BASE_URL}${baseEndpoint}/${editingHeroId}` : `${API_BASE_URL}${baseEndpoint}`;
                 const method = isEditing ? 'PUT' : 'POST';
+
+                // Disable save button
+                const saveBtn = document.getElementById('saveBtn');
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
 
                 try {
                     const response = await fetch(url, {
@@ -715,19 +753,27 @@
                         showToast(isEditing ? 'Banner updated successfully' : 'Banner created successfully', 'success');
                         closeModal();
                         loadHeroes();
+                    } else if (response.status === 401 || response.status === 403) {
+                        showToast('Session expired. Please login again.', 'error');
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
                     } else {
                         throw new Error(data.error || 'Failed to save banner');
                     }
                 } catch (error) {
                     showToast(error.message || 'Failed to save banner', 'error');
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>' + (isEditing ? 'Update Banner' : 'Save Banner') + '</span>';
                 }
             }
 
+            // Load Heroes
             async function loadHeroes() {
-                const token = getToken();
+                const token = getAdminToken();
                 if (!token) {
-                    showToast('Session expired. Please sign in again.', 'error');
-                    handleLogout();
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
                     return;
                 }
 
@@ -735,8 +781,18 @@
                 const emptyState = document.getElementById('emptyState');
                 const endpoint = endpoints[activeTab];
                 
-                // Show skeleton
-                tbody.innerHTML = `<tr><td colspan="7" style="padding:20px;text-align:center;"><div class="skeleton" style="height:200px;width:100%;"></div></td></tr>`;
+                // Show Skeleton Loader
+                tbody.innerHTML = `
+                    <tr>
+                        <td><div class="skeleton" style="width:68px;height:44px;"></div></td>
+                        <td><div class="skeleton" style="width:140px;height:16px;"></div></td>
+                        <td><div class="skeleton" style="width:110px;height:14px;"></div></td>
+                        <td><div class="skeleton" style="width:80px;height:14px;"></div></td>
+                        <td><div class="skeleton" style="width:30px;height:14px;"></div></td>
+                        <td><div class="skeleton" style="width:65px;height:24px;border-radius:20px;"></div></td>
+                        <td><div class="skeleton" style="width:110px;height:36px;margin-left:auto;"></div></td>
+                    </tr>
+                `;
                 emptyState.style.display = 'none';
 
                 try {
@@ -747,13 +803,14 @@
                         }
                     });
 
-                    if (!response.ok) {
-                        if (response.status === 401 || response.status === 403) {
-                            handleLogout();
-                            return;
-                        }
-                        throw new Error('Failed to load banners');
+                    if (response.status === 401 || response.status === 403) {
+                        showToast('Session expired. Please login again.', 'error');
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
+                        return;
                     }
+
+                    if (!response.ok) throw new Error('Failed to load banners');
 
                     const data = await response.json();
                     
@@ -787,15 +844,16 @@
                     <tr>
                         <td>
                             ${hero.img 
-                                ? `<img src="${escapeHTML(hero.img)}" alt="${escapeHTML(hero.title)}" class="hero-thumb" onerror="this.style.display='none'">`
-                                : `<div style="width:68px;height:44px;border-radius:8px;background:#e5e5ea;display:flex;align-items:center;justify-content:center;color:#999;font-size:10px;font-weight:600;">NO IMG</div>`
+                                ? `<img src="${escapeHTML(hero.img)}" alt="${escapeHTML(hero.title || '')}" class="hero-thumb" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`
+                                : ''
                             }
+                            <div style="width:68px;height:44px;border-radius:8px;background:#e5e5ea;display:${hero.img ? 'none' : 'flex'};align-items:center;justify-content:center;color:#999;font-size:10px;font-weight:600;">NO IMG</div>
                         </td>
-                        <td><span style="font-weight:600;display:block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(hero.title || '-')}</span></td>
+                        <td><span style="font-weight:600;color:var(--primary);display:block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(hero.title || '-')}</span></td>
                         <td><span style="color:var(--accent);font-size:12px;display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(hero.subtitle || '-')}</span></td>
                         <td>
                             ${hero.cta_text 
-                                ? `<span style="font-size:12px;font-weight:500;background:#f5f5f7;padding:4px 8px;border-radius:6px;">${escapeHTML(hero.cta_text)} →</span>`
+                                ? `<span style="font-size:12px;font-weight:500;background:#f5f5f7;padding:4px 8px;border-radius:6px;display:inline-block;">${escapeHTML(hero.cta_text)} ${hero.cta_link ? '→' : ''}</span>`
                                 : '<span style="color:#d1d1d6;">-</span>'
                             }
                         </td>
@@ -808,21 +866,13 @@
                         </td>
                         <td style="text-align:right;">
                             <div class="actions-cell" style="justify-content:flex-end;">
-                                <button class="action-btn edit" onclick="window._editHero(${hero.id})" title="Edit Banner"><i class="fa-solid fa-pen"></i></button>
-                                <button class="action-btn toggle" onclick="window._toggleHero(${hero.id})" title="${hero.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${hero.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                <button class="action-btn delete" onclick="window._deleteHero(${hero.id}, '${escapeHTML(hero.title).replace(/'/g, "\\'")}')" title="Delete Banner"><i class="fa-solid fa-trash-can"></i></button>
+                                <button class="action-btn edit" onclick="openEditModal(${JSON.stringify(hero).replace(/"/g, '&quot;')})" title="Edit Banner"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="toggleHeroStatus(${hero.id})" title="${hero.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${hero.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${hero.id}, '${escapeHTML(hero.title || 'Untitled').replace(/'/g, "\\'")}')" title="Delete Banner"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         </td>
                     </tr>
                 `).join('');
-
-                // Set global functions
-                window._editHero = function(id) {
-                    const hero = currentHeroes.find(h => h.id === id);
-                    if (hero) openEditModal(hero);
-                };
-                window._toggleHero = toggleHeroStatus;
-                window._deleteHero = openDeleteConfirm;
             }
 
             function escapeHTML(str) {
@@ -832,24 +882,38 @@
                 return div.innerHTML;
             }
 
+            // Make functions globally accessible
+            window.switchTab = switchTab;
+            window.openCreateModal = openCreateModal;
+            window.openEditModal = openEditModal;
+            window.closeModal = closeModal;
+            window.openDeleteConfirm = openDeleteConfirm;
+            window.closeDeleteConfirm = closeDeleteConfirm;
+            window.confirmDelete = confirmDelete;
+            window.toggleHeroStatus = toggleHeroStatus;
+            window.saveHero = saveHero;
+            window.loadHeroes = loadHeroes;
+
             // Initialize
             document.addEventListener('DOMContentLoaded', () => {
-                // Image preview
+                // Check admin authentication
+                if (!checkAdminAuth()) return;
+
+                // Image preview on input
                 const imageInput = document.getElementById('heroImage');
                 if (imageInput) {
                     imageInput.addEventListener('input', () => updateImagePreview(imageInput.value.trim()));
                 }
 
-                // Modal click outside to close
+                // Close modals on overlay click
                 document.getElementById('heroModal').addEventListener('click', function(e) { 
                     if (e.target === this) closeModal(); 
                 });
-                
                 document.getElementById('deleteConfirm').addEventListener('click', function(e) { 
                     if (e.target === this) closeDeleteConfirm(); 
                 });
 
-                // ESC key to close modals
+                // Close modals on Escape key
                 document.addEventListener('keydown', function(e) {
                     if (e.key === 'Escape') { 
                         closeModal(); 
@@ -857,15 +921,20 @@
                     }
                 });
 
-                // Check admin session before loading
-                const token = getToken();
-                if (!token) {
-                    showToast('Please sign in with your admin account', 'error');
-                    setTimeout(() => handleLogout(), 2000);
-                    return;
+                // Initialize components if available
+                if (window.JAYENWARE && window.JAYENWARE.Components) {
+                    JAYENWARE.Components.initAll({ 
+                        sidebarSelector: '#sidebar', 
+                        topBarSelector: '#topBar' 
+                    });
+                    JAYENWARE.Components.onLogout(function() { 
+                        localStorage.removeItem('jayenware_admin_session');
+                        sessionStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/';
+                    });
                 }
 
-                // Load primary tab
+                // Load primary tab by default
                 switchTab('primary');
             });
 
