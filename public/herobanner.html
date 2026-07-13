@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>All Hero Banners Management | JAYENWARE Admin</title>
-    <meta name="description" content="Manage both primary and secondary hero banners for JAYENWARE">
+    <title>Hero Banners Management | JAYENWARE Admin</title>
+    <meta name="description" content="Manage primary and secondary hero banners for JAYENWARE">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#1d1d1f">
     <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
@@ -273,12 +273,12 @@
         .confirm-actions { display: flex; gap: 12px; justify-content: center; }
         .confirm-actions .btn { flex: 1; }
 
-        .empty-state { text-align: center; padding: 60px 20px; }
+        .empty-state { text-align: center; padding: 60px 20px; display: none; }
         .empty-state-icon { width: 72px; height: 72px; border-radius: 50%; background: #f5f5f7; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: #d1d1d6; }
         .empty-state h3 { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0 0 8px; }
         .empty-state p { font-size: 14px; color: var(--accent); margin: 0 0 24px; }
 
-        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: inline-block; }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
         /* Responsive Settings */
@@ -297,6 +297,7 @@
             .modal { max-width: 100%; border-radius: 24px 24px 0 0; max-height: 85vh; margin: 0; }
             .modal-footer { flex-direction: column-reverse; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
             .modal-footer .btn { width: 100%; }
+            .actions-cell { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -349,12 +350,11 @@
                                     <th style="text-align:right;">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="heroTableBody">
-                                </tbody>
+                            <tbody id="heroTableBody"></tbody>
                         </table>
                     </div>
 
-                    <div class="empty-state" id="emptyState" style="display:none;">
+                    <div class="empty-state" id="emptyState">
                         <div class="empty-state-icon">
                             <i class="fa-solid fa-images"></i>
                         </div>
@@ -370,6 +370,7 @@
         </main>
     </div>
 
+    <!-- Create/Edit Modal -->
     <div class="modal-overlay" id="heroModal">
         <div class="modal">
             <div class="modal-header">
@@ -379,7 +380,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="heroForm" onsubmit="event.preventDefault(); saveHero();">
+                <form id="heroForm" onsubmit="return false;">
                     <input type="hidden" id="heroId" value="">
                     
                     <div class="form-group">
@@ -395,7 +396,7 @@
                     <div class="form-group">
                         <label class="form-label">Image URL *</label>
                         <input type="url" class="form-input" id="heroImage" placeholder="https://example.com/image.jpg" required>
-                        <p class="form-hint" id="imageHint">Enter a direct image URL</p>
+                        <p class="form-hint" id="imageHint">Enter a direct image URL (recommended: 1920x800px)</p>
                         <div style="margin-top:10px;border-radius:12px;overflow:hidden;background:#f5f5f7;min-height:100px;display:flex;align-items:center;justify-content:center;border:1px dashed #d1d1d6;" id="imagePreviewContainer">
                             <span style="color:#a1a1a6;font-size:13px;">Image preview will appear here</span>
                         </div>
@@ -437,6 +438,7 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
     <div class="confirm-overlay" id="deleteConfirm">
         <div class="confirm-dialog">
             <div class="confirm-icon">
@@ -454,353 +456,489 @@
         </div>
     </div>
 
+    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="/components.js"></script>
 
     <script>
-        const API_BASE_URL = window.location.origin;
-        
-        // State Management
-        let activeTab = 'primary'; // Can be 'primary' or 'secondary'
-        let currentHeroes = [];
-        let deleteTargetId = null;
-        let editingHeroId = null;
-
-        const endpoints = {
-            primary: '/api/admin/heroes',
-            secondary: '/api/admin/hero-secondary'
-        };
-
-        function setSafeElementText(id, text) {
-            const el = document.getElementById(id);
-            if (el) el.textContent = text;
-        }
-
-        function getToken() {
-            return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || '';
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('refresh_token');
-            sessionStorage.removeItem('auth_token');
-            sessionStorage.removeItem('refresh_token');
-            window.location.href = '/login.html';
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
+        (function() {
+            const API_BASE_URL = window.location.origin;
             
-            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-            toast.innerHTML = `<i class="fa-solid ${icons[type]}"></i> <span>${message}</span>`;
-            
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-20px)';
-                toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
+            // State Management
+            let activeTab = 'primary';
+            let currentHeroes = [];
+            let deleteTargetId = null;
+            let editingHeroId = null;
 
-        // Tab Switching Logic
-        function switchTab(tab) {
-            activeTab = tab;
-            
-            // UI Toggle
-            document.getElementById('tabPrimary').classList.toggle('active', tab === 'primary');
-            document.getElementById('tabSecondary').classList.toggle('active', tab === 'secondary');
-            
-            // Text Changes Based on Context
-            const isPrimary = tab === 'primary';
-            setSafeElementText('addBtnText', isPrimary ? 'Add Primary Banner' : 'Add Secondary Banner');
-            setSafeElementText('sectionTitle', isPrimary ? 'Primary Hero Banners' : 'Secondary Hero Banners');
-            setSafeElementText('sectionSubtitle', isPrimary ? 'Manage your homepage primary slider banners' : 'Manage your secondary banner slider content');
-            
-            setSafeElementText('emptyTitle', isPrimary ? 'No Primary Banners Yet' : 'No Secondary Banners Yet');
-            setSafeElementText('imageHint', isPrimary ? 'Enter a direct image URL (recommended: 1920x800px)' : 'Enter a direct image URL (recommended: 1200x600px)');
-
-            // Reload Data
-            loadHeroes();
-        }
-
-        function openCreateModal() {
-            editingHeroId = null;
-            document.getElementById('modalTitle').textContent = activeTab === 'primary' ? 'Add Primary Banner' : 'Add Secondary Banner';
-            document.getElementById('heroId').value = '';
-            document.getElementById('heroTitle').value = '';
-            document.getElementById('heroSubtitle').value = '';
-            document.getElementById('heroImage').value = '';
-            document.getElementById('heroCtaText').value = '';
-            document.getElementById('heroCtaLink').value = '';
-            document.getElementById('heroSortOrder').value = '0';
-            document.getElementById('heroIsActive').checked = true;
-            document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-check"></i><span>Save Banner</span>';
-            resetImagePreview();
-            document.getElementById('heroModal').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function openEditModal(hero) {
-            editingHeroId = hero.id;
-            document.getElementById('modalTitle').textContent = activeTab === 'primary' ? 'Edit Primary Banner' : 'Edit Secondary Banner';
-            document.getElementById('heroId').value = hero.id;
-            document.getElementById('heroTitle').value = hero.title || '';
-            document.getElementById('heroSubtitle').value = hero.subtitle || '';
-            document.getElementById('heroImage').value = hero.img || '';
-            document.getElementById('heroCtaText').value = hero.cta_text || '';
-            document.getElementById('heroCtaLink').value = hero.cta_link || '';
-            document.getElementById('heroSortOrder').value = hero.sort_order || 0;
-            document.getElementById('heroIsActive').checked = hero.is_active;
-            document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-check"></i><span>Update Banner</span>';
-            updateImagePreview(hero.img);
-            document.getElementById('heroModal').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('heroModal').classList.remove('show');
-            resetImagePreview();
-            document.body.style.overflow = '';
-        }
-
-        function updateImagePreview(url) {
-            const container = document.getElementById('imagePreviewContainer');
-            if (url) {
-                container.innerHTML = `<img src="${escapeHTML(url)}" alt="Preview" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;" onerror="this.parentElement.innerHTML='<span style=color:#dc2626;font-size:13px;><i class=\\'fa-solid fa-triangle-exclamation\\'></i> Failed to load image</span>'">`;
-            } else {
-                resetImagePreview();
-            }
-        }
-
-        function resetImagePreview() {
-            const container = document.getElementById('imagePreviewContainer');
-            container.innerHTML = '<span style="color:#a1a1a6;font-size:13px;">Image preview will appear here</span>';
-        }
-
-        function openDeleteConfirm(id, title) {
-            deleteTargetId = id;
-            document.getElementById('deleteItemName').textContent = title || 'Untitled Banner';
-            document.getElementById('deleteConfirm').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeDeleteConfirm() {
-            deleteTargetId = null;
-            document.getElementById('deleteConfirm').classList.remove('show');
-            document.body.style.overflow = '';
-        }
-
-        async function confirmDelete() {
-            if (!deleteTargetId) return;
-            
-            const token = getToken();
-            const endpoint = endpoints[activeTab];
-
-            try {
-                const response = await fetch(`${API_BASE_URL}${endpoint}/${deleteTargetId}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    showToast('Banner deleted successfully', 'success');
-                    closeDeleteConfirm();
-                    loadHeroes();
-                } else {
-                    throw new Error(data.error || 'Failed to delete');
-                }
-            } catch (error) {
-                showToast(error.message || 'Failed to delete banner', 'error');
-                closeDeleteConfirm();
-            }
-        }
-
-        async function toggleHeroStatus(id) {
-            const token = getToken();
-            const endpoint = endpoints[activeTab];
-
-            try {
-                const response = await fetch(`${API_BASE_URL}${endpoint}/${id}/toggle`, {
-                    method: 'PATCH',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    showToast('Banner status updated', 'success');
-                    loadHeroes();
-                } else {
-                    throw new Error(data.error || 'Failed to toggle status');
-                }
-            } catch (error) {
-                showToast(error.message || 'Failed to update status', 'error');
-            }
-        }
-
-        async function saveHero() {
-            const title = document.getElementById('heroTitle').value.trim();
-            const image = document.getElementById('heroImage').value.trim();
-            
-            if (!title) return showToast('Title is required', 'error');
-            if (!image) return showToast('Image URL is required', 'error');
-
-            const heroData = {
-                title: title,
-                subtitle: document.getElementById('heroSubtitle').value.trim(),
-                img: image,
-                cta_text: document.getElementById('heroCtaText').value.trim(),
-                cta_link: document.getElementById('heroCtaLink').value.trim(),
-                sort_order: parseInt(document.getElementById('heroSortOrder').value) || 0,
-                is_active: document.getElementById('heroIsActive').checked
+            // API Endpoints
+            const endpoints = {
+                primary: '/api/admin/hero',
+                secondary: '/api/admin/hero-secondary'
             };
 
-            const token = getToken();
-            const isEditing = !!editingHeroId;
-            const baseEndpoint = endpoints[activeTab];
-            const url = isEditing ? `${API_BASE_URL}${baseEndpoint}/${editingHeroId}` : `${API_BASE_URL}${baseEndpoint}`;
-            const method = isEditing ? 'PUT' : 'POST';
-
-            try {
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(heroData)
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    showToast(isEditing ? 'Banner updated successfully' : 'Banner created successfully', 'success');
-                    closeModal();
-                    loadHeroes();
-                } else {
-                    throw new Error(data.error || 'Failed to save banner');
+            // ✅ Get admin token from localStorage
+            function getAdminToken() {
+                // Check admin session in localStorage
+                const stored = localStorage.getItem('jayenware_admin_session');
+                if (stored) {
+                    try {
+                        const parsed = JSON.parse(stored);
+                        if (parsed && parsed.access_token) {
+                            return parsed.access_token;
+                        }
+                    } catch(e) {
+                        console.error('Failed to parse admin session:', e);
+                    }
                 }
-            } catch (error) {
-                showToast(error.message || 'Failed to save banner', 'error');
+
+                // Check sessionStorage
+                const sessionStored = sessionStorage.getItem('jayenware_admin_session');
+                if (sessionStored) {
+                    try {
+                        const sessionParsed = JSON.parse(sessionStored);
+                        if (sessionParsed && sessionParsed.access_token) {
+                            localStorage.setItem('jayenware_admin_session', JSON.stringify(sessionParsed));
+                            return sessionParsed.access_token;
+                        }
+                    } catch(e) {
+                        console.error('Failed to parse sessionStorage admin session:', e);
+                    }
+                }
+
+                return null;
             }
-        }
 
-        async function loadHeroes() {
-            const token = getToken();
-            const tbody = document.getElementById('heroTableBody');
-            const emptyState = document.getElementById('emptyState');
-            const endpoint = endpoints[activeTab];
-            
-            // Show Skeleton Loader
-            tbody.innerHTML = `<tr class="skeleton-row"><td><div class="skeleton" style="width:68px;height:44px;"></div></td><td><div class="skeleton" style="width:140px;height:16px;"></div></td><td><div class="skeleton" style="width:110px;height:14px;"></div></td><td><div class="skeleton" style="width:80px;height:14px;"></div></td><td><div class="skeleton" style="width:30px;height:14px;"></div></td><td><div class="skeleton" style="width:65px;height:24px;border-radius:20px;"></div></td><td><div class="skeleton" style="width:110px;height:36px;margin-left:auto;"></div></td></tr>`;
-            emptyState.style.display = 'none';
+            // ✅ Check if admin is authenticated
+            function checkAdminAuth() {
+                const token = getAdminToken();
+                if (!token) {
+                    window.location.href = '/signin?type=admin&message=admin_required';
+                    return false;
+                }
+                return true;
+            }
 
-            try {
-                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-                    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-                });
-
-                if (!response.ok) throw new Error('Failed to load banners');
-
-                const data = await response.json();
+            function showToast(message, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
                 
-                if (data.success) {
-                    currentHeroes = data.data || [];
-                    renderHeroesTable();
-                    setSafeElementText('totalCount', currentHeroes.length);
+                const icons = { 
+                    success: 'fa-check-circle', 
+                    error: 'fa-exclamation-circle', 
+                    info: 'fa-info-circle' 
+                };
+                toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.info}"></i> <span>${escapeHTML(message)}</span>`;
+                
+                container.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(-20px)';
+                    toast.style.transition = 'all 0.3s ease';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3500);
+            }
+
+            // Tab Switching
+            function switchTab(tab) {
+                activeTab = tab;
+                
+                document.getElementById('tabPrimary').classList.toggle('active', tab === 'primary');
+                document.getElementById('tabSecondary').classList.toggle('active', tab === 'secondary');
+                
+                const isPrimary = tab === 'primary';
+                document.getElementById('addBtnText').textContent = isPrimary ? 'Add Primary Banner' : 'Add Secondary Banner';
+                document.getElementById('sectionTitle').textContent = isPrimary ? 'Primary Hero Banners' : 'Secondary Hero Banners';
+                document.getElementById('sectionSubtitle').textContent = isPrimary ? 'Manage your homepage primary slider banners' : 'Manage your secondary banner slider content';
+                document.getElementById('emptyTitle').textContent = isPrimary ? 'No Primary Banners Yet' : 'No Secondary Banners Yet';
+                document.getElementById('imageHint').textContent = isPrimary ? 'Enter a direct image URL (recommended: 1920x800px)' : 'Enter a direct image URL (recommended: 1200x600px)';
+
+                loadHeroes();
+            }
+
+            // Modal Functions
+            function openCreateModal() {
+                editingHeroId = null;
+                document.getElementById('modalTitle').textContent = activeTab === 'primary' ? 'Add Primary Banner' : 'Add Secondary Banner';
+                document.getElementById('heroId').value = '';
+                document.getElementById('heroTitle').value = '';
+                document.getElementById('heroSubtitle').value = '';
+                document.getElementById('heroImage').value = '';
+                document.getElementById('heroCtaText').value = '';
+                document.getElementById('heroCtaLink').value = '';
+                document.getElementById('heroSortOrder').value = '0';
+                document.getElementById('heroIsActive').checked = true;
+                document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-check"></i><span>Save Banner</span>';
+                resetImagePreview();
+                document.getElementById('heroModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function openEditModal(hero) {
+                editingHeroId = hero.id;
+                document.getElementById('modalTitle').textContent = activeTab === 'primary' ? 'Edit Primary Banner' : 'Edit Secondary Banner';
+                document.getElementById('heroId').value = hero.id;
+                document.getElementById('heroTitle').value = hero.title || '';
+                document.getElementById('heroSubtitle').value = hero.subtitle || '';
+                document.getElementById('heroImage').value = hero.img || '';
+                document.getElementById('heroCtaText').value = hero.cta_text || '';
+                document.getElementById('heroCtaLink').value = hero.cta_link || '';
+                document.getElementById('heroSortOrder').value = hero.sort_order || 0;
+                document.getElementById('heroIsActive').checked = hero.is_active;
+                document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-check"></i><span>Update Banner</span>';
+                updateImagePreview(hero.img);
+                document.getElementById('heroModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                document.getElementById('heroModal').classList.remove('show');
+                resetImagePreview();
+                document.body.style.overflow = '';
+            }
+
+            function updateImagePreview(url) {
+                const container = document.getElementById('imagePreviewContainer');
+                if (url) {
+                    container.innerHTML = `<img src="${escapeHTML(url)}" alt="Preview" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;" onerror="this.parentElement.innerHTML='<span style=color:#dc2626;font-size:13px;><i class=\\'fa-solid fa-triangle-exclamation\\'></i> Failed to load image</span>'">`;
                 } else {
-                    throw new Error(data.error || 'Failed to load data');
+                    resetImagePreview();
                 }
-            } catch (error) {
-                console.error(`Failed to load ${activeTab} heroes:`, error);
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;"><i class="fa-solid fa-exclamation-circle"></i> Failed to load banners. <button onclick="loadHeroes()" style="background:none;border:none;color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;">Retry</button></td></tr>`;
-                setSafeElementText('totalCount', '0');
-            }
-        }
-
-        function renderHeroesTable() {
-            const tbody = document.getElementById('heroTableBody');
-            const emptyState = document.getElementById('emptyState');
-
-            if (currentHeroes.length === 0) {
-                tbody.innerHTML = '';
-                emptyState.style.display = 'block';
-                return;
             }
 
-            emptyState.style.display = 'none';
+            function resetImagePreview() {
+                document.getElementById('imagePreviewContainer').innerHTML = '<span style="color:#a1a1a6;font-size:13px;">Image preview will appear here</span>';
+            }
 
-            tbody.innerHTML = currentHeroes.map(hero => `
-                <tr>
-                    <td>
-                        ${hero.img 
-                            ? `<img src="${escapeHTML(hero.img)}" alt="${escapeHTML(hero.title)}" class="hero-thumb" onerror="this.style.display='none'">`
-                            : `<div style="width:68px;height:44px;border-radius:8px;background:#e5e5ea;display:flex;align-items:center;justify-content:center;color:#999;font-size:10px;font-weight:600;">NO IMG</div>`
+            // Delete Confirmation
+            function openDeleteConfirm(id, title) {
+                deleteTargetId = id;
+                document.getElementById('deleteItemName').textContent = title || 'Untitled Banner';
+                document.getElementById('deleteConfirm').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDeleteConfirm() {
+                deleteTargetId = null;
+                document.getElementById('deleteConfirm').classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            async function confirmDelete() {
+                if (!deleteTargetId) return;
+                
+                const token = getAdminToken();
+                if (!token) {
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
+                    return;
+                }
+
+                const endpoint = endpoints[activeTab];
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}${endpoint}/${deleteTargetId}`, {
+                        method: 'DELETE',
+                        headers: { 
+                            'Authorization': `Bearer ${token}`, 
+                            'Accept': 'application/json' 
                         }
-                    </td>
-                    <td><span style="font-weight:600;color:var(--primary);display:block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(hero.title || '-')}</span></td>
-                    <td><span style="color:var(--accent);font-size:12px;display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(hero.subtitle || '-')}</span></td>
-                    <td>
-                        ${hero.cta_text 
-                            ? `<span style="font-size:12px;font-weight:500;background:#f5f5f7;padding:4px 8px;border-radius:6px;display:inline-block;">${escapeHTML(hero.cta_text)} ${hero.cta_link ? '→' : ''}</span>`
-                            : '<span style="color:#d1d1d6;">-</span>'
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        showToast('Banner deleted successfully', 'success');
+                        closeDeleteConfirm();
+                        loadHeroes();
+                    } else {
+                        throw new Error(data.error || 'Failed to delete banner');
+                    }
+                } catch (error) {
+                    showToast(error.message || 'Failed to delete banner', 'error');
+                    closeDeleteConfirm();
+                }
+            }
+
+            // Toggle Status
+            async function toggleHeroStatus(id) {
+                const token = getAdminToken();
+                if (!token) {
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
+                    return;
+                }
+
+                const endpoint = endpoints[activeTab];
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}${endpoint}/${id}/toggle`, {
+                        method: 'PATCH',
+                        headers: { 
+                            'Authorization': `Bearer ${token}`, 
+                            'Accept': 'application/json' 
                         }
-                    </td>
-                    <td><span style="font-family:'Sora',monospace;font-size:13px;font-weight:600;">${hero.sort_order || 0}</span></td>
-                    <td>
-                        <span class="status-badge ${hero.is_active ? 'active' : 'inactive'}">
-                            <span class="status-dot ${hero.is_active ? 'active' : 'inactive'}"></span>
-                            ${hero.is_active ? 'Active' : 'Inactive'}
-                        </span>
-                    </td>
-                    <td style="text-align:right;">
-                        <div class="actions-cell" style="justify-content:flex-end;">
-                            <button class="action-btn edit" onclick='openEditModal(${JSON.stringify(hero).replace(/'/g, "&#39;")})' title="Edit Banner"><i class="fa-solid fa-pen"></i></button>
-                            <button class="action-btn toggle" onclick="toggleHeroStatus(${hero.id})" title="${hero.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${hero.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                            <button class="action-btn delete" onclick="openDeleteConfirm(${hero.id}, '${escapeHTML(hero.title).replace(/'/g, "\\'")}')" title="Delete Banner"><i class="fa-solid fa-trash-can"></i></button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
+                    });
 
-        function escapeHTML(str) {
-            if (!str) return '';
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
+                    const data = await response.json();
 
-        // INIT & EVENT LISTENERS
-        document.addEventListener('DOMContentLoaded', () => {
-            const imageInput = document.getElementById('heroImage');
-            if (imageInput) imageInput.addEventListener('input', () => updateImagePreview(imageInput.value.trim()));
+                    if (response.ok && data.success) {
+                        showToast(`Banner ${data.banner.is_active ? 'activated' : 'deactivated'} successfully`, 'success');
+                        loadHeroes();
+                    } else {
+                        throw new Error(data.error || 'Failed to toggle status');
+                    }
+                } catch (error) {
+                    showToast(error.message || 'Failed to update status', 'error');
+                }
+            }
 
-            document.getElementById('heroModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-            document.getElementById('deleteConfirm').addEventListener('click', function(e) { if (e.target === this) closeDeleteConfirm(); });
+            // Save Hero (Create/Update)
+            async function saveHero() {
+                const title = document.getElementById('heroTitle').value.trim();
+                const image = document.getElementById('heroImage').value.trim();
+                
+                if (!title) {
+                    showToast('Title is required', 'error');
+                    return;
+                }
+                if (!image) {
+                    showToast('Image URL is required', 'error');
+                    return;
+                }
 
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') { closeModal(); closeDeleteConfirm(); }
+                const token = getAdminToken();
+                if (!token) {
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
+                    return;
+                }
+
+                const heroData = {
+                    title: title,
+                    subtitle: document.getElementById('heroSubtitle').value.trim(),
+                    img: image,
+                    cta_text: document.getElementById('heroCtaText').value.trim(),
+                    cta_link: document.getElementById('heroCtaLink').value.trim(),
+                    sort_order: parseInt(document.getElementById('heroSortOrder').value) || 0,
+                    is_active: document.getElementById('heroIsActive').checked
+                };
+
+                const isEditing = !!editingHeroId;
+                const baseEndpoint = endpoints[activeTab];
+                const url = isEditing ? `${API_BASE_URL}${baseEndpoint}/${editingHeroId}` : `${API_BASE_URL}${baseEndpoint}`;
+                const method = isEditing ? 'PUT' : 'POST';
+
+                // Disable save button
+                const saveBtn = document.getElementById('saveBtn');
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
+
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(heroData)
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        showToast(isEditing ? 'Banner updated successfully' : 'Banner created successfully', 'success');
+                        closeModal();
+                        loadHeroes();
+                    } else if (response.status === 401 || response.status === 403) {
+                        showToast('Session expired. Please login again.', 'error');
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
+                    } else {
+                        throw new Error(data.error || 'Failed to save banner');
+                    }
+                } catch (error) {
+                    showToast(error.message || 'Failed to save banner', 'error');
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>' + (isEditing ? 'Update Banner' : 'Save Banner') + '</span>';
+                }
+            }
+
+            // Load Heroes
+            async function loadHeroes() {
+                const token = getAdminToken();
+                if (!token) {
+                    showToast('Session expired. Please login again.', 'error');
+                    window.location.href = '/signin?type=admin';
+                    return;
+                }
+
+                const tbody = document.getElementById('heroTableBody');
+                const emptyState = document.getElementById('emptyState');
+                const endpoint = endpoints[activeTab];
+                
+                // Show Skeleton Loader
+                tbody.innerHTML = `
+                    <tr>
+                        <td><div class="skeleton" style="width:68px;height:44px;"></div></td>
+                        <td><div class="skeleton" style="width:140px;height:16px;"></div></td>
+                        <td><div class="skeleton" style="width:110px;height:14px;"></div></td>
+                        <td><div class="skeleton" style="width:80px;height:14px;"></div></td>
+                        <td><div class="skeleton" style="width:30px;height:14px;"></div></td>
+                        <td><div class="skeleton" style="width:65px;height:24px;border-radius:20px;"></div></td>
+                        <td><div class="skeleton" style="width:110px;height:36px;margin-left:auto;"></div></td>
+                    </tr>
+                `;
+                emptyState.style.display = 'none';
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                        headers: { 
+                            'Authorization': `Bearer ${token}`, 
+                            'Accept': 'application/json' 
+                        }
+                    });
+
+                    if (response.status === 401 || response.status === 403) {
+                        showToast('Session expired. Please login again.', 'error');
+                        localStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/signin?type=admin';
+                        return;
+                    }
+
+                    if (!response.ok) throw new Error('Failed to load banners');
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        currentHeroes = data.banners || [];
+                        renderHeroesTable();
+                        document.getElementById('totalCount').textContent = currentHeroes.length;
+                    } else {
+                        throw new Error(data.error || 'Failed to load data');
+                    }
+                } catch (error) {
+                    console.error(`Failed to load ${activeTab} heroes:`, error);
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;"><i class="fa-solid fa-exclamation-circle"></i> Failed to load banners. <button onclick="loadHeroes()" style="background:none;border:none;color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;">Retry</button></td></tr>`;
+                    document.getElementById('totalCount').textContent = '0';
+                }
+            }
+
+            function renderHeroesTable() {
+                const tbody = document.getElementById('heroTableBody');
+                const emptyState = document.getElementById('emptyState');
+
+                if (currentHeroes.length === 0) {
+                    tbody.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+
+                tbody.innerHTML = currentHeroes.map(hero => `
+                    <tr>
+                        <td>
+                            ${hero.img 
+                                ? `<img src="${escapeHTML(hero.img)}" alt="${escapeHTML(hero.title || '')}" class="hero-thumb" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`
+                                : ''
+                            }
+                            <div style="width:68px;height:44px;border-radius:8px;background:#e5e5ea;display:${hero.img ? 'none' : 'flex'};align-items:center;justify-content:center;color:#999;font-size:10px;font-weight:600;">NO IMG</div>
+                        </td>
+                        <td><span style="font-weight:600;color:var(--primary);display:block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(hero.title || '-')}</span></td>
+                        <td><span style="color:var(--accent);font-size:12px;display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(hero.subtitle || '-')}</span></td>
+                        <td>
+                            ${hero.cta_text 
+                                ? `<span style="font-size:12px;font-weight:500;background:#f5f5f7;padding:4px 8px;border-radius:6px;display:inline-block;">${escapeHTML(hero.cta_text)} ${hero.cta_link ? '→' : ''}</span>`
+                                : '<span style="color:#d1d1d6;">-</span>'
+                            }
+                        </td>
+                        <td><span style="font-family:'Sora',monospace;font-size:13px;font-weight:600;">${hero.sort_order || 0}</span></td>
+                        <td>
+                            <span class="status-badge ${hero.is_active ? 'active' : 'inactive'}">
+                                <span class="status-dot ${hero.is_active ? 'active' : 'inactive'}"></span>
+                                ${hero.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td style="text-align:right;">
+                            <div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn edit" onclick="openEditModal(${JSON.stringify(hero).replace(/"/g, '&quot;')})" title="Edit Banner"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="toggleHeroStatus(${hero.id})" title="${hero.is_active ? 'Deactivate' : 'Activate'}"><i class="fa-solid fa-${hero.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${hero.id}, '${escapeHTML(hero.title || 'Untitled').replace(/'/g, "\\'")}')" title="Delete Banner"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function escapeHTML(str) {
+                if (!str) return '';
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            // Make functions globally accessible
+            window.switchTab = switchTab;
+            window.openCreateModal = openCreateModal;
+            window.openEditModal = openEditModal;
+            window.closeModal = closeModal;
+            window.openDeleteConfirm = openDeleteConfirm;
+            window.closeDeleteConfirm = closeDeleteConfirm;
+            window.confirmDelete = confirmDelete;
+            window.toggleHeroStatus = toggleHeroStatus;
+            window.saveHero = saveHero;
+            window.loadHeroes = loadHeroes;
+
+            // Initialize
+            document.addEventListener('DOMContentLoaded', () => {
+                // Check admin authentication
+                if (!checkAdminAuth()) return;
+
+                // Image preview on input
+                const imageInput = document.getElementById('heroImage');
+                if (imageInput) {
+                    imageInput.addEventListener('input', () => updateImagePreview(imageInput.value.trim()));
+                }
+
+                // Close modals on overlay click
+                document.getElementById('heroModal').addEventListener('click', function(e) { 
+                    if (e.target === this) closeModal(); 
+                });
+                document.getElementById('deleteConfirm').addEventListener('click', function(e) { 
+                    if (e.target === this) closeDeleteConfirm(); 
+                });
+
+                // Close modals on Escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') { 
+                        closeModal(); 
+                        closeDeleteConfirm(); 
+                    }
+                });
+
+                // Initialize components if available
+                if (window.JAYENWARE && window.JAYENWARE.Components) {
+                    JAYENWARE.Components.initAll({ 
+                        sidebarSelector: '#sidebar', 
+                        topBarSelector: '#topBar' 
+                    });
+                    JAYENWARE.Components.onLogout(function() { 
+                        localStorage.removeItem('jayenware_admin_session');
+                        sessionStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/';
+                    });
+                }
+
+                // Load primary tab by default
+                switchTab('primary');
             });
 
-            // Demo Init for Component Framework if used
-            if (window.JAYENWARE && window.JAYENWARE.Components) {
-                JAYENWARE.Components.initAll({ sidebarSelector: '#sidebar', topBarSelector: '#topBar' });
-                JAYENWARE.Components.onLogout(function() { handleLogout(); });
-                JAYENWARE.Components.updateUserInfo({ name: 'Admin', email: 'admin@jayenware.com', role: 'admin', avatarLetter: 'A' });
-            }
-
-            // Start by loading the primary tab
-            switchTab('primary');
-        });
+        })();
     </script>
 </body>
 </html>
