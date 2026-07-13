@@ -1,6 +1,6 @@
 // ============================================
 // admin-server.js - Complete Admin API Server
-// Admin Auth & Management | Supabase Integrated
+// Admin Auth, Management & Hero Banners | Supabase Integrated
 // ============================================
 
 const express = require('express');
@@ -205,9 +205,6 @@ app.get('/api/admin/profile', adminAuth, async (req, res) => {
             .single();
 
         if (adminError) throw adminError;
-
-        // Get user auth metadata
-        const { data: { user }, error: userError } = await supabase.auth.admin.getUserById(req.user.id);
         
         res.json({
             success: true,
@@ -219,8 +216,7 @@ app.get('/api/admin/profile', adminAuth, async (req, res) => {
                 role: adminProfile.role,
                 is_active: adminProfile.is_active,
                 last_login: adminProfile.last_login,
-                created_at: adminProfile.created_at,
-                metadata: user?.user_metadata || {}
+                created_at: adminProfile.created_at
             }
         });
     } catch (err) {
@@ -480,6 +476,496 @@ app.get('/api/admin/verify', async (req, res) => {
                 role: admin.role,
                 full_name: admin.full_name
             }
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// ============================================
+// HERO BANNERS MANAGEMENT API
+// ============================================
+
+// ============================================
+// PRIMARY HERO BANNERS
+// ============================================
+
+// Get all hero banners (admin - including inactive)
+app.get('/api/admin/hero', adminAuth, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero')
+            .select('*')
+            .order('sort_order', { ascending: true });
+
+        if (error) throw error;
+
+        res.json({
+            success: true,
+            banners: data || []
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Get single hero banner
+app.get('/api/admin/hero/:id', adminAuth, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero')
+            .select('*')
+            .eq('id', req.params.id)
+            .single();
+
+        if (error) throw error;
+        if (!data) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Hero banner not found' 
+            });
+        }
+
+        res.json({
+            success: true,
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Create new hero banner
+app.post('/api/admin/hero', adminAuth, async (req, res) => {
+    try {
+        const { title, subtitle, img, cta_text, cta_link, is_active, sort_order } = req.body;
+
+        if (!img) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Image URL is required' 
+            });
+        }
+
+        const { data, error } = await supabase
+            .from('hero')
+            .insert([{
+                title: title || '',
+                subtitle: subtitle || '',
+                img: img,
+                cta_text: cta_text || '',
+                cta_link: cta_link || '',
+                is_active: is_active !== undefined ? is_active : true,
+                sort_order: sort_order || 0
+            }])
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        res.status(201).json({
+            success: true,
+            message: 'Hero banner created successfully',
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Update hero banner
+app.put('/api/admin/hero/:id', adminAuth, async (req, res) => {
+    try {
+        const { title, subtitle, img, cta_text, cta_link, is_active, sort_order } = req.body;
+
+        const updates = {};
+        if (title !== undefined) updates.title = title;
+        if (subtitle !== undefined) updates.subtitle = subtitle;
+        if (img !== undefined) updates.img = img;
+        if (cta_text !== undefined) updates.cta_text = cta_text;
+        if (cta_link !== undefined) updates.cta_link = cta_link;
+        if (is_active !== undefined) updates.is_active = is_active;
+        if (sort_order !== undefined) updates.sort_order = sort_order;
+
+        const { data, error } = await supabase
+            .from('hero')
+            .update(updates)
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        if (!data) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Hero banner not found' 
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Hero banner updated successfully',
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Delete hero banner
+app.delete('/api/admin/hero/:id', adminAuth, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero')
+            .delete()
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        if (!data) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Hero banner not found' 
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Hero banner deleted successfully',
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Toggle hero banner active status
+app.patch('/api/admin/hero/:id/toggle', adminAuth, async (req, res) => {
+    try {
+        // First get current status
+        const { data: current, error: fetchError } = await supabase
+            .from('hero')
+            .select('is_active')
+            .eq('id', req.params.id)
+            .single();
+
+        if (fetchError || !current) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Hero banner not found' 
+            });
+        }
+
+        // Toggle the status
+        const { data, error } = await supabase
+            .from('hero')
+            .update({ is_active: !current.is_active })
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        res.json({
+            success: true,
+            message: `Hero banner ${data.is_active ? 'activated' : 'deactivated'} successfully`,
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Update hero banner sort order (batch)
+app.put('/api/admin/hero/reorder', adminAuth, async (req, res) => {
+    try {
+        const { items } = req.body; // Array of { id, sort_order }
+
+        if (!items || !Array.isArray(items)) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Items array is required' 
+            });
+        }
+
+        // Update each item's sort_order
+        const updates = items.map(item => 
+            supabase
+                .from('hero')
+                .update({ sort_order: item.sort_order })
+                .eq('id', item.id)
+        );
+
+        await Promise.all(updates);
+
+        res.json({
+            success: true,
+            message: 'Hero banners reordered successfully'
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// ============================================
+// SECONDARY HERO BANNERS
+// ============================================
+
+// Get all secondary hero banners (admin - including inactive)
+app.get('/api/admin/hero-secondary', adminAuth, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero_secondary')
+            .select('*')
+            .order('sort_order', { ascending: true });
+
+        if (error) throw error;
+
+        res.json({
+            success: true,
+            banners: data || []
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Get single secondary hero banner
+app.get('/api/admin/hero-secondary/:id', adminAuth, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero_secondary')
+            .select('*')
+            .eq('id', req.params.id)
+            .single();
+
+        if (error) throw error;
+        if (!data) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Secondary hero banner not found' 
+            });
+        }
+
+        res.json({
+            success: true,
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Create new secondary hero banner
+app.post('/api/admin/hero-secondary', adminAuth, async (req, res) => {
+    try {
+        const { title, subtitle, img, cta_text, cta_link, is_active, sort_order } = req.body;
+
+        if (!img) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Image URL is required' 
+            });
+        }
+
+        const { data, error } = await supabase
+            .from('hero_secondary')
+            .insert([{
+                title: title || '',
+                subtitle: subtitle || '',
+                img: img,
+                cta_text: cta_text || '',
+                cta_link: cta_link || '',
+                is_active: is_active !== undefined ? is_active : true,
+                sort_order: sort_order || 0
+            }])
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        res.status(201).json({
+            success: true,
+            message: 'Secondary hero banner created successfully',
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Update secondary hero banner
+app.put('/api/admin/hero-secondary/:id', adminAuth, async (req, res) => {
+    try {
+        const { title, subtitle, img, cta_text, cta_link, is_active, sort_order } = req.body;
+
+        const updates = {};
+        if (title !== undefined) updates.title = title;
+        if (subtitle !== undefined) updates.subtitle = subtitle;
+        if (img !== undefined) updates.img = img;
+        if (cta_text !== undefined) updates.cta_text = cta_text;
+        if (cta_link !== undefined) updates.cta_link = cta_link;
+        if (is_active !== undefined) updates.is_active = is_active;
+        if (sort_order !== undefined) updates.sort_order = sort_order;
+
+        const { data, error } = await supabase
+            .from('hero_secondary')
+            .update(updates)
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        if (!data) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Secondary hero banner not found' 
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Secondary hero banner updated successfully',
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Delete secondary hero banner
+app.delete('/api/admin/hero-secondary/:id', adminAuth, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('hero_secondary')
+            .delete()
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        if (!data) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Secondary hero banner not found' 
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Secondary hero banner deleted successfully',
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Toggle secondary hero banner active status
+app.patch('/api/admin/hero-secondary/:id/toggle', adminAuth, async (req, res) => {
+    try {
+        // First get current status
+        const { data: current, error: fetchError } = await supabase
+            .from('hero_secondary')
+            .select('is_active')
+            .eq('id', req.params.id)
+            .single();
+
+        if (fetchError || !current) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Secondary hero banner not found' 
+            });
+        }
+
+        // Toggle the status
+        const { data, error } = await supabase
+            .from('hero_secondary')
+            .update({ is_active: !current.is_active })
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        res.json({
+            success: true,
+            message: `Secondary hero banner ${data.is_active ? 'activated' : 'deactivated'} successfully`,
+            banner: data
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
+// Update secondary hero banner sort order (batch)
+app.put('/api/admin/hero-secondary/reorder', adminAuth, async (req, res) => {
+    try {
+        const { items } = req.body; // Array of { id, sort_order }
+
+        if (!items || !Array.isArray(items)) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Items array is required' 
+            });
+        }
+
+        // Update each item's sort_order
+        const updates = items.map(item => 
+            supabase
+                .from('hero_secondary')
+                .update({ sort_order: item.sort_order })
+                .eq('id', item.id)
+        );
+
+        await Promise.all(updates);
+
+        res.json({
+            success: true,
+            message: 'Secondary hero banners reordered successfully'
         });
     } catch (err) {
         res.status(500).json({ 
