@@ -24,8 +24,8 @@
       "dest": "/public/fonts.js"
     },
     {
-      "src": "/hero-banner.js",
-      "dest": "/public/hero-banner.js"
+      "src": "/herobanner.html",
+      "dest": "/public/herobanner.html"
     },
     {
       "src": "/hero-video.js",
