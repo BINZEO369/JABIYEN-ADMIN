@@ -114,7 +114,6 @@
       margin: 0;
     }
 
-    /* Admin Badge in Header */
     .admin-status-badge {
       display: inline-flex;
       align-items: center;
@@ -210,9 +209,8 @@
       font-size: 16px;
     }
 
-    /* Admin Dashboard Button */
     .admin-dashboard-btn {
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       gap: 12px;
@@ -289,7 +287,6 @@
       margin-bottom: 20px;
     }
 
-    /* Admin Info Card */
     .admin-info-card {
       background: linear-gradient(135deg, #fffbeb, #fef3c7);
       border: 1.5px solid #fbbf24;
@@ -409,7 +406,6 @@
       position: relative;
     }
     
-    /* Admin indicator on avatar */
     .avatar-admin-indicator {
       position: absolute;
       bottom: -2px;
@@ -676,15 +672,12 @@
             </div>
             
             <div id="content-profile" style="display:none;">
-              <!-- Admin Info Card -->
               <div class="admin-info-card" id="admin-info-card">
                 <div class="admin-info-header">
                   <i class="fa-solid fa-shield-halved"></i>
                   <h3>Administrator Access</h3>
                 </div>
-                <div class="admin-info-grid" id="admin-info-grid">
-                  <!-- Filled dynamically -->
-                </div>
+                <div class="admin-info-grid" id="admin-info-grid"></div>
               </div>
               
               <div class="profile-header-card" id="profile-avatar-card"></div>
@@ -721,8 +714,7 @@
             <i class="fa-solid fa-location-dot"></i> Location
           </button>
           
-          <!-- Admin Dashboard Button (hidden by default) -->
-          <a href="/admin/dashboard" class="admin-dashboard-btn" id="admin-dashboard-btn" style="display: none;">
+          <a href="/admin/dashboard" class="admin-dashboard-btn" id="admin-dashboard-btn">
             <i class="fa-solid fa-gauge-high"></i> Admin Panel
           </a>
           
@@ -764,33 +756,107 @@
       var currentPanel = 'profile';
       var userData = null;
       var adminData = null;
-      var authToken = null;
-      var adminToken = null;
       var isEditingProfile = false;
       var isEditingAddress = false;
 
-      function getToken() {
-        if (authToken) return authToken;
+      // ✅ IMPROVED: Multiple session check methods
+      function getSession() {
+        // Method 1: Check localStorage
         var stored = localStorage.getItem('jayenware_session');
         if (stored) {
           try {
             var parsed = JSON.parse(stored);
-            authToken = parsed.access_token || null;
-          } catch(e) {}
+            if (parsed && parsed.access_token) {
+              console.log('✅ Session found in localStorage');
+              return parsed;
+            }
+          } catch(e) {
+            console.error('Failed to parse localStorage session:', e);
+          }
         }
-        return authToken;
+
+        // Method 2: Check sessionStorage
+        var sessionStored = sessionStorage.getItem('jayenware_session');
+        if (sessionStored) {
+          try {
+            var sessionParsed = JSON.parse(sessionStored);
+            if (sessionParsed && sessionParsed.access_token) {
+              console.log('✅ Session found in sessionStorage');
+              // Sync to localStorage
+              localStorage.setItem('jayenware_session', JSON.stringify(sessionParsed));
+              return sessionParsed;
+            }
+          } catch(e) {
+            console.error('Failed to parse sessionStorage session:', e);
+          }
+        }
+
+        // Method 3: Check cookies
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          if (cookie.startsWith('jayenware_session=')) {
+            try {
+              var cookieValue = cookie.substring('jayenware_session='.length);
+              var cookieParsed = JSON.parse(decodeURIComponent(cookieValue));
+              if (cookieParsed && cookieParsed.access_token) {
+                console.log('✅ Session found in cookies');
+                // Sync to localStorage
+                localStorage.setItem('jayenware_session', JSON.stringify(cookieParsed));
+                return cookieParsed;
+              }
+            } catch(e) {
+              console.error('Failed to parse cookie session:', e);
+            }
+          }
+        }
+
+        console.warn('❌ No session found in any storage');
+        return null;
       }
 
-      function getAdminToken() {
-        if (adminToken) return adminToken;
+      function getToken() {
+        var session = getSession();
+        return session ? session.access_token : null;
+      }
+
+      function getAdminSession() {
+        // Check admin session in localStorage
         var stored = localStorage.getItem('jayenware_admin_session');
         if (stored) {
           try {
             var parsed = JSON.parse(stored);
-            adminToken = parsed.access_token || null;
-          } catch(e) {}
+            if (parsed && parsed.access_token) {
+              console.log('✅ Admin session found in localStorage');
+              return parsed;
+            }
+          } catch(e) {
+            console.error('Failed to parse admin session:', e);
+          }
         }
-        return adminToken;
+
+        // Check admin session in sessionStorage
+        var sessionStored = sessionStorage.getItem('jayenware_admin_session');
+        if (sessionStored) {
+          try {
+            var sessionParsed = JSON.parse(sessionStored);
+            if (sessionParsed && sessionParsed.access_token) {
+              console.log('✅ Admin session found in sessionStorage');
+              localStorage.setItem('jayenware_admin_session', JSON.stringify(sessionParsed));
+              return sessionParsed;
+            }
+          } catch(e) {
+            console.error('Failed to parse admin session:', e);
+          }
+        }
+
+        console.log('ℹ️ No admin session found');
+        return null;
+      }
+
+      function getAdminToken() {
+        var adminSession = getAdminSession();
+        return adminSession ? adminSession.access_token : null;
       }
 
       function showToast(message, type) {
@@ -845,14 +911,30 @@
       document.getElementById('confirm-logout-btn').addEventListener('click', async function() {
         var btn = document.getElementById('confirm-logout-btn');
         btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Signing Out...';
+        btn.disabled = true;
+        
         try {
-          await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
+          var token = getToken();
+          if (token) {
+            await fetch(API_BASE + '/api/auth/logout', {
+              method: 'POST',
+              headers: { 'Authorization': 'Bearer ' + token }
+            });
+          }
         } catch(e) {
-          console.error('Logout error:', e);
+          console.error('Logout API error:', e);
         }
-        // Clear all sessions
+        
+        // Clear ALL sessions from ALL storages
         localStorage.removeItem('jayenware_session');
         localStorage.removeItem('jayenware_admin_session');
+        sessionStorage.removeItem('jayenware_session');
+        sessionStorage.removeItem('jayenware_admin_session');
+        
+        // Clear cookies
+        document.cookie = 'jayenware_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'jayenware_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        
         window.location.href = '/';
       });
 
@@ -867,29 +949,36 @@
       // Check admin status
       async function checkAdminStatus() {
         var token = getAdminToken();
-        if (!token) return null;
+        if (!token) {
+          console.log('ℹ️ No admin token found, skipping admin check');
+          return null;
+        }
 
         try {
+          console.log('🔍 Checking admin status...');
           var response = await fetch(API_BASE + '/api/admin/verify', {
             headers: {
               'Authorization': 'Bearer ' + token
             }
           });
 
-          if (!response.ok) return null;
+          if (!response.ok) {
+            console.warn('⚠️ Admin verification failed with status:', response.status);
+            return null;
+          }
 
           var result = await response.json();
           if (result.success && result.user) {
+            console.log('✅ Admin verified:', result.user.role);
             adminData = result.user;
             return result.user;
           }
         } catch (error) {
-          console.log('Admin check failed:', error);
+          console.error('❌ Admin check error:', error);
         }
         return null;
       }
 
-      // Render admin status badge in header
       function renderAdminStatusBadge(adminInfo) {
         var container = document.getElementById('admin-status-container');
         
@@ -911,7 +1000,6 @@
         }
       }
 
-      // Render admin info card
       function renderAdminInfoCard(adminInfo) {
         var card = document.getElementById('admin-info-card');
         var grid = document.getElementById('admin-info-grid');
@@ -947,25 +1035,12 @@
         }
       }
 
-      // Show/hide admin dashboard button
       function toggleAdminButton(adminInfo) {
         var btn = document.getElementById('admin-dashboard-btn');
         if (adminInfo && adminInfo.role) {
           btn.style.display = 'flex';
         } else {
           btn.style.display = 'none';
-        }
-      }
-
-      // Show admin indicator on avatar
-      function toggleAdminAvatarIndicator(adminInfo) {
-        var indicator = document.querySelector('.avatar-admin-indicator');
-        if (indicator) {
-          if (adminInfo && adminInfo.role) {
-            indicator.classList.add('visible');
-          } else {
-            indicator.classList.remove('visible');
-          }
         }
       }
 
@@ -1006,6 +1081,12 @@
           });
 
           if (!response.ok) {
+            if (response.status === 401) {
+              showToast('Session expired. Please sign in again.', 'error');
+              localStorage.removeItem('jayenware_session');
+              window.location.href = '/signin';
+              return;
+            }
             var errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.error || 'Failed to update profile');
           }
@@ -1016,11 +1097,6 @@
             userData.last_name = result.profile.last_name || newLname;
             userData.phone = result.profile.phone || newPhone;
             userData.updated_at = result.profile.updated_at || new Date().toISOString();
-          } else {
-            userData.first_name = newFname;
-            userData.last_name = newLname;
-            userData.phone = newPhone;
-            userData.updated_at = new Date().toISOString();
           }
 
           showToast('Profile updated successfully!');
@@ -1080,6 +1156,12 @@
           });
 
           if (!response.ok) {
+            if (response.status === 401) {
+              showToast('Session expired. Please sign in again.', 'error');
+              localStorage.removeItem('jayenware_session');
+              window.location.href = '/signin';
+              return;
+            }
             var errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.error || 'Failed to update address');
           }
@@ -1093,14 +1175,6 @@
             userData.postal_code = result.profile.postal_code || newZip;
             userData.country = result.profile.country || newCountry;
             userData.updated_at = result.profile.updated_at || new Date().toISOString();
-          } else {
-            userData.address_line1 = newAddr1;
-            userData.address_line2 = newAddr2;
-            userData.city = newCity;
-            userData.state = newState;
-            userData.postal_code = newZip;
-            userData.country = newCountry;
-            userData.updated_at = new Date().toISOString();
           }
 
           showToast('Address updated successfully!');
@@ -1121,7 +1195,6 @@
         document.getElementById('skeleton-profile').style.display = 'none';
         document.getElementById('content-profile').style.display = 'block';
 
-        // Render admin info card
         renderAdminInfoCard(adminData);
 
         var fName = data.first_name || '';
@@ -1235,12 +1308,18 @@
 
       async function fetchUserData() {
         var token = getToken();
+        
+        console.log('🔑 Token found:', token ? 'Yes (length: ' + token.length + ')' : 'No');
+        
         if (!token) {
+          console.error('❌ No token available');
           showErrorState('Please sign in to view your account.');
           return;
         }
 
         try {
+          console.log('📡 Fetching user data...');
+          
           // Fetch user data and admin status in parallel
           var [userResponse, adminInfo] = await Promise.all([
             fetch(API_BASE + '/api/user/profile', {
@@ -1252,16 +1331,24 @@
             checkAdminStatus()
           ]);
 
+          console.log('📡 User API response status:', userResponse.status);
+
           if (!userResponse.ok) {
             if (userResponse.status === 401) {
+              console.error('❌ 401 Unauthorized - Token expired or invalid');
+              // Clear invalid session
               localStorage.removeItem('jayenware_session');
+              sessionStorage.removeItem('jayenware_session');
+              document.cookie = 'jayenware_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
               showErrorState('Session expired. Please sign in again.');
               return;
             }
-            throw new Error('Failed to load user data');
+            throw new Error('Failed to load user data (Status: ' + userResponse.status + ')');
           }
 
           var result = await userResponse.json();
+          console.log('✅ User data received:', result);
+          
           var profile = result.profile || {};
           var user = result.user || {};
           
@@ -1280,9 +1367,9 @@
             updated_at: profile.updated_at || user.updated_at || ''
           };
 
-          // Store admin data
           adminData = adminInfo;
 
+          // Show the account grid
           document.getElementById('account-grid').style.display = 'flex';
           document.getElementById('error-state').classList.remove('visible');
           
@@ -1295,10 +1382,12 @@
           
           // Render profile with admin data
           renderProfile(userData);
+          
+          console.log('✅ Account page fully loaded');
 
         } catch (error) {
-          console.error('Error loading user data:', error);
-          showErrorState('Failed to load account data. Please try again.');
+          console.error('❌ Error loading user data:', error);
+          showErrorState('Failed to load account data. Please try again. Error: ' + error.message);
         }
       }
 
@@ -1344,7 +1433,11 @@
         }
       }
 
+      // Initialize on page load
       document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Account page initialized');
+        
+        // Load fonts
         if (window.JAYENWARE_FONTS) {
           var root = document.documentElement;
           var vars = window.JAYENWARE_FONTS.cssVariables;
@@ -1352,6 +1445,13 @@
             if (vars.hasOwnProperty(key)) root.style.setProperty(key, vars[key]);
           }
         }
+
+        // Debug: Check all storage
+        console.log('📦 localStorage keys:', Object.keys(localStorage));
+        console.log('📦 sessionStorage keys:', Object.keys(sessionStorage));
+        console.log('📦 Cookies:', document.cookie);
+
+        // Fetch user data
         fetchUserData();
       });
 
