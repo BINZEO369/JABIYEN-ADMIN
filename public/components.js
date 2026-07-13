@@ -3,12 +3,6 @@
 // Brand: JABIYEN (Premium Apparel)
 // ============================================================================
 
-let userSession = null;
-let allMenuItems = [];
-let allCategories = [];
-let allSubcategories = [];
-let announcementData = null;
-
 window.JABIYEN_COMPONENTS_INITIALIZED = window.JABIYEN_COMPONENTS_INITIALIZED || false;
 
 // ============================================================================
@@ -40,22 +34,6 @@ function applyFontVariables() {
 }
 
 // ============================================================================
-// ANNOUNCEMENT API FETCH
-// ============================================================================
-async function fetchAnnouncement() {
-    try {
-        const response = await fetch('/api/announcement');
-        if (!response.ok) throw new Error('Failed to fetch announcement');
-        const data = await response.json();
-        announcementData = data;
-        return data;
-    } catch (error) {
-        console.error('Announcement fetch error:', error);
-        return null;
-    }
-}
-
-// ============================================================================
 // SHARED CSS STYLES - Header, Navigation, Drawers, Toast ONLY
 // ============================================================================
 function injectSharedStyles() {
@@ -74,7 +52,7 @@ function injectSharedStyles() {
             --glass-border-dark: rgba(0, 0, 0, 0.06);
             --glass-border-inline: rgba(255, 255, 255, 0.15);
             --glass-blur: blur(25px) saturate(200%);
-            --bar-height: 36px;
+            --bar-height: 0px;
         }
         
         html, body {
@@ -96,64 +74,11 @@ function injectSharedStyles() {
         .text-heading-sm { font-family: var(--font-heading); font-size: clamp(1rem, 2.5vw, 1.5rem); line-height: 1.25; font-weight: 600; color: var(--primary); }
         .text-body-sm { font-family: var(--font-body); font-size: 0.875rem; line-height: 1.55; font-weight: 400; color: #2c2c2e; }
         .text-body-xs { font-family: var(--font-body); font-size: 0.75rem; line-height: 1.5; font-weight: 400; color: #3a3a3c; }
-        
-        /* ==================== TOP ANNOUNCEMENT BAR - DYNAMIC ==================== */
-        .top-announcement-bar {
-            background: #000000 !important;
-            color: #ffffff !important;
-            font-family: var(--font-body);
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            height: var(--bar-height);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100% !important;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 60;
-            padding: 0 45px 0 16px;
-            text-align: center;
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, height 0.4s ease;
-        }
-        .top-announcement-bar.bar-hidden {
-            transform: translateY(-100%);
-            opacity: 0;
-            height: 0 !important;
-            pointer-events: none;
-        }
-        .top-announcement-bar a {
-            color: rgba(255,255,255,0.7);
-            text-decoration: underline;
-            font-weight: 700;
-            margin-left: 6px;
-            transition: color 0.2s ease;
-        }
-        .top-announcement-bar a:hover {
-            color: #ffffff;
-        }
-        .announcement-close-btn {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: rgba(255,255,255,0.6);
-            cursor: pointer;
-            padding: 4px;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        .announcement-close-btn:hover { color: #ffffff; transform: translateY(-50%) scale(1.1); }
 
         /* ==================== GLASS NAVIGATION ==================== */
         .glass-nav {
             position: fixed;
-            top: var(--bar-height); 
+            top: 0; 
             left: 0 !important; 
             right: 0 !important;
             width: 100% !important; 
@@ -175,7 +100,6 @@ function injectSharedStyles() {
             border-bottom: 1px solid rgba(0,0,0,0.06);
             box-shadow: 0 4px 30px rgba(0,0,0,0.03);
         }
-        body.announcement-dismissed .glass-nav:not(.nav-scrolled) { top: 0 !important; }
         .glass-nav > div {
             padding-left: 16px !important;
             padding-right: 12px !important;
@@ -293,235 +217,14 @@ function injectSharedStyles() {
 }
 
 // ============================================================================
-// DATA CONTROLLER & UTILITIES
-// ============================================================================
-function createSlug(text) {
-    if (!text) return '';
-    return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
-}
-
-async function fetchMenuItems() {
-    try {
-        const response = await fetch('/api/menu-items');
-        if (!response.ok) throw new Error('Failed to fetch menu pipeline');
-        allMenuItems = await response.json();
-        return allMenuItems;
-    } catch (error) {
-        console.error('Menu infrastructure error:', error);
-        return [];
-    }
-}
-
-async function fetchCategories() {
-    try {
-        const response = await fetch('/api/categories');
-        if (!response.ok) throw new Error('Failed to fetch categories');
-        allCategories = await response.json();
-        return allCategories;
-    } catch (error) {
-        console.error('Category framework error:', error);
-        return [];
-    }
-}
-
-async function fetchSubcategories() {
-    try {
-        const response = await fetch('/api/subcategories');
-        if (!response.ok) throw new Error('Failed to fetch subcategories');
-        allSubcategories = await response.json();
-        return allSubcategories;
-    } catch (error) {
-        console.error('Subcategory architecture error:', error);
-        return [];
-    }
-}
-
-function buildMenuTree(items, parentId = null) {
-    return items
-        .filter(item => (item.parent_id || null) === (parentId || null))
-        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
-        .map(item => ({ ...item, children: buildMenuTree(items, item.id) }));
-}
-
-function getMenuLinkUrl(item) {
-    if (item.link && item.link.trim() !== '') return item.link;
-    const slug = item.slug || '';
-    switch (item.menu_type) {
-        case 'home': return '/';
-        case 'products': return '/products';
-        case 'category': return item.category_slug ? `/category/${item.category_slug}` : '#';
-        case 'subcategory': return (item.category_slug && item.subcategory_slug) ? `/category/${item.category_slug}/${item.subcategory_slug}` : '#';
-        case 'contact': return '/contact';
-        case 'about': return '/about';
-        case 'journal': return '/journal';
-        default: return slug ? `/${slug}` : '#';
-    }
-}
-
-// ============================================================================
-// RENDER UNIFIED DRAWER ENGINE
-// ============================================================================
-function renderUnifiedDrawerMenu(rootItems) {
-    let html = '';
-    rootItems.forEach((item, index) => {
-        const hasChildren = item.children && item.children.length > 0;
-        const linkUrl = getMenuLinkUrl(item);
-        const uniqueId = `drawer-node-${index}-${Date.now()}`;
-        
-        if (hasChildren) {
-            html += `
-            <div>
-                <div class="menu-node-item" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
-                    <span>${item.title || item.name || ''}</span>
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </div>
-                <div class="menu-node-submenu" id="${uniqueId}">
-                    ${renderDrawerSubItems(item, uniqueId)}
-                </div>
-            </div>`;
-        } else {
-            html += `
-            <a href="${linkUrl}" class="menu-node-item no-underline">
-                <span>${item.title || item.name || ''}</span>
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>`;
-        }
-    });
-    return html;
-}
-
-// ============================================================================
-// DRAWER INNER LOGICS
-// ============================================================================
-function renderDrawerSubItems(item, parentId) {
-    if (item.menu_type === 'category' && item.show_categories_from_db) {
-        return renderDatabaseCategoriesToDrawer(parentId);
-    }
-    if (item.children && item.children.length > 0) {
-        let html = '';
-        item.children.forEach((child, idx) => {
-            const hasGrandChildren = child.children && child.children.length > 0;
-            const linkUrl = getMenuLinkUrl(child);
-            const uniqueId = `${parentId}-sub-${idx}`;
-            
-            if (hasGrandChildren) {
-                html += `
-                <div>
-                    <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
-                        <span>${child.title || child.name || ''}</span>
-                        <svg width="8" height="5" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <div class="menu-node-submenu" id="${uniqueId}">
-                        ${child.children.map(gc => `<a href="${getMenuLinkUrl(gc)}" class="menu-node-sub-item">${gc.title || gc.name || ''}</a>`).join('')}
-                    </div>
-                </div>`;
-            } else {
-                html += `<a href="${linkUrl}" class="menu-node-sub-item">${child.title || child.name || ''}</a>`;
-            }
-        });
-        return html;
-    }
-    return renderDatabaseCategoriesToDrawer(parentId);
-}
-
-function renderDatabaseCategoriesToDrawer(parentId) {
-    if (!allCategories || allCategories.length === 0) {
-        return '<div class="menu-node-sub-item opacity-40">No configuration found</div>';
-    }
-    let html = '';
-    allCategories.forEach((cat, idx) => {
-        const catSlug = cat.slug || createSlug(cat.name);
-        const catUrl = `/category/${catSlug}`;
-        const uniqueId = `${parentId}-cat-${idx}`;
-        const subcategories = allSubcategories.filter(sub => sub.category_id === cat.id);
-        
-        if (subcategories.length > 0) {
-            html += `
-            <div>
-                <div class="menu-node-sub-item flex justify-between items-center cursor-pointer font-bold text-black" onclick="toggleDrawerSubmenu('${uniqueId}', this)">
-                    <span>${cat.name}</span>
-                    <svg width="8" height="5" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-40"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </div>
-                <div class="menu-node-submenu" id="${uniqueId}">
-                    <a href="${catUrl}" class="menu-node-sub-item font-black underline decoration-black/10">All ${cat.name}</a>
-                    ${subcategories.map(sub => {
-                        const subSlug = sub.slug || createSlug(sub.name);
-                        return `<a href="/category/${catSlug}/${subSlug}" class="menu-node-sub-item">${sub.name}</a>`;
-                    }).join('')}
-                </div>
-            </div>`;
-        } else {
-            html += `<a href="${catUrl}" class="menu-node-sub-item">${cat.name}</a>`;
-        }
-    });
-    return html;
-}
-
-// ============================================================================
 // HEADER SYSTEM
 // ============================================================================
-async function renderHeader() {
-    if (document.getElementById('main-nav') || document.getElementById('top-announcement-bar')) {
+function renderHeader() {
+    if (document.getElementById('main-nav')) {
         return;
     }
 
-    const [menuItems, categories, subcategories, announcement] = await Promise.all([
-        fetchMenuItems(),
-        fetchCategories(),
-        fetchSubcategories(),
-        fetchAnnouncement()
-    ]);
-    
-    allCategories = categories;
-    allSubcategories = subcategories;
-    announcementData = announcement;
-    const menuTree = buildMenuTree(menuItems);
-    
-    const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
-    const hasAnnouncement = announcementData && announcementData.message;
-    const shouldShowBar = hasAnnouncement && !isBarDismissed;
-    
-    if (isBarDismissed) {
-        document.body.classList.add('announcement-dismissed');
-    }
-
-    let announcementHTML = '';
-    if (hasAnnouncement) {
-        const bgColor = announcementData.bg_color || '#000000';
-        const textColor = announcementData.text_color || '#ffffff';
-        const message = announcementData.message || '';
-        const linkUrl = announcementData.link_url || '';
-        const linkTitle = announcementData.link_title || '';
-        
-        let linkHTML = '';
-        if (linkUrl && linkTitle) {
-            linkHTML = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${linkTitle}</a>`;
-        }
-        
-        announcementHTML = `
-        <div class="top-announcement-bar ${shouldShowBar ? '' : 'bar-hidden'}" 
-             id="top-announcement-bar" 
-             style="background: ${bgColor} !important; color: ${textColor} !important;">
-            <span id="announcement-text">${message} ${linkHTML}</span>
-            <button class="announcement-close-btn" onclick="dismissAnnouncementBar()" aria-label="Close Announcement">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-        </div>
-        `;
-    } else {
-        document.body.classList.add('announcement-dismissed');
-        announcementHTML = `
-        <div class="top-announcement-bar bar-hidden" id="top-announcement-bar">
-            <span id="announcement-text"></span>
-        </div>
-        `;
-    }
-
     const headerHTML = `
-    ${announcementHTML}
-
     <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
     <div class="side-menu-drawer" id="sideMenuDrawer">
         <div class="side-menu-header">
@@ -547,7 +250,6 @@ async function renderHeader() {
                 <span>Category</span>
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
-            ${renderUnifiedDrawerMenu(menuTree)}
         </div>
         <div class="side-drawer-footer">
             <a href="/login" class="block w-full py-3.5 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[9px] no-underline transition hover:bg-neutral-900">Account Architecture</a>
@@ -572,18 +274,6 @@ async function renderHeader() {
     </nav>
     `;
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
-}
-
-// ============================================================================
-// ANNOUNCEMENT LOGIC
-// ============================================================================
-function dismissAnnouncementBar() {
-    const bar = document.getElementById('top-announcement-bar');
-    const nav = document.getElementById('main-nav');
-    if (bar) bar.classList.add('bar-hidden');
-    localStorage.setItem('jabiyen_announcement_hidden', 'true');
-    document.body.classList.add('announcement-dismissed');
-    if (nav && !nav.classList.contains('nav-scrolled')) nav.style.top = '0px';
 }
 
 // ============================================================================
@@ -646,16 +336,11 @@ function toggleDrawerSubmenu(submenuId, element) {
 function handleNavScroll() {
     const nav = document.getElementById('main-nav');
     if (!nav) return;
-    const isBarDismissed = localStorage.getItem('jabiyen_announcement_hidden') === 'true';
-    const hasAnnouncement = announcementData && announcementData.message;
-    const barHeight = (hasAnnouncement && !isBarDismissed) ? '36px' : '0px';
     
     if (window.scrollY > 20) {
         nav.classList.add('nav-scrolled');
-        nav.style.top = '0px';
     } else {
         nav.classList.remove('nav-scrolled');
-        nav.style.top = barHeight;
     }
 }
 
@@ -667,16 +352,14 @@ window.hideToast = hideToast;
 window.openSideMenu = openSideMenu;
 window.closeSideMenu = closeSideMenu;
 window.toggleDrawerSubmenu = toggleDrawerSubmenu;
-window.dismissAnnouncementBar = dismissAnnouncementBar;
-window.fetchAnnouncement = fetchAnnouncement;
 
-async function initSharedComponents() {
+function initSharedComponents() {
     if (window.JABIYEN_COMPONENTS_INITIALIZED) return;
     window.JABIYEN_COMPONENTS_INITIALIZED = true;
 
     loadFontsConfiguration();
     injectSharedStyles();
-    await renderHeader();
+    renderHeader();
     
     window.removeEventListener('scroll', handleNavScroll);
     window.addEventListener('scroll', handleNavScroll);
