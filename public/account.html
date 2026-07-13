@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>My Account | JAYENWARE</title>
+  <meta name="description" content="Manage your JAYENWARE account, orders, and profile" />
+  <meta name="theme-color" content="#ffffff" />
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <script src="/fonts.js"></script>
+  <script src="/footer.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1d1d1f',
+            accent: '#86868b',
+            soft: '#f5f5f7',
+            blue: '#666666'
+          },
+          fontFamily: {
+            sans: ["'Inter', 'sans-serif'"],
+            serif: ["'Manrope', 'sans-serif'"],
+            mono: ["'Sora', 'sans-serif'"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary: #1d1d1f;
+      --accent: #86868b;
+      --soft: #f5f5f7;
+      --blue: #007aff;
+      --error: #ff3b30;
+    }
+    
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes fadeSlideUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .account-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 100px 16px 48px; 
+    }
+
+    .account-header {
+      margin-bottom: 40px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeSlideUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    
+    .account-header h1 {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0 0 6px 0;
+      letter-spacing: -0.02em;
+    }
+    
+    .account-header p {
+      font-size: 15px;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    .account-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .account-sidebar {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeSlideUp 0.5s 0.2s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    
+    @media (max-width: 768px) {
+      .account-sidebar {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      border: none;
+      background: #f5f5f7;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      flex: 1;
+      min-width: 180px;
+    }
+    
+    .sidebar-nav-item:hover {
+      background: #eaeaed;
+    }
+    
+    .sidebar-nav-item.active {
+      background: #1d1d1f;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar-nav-item i {
+      font-size: 16px;
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--error);
+      background: #fff0ef;
+      border: none;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+      flex: 1;
+      min-width: 180px;
+    }
+    
+    .logout-btn:hover { 
+      background: #ffe3e1; 
+      box-shadow: 0 4px 12px rgba(255, 59, 48, 0.1);
+    }
+
+    .account-content {
+      min-height: 400px;
+    }
+
+    .content-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    
+    .content-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .info-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+    }
+
+    .profile-header-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 32px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .avatar-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), #005bb5);
+      color: white;
+      font-size: 28px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-family: 'Manrope', sans-serif;
+      box-shadow: 0 8px 16px rgba(0, 122, 255, 0.2);
+    }
+
+    .profile-name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0 0 4px 0;
+    }
+
+    .profile-email {
+      font-size: 14px;
+      color: var(--accent);
+      margin: 0;
+    }
+    
+    .info-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    
+    .info-card-header h2 {
+      font-family: 'Manrope', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .edit-btn {
+      font-size: 13px;
+      color: var(--blue);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      padding: 6px 14px;
+      border-radius: 50px;
+      transition: all 0.2s ease;
+    }
+    
+    .edit-btn:hover:not(:disabled) {
+      background: rgba(0,122,255,0.08);
+    }
+
+    .save-btn {
+      background: var(--blue);
+      color: white;
+    }
+    .save-btn:hover:not(:disabled) {
+      background: #0062cc;
+    }
+    .save-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .cancel-btn {
+      color: var(--error);
+    }
+    .cancel-btn:hover {
+      background: rgba(255, 59, 48, 0.08);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 24px;
+    }
+    
+    @media (max-width: 480px) {
+      .info-grid { grid-template-columns: 1fr; }
+    }
+    
+    .info-item label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    
+    .info-item span {
+      display: block;
+      font-size: 15px;
+      color: var(--primary);
+      font-weight: 500;
+      min-height: 22px;
+    }
+
+    .edit-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .edit-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+    }
+    .edit-input:disabled { background-color: #f5f5f7; color: var(--accent); cursor: not-allowed; }
+
+    .address-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
+      border: 1.5px solid transparent;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .address-card.default { border-color: var(--blue); }
+    
+    .address-card .default-badge {
+      position: absolute; top: 12px; right: 12px; background: var(--blue); color: #fff;
+      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 50px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+
+    .error-state {
+      text-align: center;
+      padding: 60px 20px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .error-state.visible { display: flex; }
+    .error-state i { font-size: 48px; color: var(--error); margin-bottom: 16px; }
+    .error-state h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .error-state p { font-size: 14px; color: var(--accent); max-width: 400px; }
+
+    .toast {
+      position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-120px);
+      background: #1d1d1f; color: #fff; padding: 14px 24px; border-radius: 50px;
+      font-size: 14px; font-weight: 500; z-index: 999; box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+      display: flex; align-items: center; gap: 10px; max-width: 90vw;
+    }
+    
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.error { background: var(--error); }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 9999;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1; pointer-events: all;
+    }
+
+    .modal-box {
+      background: #fff; border-radius: 24px; padding: 40px 32px; text-align: center;
+      transform: scale(0.9) translateY(20px); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 420px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    
+    .modal-overlay.active .modal-box {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-badge {
+      width: 80px; height: 80px; background: #fff0ef; color: var(--error);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 36px; margin: 0 auto 24px; box-shadow: 0 8px 24px rgba(255,59,48,0.2);
+    }
+
+    .modal-title {
+      font-family: 'Manrope', sans-serif; font-size: 24px; font-weight: 800;
+      color: var(--primary); margin: 0 0 12px 0;
+    }
+
+    .modal-text {
+      font-size: 15px; color: var(--accent); margin: 0 0 32px 0; line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex; gap: 12px; justify-content: center;
+    }
+
+    .modal-btn {
+      flex: 1; padding: 14px 20px; border-radius: 12px; font-size: 15px;
+      font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.2s; border: none;
+    }
+    
+    .btn-cancel {
+      background: #f5f5f7; color: var(--primary);
+    }
+    .btn-cancel:hover { background: #eaeaed; }
+    
+    .btn-confirm {
+      background: var(--error); color: #fff; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);
+    }
+    .btn-confirm:hover { background: #e6352b; box-shadow: 0 6px 16px rgba(255, 59, 48, 0.3); }
+
+  </style>
+</head>
+<body class="antialiased">
+
+  <div id="dynamic-header"></div>
+
+  <main>
+    <div class="account-container">
+      <div class="account-header">
+        <h1>My Account</h1>
+        <p id="welcome-message">Welcome back</p>
+      </div>
+
+      <div class="error-state" id="error-state">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <h3>Failed to load account</h3>
+        <p>Please sign in again to access your account.</p>
+        <button onclick="window.location.href='/signin'" style="margin-top: 16px; padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: 'Inter', sans-serif;">Go to Sign In</button>
+      </div>
+
+      <div class="account-grid" id="account-grid" style="display:none;">
+
+        <div class="account-content">
+          <div class="content-panel active" id="panel-profile">
+            <div id="skeleton-profile">
+              <div class="info-card"><div class="skeleton" style="height:200px;"></div></div>
+            </div>
+            
+            <div id="content-profile" style="display:none;">
+              <div class="profile-header-card" id="profile-avatar-card"></div>
+              <div class="info-card">
+                <div class="info-card-header">
+                  <h2>Personal Information</h2>
+                  <div class="action-buttons" id="edit-profile-actions"></div>
+                </div>
+                <div class="info-grid" id="profile-info-grid"></div>
+              </div>
+              <div class="info-card">
+                <div class="info-card-header"><h2>Account Details</h2></div>
+                <div class="info-grid" id="account-info-grid"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-panel" id="panel-addresses">
+            <div id="skeleton-addresses">
+              <div class="info-card"><div class="skeleton" style="height:140px;"></div></div>
+            </div>
+            <div id="content-addresses" style="display:none;">
+              <div id="addresses-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="account-sidebar" id="account-sidebar">
+          <button class="sidebar-nav-item active" data-panel="profile">
+            <i class="fa-solid fa-user"></i> Profile
+          </button>
+          
+          <button class="sidebar-nav-item" data-panel="addresses">
+            <i class="fa-solid fa-location-dot"></i> Location
+          </button>
+          
+          <button class="logout-btn" id="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+          </button>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-circle-check" id="toast-icon"></i>
+    <span id="toast-message"></span>
+  </div>
+
+  <div class="modal-overlay" id="logout-modal">
+    <div class="modal-box">
+      <div class="modal-badge">
+        <i class="fa-solid fa-power-off"></i>
+      </div>
+      <h2 class="modal-title">Sign Out</h2>
+      <p class="modal-text">Are you sure you want to sign out of your JAYENWARE account?</p>
+      <div class="modal-actions">
+        <button class="modal-btn btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+        <button class="modal-btn btn-confirm" id="confirm-logout-btn">Yes, Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dynamic-footer"></div>
+
+  <script src="/components.js"></script>
+
+  <script>
+    (function() {
+      var API_BASE = window.location.origin;
+      var currentPanel = 'profile';
+      var userData = null;
+      var authToken = null;
+      var isEditingProfile = false;
+      var isEditingAddress = false;
+
+      function getToken() {
+        if (authToken) return authToken;
+        var stored = localStorage.getItem('jayenware_session');
+        if (stored) {
+          try {
+            var parsed = JSON.parse(stored);
+            authToken = parsed.access_token || null;
+          } catch(e) {}
+        }
+        return authToken;
+      }
+
+      function showToast(message, type) {
+        var toast = document.getElementById('toast');
+        var toastIcon = document.getElementById('toast-icon');
+        var toastMessage = document.getElementById('toast-message');
+        
+        toastMessage.textContent = message;
+        toast.className = 'toast ' + (type || '') + ' show';
+        toastIcon.className = type === 'error' ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
+        
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(function() { 
+          toast.classList.remove('show'); 
+        }, 4000);
+      }
+
+      function switchPanel(panelName) {
+        currentPanel = panelName;
+        
+        document.querySelectorAll('.sidebar-nav-item').forEach(function(item) {
+          item.classList.remove('active');
+          if (item.getAttribute('data-panel') === panelName) item.classList.add('active');
+        });
+        
+        document.querySelectorAll('.content-panel').forEach(function(panel) {
+          panel.classList.remove('active');
+        });
+        
+        var targetPanel = document.getElementById('panel-' + panelName);
+        if (targetPanel) targetPanel.classList.add('active');
+        
+        loadPanelData(panelName);
+      }
+
+      document.getElementById('account-sidebar').addEventListener('click', function(e) {
+        var navItem = e.target.closest('.sidebar-nav-item');
+        var logoutBtn = e.target.closest('.logout-btn');
+
+        if (navItem) {
+          var panel = navItem.getAttribute('data-panel');
+          if (panel) switchPanel(panel);
+        } else if (logoutBtn) {
+          document.getElementById('logout-modal').classList.add('active');
+        }
+      });
+
+      window.closeLogoutModal = function() {
+        document.getElementById('logout-modal').classList.remove('active');
+      };
+
+      document.getElementById('confirm-logout-btn').addEventListener('click', async function() {
+        var btn = document.getElementById('confirm-logout-btn');
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Signing Out...';
+        try {
+          await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
+        } catch(e) {
+          console.error('Logout error:', e);
+        }
+        localStorage.removeItem('jayenware_session');
+        window.location.href = '/';
+      });
+
+      function loadPanelData(panel) {
+        if (!userData) return;
+        switch(panel) {
+          case 'profile': renderProfile(userData); break;
+          case 'addresses': renderAddresses(userData); break;
+        }
+      }
+
+      // Profile Edit Functions
+      window.toggleEditProfile = function(state) {
+        isEditingProfile = state;
+        renderProfile(userData);
+      };
+
+      window.saveProfileInfo = async function() {
+        var btn = document.getElementById('save-profile-btn');
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="margin-right:4px;"></i> Saving...';
+        btn.disabled = true;
+
+        var newFname = document.getElementById('edit-fname').value.trim();
+        var newLname = document.getElementById('edit-lname').value.trim();
+        var newPhone = document.getElementById('edit-phone').value.trim();
+        var token = getToken();
+
+        if (!token) {
+          showToast('Session expired. Please sign in again.', 'error');
+          window.location.href = '/signin';
+          return;
+        }
+
+        try {
+          var response = await fetch(API_BASE + '/api/user/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+              first_name: newFname,
+              last_name: newLname,
+              phone: newPhone
+            })
+          });
+
+          if (!response.ok) {
+            var errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Failed to update profile');
+          }
+
+          // Update local data with fresh server response
+          var result = await response.json();
+          if (result.profile) {
+            userData.first_name = result.profile.first_name || newFname;
+            userData.last_name = result.profile.last_name || newLname;
+            userData.phone = result.profile.phone || newPhone;
+            userData.updated_at = result.profile.updated_at || new Date().toISOString();
+          } else {
+            userData.first_name = newFname;
+            userData.last_name = newLname;
+            userData.phone = newPhone;
+            userData.updated_at = new Date().toISOString();
+          }
+
+          showToast('Profile updated successfully!');
+          isEditingProfile = false;
+          renderProfile(userData);
+
+        } catch (error) {
+          console.error('Profile update error:', error);
+          showToast(error.message || 'Failed to update profile', 'error');
+          btn.innerHTML = 'Save';
+          btn.disabled = false;
+        }
+      };
+
+      // Address Edit Functions
+      window.toggleEditAddress = function(state) {
+        isEditingAddress = state;
+        renderAddresses(userData);
+      };
+
+      window.saveAddressInfo = async function() {
+        var btn = document.getElementById('save-address-btn');
+        if(btn) {
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="margin-right:4px;"></i> Saving...';
+            btn.disabled = true;
+        }
+
+        var newAddr1 = document.getElementById('edit-addr1').value.trim();
+        var newAddr2 = document.getElementById('edit-addr2').value.trim();
+        var newCity = document.getElementById('edit-city').value.trim();
+        var newState = document.getElementById('edit-state').value.trim();
+        var newZip = document.getElementById('edit-zip').value.trim();
+        var newCountry = document.getElementById('edit-country').value.trim();
+        var token = getToken();
+
+        if (!token) {
+          showToast('Session expired. Please sign in again.', 'error');
+          window.location.href = '/signin';
+          return;
+        }
+
+        try {
+          var response = await fetch(API_BASE + '/api/user/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+              address_line1: newAddr1,
+              address_line2: newAddr2,
+              city: newCity,
+              state: newState,
+              postal_code: newZip,
+              country: newCountry
+            })
+          });
+
+          if (!response.ok) {
+            var errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Failed to update address');
+          }
+
+          // Update local data with fresh server response
+          var result = await response.json();
+          if (result.profile) {
+            userData.address_line1 = result.profile.address_line1 || newAddr1;
+            userData.address_line2 = result.profile.address_line2 || newAddr2;
+            userData.city = result.profile.city || newCity;
+            userData.state = result.profile.state || newState;
+            userData.postal_code = result.profile.postal_code || newZip;
+            userData.country = result.profile.country || newCountry;
+            userData.updated_at = result.profile.updated_at || new Date().toISOString();
+          } else {
+            userData.address_line1 = newAddr1;
+            userData.address_line2 = newAddr2;
+            userData.city = newCity;
+            userData.state = newState;
+            userData.postal_code = newZip;
+            userData.country = newCountry;
+            userData.updated_at = new Date().toISOString();
+          }
+
+          showToast('Address updated successfully!');
+          isEditingAddress = false;
+          renderAddresses(userData);
+
+        } catch (error) {
+          console.error('Address update error:', error);
+          showToast(error.message || 'Failed to update address', 'error');
+          if (btn) {
+            btn.innerHTML = 'Save';
+            btn.disabled = false;
+          }
+        }
+      };
+
+      function renderProfile(data) {
+        document.getElementById('skeleton-profile').style.display = 'none';
+        document.getElementById('content-profile').style.display = 'block';
+
+        var fName = data.first_name || '';
+        var lName = data.last_name || '';
+        
+        var initials = (fName.charAt(0) + lName.charAt(0)).toUpperCase() || 'U';
+        var fullName = (fName + ' ' + lName).trim() || 'User';
+
+        document.getElementById('profile-avatar-card').innerHTML = `
+          <div class="avatar-circle">${initials}</div>
+          <h3 class="profile-name">${escapeHTML(fullName)}</h3>
+          <p class="profile-email">${escapeHTML(data.email || 'No email provided')}</p>
+        `;
+        
+        var grid = document.getElementById('profile-info-grid');
+        var actions = document.getElementById('edit-profile-actions');
+
+        if (isEditingProfile) {
+          grid.innerHTML = `
+            <div class="info-item"><label>First Name</label><input type="text" id="edit-fname" class="edit-input" value="${escapeHTML(fName)}" placeholder="Enter your first name"></div>
+            <div class="info-item"><label>Last Name</label><input type="text" id="edit-lname" class="edit-input" value="${escapeHTML(lName)}" placeholder="Enter your last name"></div>
+            <div class="info-item"><label>Phone Number</label><input type="text" id="edit-phone" class="edit-input" value="${escapeHTML(data.phone || '')}" placeholder="e.g. +1 (555) 000-0000"></div>
+            <div class="info-item"><label>Email Address</label><input type="email" class="edit-input" value="${escapeHTML(data.email || '')}" disabled title="Email address cannot be changed"></div>
+          `;
+          
+          actions.innerHTML = `
+            <button class="edit-btn cancel-btn" onclick="toggleEditProfile(false)">Cancel</button>
+            <button class="edit-btn save-btn" id="save-profile-btn" onclick="saveProfileInfo()">Save</button>
+          `;
+        } else {
+          grid.innerHTML = `
+            <div class="info-item"><label>First Name</label><span>${escapeHTML(fName || '—')}</span></div>
+            <div class="info-item"><label>Last Name</label><span>${escapeHTML(lName || '—')}</span></div>
+            <div class="info-item"><label>Phone Number</label><span>${escapeHTML(data.phone || '—')}</span></div>
+            <div class="info-item"><label>Email Address</label><span>${escapeHTML(data.email || '—')}</span></div>
+          `;
+          
+          actions.innerHTML = `
+            <button class="edit-btn" onclick="toggleEditProfile(true)">
+              <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
+            </button>
+          `;
+        }
+        
+        document.getElementById('account-info-grid').innerHTML = `
+          <div class="info-item"><label>Member Since</label><span>${formatDate(data.created_at)}</span></div>
+          <div class="info-item"><label>Last Updated</label><span>${formatDate(data.updated_at)}</span></div>
+        `;
+      }
+
+      function renderAddresses(data) {
+        document.getElementById('skeleton-addresses').style.display = 'none';
+        document.getElementById('content-addresses').style.display = 'block';
+        
+        var container = document.getElementById('addresses-list');
+        
+        var addr1 = data.address_line1 || '';
+        var addr2 = data.address_line2 || '';
+        var city = data.city || '';
+        var state = data.state || '';
+        var zip = data.postal_code || '';
+        var country = data.country || '';
+
+        if (isEditingAddress) {
+          container.innerHTML = `
+            <div class="address-card default">
+              <div class="info-card-header" style="margin-bottom: 24px;">
+                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Edit Location</h2>
+                  <div class="action-buttons">
+                    <button class="edit-btn cancel-btn" onclick="toggleEditAddress(false)">Cancel</button>
+                    <button class="edit-btn save-btn" id="save-address-btn" onclick="saveAddressInfo()">Save</button>
+                  </div>
+              </div>
+              <div class="info-grid">
+                <div class="info-item"><label>Address Line 1</label><input type="text" id="edit-addr1" class="edit-input" value="${escapeHTML(addr1)}" placeholder="Street Address, P.O. Box"></div>
+                <div class="info-item"><label>Address Line 2</label><input type="text" id="edit-addr2" class="edit-input" value="${escapeHTML(addr2)}" placeholder="Apartment, suite, building, floor, etc."></div>
+                <div class="info-item"><label>City</label><input type="text" id="edit-city" class="edit-input" value="${escapeHTML(city)}" placeholder="Enter your city"></div>
+                <div class="info-item"><label>State / Province</label><input type="text" id="edit-state" class="edit-input" value="${escapeHTML(state)}" placeholder="Enter state or province"></div>
+                <div class="info-item"><label>Postal / Zip Code</label><input type="text" id="edit-zip" class="edit-input" value="${escapeHTML(zip)}" placeholder="Enter postal code"></div>
+                <div class="info-item"><label>Country</label><input type="text" id="edit-country" class="edit-input" value="${escapeHTML(country)}" placeholder="Enter country"></div>
+              </div>
+            </div>
+          `;
+        } else {
+          container.innerHTML = `
+            <div class="address-card default">
+              <div class="default-badge">Primary</div>
+              <div class="info-card-header" style="margin-bottom: 24px; align-items: flex-start;">
+                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Saved Location</h2>
+                  <button class="edit-btn" onclick="toggleEditAddress(true)" style="border: 1.5px solid #e5e5ea; padding: 6px 14px; margin-top: -6px;">
+                    <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
+                  </button>
+              </div>
+              <div class="info-grid">
+                <div class="info-item"><label>Address Line 1</label><span>${escapeHTML(addr1 || '—')}</span></div>
+                <div class="info-item"><label>Address Line 2</label><span>${escapeHTML(addr2 || '—')}</span></div>
+                <div class="info-item"><label>City</label><span>${escapeHTML(city || '—')}</span></div>
+                <div class="info-item"><label>State / Province</label><span>${escapeHTML(state || '—')}</span></div>
+                <div class="info-item"><label>Postal / Zip Code</label><span>${escapeHTML(zip || '—')}</span></div>
+                <div class="info-item"><label>Country</label><span>${escapeHTML(country || '—')}</span></div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      async function fetchUserData() {
+        var token = getToken();
+        if (!token) {
+          showErrorState('Please sign in to view your account.');
+          return;
+        }
+
+        try {
+          var response = await fetch(API_BASE + '/api/user/profile', {
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': 'Bearer ' + token
+            }
+          });
+
+          if (!response.ok) {
+            if (response.status === 401) {
+              localStorage.removeItem('jayenware_session');
+              showErrorState('Session expired. Please sign in again.');
+              return;
+            }
+            throw new Error('Failed to load user data');
+          }
+
+          var result = await response.json();
+          var profile = result.profile || {};
+          var user = result.user || {};
+          
+          userData = {
+            email: user.email || profile.email || '',
+            first_name: profile.first_name || user.user_metadata?.first_name || '',
+            last_name: profile.last_name || user.user_metadata?.last_name || '',
+            phone: profile.phone || user.user_metadata?.phone || '',
+            address_line1: profile.address_line1 || user.user_metadata?.address_line1 || '',
+            address_line2: profile.address_line2 || user.user_metadata?.address_line2 || '',
+            city: profile.city || user.user_metadata?.city || '',
+            state: profile.state || user.user_metadata?.state || '',
+            postal_code: profile.postal_code || user.user_metadata?.postal_code || '',
+            country: profile.country || user.user_metadata?.country || '',
+            created_at: profile.created_at || user.created_at || '',
+            updated_at: profile.updated_at || user.updated_at || ''
+          };
+
+          document.getElementById('account-grid').style.display = 'flex';
+          document.getElementById('error-state').classList.remove('visible');
+          
+          var fName = userData.first_name || 'User';
+          document.getElementById('welcome-message').textContent = 'Welcome back, ' + fName;
+          
+          renderProfile(userData);
+
+        } catch (error) {
+          console.error('Error loading user data:', error);
+          showErrorState('Failed to load account data. Please try again.');
+        }
+      }
+
+      function showErrorState(message) {
+        document.getElementById('account-grid').style.display = 'none';
+        var errorState = document.getElementById('error-state');
+        errorState.classList.add('visible');
+        if (message) {
+          errorState.querySelector('p').textContent = message;
+        }
+      }
+
+      function escapeHTML(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return '—';
+        try {
+          var date = new Date(dateString);
+          return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        } catch(e) {
+          return dateString;
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.JAYENWARE_FONTS) {
+          var root = document.documentElement;
+          var vars = window.JAYENWARE_FONTS.cssVariables;
+          for (var key in vars) {
+            if (vars.hasOwnProperty(key)) root.style.setProperty(key, vars[key]);
+          }
+        }
+        fetchUserData();
+      });
+
+    })();
+  </script>
+</body>
+</html>
