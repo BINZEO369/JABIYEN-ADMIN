@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>My Account | JAYENWARE</title>
-  <meta name="description" content="Manage your JAYENWARE account, orders, and profile" />
+  <title>Admin Account | JAYENWARE</title>
+  <meta name="description" content="Manage your JAYENWARE admin account and profile" />
   <meta name="theme-color" content="#ffffff" />
   
   <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
@@ -30,7 +30,7 @@
             primary: '#1d1d1f',
             accent: '#86868b',
             soft: '#f5f5f7',
-            blue: '#666666'
+            blue: '#007aff'
           },
           fontFamily: {
             sans: ["'Inter', 'sans-serif'"],
@@ -119,30 +119,20 @@
       align-items: center;
       gap: 6px;
       margin-top: 12px;
-      padding: 6px 16px;
+      padding: 8px 20px;
       border-radius: 50px;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      transition: all 0.3s ease;
-    }
-    
-    .admin-status-badge.active {
       background: linear-gradient(135deg, #fef3c7, #fde68a);
       color: #92400e;
       border: 1.5px solid #fbbf24;
       box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
     }
     
-    .admin-status-badge.inactive {
-      background: #f5f5f7;
-      color: var(--accent);
-      border: 1.5px solid #e5e5ea;
-    }
-    
     .admin-status-badge i {
-      font-size: 12px;
+      font-size: 14px;
     }
 
     .account-grid {
@@ -210,7 +200,7 @@
     }
 
     .admin-dashboard-btn {
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
@@ -294,11 +284,6 @@
       padding: 20px 24px;
       box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
       margin-bottom: 20px;
-      display: none;
-    }
-    
-    .admin-info-card.visible {
-      display: block;
     }
     
     .admin-info-header {
@@ -393,7 +378,7 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--blue), #005bb5);
+      background: linear-gradient(135deg, #f59e0b, #d97706);
       color: white;
       font-size: 28px;
       font-weight: 700;
@@ -402,7 +387,7 @@
       justify-content: center;
       margin-bottom: 16px;
       font-family: 'Manrope', sans-serif;
-      box-shadow: 0 8px 16px rgba(0, 122, 255, 0.2);
+      box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
       position: relative;
     }
     
@@ -421,11 +406,6 @@
       color: #fff;
       border: 2px solid #fff;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      display: none;
-    }
-    
-    .avatar-admin-indicator.visible {
-      display: flex;
     }
 
     .profile-name {
@@ -545,24 +525,6 @@
     }
     .edit-input:disabled { background-color: #f5f5f7; color: var(--accent); cursor: not-allowed; }
 
-    .address-card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 4px 16px rgba(0,0,0,0.04);
-      border: 1.5px solid transparent;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-    
-    .address-card.default { border-color: var(--blue); }
-    
-    .address-card .default-badge {
-      position: absolute; top: 12px; right: 12px; background: var(--blue); color: #fff;
-      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 50px;
-      text-transform: uppercase; letter-spacing: 0.04em;
-    }
-
     .error-state {
       text-align: center;
       padding: 60px 20px;
@@ -651,16 +613,21 @@
   <main>
     <div class="account-container">
       <div class="account-header">
-        <h1>My Account</h1>
-        <p id="welcome-message">Welcome back</p>
-        <div id="admin-status-container"></div>
+        <h1>Admin Account</h1>
+        <p id="welcome-message">Welcome back, Admin</p>
+        <div id="admin-status-container">
+          <div class="admin-status-badge">
+            <i class="fa-solid fa-shield-halved"></i>
+            Administrator
+          </div>
+        </div>
       </div>
 
       <div class="error-state" id="error-state">
         <i class="fa-solid fa-circle-exclamation"></i>
-        <h3>Failed to load account</h3>
-        <p>Please sign in again to access your account.</p>
-        <button onclick="window.location.href='/signin'" style="margin-top: 16px; padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: 'Inter', sans-serif;">Go to Sign In</button>
+        <h3>Admin Access Required</h3>
+        <p>Please sign in with your admin account to access this page.</p>
+        <button onclick="window.location.href='/signin?type=admin'" style="margin-top: 16px; padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: 'Inter', sans-serif;">Go to Admin Sign In</button>
       </div>
 
       <div class="account-grid" id="account-grid" style="display:none;">
@@ -681,6 +648,7 @@
               </div>
               
               <div class="profile-header-card" id="profile-avatar-card"></div>
+              
               <div class="info-card">
                 <div class="info-card-header">
                   <h2>Personal Information</h2>
@@ -688,19 +656,11 @@
                 </div>
                 <div class="info-grid" id="profile-info-grid"></div>
               </div>
+              
               <div class="info-card">
                 <div class="info-card-header"><h2>Account Details</h2></div>
                 <div class="info-grid" id="account-info-grid"></div>
               </div>
-            </div>
-          </div>
-
-          <div class="content-panel" id="panel-addresses">
-            <div id="skeleton-addresses">
-              <div class="info-card"><div class="skeleton" style="height:140px;"></div></div>
-            </div>
-            <div id="content-addresses" style="display:none;">
-              <div id="addresses-list"></div>
             </div>
           </div>
         </div>
@@ -710,11 +670,7 @@
             <i class="fa-solid fa-user"></i> Profile
           </button>
           
-          <button class="sidebar-nav-item" data-panel="addresses">
-            <i class="fa-solid fa-location-dot"></i> Location
-          </button>
-          
-          <a href="/admin/dashboard" class="admin-dashboard-btn" id="admin-dashboard-btn">
+          <a href="/admin/dashboard" class="admin-dashboard-btn">
             <i class="fa-solid fa-gauge-high"></i> Admin Panel
           </a>
           
@@ -738,7 +694,7 @@
         <i class="fa-solid fa-power-off"></i>
       </div>
       <h2 class="modal-title">Sign Out</h2>
-      <p class="modal-text">Are you sure you want to sign out of your JAYENWARE account?</p>
+      <p class="modal-text">Are you sure you want to sign out of your admin account?</p>
       <div class="modal-actions">
         <button class="modal-btn btn-cancel" onclick="closeLogoutModal()">Cancel</button>
         <button class="modal-btn btn-confirm" id="confirm-logout-btn">Yes, Sign Out</button>
@@ -753,73 +709,10 @@
   <script>
     (function() {
       var API_BASE = window.location.origin;
-      var currentPanel = 'profile';
-      var userData = null;
       var adminData = null;
       var isEditingProfile = false;
-      var isEditingAddress = false;
 
-      // ✅ IMPROVED: Multiple session check methods
-      function getSession() {
-        // Method 1: Check localStorage
-        var stored = localStorage.getItem('jayenware_session');
-        if (stored) {
-          try {
-            var parsed = JSON.parse(stored);
-            if (parsed && parsed.access_token) {
-              console.log('✅ Session found in localStorage');
-              return parsed;
-            }
-          } catch(e) {
-            console.error('Failed to parse localStorage session:', e);
-          }
-        }
-
-        // Method 2: Check sessionStorage
-        var sessionStored = sessionStorage.getItem('jayenware_session');
-        if (sessionStored) {
-          try {
-            var sessionParsed = JSON.parse(sessionStored);
-            if (sessionParsed && sessionParsed.access_token) {
-              console.log('✅ Session found in sessionStorage');
-              // Sync to localStorage
-              localStorage.setItem('jayenware_session', JSON.stringify(sessionParsed));
-              return sessionParsed;
-            }
-          } catch(e) {
-            console.error('Failed to parse sessionStorage session:', e);
-          }
-        }
-
-        // Method 3: Check cookies
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-          var cookie = cookies[i].trim();
-          if (cookie.startsWith('jayenware_session=')) {
-            try {
-              var cookieValue = cookie.substring('jayenware_session='.length);
-              var cookieParsed = JSON.parse(decodeURIComponent(cookieValue));
-              if (cookieParsed && cookieParsed.access_token) {
-                console.log('✅ Session found in cookies');
-                // Sync to localStorage
-                localStorage.setItem('jayenware_session', JSON.stringify(cookieParsed));
-                return cookieParsed;
-              }
-            } catch(e) {
-              console.error('Failed to parse cookie session:', e);
-            }
-          }
-        }
-
-        console.warn('❌ No session found in any storage');
-        return null;
-      }
-
-      function getToken() {
-        var session = getSession();
-        return session ? session.access_token : null;
-      }
-
+      // ✅ ONLY ADMIN SESSION - No user session
       function getAdminSession() {
         // Check admin session in localStorage
         var stored = localStorage.getItem('jayenware_admin_session');
@@ -846,11 +739,11 @@
               return sessionParsed;
             }
           } catch(e) {
-            console.error('Failed to parse admin session:', e);
+            console.error('Failed to parse sessionStorage admin session:', e);
           }
         }
 
-        console.log('ℹ️ No admin session found');
+        console.error('❌ No admin session found');
         return null;
       }
 
@@ -874,34 +767,9 @@
         }, 4000);
       }
 
-      function switchPanel(panelName) {
-        currentPanel = panelName;
-        
-        document.querySelectorAll('.sidebar-nav-item').forEach(function(item) {
-          item.classList.remove('active');
-          if (item.getAttribute('data-panel') === panelName) item.classList.add('active');
-        });
-        
-        document.querySelectorAll('.content-panel').forEach(function(panel) {
-          panel.classList.remove('active');
-        });
-        
-        var targetPanel = document.getElementById('panel-' + panelName);
-        if (targetPanel) targetPanel.classList.add('active');
-        
-        loadPanelData(panelName);
-      }
-
-      document.getElementById('account-sidebar').addEventListener('click', function(e) {
-        var navItem = e.target.closest('.sidebar-nav-item');
-        var logoutBtn = e.target.closest('.logout-btn');
-
-        if (navItem) {
-          var panel = navItem.getAttribute('data-panel');
-          if (panel) switchPanel(panel);
-        } else if (logoutBtn) {
-          document.getElementById('logout-modal').classList.add('active');
-        }
+      // Logout Modal
+      document.getElementById('logout-btn').addEventListener('click', function() {
+        document.getElementById('logout-modal').classList.add('active');
       });
 
       window.closeLogoutModal = function() {
@@ -914,9 +782,9 @@
         btn.disabled = true;
         
         try {
-          var token = getToken();
+          var token = getAdminToken();
           if (token) {
-            await fetch(API_BASE + '/api/auth/logout', {
+            await fetch(API_BASE + '/api/admin/logout', {
               method: 'POST',
               headers: { 'Authorization': 'Bearer ' + token }
             });
@@ -925,129 +793,18 @@
           console.error('Logout API error:', e);
         }
         
-        // Clear ALL sessions from ALL storages
-        localStorage.removeItem('jayenware_session');
+        // Clear ONLY admin sessions
         localStorage.removeItem('jayenware_admin_session');
-        sessionStorage.removeItem('jayenware_session');
         sessionStorage.removeItem('jayenware_admin_session');
-        
-        // Clear cookies
-        document.cookie = 'jayenware_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         document.cookie = 'jayenware_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         
         window.location.href = '/';
       });
 
-      function loadPanelData(panel) {
-        if (!userData) return;
-        switch(panel) {
-          case 'profile': renderProfile(userData); break;
-          case 'addresses': renderAddresses(userData); break;
-        }
-      }
-
-      // Check admin status
-      async function checkAdminStatus() {
-        var token = getAdminToken();
-        if (!token) {
-          console.log('ℹ️ No admin token found, skipping admin check');
-          return null;
-        }
-
-        try {
-          console.log('🔍 Checking admin status...');
-          var response = await fetch(API_BASE + '/api/admin/verify', {
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
-          });
-
-          if (!response.ok) {
-            console.warn('⚠️ Admin verification failed with status:', response.status);
-            return null;
-          }
-
-          var result = await response.json();
-          if (result.success && result.user) {
-            console.log('✅ Admin verified:', result.user.role);
-            adminData = result.user;
-            return result.user;
-          }
-        } catch (error) {
-          console.error('❌ Admin check error:', error);
-        }
-        return null;
-      }
-
-      function renderAdminStatusBadge(adminInfo) {
-        var container = document.getElementById('admin-status-container');
-        
-        if (adminInfo && adminInfo.role) {
-          var roleLabel = adminInfo.role.replace('_', ' ').toUpperCase();
-          container.innerHTML = `
-            <div class="admin-status-badge active">
-              <i class="fa-solid fa-shield-halved"></i>
-              ${roleLabel} Access Active
-            </div>
-          `;
-        } else {
-          container.innerHTML = `
-            <div class="admin-status-badge inactive">
-              <i class="fa-solid fa-user"></i>
-              Customer Account
-            </div>
-          `;
-        }
-      }
-
-      function renderAdminInfoCard(adminInfo) {
-        var card = document.getElementById('admin-info-card');
-        var grid = document.getElementById('admin-info-grid');
-        
-        if (adminInfo && adminInfo.role) {
-          card.classList.add('visible');
-          
-          var roleClass = adminInfo.role === 'super_admin' ? 'super_admin' : 
-                         adminInfo.role === 'admin' ? 'admin' : 'moderator';
-          
-          var lastLogin = adminInfo.last_login || 'First login';
-          
-          grid.innerHTML = `
-            <div class="admin-info-item">
-              <label>Admin Role</label>
-              <span><span class="admin-role-badge ${roleClass}">${adminInfo.role.replace('_', ' ')}</span></span>
-            </div>
-            <div class="admin-info-item">
-              <label>Admin Name</label>
-              <span>${escapeHTML(adminInfo.full_name || 'N/A')}</span>
-            </div>
-            <div class="admin-info-item">
-              <label>Admin Email</label>
-              <span>${escapeHTML(adminInfo.email || 'N/A')}</span>
-            </div>
-            <div class="admin-info-item">
-              <label>Last Login</label>
-              <span>${formatDateTime(lastLogin)}</span>
-            </div>
-          `;
-        } else {
-          card.classList.remove('visible');
-        }
-      }
-
-      function toggleAdminButton(adminInfo) {
-        var btn = document.getElementById('admin-dashboard-btn');
-        if (adminInfo && adminInfo.role) {
-          btn.style.display = 'flex';
-        } else {
-          btn.style.display = 'none';
-        }
-      }
-
       // Profile Edit Functions
       window.toggleEditProfile = function(state) {
         isEditingProfile = state;
-        renderProfile(userData);
+        renderProfile();
       };
 
       window.saveProfileInfo = async function() {
@@ -1058,24 +815,23 @@
         var newFname = document.getElementById('edit-fname').value.trim();
         var newLname = document.getElementById('edit-lname').value.trim();
         var newPhone = document.getElementById('edit-phone').value.trim();
-        var token = getToken();
+        var token = getAdminToken();
 
         if (!token) {
           showToast('Session expired. Please sign in again.', 'error');
-          window.location.href = '/signin';
+          window.location.href = '/signin?type=admin';
           return;
         }
 
         try {
-          var response = await fetch(API_BASE + '/api/user/profile', {
+          var response = await fetch(API_BASE + '/api/admin/profile', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
             },
             body: JSON.stringify({
-              first_name: newFname,
-              last_name: newLname,
+              full_name: (newFname + ' ' + newLname).trim(),
               phone: newPhone
             })
           });
@@ -1083,8 +839,8 @@
           if (!response.ok) {
             if (response.status === 401) {
               showToast('Session expired. Please sign in again.', 'error');
-              localStorage.removeItem('jayenware_session');
-              window.location.href = '/signin';
+              localStorage.removeItem('jayenware_admin_session');
+              window.location.href = '/signin?type=admin';
               return;
             }
             var errorData = await response.json().catch(() => ({}));
@@ -1093,15 +849,13 @@
 
           var result = await response.json();
           if (result.profile) {
-            userData.first_name = result.profile.first_name || newFname;
-            userData.last_name = result.profile.last_name || newLname;
-            userData.phone = result.profile.phone || newPhone;
-            userData.updated_at = result.profile.updated_at || new Date().toISOString();
+            adminData.full_name = result.profile.full_name || adminData.full_name;
+            adminData.phone = result.profile.phone || adminData.phone;
           }
 
           showToast('Profile updated successfully!');
           isEditingProfile = false;
-          renderProfile(userData);
+          renderProfile();
 
         } catch (error) {
           console.error('Profile update error:', error);
@@ -1111,118 +865,67 @@
         }
       };
 
-      // Address Edit Functions
-      window.toggleEditAddress = function(state) {
-        isEditingAddress = state;
-        renderAddresses(userData);
-      };
-
-      window.saveAddressInfo = async function() {
-        var btn = document.getElementById('save-address-btn');
-        if(btn) {
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="margin-right:4px;"></i> Saving...';
-            btn.disabled = true;
-        }
-
-        var newAddr1 = document.getElementById('edit-addr1').value.trim();
-        var newAddr2 = document.getElementById('edit-addr2').value.trim();
-        var newCity = document.getElementById('edit-city').value.trim();
-        var newState = document.getElementById('edit-state').value.trim();
-        var newZip = document.getElementById('edit-zip').value.trim();
-        var newCountry = document.getElementById('edit-country').value.trim();
-        var token = getToken();
-
-        if (!token) {
-          showToast('Session expired. Please sign in again.', 'error');
-          window.location.href = '/signin';
-          return;
-        }
-
-        try {
-          var response = await fetch(API_BASE + '/api/user/profile', {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({
-              address_line1: newAddr1,
-              address_line2: newAddr2,
-              city: newCity,
-              state: newState,
-              postal_code: newZip,
-              country: newCountry
-            })
-          });
-
-          if (!response.ok) {
-            if (response.status === 401) {
-              showToast('Session expired. Please sign in again.', 'error');
-              localStorage.removeItem('jayenware_session');
-              window.location.href = '/signin';
-              return;
-            }
-            var errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error || 'Failed to update address');
-          }
-
-          var result = await response.json();
-          if (result.profile) {
-            userData.address_line1 = result.profile.address_line1 || newAddr1;
-            userData.address_line2 = result.profile.address_line2 || newAddr2;
-            userData.city = result.profile.city || newCity;
-            userData.state = result.profile.state || newState;
-            userData.postal_code = result.profile.postal_code || newZip;
-            userData.country = result.profile.country || newCountry;
-            userData.updated_at = result.profile.updated_at || new Date().toISOString();
-          }
-
-          showToast('Address updated successfully!');
-          isEditingAddress = false;
-          renderAddresses(userData);
-
-        } catch (error) {
-          console.error('Address update error:', error);
-          showToast(error.message || 'Failed to update address', 'error');
-          if (btn) {
-            btn.innerHTML = 'Save';
-            btn.disabled = false;
-          }
-        }
-      };
-
-      function renderProfile(data) {
+      function renderProfile() {
         document.getElementById('skeleton-profile').style.display = 'none';
         document.getElementById('content-profile').style.display = 'block';
 
-        renderAdminInfoCard(adminData);
-
-        var fName = data.first_name || '';
-        var lName = data.last_name || '';
+        // Render admin info card
+        var adminCard = document.getElementById('admin-info-card');
+        var adminGrid = document.getElementById('admin-info-grid');
         
-        var initials = (fName.charAt(0) + lName.charAt(0)).toUpperCase() || 'U';
-        var fullName = (fName + ' ' + lName).trim() || 'User';
+        if (adminData) {
+          adminCard.style.display = 'block';
+          
+          var roleClass = adminData.role === 'super_admin' ? 'super_admin' : 
+                         adminData.role === 'admin' ? 'admin' : 'moderator';
+          
+          adminGrid.innerHTML = `
+            <div class="admin-info-item">
+              <label>Admin Role</label>
+              <span><span class="admin-role-badge ${roleClass}">${(adminData.role || 'admin').replace('_', ' ')}</span></span>
+            </div>
+            <div class="admin-info-item">
+              <label>Admin Name</label>
+              <span>${escapeHTML(adminData.full_name || 'N/A')}</span>
+            </div>
+            <div class="admin-info-item">
+              <label>Admin Email</label>
+              <span>${escapeHTML(adminData.email || 'N/A')}</span>
+            </div>
+            <div class="admin-info-item">
+              <label>Last Login</label>
+              <span>${formatDateTime(adminData.last_login || new Date().toISOString())}</span>
+            </div>
+          `;
+        }
+
+        // Render avatar
+        var fullName = adminData?.full_name || 'Admin User';
+        var nameParts = fullName.split(' ');
+        var initials = (nameParts[0]?.charAt(0) || 'A').toUpperCase() + 
+                      (nameParts[1]?.charAt(0) || nameParts[0]?.charAt(1) || 'D').toUpperCase();
 
         document.getElementById('profile-avatar-card').innerHTML = `
           <div class="avatar-circle">
             ${initials}
-            <div class="avatar-admin-indicator ${adminData && adminData.role ? 'visible' : ''}">
+            <div class="avatar-admin-indicator">
               <i class="fa-solid fa-shield-halved"></i>
             </div>
           </div>
           <h3 class="profile-name">${escapeHTML(fullName)}</h3>
-          <p class="profile-email">${escapeHTML(data.email || 'No email provided')}</p>
+          <p class="profile-email">${escapeHTML(adminData?.email || 'No email provided')}</p>
         `;
         
+        // Render personal info
         var grid = document.getElementById('profile-info-grid');
         var actions = document.getElementById('edit-profile-actions');
 
         if (isEditingProfile) {
           grid.innerHTML = `
-            <div class="info-item"><label>First Name</label><input type="text" id="edit-fname" class="edit-input" value="${escapeHTML(fName)}" placeholder="Enter your first name"></div>
-            <div class="info-item"><label>Last Name</label><input type="text" id="edit-lname" class="edit-input" value="${escapeHTML(lName)}" placeholder="Enter your last name"></div>
-            <div class="info-item"><label>Phone Number</label><input type="text" id="edit-phone" class="edit-input" value="${escapeHTML(data.phone || '')}" placeholder="e.g. +1 (555) 000-0000"></div>
-            <div class="info-item"><label>Email Address</label><input type="email" class="edit-input" value="${escapeHTML(data.email || '')}" disabled title="Email address cannot be changed"></div>
+            <div class="info-item"><label>First Name</label><input type="text" id="edit-fname" class="edit-input" value="${escapeHTML(nameParts[0] || '')}" placeholder="Enter your first name"></div>
+            <div class="info-item"><label>Last Name</label><input type="text" id="edit-lname" class="edit-input" value="${escapeHTML(nameParts.slice(1).join(' ') || '')}" placeholder="Enter your last name"></div>
+            <div class="info-item"><label>Phone Number</label><input type="text" id="edit-phone" class="edit-input" value="${escapeHTML(adminData?.phone || '')}" placeholder="e.g. +1 (555) 000-0000"></div>
+            <div class="info-item"><label>Email Address</label><input type="email" class="edit-input" value="${escapeHTML(adminData?.email || '')}" disabled title="Email address cannot be changed"></div>
           `;
           
           actions.innerHTML = `
@@ -1231,10 +934,10 @@
           `;
         } else {
           grid.innerHTML = `
-            <div class="info-item"><label>First Name</label><span>${escapeHTML(fName || '—')}</span></div>
-            <div class="info-item"><label>Last Name</label><span>${escapeHTML(lName || '—')}</span></div>
-            <div class="info-item"><label>Phone Number</label><span>${escapeHTML(data.phone || '—')}</span></div>
-            <div class="info-item"><label>Email Address</label><span>${escapeHTML(data.email || '—')}</span></div>
+            <div class="info-item"><label>First Name</label><span>${escapeHTML(nameParts[0] || '—')}</span></div>
+            <div class="info-item"><label>Last Name</label><span>${escapeHTML(nameParts.slice(1).join(' ') || '—')}</span></div>
+            <div class="info-item"><label>Phone Number</label><span>${escapeHTML(adminData?.phone || '—')}</span></div>
+            <div class="info-item"><label>Email Address</label><span>${escapeHTML(adminData?.email || '—')}</span></div>
           `;
           
           actions.innerHTML = `
@@ -1244,150 +947,68 @@
           `;
         }
         
+        // Account details
         document.getElementById('account-info-grid').innerHTML = `
-          <div class="info-item"><label>Member Since</label><span>${formatDate(data.created_at)}</span></div>
-          <div class="info-item"><label>Last Updated</label><span>${formatDate(data.updated_at)}</span></div>
+          <div class="info-item"><label>Member Since</label><span>${formatDate(adminData?.created_at)}</span></div>
+          <div class="info-item"><label>Last Updated</label><span>${formatDate(adminData?.updated_at || adminData?.created_at)}</span></div>
         `;
+        
+        // Update welcome message
+        document.getElementById('welcome-message').textContent = 'Welcome back, ' + nameParts[0];
       }
 
-      function renderAddresses(data) {
-        document.getElementById('skeleton-addresses').style.display = 'none';
-        document.getElementById('content-addresses').style.display = 'block';
+      async function fetchAdminData() {
+        var token = getAdminToken();
         
-        var container = document.getElementById('addresses-list');
-        
-        var addr1 = data.address_line1 || '';
-        var addr2 = data.address_line2 || '';
-        var city = data.city || '';
-        var state = data.state || '';
-        var zip = data.postal_code || '';
-        var country = data.country || '';
-
-        if (isEditingAddress) {
-          container.innerHTML = `
-            <div class="address-card default">
-              <div class="info-card-header" style="margin-bottom: 24px;">
-                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Edit Location</h2>
-                  <div class="action-buttons">
-                    <button class="edit-btn cancel-btn" onclick="toggleEditAddress(false)">Cancel</button>
-                    <button class="edit-btn save-btn" id="save-address-btn" onclick="saveAddressInfo()">Save</button>
-                  </div>
-              </div>
-              <div class="info-grid">
-                <div class="info-item"><label>Address Line 1</label><input type="text" id="edit-addr1" class="edit-input" value="${escapeHTML(addr1)}" placeholder="Street Address, P.O. Box"></div>
-                <div class="info-item"><label>Address Line 2</label><input type="text" id="edit-addr2" class="edit-input" value="${escapeHTML(addr2)}" placeholder="Apartment, suite, building, floor, etc."></div>
-                <div class="info-item"><label>City</label><input type="text" id="edit-city" class="edit-input" value="${escapeHTML(city)}" placeholder="Enter your city"></div>
-                <div class="info-item"><label>State / Province</label><input type="text" id="edit-state" class="edit-input" value="${escapeHTML(state)}" placeholder="Enter state or province"></div>
-                <div class="info-item"><label>Postal / Zip Code</label><input type="text" id="edit-zip" class="edit-input" value="${escapeHTML(zip)}" placeholder="Enter postal code"></div>
-                <div class="info-item"><label>Country</label><input type="text" id="edit-country" class="edit-input" value="${escapeHTML(country)}" placeholder="Enter country"></div>
-              </div>
-            </div>
-          `;
-        } else {
-          container.innerHTML = `
-            <div class="address-card default">
-              <div class="default-badge">Primary</div>
-              <div class="info-card-header" style="margin-bottom: 24px; align-items: flex-start;">
-                  <h2 style="font-family:'Manrope',sans-serif;font-size:18px;font-weight:700;margin:0;color:var(--primary);">Saved Location</h2>
-                  <button class="edit-btn" onclick="toggleEditAddress(true)" style="border: 1.5px solid #e5e5ea; padding: 6px 14px; margin-top: -6px;">
-                    <i class="fa-solid fa-pen" style="margin-right:4px;"></i> Edit
-                  </button>
-              </div>
-              <div class="info-grid">
-                <div class="info-item"><label>Address Line 1</label><span>${escapeHTML(addr1 || '—')}</span></div>
-                <div class="info-item"><label>Address Line 2</label><span>${escapeHTML(addr2 || '—')}</span></div>
-                <div class="info-item"><label>City</label><span>${escapeHTML(city || '—')}</span></div>
-                <div class="info-item"><label>State / Province</label><span>${escapeHTML(state || '—')}</span></div>
-                <div class="info-item"><label>Postal / Zip Code</label><span>${escapeHTML(zip || '—')}</span></div>
-                <div class="info-item"><label>Country</label><span>${escapeHTML(country || '—')}</span></div>
-              </div>
-            </div>
-          `;
-        }
-      }
-
-      async function fetchUserData() {
-        var token = getToken();
-        
-        console.log('🔑 Token found:', token ? 'Yes (length: ' + token.length + ')' : 'No');
+        console.log('🔑 Admin Token found:', token ? 'Yes (length: ' + token.length + ')' : 'No');
         
         if (!token) {
-          console.error('❌ No token available');
-          showErrorState('Please sign in to view your account.');
+          console.error('❌ No admin token available');
+          showErrorState('Please sign in with your admin account.');
           return;
         }
 
         try {
-          console.log('📡 Fetching user data...');
+          console.log('📡 Fetching admin data...');
           
-          // Fetch user data and admin status in parallel
-          var [userResponse, adminInfo] = await Promise.all([
-            fetch(API_BASE + '/api/user/profile', {
-              headers: {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer ' + token
-              }
-            }),
-            checkAdminStatus()
-          ]);
+          // Verify admin and get profile
+          var response = await fetch(API_BASE + '/api/admin/profile', {
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': 'Bearer ' + token
+            }
+          });
 
-          console.log('📡 User API response status:', userResponse.status);
+          console.log('📡 Admin API response status:', response.status);
 
-          if (!userResponse.ok) {
-            if (userResponse.status === 401) {
-              console.error('❌ 401 Unauthorized - Token expired or invalid');
-              // Clear invalid session
-              localStorage.removeItem('jayenware_session');
-              sessionStorage.removeItem('jayenware_session');
-              document.cookie = 'jayenware_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-              showErrorState('Session expired. Please sign in again.');
+          if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+              console.error('❌ Admin authentication failed');
+              localStorage.removeItem('jayenware_admin_session');
+              sessionStorage.removeItem('jayenware_admin_session');
+              showErrorState('Admin session expired. Please sign in again.');
               return;
             }
-            throw new Error('Failed to load user data (Status: ' + userResponse.status + ')');
+            throw new Error('Failed to load admin data (Status: ' + response.status + ')');
           }
 
-          var result = await userResponse.json();
-          console.log('✅ User data received:', result);
+          var result = await response.json();
+          console.log('✅ Admin data received:', result);
           
-          var profile = result.profile || {};
-          var user = result.user || {};
+          adminData = result.profile || result.user || {};
           
-          userData = {
-            email: user.email || profile.email || '',
-            first_name: profile.first_name || user.user_metadata?.first_name || '',
-            last_name: profile.last_name || user.user_metadata?.last_name || '',
-            phone: profile.phone || user.user_metadata?.phone || '',
-            address_line1: profile.address_line1 || user.user_metadata?.address_line1 || '',
-            address_line2: profile.address_line2 || user.user_metadata?.address_line2 || '',
-            city: profile.city || user.user_metadata?.city || '',
-            state: profile.state || user.user_metadata?.state || '',
-            postal_code: profile.postal_code || user.user_metadata?.postal_code || '',
-            country: profile.country || user.user_metadata?.country || '',
-            created_at: profile.created_at || user.created_at || '',
-            updated_at: profile.updated_at || user.updated_at || ''
-          };
-
-          adminData = adminInfo;
-
           // Show the account grid
           document.getElementById('account-grid').style.display = 'flex';
           document.getElementById('error-state').classList.remove('visible');
           
-          var fName = userData.first_name || 'User';
-          document.getElementById('welcome-message').textContent = 'Welcome back, ' + fName;
+          // Render profile
+          renderProfile();
           
-          // Render admin status
-          renderAdminStatusBadge(adminInfo);
-          toggleAdminButton(adminInfo);
-          
-          // Render profile with admin data
-          renderProfile(userData);
-          
-          console.log('✅ Account page fully loaded');
+          console.log('✅ Admin account page fully loaded');
 
         } catch (error) {
-          console.error('❌ Error loading user data:', error);
-          showErrorState('Failed to load account data. Please try again. Error: ' + error.message);
+          console.error('❌ Error loading admin data:', error);
+          showErrorState('Failed to load admin data. Please try again.');
         }
       }
 
@@ -1435,7 +1056,7 @@
 
       // Initialize on page load
       document.addEventListener('DOMContentLoaded', function() {
-        console.log('🚀 Account page initialized');
+        console.log('🚀 Admin Account page initialized');
         
         // Load fonts
         if (window.JAYENWARE_FONTS) {
@@ -1446,13 +1067,12 @@
           }
         }
 
-        // Debug: Check all storage
-        console.log('📦 localStorage keys:', Object.keys(localStorage));
-        console.log('📦 sessionStorage keys:', Object.keys(sessionStorage));
-        console.log('📦 Cookies:', document.cookie);
+        // Debug: Check admin storage
+        console.log(' localStorage keys:', Object.keys(localStorage));
+        console.log(' Admin session exists:', !!localStorage.getItem('jayenware_admin_session'));
 
-        // Fetch user data
-        fetchUserData();
+        // Fetch admin data only
+        fetchAdminData();
       });
 
     })();
