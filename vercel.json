@@ -108,14 +108,6 @@
       "dest": "/public/store-locator.html"
     },
     {
-      "src": "/herobanner",
-      "dest": "/public/herobanner.html"
-    },
-    {
-      "src": "/hero2",
-      "dest": "/public/hero2.html"
-    },
-    {
       "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))",
       "dest": "/public/$1"
     },
@@ -149,3 +141,4 @@
     }
   ]
 }
+
