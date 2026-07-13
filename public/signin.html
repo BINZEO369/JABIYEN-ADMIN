@@ -126,6 +126,59 @@
       font-weight: 400;
     }
 
+    /* Login Type Toggle */
+    .login-type-toggle {
+      display: flex;
+      background: var(--soft);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 28px;
+      gap: 4px;
+    }
+    .login-type-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .login-type-btn i {
+      font-size: 13px;
+    }
+    .login-type-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .login-type-btn:hover:not(.active) {
+      color: var(--primary);
+    }
+    .admin-badge {
+      display: none;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .login-type-btn.active .admin-badge {
+      display: inline-block;
+    }
+
     /* Form Groups */
     .form-group {
       margin-bottom: 18px;
@@ -237,7 +290,8 @@
     /* Forgot password */
     .forgot-row {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 20px;
       margin-top: -8px;
     }
@@ -250,6 +304,19 @@
     }
     .forgot-link:hover {
       color: #0056b3;
+    }
+    .admin-hint {
+      font-size: 11px;
+      color: var(--accent);
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+    .admin-hint.visible {
+      display: flex;
+    }
+    .admin-hint i {
+      font-size: 10px;
     }
 
     /* Submit Button */
@@ -413,8 +480,21 @@
         <!-- Branding -->
         <div class="auth-brand">
           <img src="/logo.png" alt="JAYENWARE" onerror="this.style.display='none';" />
-          <h1>Welcome Back</h1>
-          <p>Sign in to continue your journey</p>
+          <h1 id="brand-title">Welcome Back</h1>
+          <p id="brand-subtitle">Sign in to continue your journey</p>
+        </div>
+
+        <!-- Login Type Toggle -->
+        <div class="login-type-toggle">
+          <button type="button" class="login-type-btn active" data-login-type="user" id="user-login-btn">
+            <i class="fa-solid fa-user"></i>
+            <span>Customer</span>
+          </button>
+          <button type="button" class="login-type-btn" data-login-type="admin" id="admin-login-btn">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Admin</span>
+            <span class="admin-badge">Staff</span>
+          </button>
         </div>
 
         <!-- General Error Alert -->
@@ -467,9 +547,13 @@
             </div>
           </div>
 
-          <!-- Forgot Password -->
+          <!-- Forgot Password / Admin Hint -->
           <div class="forgot-row">
-            <a href="/forgot-password" class="forgot-link">Forgot password?</a>
+            <a href="/forgot-password" class="forgot-link" id="forgot-link">Forgot password?</a>
+            <span class="admin-hint" id="admin-hint">
+              <i class="fa-solid fa-lock"></i>
+              Authorized personnel only
+            </span>
           </div>
 
           <!-- Remember Me -->
@@ -480,20 +564,20 @@
 
           <!-- Submit Button -->
           <button type="submit" class="btn-submit" id="submit-btn">
-            <span class="btn-text">Sign In</span>
+            <span class="btn-text" id="submit-text">Sign In</span>
             <span class="spinner"></span>
           </button>
         </form>
 
         <!-- Divider -->
-        <div class="auth-divider">
-          <span>New to JAYENWARE?</span>
+        <div class="auth-divider" id="auth-divider">
+          <span id="divider-text">New to JAYENWARE?</span>
         </div>
 
         <!-- Footer Link -->
-        <div class="auth-footer">
+        <div class="auth-footer" id="auth-footer">
           <p>
-            <a href="/signup">Create a new account</a>
+            <a href="/signup" id="footer-link">Create a new account</a>
           </p>
         </div>
 
@@ -514,10 +598,12 @@
   <script>
     (function() {
       var API_BASE = window.location.origin;
+      var currentLoginType = 'user'; // 'user' or 'admin'
 
       // DOM Elements
       var form = document.getElementById('login-form');
       var submitBtn = document.getElementById('submit-btn');
+      var submitText = document.getElementById('submit-text');
       var alertError = document.getElementById('alert-error');
       var alertMessage = document.getElementById('alert-message');
       var toast = document.getElementById('toast');
@@ -526,6 +612,16 @@
       var passwordToggle = document.getElementById('password-toggle');
       var passwordInput = document.getElementById('password');
       var emailInput = document.getElementById('email');
+      var userLoginBtn = document.getElementById('user-login-btn');
+      var adminLoginBtn = document.getElementById('admin-login-btn');
+      var brandTitle = document.getElementById('brand-title');
+      var brandSubtitle = document.getElementById('brand-subtitle');
+      var forgotLink = document.getElementById('forgot-link');
+      var adminHint = document.getElementById('admin-hint');
+      var dividerText = document.getElementById('divider-text');
+      var footerLink = document.getElementById('footer-link');
+      var authDivider = document.getElementById('auth-divider');
+      var authFooter = document.getElementById('auth-footer');
 
       // Show toast notification
       function showToast(message, type) {
@@ -645,15 +741,57 @@
         }
       }
 
-      // ✅ Save session to localStorage
-      function saveSession(session) {
+      // Save session to localStorage
+      function saveSession(session, loginType) {
         if (session && session.access_token) {
-          localStorage.setItem('jayenware_session', JSON.stringify({
+          var storageKey = loginType === 'admin' ? 'jayenware_admin_session' : 'jayenware_session';
+          localStorage.setItem(storageKey, JSON.stringify({
             access_token: session.access_token,
             expires_at: session.expires_at || null,
-            user_id: session.user?.id || null
+            user_id: session.user?.id || null,
+            login_type: loginType
           }));
         }
+      }
+
+      // Switch login type
+      function switchLoginType(type) {
+        currentLoginType = type;
+        
+        if (type === 'admin') {
+          // Admin mode
+          userLoginBtn.classList.remove('active');
+          adminLoginBtn.classList.add('active');
+          brandTitle.textContent = 'Admin Portal';
+          brandSubtitle.textContent = 'Sign in to manage your store';
+          submitText.textContent = 'Sign In as Admin';
+          forgotLink.style.display = 'none';
+          adminHint.classList.add('visible');
+          dividerText.textContent = 'Admin Access Only';
+          footerLink.textContent = 'Return to store';
+          footerLink.href = '/';
+          emailInput.placeholder = 'admin@jayenware.com';
+        } else {
+          // Customer mode
+          userLoginBtn.classList.add('active');
+          adminLoginBtn.classList.remove('active');
+          brandTitle.textContent = 'Welcome Back';
+          brandSubtitle.textContent = 'Sign in to continue your journey';
+          submitText.textContent = 'Sign In';
+          forgotLink.style.display = 'inline';
+          adminHint.classList.remove('visible');
+          dividerText.textContent = 'New to JAYENWARE?';
+          footerLink.textContent = 'Create a new account';
+          footerLink.href = '/signup';
+          emailInput.placeholder = 'you@example.com';
+        }
+        
+        // Clear form and errors
+        hideAlert();
+        clearFieldError('email');
+        clearFieldError('password');
+        emailInput.classList.remove('success', 'error');
+        passwordInput.classList.remove('success', 'error');
       }
 
       // Password toggle
@@ -668,6 +806,19 @@
         } else {
           icon.className = 'fa-solid fa-eye';
           passwordToggle.setAttribute('aria-label', 'Show password');
+        }
+      });
+
+      // Toggle button click handlers
+      userLoginBtn.addEventListener('click', function() {
+        if (currentLoginType !== 'user') {
+          switchLoginType('user');
+        }
+      });
+
+      adminLoginBtn.addEventListener('click', function() {
+        if (currentLoginType !== 'admin') {
+          switchLoginType('admin');
         }
       });
 
@@ -698,7 +849,12 @@
         setLoading(true);
 
         try {
-          var response = await fetch(API_BASE + '/api/auth/login', {
+          // Choose API endpoint based on login type
+          var apiEndpoint = currentLoginType === 'admin' 
+            ? '/api/admin/login' 
+            : '/api/auth/login';
+          
+          var response = await fetch(API_BASE + apiEndpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
@@ -710,20 +866,27 @@
             throw new Error(result.error || result.message || 'Invalid email or password');
           }
 
-          // ✅ Save session token to localStorage
+          // Save session token to localStorage
           if (result.session) {
-            saveSession(result.session);
+            saveSession(result.session, currentLoginType);
           }
 
           // Success
-          showToast('Signed in successfully! Redirecting...', 'success');
+          var successMessage = currentLoginType === 'admin' 
+            ? 'Admin login successful! Redirecting...' 
+            : 'Signed in successfully! Redirecting...';
+          
+          showToast(successMessage, 'success');
           
           // Mark fields as success
           markFieldSuccess('email');
           markFieldSuccess('password');
 
           // Redirect after short delay
-          var redirectUrl = result.redirect || '/account';
+          var redirectUrl = currentLoginType === 'admin' 
+            ? (result.redirect || '/admin/dashboard') 
+            : (result.redirect || '/account');
+          
           setTimeout(function() {
             window.location.href = redirectUrl;
           }, 1000);
@@ -731,17 +894,31 @@
         } catch (error) {
           console.error('Login error:', error);
           
-          // Show inline alert for auth errors
+          // Show appropriate error message
           var errorMsg = error.message || 'Something went wrong';
-          if (errorMsg.toLowerCase().includes('invalid') || 
-              errorMsg.toLowerCase().includes('credentials') ||
-              errorMsg.toLowerCase().includes('password') ||
-              errorMsg.toLowerCase().includes('email')) {
-            showAlert(errorMsg);
-            showFieldError('email', '');
-            showFieldError('password', '');
+          
+          if (currentLoginType === 'admin') {
+            if (errorMsg.toLowerCase().includes('admin') || 
+                errorMsg.toLowerCase().includes('access') ||
+                errorMsg.toLowerCase().includes('permission')) {
+              showAlert('Access denied. Admin privileges required.');
+            } else if (errorMsg.toLowerCase().includes('invalid') || 
+                      errorMsg.toLowerCase().includes('credentials')) {
+              showAlert('Invalid admin credentials');
+            } else {
+              showAlert(errorMsg);
+            }
           } else {
-            showToast(errorMsg, 'error');
+            if (errorMsg.toLowerCase().includes('invalid') || 
+                errorMsg.toLowerCase().includes('credentials') ||
+                errorMsg.toLowerCase().includes('password') ||
+                errorMsg.toLowerCase().includes('email')) {
+              showAlert(errorMsg);
+              showFieldError('email', '');
+              showFieldError('password', '');
+            } else {
+              showToast(errorMsg, 'error');
+            }
           }
         } finally {
           setLoading(false);
@@ -772,7 +949,7 @@
         hideAlert();
       });
 
-      // Check for redirected message (e.g., after signup)
+      // Check for redirected message
       document.addEventListener('DOMContentLoaded', function() {
         // Load fonts CSS variables if available
         if (window.JAYENWARE_FONTS) {
@@ -788,12 +965,22 @@
         // Check URL params for messages
         var urlParams = new URLSearchParams(window.location.search);
         var msg = urlParams.get('message');
+        var type = urlParams.get('type');
+        
         if (msg === 'signup_success') {
           showToast('Account created successfully! Please sign in.', 'success');
         } else if (msg === 'password_reset') {
           showToast('Password reset successfully! Please sign in.', 'success');
         } else if (msg === 'session_expired') {
           showToast('Your session has expired. Please sign in again.', 'error');
+        } else if (msg === 'admin_required') {
+          switchLoginType('admin');
+          showToast('Please sign in with your admin account', 'error');
+        }
+
+        // If URL has admin parameter, switch to admin login
+        if (type === 'admin' || window.location.pathname.includes('/admin')) {
+          switchLoginType('admin');
         }
 
         // Focus email field
