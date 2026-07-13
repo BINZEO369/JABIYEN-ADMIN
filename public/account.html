@@ -49,6 +49,8 @@
       --soft: #f5f5f7;
       --blue: #007aff;
       --error: #ff3b30;
+      --success: #34c759;
+      --admin-gold: #f59e0b;
     }
     
     * {
@@ -110,6 +112,38 @@
       font-size: 15px;
       color: var(--accent);
       margin: 0;
+    }
+
+    /* Admin Badge in Header */
+    .admin-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+    }
+    
+    .admin-status-badge.active {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      color: #92400e;
+      border: 1.5px solid #fbbf24;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+    }
+    
+    .admin-status-badge.inactive {
+      background: #f5f5f7;
+      color: var(--accent);
+      border: 1.5px solid #e5e5ea;
+    }
+    
+    .admin-status-badge i {
+      font-size: 12px;
     }
 
     .account-grid {
@@ -176,6 +210,35 @@
       font-size: 16px;
     }
 
+    /* Admin Dashboard Button */
+    .admin-dashboard-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+      border: none;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      flex: 1;
+      min-width: 180px;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+    
+    .admin-dashboard-btn:hover {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+      transform: translateY(-1px);
+    }
+
     .logout-btn {
       display: flex;
       align-items: center;
@@ -226,6 +289,96 @@
       margin-bottom: 20px;
     }
 
+    /* Admin Info Card */
+    .admin-info-card {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 1.5px solid #fbbf24;
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+      margin-bottom: 20px;
+      display: none;
+    }
+    
+    .admin-info-card.visible {
+      display: block;
+    }
+    
+    .admin-info-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .admin-info-header i {
+      font-size: 20px;
+      color: #f59e0b;
+    }
+    
+    .admin-info-header h3 {
+      font-family: 'Manrope', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #92400e;
+      margin: 0;
+    }
+    
+    .admin-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 20px;
+    }
+    
+    @media (max-width: 480px) {
+      .admin-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .admin-info-item label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #92400e;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+    
+    .admin-info-item span {
+      display: block;
+      font-size: 14px;
+      color: #78350f;
+      font-weight: 600;
+    }
+    
+    .admin-role-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .admin-role-badge.super_admin {
+      background: #dc2626;
+      color: #ffffff;
+    }
+    
+    .admin-role-badge.admin {
+      background: #f59e0b;
+      color: #78350f;
+    }
+    
+    .admin-role-badge.moderator {
+      background: #3b82f6;
+      color: #ffffff;
+    }
+
     .profile-header-card {
       display: flex;
       flex-direction: column;
@@ -253,6 +406,30 @@
       margin-bottom: 16px;
       font-family: 'Manrope', sans-serif;
       box-shadow: 0 8px 16px rgba(0, 122, 255, 0.2);
+      position: relative;
+    }
+    
+    /* Admin indicator on avatar */
+    .avatar-admin-indicator {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #fff;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: none;
+    }
+    
+    .avatar-admin-indicator.visible {
+      display: flex;
     }
 
     .profile-name {
@@ -480,6 +657,7 @@
       <div class="account-header">
         <h1>My Account</h1>
         <p id="welcome-message">Welcome back</p>
+        <div id="admin-status-container"></div>
       </div>
 
       <div class="error-state" id="error-state">
@@ -498,6 +676,17 @@
             </div>
             
             <div id="content-profile" style="display:none;">
+              <!-- Admin Info Card -->
+              <div class="admin-info-card" id="admin-info-card">
+                <div class="admin-info-header">
+                  <i class="fa-solid fa-shield-halved"></i>
+                  <h3>Administrator Access</h3>
+                </div>
+                <div class="admin-info-grid" id="admin-info-grid">
+                  <!-- Filled dynamically -->
+                </div>
+              </div>
+              
               <div class="profile-header-card" id="profile-avatar-card"></div>
               <div class="info-card">
                 <div class="info-card-header">
@@ -531,6 +720,11 @@
           <button class="sidebar-nav-item" data-panel="addresses">
             <i class="fa-solid fa-location-dot"></i> Location
           </button>
+          
+          <!-- Admin Dashboard Button (hidden by default) -->
+          <a href="/admin/dashboard" class="admin-dashboard-btn" id="admin-dashboard-btn" style="display: none;">
+            <i class="fa-solid fa-gauge-high"></i> Admin Panel
+          </a>
           
           <button class="logout-btn" id="logout-btn">
             <i class="fa-solid fa-right-from-bracket"></i> Sign Out
@@ -569,7 +763,9 @@
       var API_BASE = window.location.origin;
       var currentPanel = 'profile';
       var userData = null;
+      var adminData = null;
       var authToken = null;
+      var adminToken = null;
       var isEditingProfile = false;
       var isEditingAddress = false;
 
@@ -583,6 +779,18 @@
           } catch(e) {}
         }
         return authToken;
+      }
+
+      function getAdminToken() {
+        if (adminToken) return adminToken;
+        var stored = localStorage.getItem('jayenware_admin_session');
+        if (stored) {
+          try {
+            var parsed = JSON.parse(stored);
+            adminToken = parsed.access_token || null;
+          } catch(e) {}
+        }
+        return adminToken;
       }
 
       function showToast(message, type) {
@@ -642,7 +850,9 @@
         } catch(e) {
           console.error('Logout error:', e);
         }
+        // Clear all sessions
         localStorage.removeItem('jayenware_session');
+        localStorage.removeItem('jayenware_admin_session');
         window.location.href = '/';
       });
 
@@ -651,6 +861,111 @@
         switch(panel) {
           case 'profile': renderProfile(userData); break;
           case 'addresses': renderAddresses(userData); break;
+        }
+      }
+
+      // Check admin status
+      async function checkAdminStatus() {
+        var token = getAdminToken();
+        if (!token) return null;
+
+        try {
+          var response = await fetch(API_BASE + '/api/admin/verify', {
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          });
+
+          if (!response.ok) return null;
+
+          var result = await response.json();
+          if (result.success && result.user) {
+            adminData = result.user;
+            return result.user;
+          }
+        } catch (error) {
+          console.log('Admin check failed:', error);
+        }
+        return null;
+      }
+
+      // Render admin status badge in header
+      function renderAdminStatusBadge(adminInfo) {
+        var container = document.getElementById('admin-status-container');
+        
+        if (adminInfo && adminInfo.role) {
+          var roleLabel = adminInfo.role.replace('_', ' ').toUpperCase();
+          container.innerHTML = `
+            <div class="admin-status-badge active">
+              <i class="fa-solid fa-shield-halved"></i>
+              ${roleLabel} Access Active
+            </div>
+          `;
+        } else {
+          container.innerHTML = `
+            <div class="admin-status-badge inactive">
+              <i class="fa-solid fa-user"></i>
+              Customer Account
+            </div>
+          `;
+        }
+      }
+
+      // Render admin info card
+      function renderAdminInfoCard(adminInfo) {
+        var card = document.getElementById('admin-info-card');
+        var grid = document.getElementById('admin-info-grid');
+        
+        if (adminInfo && adminInfo.role) {
+          card.classList.add('visible');
+          
+          var roleClass = adminInfo.role === 'super_admin' ? 'super_admin' : 
+                         adminInfo.role === 'admin' ? 'admin' : 'moderator';
+          
+          var lastLogin = adminInfo.last_login || 'First login';
+          
+          grid.innerHTML = `
+            <div class="admin-info-item">
+              <label>Admin Role</label>
+              <span><span class="admin-role-badge ${roleClass}">${adminInfo.role.replace('_', ' ')}</span></span>
+            </div>
+            <div class="admin-info-item">
+              <label>Admin Name</label>
+              <span>${escapeHTML(adminInfo.full_name || 'N/A')}</span>
+            </div>
+            <div class="admin-info-item">
+              <label>Admin Email</label>
+              <span>${escapeHTML(adminInfo.email || 'N/A')}</span>
+            </div>
+            <div class="admin-info-item">
+              <label>Last Login</label>
+              <span>${formatDateTime(lastLogin)}</span>
+            </div>
+          `;
+        } else {
+          card.classList.remove('visible');
+        }
+      }
+
+      // Show/hide admin dashboard button
+      function toggleAdminButton(adminInfo) {
+        var btn = document.getElementById('admin-dashboard-btn');
+        if (adminInfo && adminInfo.role) {
+          btn.style.display = 'flex';
+        } else {
+          btn.style.display = 'none';
+        }
+      }
+
+      // Show admin indicator on avatar
+      function toggleAdminAvatarIndicator(adminInfo) {
+        var indicator = document.querySelector('.avatar-admin-indicator');
+        if (indicator) {
+          if (adminInfo && adminInfo.role) {
+            indicator.classList.add('visible');
+          } else {
+            indicator.classList.remove('visible');
+          }
         }
       }
 
@@ -695,7 +1010,6 @@
             throw new Error(errorData.error || 'Failed to update profile');
           }
 
-          // Update local data with fresh server response
           var result = await response.json();
           if (result.profile) {
             userData.first_name = result.profile.first_name || newFname;
@@ -770,7 +1084,6 @@
             throw new Error(errorData.error || 'Failed to update address');
           }
 
-          // Update local data with fresh server response
           var result = await response.json();
           if (result.profile) {
             userData.address_line1 = result.profile.address_line1 || newAddr1;
@@ -808,6 +1121,9 @@
         document.getElementById('skeleton-profile').style.display = 'none';
         document.getElementById('content-profile').style.display = 'block';
 
+        // Render admin info card
+        renderAdminInfoCard(adminData);
+
         var fName = data.first_name || '';
         var lName = data.last_name || '';
         
@@ -815,7 +1131,12 @@
         var fullName = (fName + ' ' + lName).trim() || 'User';
 
         document.getElementById('profile-avatar-card').innerHTML = `
-          <div class="avatar-circle">${initials}</div>
+          <div class="avatar-circle">
+            ${initials}
+            <div class="avatar-admin-indicator ${adminData && adminData.role ? 'visible' : ''}">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+          </div>
           <h3 class="profile-name">${escapeHTML(fullName)}</h3>
           <p class="profile-email">${escapeHTML(data.email || 'No email provided')}</p>
         `;
@@ -920,15 +1241,19 @@
         }
 
         try {
-          var response = await fetch(API_BASE + '/api/user/profile', {
-            headers: {
-              'Accept': 'application/json',
-              'Authorization': 'Bearer ' + token
-            }
-          });
+          // Fetch user data and admin status in parallel
+          var [userResponse, adminInfo] = await Promise.all([
+            fetch(API_BASE + '/api/user/profile', {
+              headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + token
+              }
+            }),
+            checkAdminStatus()
+          ]);
 
-          if (!response.ok) {
-            if (response.status === 401) {
+          if (!userResponse.ok) {
+            if (userResponse.status === 401) {
               localStorage.removeItem('jayenware_session');
               showErrorState('Session expired. Please sign in again.');
               return;
@@ -936,7 +1261,7 @@
             throw new Error('Failed to load user data');
           }
 
-          var result = await response.json();
+          var result = await userResponse.json();
           var profile = result.profile || {};
           var user = result.user || {};
           
@@ -955,12 +1280,20 @@
             updated_at: profile.updated_at || user.updated_at || ''
           };
 
+          // Store admin data
+          adminData = adminInfo;
+
           document.getElementById('account-grid').style.display = 'flex';
           document.getElementById('error-state').classList.remove('visible');
           
           var fName = userData.first_name || 'User';
           document.getElementById('welcome-message').textContent = 'Welcome back, ' + fName;
           
+          // Render admin status
+          renderAdminStatusBadge(adminInfo);
+          toggleAdminButton(adminInfo);
+          
+          // Render profile with admin data
           renderProfile(userData);
 
         } catch (error) {
@@ -990,6 +1323,22 @@
         try {
           var date = new Date(dateString);
           return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        } catch(e) {
+          return dateString;
+        }
+      }
+
+      function formatDateTime(dateString) {
+        if (!dateString) return '—';
+        try {
+          var date = new Date(dateString);
+          return date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
         } catch(e) {
           return dateString;
         }
