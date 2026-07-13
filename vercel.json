@@ -24,7 +24,7 @@
       "dest": "/public/fonts.js"
     },
     {
-      "src": "/herobanner.html",
+      "src": "/herobanner",
       "dest": "/public/herobanner.html"
     },
     {
