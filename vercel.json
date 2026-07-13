@@ -32,8 +32,8 @@
       "dest": "/public/herovideo.html"
     },
     {
-      "src": "/hero-secondary-banner.js",
-      "dest": "/public/hero-secondary-banner.js"
+      "src": "/category-menu-item",
+      "dest": "/public/category-menu-item.html"
     },
     {
       "src": "/logo.png",
