@@ -56,7 +56,7 @@
       "dest": "/public/account.html"
     },
     {
-      "src": "/product/(.*)",
+      "src": "/product",
       "dest": "/public/product.html"
     },
     {
