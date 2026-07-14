@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Product Variants | JAYENWARE Admin</title>
+    <meta name="description" content="Manage product colors, sizes and variants for JAYENWARE">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#1d1d1f">
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/logo.png">
+    <link rel="apple-touch-icon" href="/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1d1d1f',
+                        accent: '#86868b',
+                        soft: '#f5f5f7',
+                        blue: '#007aff'
+                    },
+                    fontFamily: {
+                        sans: ["'Inter', 'sans-serif'"],
+                        serif: ["'Manrope', 'sans-serif'"],
+                        mono: ["'Sora', 'sans-serif'"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary: #1d1d1f;
+            --accent: #86868b;
+            --soft: #f5f5f7;
+            --blue: #007aff;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #1d1d1f;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #fafafa;
+            border-right: 1px solid #e5e5ea;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            z-index: 40;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e5e5ea;
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            gap: 16px;
+        }
+
+        .main-content {
+            flex: 1;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (min-width: 1025px) {
+            .main-content { margin-left: var(--sidebar-width); }
+        }
+
+        .page-header-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e5ea;
+            padding: 40px 24px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .page-header-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.01em;
+            margin: 0 0 10px 0;
+        }
+        
+        .page-header-subtitle {
+            font-size: 14px;
+            color: var(--accent);
+            margin: 0 0 12px 0;
+            font-weight: 400;
+        }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; padding: 10px 24px; border-radius: 50px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+            border: none; font-family: 'Inter', sans-serif;
+            text-decoration: none; white-space: nowrap; min-height: 42px;
+        }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .btn-primary:hover, .btn-primary:active { background: #333; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+        .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid #d1d1d6; }
+        .btn-outline:hover, .btn-outline:active { border-color: var(--primary); background: #f5f5f7; }
+        .btn-danger { background: #dc2626; color: #fff; }
+        .btn-danger:hover, .btn-danger:active { background: #b91c1c; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; min-height: 32px; }
+        .btn-xs { padding: 4px 10px; font-size: 11px; min-height: 26px; border-radius: 20px; }
+
+        .content-area {
+            flex: 1; padding: 30px 24px; max-width: 1400px;
+            width: 100%; margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+        }
+        .section-title {
+            font-family: 'Manrope', sans-serif; font-size: 18px;
+            font-weight: 700; color: var(--primary); margin: 0;
+        }
+        .section-subtitle {
+            font-size: 13px; color: var(--accent); margin: 4px 0 0;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            margin-bottom: 20px; padding: 14px 18px; background: #fafafa;
+            border-radius: 16px; border: 1px solid #e5e5ea;
+        }
+        .filter-bar .form-select {
+            width: auto; min-width: 200px; padding: 8px 12px; font-size: 13px;
+            border-radius: 10px; background: #fff;
+        }
+        .filter-bar .form-input {
+            width: auto; min-width: 200px; padding: 8px 12px; font-size: 13px;
+            border-radius: 10px; background: #fff;
+        }
+
+        .table-container {
+            background: #ffffff; border: 1px solid #e5e5ea;
+            border-radius: 16px; overflow: hidden; margin-bottom: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        thead { background: #f8f8fa; border-bottom: 1px solid #e5e5ea; }
+        th { padding: 14px 16px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); white-space: nowrap; }
+        td { padding: 14px 16px; font-size: 13px; color: var(--primary); border-bottom: 1px solid #f0f0f5; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fafafa; }
+
+        .color-preview {
+            width: 36px; height: 36px; border-radius: 10px;
+            border: 2px solid #e5e5ea; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700; color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .color-card {
+            background: #ffffff; border: 1px solid #e5e5ea; border-radius: 14px;
+            padding: 18px; margin-bottom: 14px; transition: all 0.2s ease;
+        }
+        .color-card:hover { border-color: #d1d1d6; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .color-card-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+        }
+        .color-info { display: flex; align-items: center; gap: 12px; }
+        .color-name {
+            font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700;
+            color: var(--primary);
+        }
+        .color-meta {
+            font-size: 11px; color: var(--accent); font-family: 'Sora', monospace;
+        }
+
+        .size-tags {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
+        }
+        .size-tag {
+            padding: 5px 12px; border-radius: 8px; font-size: 12px;
+            font-weight: 600; background: #f5f5f7; color: var(--primary);
+            border: 1px solid #e5e5ea; cursor: pointer; transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .size-tag:hover { border-color: #d1d1d6; background: #fff; }
+        .size-tag.has-variant { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
+        .size-tag.no-variant { background: #fef2f2; border-color: #fecaca; color: #dc2626; opacity: 0.6; }
+
+        .variant-row {
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+            gap: 10px; align-items: center; padding: 10px 14px;
+            background: #fafafa; border-radius: 10px; margin-bottom: 8px;
+            font-size: 12px; border: 1px solid #e5e5ea;
+        }
+        .variant-row.header-row {
+            background: #f0f0f5; font-weight: 700; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent);
+            border: none; margin-bottom: 8px;
+        }
+
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+        .status-badge.active { background: #e6fff0; color: #059669; }
+        .status-badge.inactive { background: #fef2f2; color: #dc2626; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .status-dot.active { background: #059669; }
+        .status-dot.inactive { background: #dc2626; }
+
+        .product-id-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; background: #f0f0f5; border-radius: 8px;
+            font-family: 'Sora', monospace; font-size: 12px; font-weight: 600;
+            color: var(--primary);
+        }
+
+        .actions-cell { display: flex; gap: 8px; align-items: center; }
+        .action-btn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid #e5e5ea; background: #fff; color: #555; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 12px; flex-shrink: 0; }
+        .action-btn:hover, .action-btn:active { background: #f5f5f7; border-color: #d1d1d6; color: var(--primary); transform: scale(1.05); }
+        .action-btn.edit:hover { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
+        .action-btn.delete:hover { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+        .action-btn.add:hover { background: #f0fdf4; border-color: #bbf7d0; color: #059669; }
+
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.25s ease; }
+        .modal-overlay.show { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .modal { background: #fff; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25); animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        .modal.wide { max-width: 800px; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid #e5e5ea; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; z-index: 10; }
+        .modal-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0; }
+        .modal-close { width: 36px; height: 36px; border-radius: 50%; background: #f5f5f7; border: none; color: #666; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 16px; }
+        .modal-close:hover { background: #e8e8ed; color: var(--primary); }
+        .modal-body { padding: 24px; flex: 1; }
+        .modal-footer { padding: 16px 24px; display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #e5e5ea; position: sticky; bottom: 0; background: #fff; z-index: 10; }
+
+        .form-group { margin-bottom: 18px; }
+        .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-input, .form-textarea, .form-select { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5ea; border-radius: 12px; font-size: 16px; font-family: 'Inter', sans-serif; color: var(--primary); background: #fafafa; transition: all 0.2s ease; outline: none; -webkit-appearance: none; }
+        @media (min-width: 640px) { .form-input, .form-textarea, .form-select { font-size: 14px; } }
+        .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08); }
+        .form-hint { font-size: 12px; color: var(--accent); margin-top: 6px; }
+        .form-row { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 640px) { .form-row-2 { grid-template-columns: 1fr 1fr; } .form-row-3 { grid-template-columns: 1fr 1fr 1fr; } }
+        .form-check { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-top: 6px; }
+        .form-check input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; border-radius: 6px; }
+        .form-check label { font-size: 14px; font-weight: 500; color: var(--primary); cursor: pointer; }
+
+        .tab-nav {
+            display: flex; gap: 4px; background: #f5f5f7; padding: 4px;
+            border-radius: 12px; margin-bottom: 20px;
+        }
+        .tab-btn {
+            flex: 1; padding: 10px 16px; border-radius: 10px; border: none;
+            background: transparent; color: var(--accent); font-size: 13px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif; white-space: nowrap;
+        }
+        .tab-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+        .tab-btn:hover:not(.active) { color: var(--primary); }
+
+        .toast-container { position: fixed; top: 20px; right: 20px; left: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; pointer-events: none; align-items: center; }
+        @media (min-width: 640px) { .toast-container { left: auto; align-items: flex-end; } }
+        .toast { padding: 14px 20px; border-radius: 14px; font-size: 13px; font-weight: 600; color: #fff; animation: slideInDown 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); max-width: 380px; width: 100%; display: flex; align-items: center; gap: 12px; pointer-events: auto; }
+        .toast.success { background: #059669; }
+        .toast.error { background: #dc2626; }
+        .toast.info { background: #2563eb; }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 150; align-items: center; justify-content: center; padding: 20px; }
+        .confirm-overlay.show { display: flex; }
+        .confirm-dialog { background: #fff; border-radius: 20px; padding: 28px; max-width: 400px; width: 100%; text-align: center; animation: slideUp 0.25s ease; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .confirm-icon { width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; color: #dc2626; }
+        .confirm-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0 0 8px; }
+        .confirm-text { font-size: 14px; color: var(--accent); margin: 0 0 24px; line-height: 1.5; }
+        .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+        .confirm-actions .btn { flex: 1; }
+
+        .empty-state { text-align: center; padding: 60px 20px; display: none; }
+        .empty-state-icon { width: 72px; height: 72px; border-radius: 50%; background: #f5f5f7; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: #d1d1d6; }
+        .empty-state h3 { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0 0 8px; }
+        .empty-state p { font-size: 14px; color: var(--accent); margin: 0 0 24px; }
+
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: inline-block; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        .count-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 2px 10px; background: #f0f0f5; border-radius: 12px;
+            font-size: 11px; font-weight: 600; color: var(--accent);
+        }
+
+        .stock-input {
+            width: 80px; padding: 6px 8px; border: 1px solid #e5e5ea;
+            border-radius: 8px; font-size: 13px; text-align: center;
+            background: #fff; font-family: 'Sora', monospace;
+        }
+        .price-input {
+            width: 100px; padding: 6px 8px; border: 1px solid #e5e5ea;
+            border-radius: 8px; font-size: 13px; text-align: right;
+            background: #fff; font-family: 'Sora', monospace;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+        }
+        @media (max-width: 639px) {
+            .content-area { padding: 16px 12px; }
+            .page-header-bar { padding: 40px 16px 24px; }
+            .filter-bar { flex-direction: column; align-items: stretch; }
+            .filter-bar .form-select, .filter-bar .form-input { width: 100%; min-width: auto; }
+            .modal-overlay { align-items: flex-end; padding: 0; }
+            .modal { max-width: 100%; border-radius: 24px 24px 0 0; max-height: 85vh; margin: 0; }
+            .modal-footer { flex-direction: column-reverse; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+            .modal-footer .btn { width: 100%; }
+            .variant-row { grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px; }
+            .variant-row.header-row { display: none; }
+            .actions-cell { flex-wrap: wrap; }
+            .tab-btn { font-size: 11px; padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="admin-layout">
+        
+        <aside class="sidebar" id="sidebar"></aside>
+
+        <main class="main-content" id="mainContent">
+            
+            <header class="top-bar" id="topBar"></header>
+
+            <div class="page-header-bar">
+                <h1 class="page-header-title">Product Variants</h1>
+                <p class="page-header-subtitle">Manage colors, sizes, and variant combinations for each product</p>
+            </div>
+
+            <div class="content-area">
+                <!-- Tab Navigation -->
+                <div class="tab-nav" id="variantTabs">
+                    <button class="tab-btn active" data-tab="colors">
+                        <i class="fa-solid fa-palette"></i> Colors & Sizes
+                    </button>
+                    <button class="tab-btn" data-tab="variants">
+                        <i class="fa-solid fa-boxes-stacked"></i> Variants (SKU/Price/Stock)
+                    </button>
+                </div>
+
+                <!-- Tab: Colors & Sizes -->
+                <div class="tab-content active" id="tab-colors">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Product Colors & Sizes</h2>
+                            <p class="section-subtitle">Define available colors and their size options</p>
+                        </div>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <button class="btn btn-primary btn-sm" onclick="openColorModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Color</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="filter-bar">
+                        <select class="form-select" id="colorProductFilter" onchange="loadColors()">
+                            <option value="">Select Product</option>
+                        </select>
+                    </div>
+
+                    <div id="colorsContainer">
+                        <div class="empty-state" id="colorsEmptyState">
+                            <div class="empty-state-icon"><i class="fa-solid fa-palette"></i></div>
+                            <h3>No Colors Defined</h3>
+                            <p>Select a product and add colors with their available sizes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Variants -->
+                <div class="tab-content" id="tab-variants" style="display:none;">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Variant Combinations</h2>
+                            <p class="section-subtitle">Manage SKU, price, and stock for each color-size combination</p>
+                        </div>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <button class="btn btn-primary btn-sm" onclick="openVariantModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Variant</span>
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="bulkGenerateVariants()">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Bulk Generate</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="filter-bar">
+                        <select class="form-select" id="variantProductFilter" onchange="loadVariants()">
+                            <option value="">Select Product</option>
+                        </select>
+                        <select class="form-select" id="variantColorFilter" onchange="loadVariants()">
+                            <option value="">All Colors</option>
+                        </select>
+                    </div>
+
+                    <div id="variantsTableContainer">
+                        <div class="table-container">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Color</th>
+                                            <th>Size</th>
+                                            <th>SKU</th>
+                                            <th>Price</th>
+                                            <th>Stock</th>
+                                            <th>Status</th>
+                                            <th style="text-align:right;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="variantsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="empty-state" id="variantsEmptyState">
+                            <div class="empty-state-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                            <h3>No Variants Yet</h3>
+                            <p>Create variant combinations to manage inventory.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Color Modal -->
+    <div class="modal-overlay" id="colorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="colorModalTitle">Add Color</h3>
+                <button class="modal-close" onclick="closeColorModal()" aria-label="Close">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="colorForm" onsubmit="return false;">
+                    <input type="hidden" id="colorId" value="">
+                    
+                    <div class="form-group">
+                        <label class="form-label">Product *</label>
+                        <select class="form-select" id="colorProductId" required onchange="updateColorPreview()">
+                            <option value="">Select Product</option>
+                        </select>
+                    </div>
+                    <div class="form-row form-row-2">
+                        <div class="form-group">
+                            <label class="form-label">Color Name *</label>
+                            <input type="text" class="form-input" id="colorName" placeholder="e.g., Red, Navy Blue" required oninput="updateColorPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Color Code</label>
+                            <input type="text" class="form-input" id="colorCode" placeholder="#FF0000" oninput="updateColorPreview()">
+                            <div class="color-preview" id="colorPreview" style="width:48px;height:48px;margin-top:8px;background:#ccc;">?</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Color Image URL</label>
+                        <input type="url" class="form-input" id="colorImage" placeholder="https://example.com/color-image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sort Order</label>
+                        <input type="number" class="form-input" id="colorSortOrder" placeholder="0" value="0" min="0">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeColorModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveColor()" id="colorSaveBtn">
+                    <i class="fa-solid fa-check"></i><span>Save Color</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Size Modal -->
+    <div class="modal-overlay" id="sizeModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="sizeModalTitle">Add Size</h3>
+                <button class="modal-close" onclick="closeSizeModal()" aria-label="Close">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="sizeForm" onsubmit="return false;">
+                    <input type="hidden" id="sizeId" value="">
+                    <input type="hidden" id="sizeColorId" value="">
+                    
+                    <div class="form-group">
+                        <label class="form-label">Color *</label>
+                        <select class="form-select" id="sizeColorSelect" required>
+                            <option value="">Select Color</option>
+                        </select>
+                    </div>
+                    <div class="form-row form-row-2">
+                        <div class="form-group">
+                            <label class="form-label">Size Name *</label>
+                            <input type="text" class="form-input" id="sizeName" placeholder="e.g., S, M, L, XL" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sort Order</label>
+                            <input type="number" class="form-input" id="sizeSortOrder" placeholder="0" value="0" min="0">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeSizeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveSize()" id="sizeSaveBtn">
+                    <i class="fa-solid fa-check"></i><span>Save Size</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Variant Modal -->
+    <div class="modal-overlay" id="variantModal">
+        <div class="modal wide">
+            <div class="modal-header">
+                <h3 class="modal-title" id="variantModalTitle">Add Variant</h3>
+                <button class="modal-close" onclick="closeVariantModal()" aria-label="Close">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="variantForm" onsubmit="return false;">
+                    <input type="hidden" id="variantId" value="">
+                    
+                    <div class="form-row form-row-3">
+                        <div class="form-group">
+                            <label class="form-label">Product *</label>
+                            <select class="form-select" id="variantProductId" required onchange="loadColorsForVariant()">
+                                <option value="">Select Product</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Color *</label>
+                            <select class="form-select" id="variantColorId" required onchange="loadSizesForVariant()">
+                                <option value="">Select Color</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Size *</label>
+                            <select class="form-select" id="variantSizeId" required>
+                                <option value="">Select Size</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row form-row-3">
+                        <div class="form-group">
+                            <label class="form-label">SKU</label>
+                            <input type="text" class="form-input" id="variantSku" placeholder="Auto-generated">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Barcode</label>
+                            <input type="text" class="form-input" id="variantBarcode" placeholder="Auto-generated">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Material</label>
+                            <input type="text" class="form-input" id="variantMaterial" placeholder="e.g., Cotton">
+                        </div>
+                    </div>
+                    <div class="form-row form-row-3">
+                        <div class="form-group">
+                            <label class="form-label">Price *</label>
+                            <input type="number" class="form-input" id="variantPrice" placeholder="0.00" required min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Old Price</label>
+                            <input type="number" class="form-input" id="variantOldPrice" placeholder="0.00" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Weight</label>
+                            <input type="number" class="form-input" id="variantWeight" placeholder="0" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-row form-row-3">
+                        <div class="form-group">
+                            <label class="form-label">Stock</label>
+                            <input type="number" class="form-input" id="variantStock" placeholder="0" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sort Order</label>
+                            <input type="number" class="form-input" id="variantSortOrder" placeholder="0" value="0" min="0">
+                        </div>
+                        <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
+                            <div class="form-check">
+                                <input type="checkbox" id="variantIsActive" checked>
+                                <label for="variantIsActive">Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeVariantModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveVariant()" id="variantSaveBtn">
+                    <i class="fa-solid fa-check"></i><span>Save Variant</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="confirm-overlay" id="deleteConfirm">
+        <div class="confirm-dialog">
+            <div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
+            <h3 class="confirm-title" id="deleteConfirmTitle">Delete Item?</h3>
+            <p class="confirm-text" id="deleteConfirmText">Are you sure you want to delete this item?</p>
+            <div class="confirm-actions">
+                <button class="btn btn-outline" onclick="closeDeleteConfirm()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">
+                    <i class="fa-solid fa-trash-can"></i><span>Delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/components.js"></script>
+
+    <script>
+        (function() {
+            const API_BASE_URL = window.location.origin;
+            
+            let deleteTargetId = null;
+            let deleteTargetType = null;
+            let activeProductId = null;
+            let deleteCallback = null;
+
+            function getAdminToken() {
+                const stored = localStorage.getItem('jayenware_admin_session');
+                if (stored) { try { const p = JSON.parse(stored); if (p?.access_token) return p.access_token; } catch(e) {} }
+                const ss = sessionStorage.getItem('jayenware_admin_session');
+                if (ss) { try { const p = JSON.parse(ss); if (p?.access_token) { localStorage.setItem('jayenware_admin_session', JSON.stringify(p)); return p.access_token; } } catch(e) {} }
+                return null;
+            }
+
+            function checkAdminAuth() {
+                if (!getAdminToken()) { window.location.href = '/signin?type=admin&message=admin_required'; return false; }
+                return true;
+            }
+
+            function showToast(message, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `<i class="fa-solid fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i> <span>${escapeHTML(message)}</span>`;
+                container.appendChild(toast);
+                setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateY(-20px)'; toast.style.transition='all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
+            }
+
+            // ==================== PRODUCT DROPDOWNS ====================
+            async function loadProductDropdowns() {
+                const token = getAdminToken();
+                if (!token) return;
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products?limit=1000`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success && data.products) {
+                        const options = '<option value="">Select Product</option>' + 
+                            data.products.map(p => `<option value="${p.id}">#${p.id} - ${escapeHTML(p.title)}</option>`).join('');
+                        
+                        ['colorProductFilter', 'colorProductId', 'variantProductFilter', 'variantProductId'].forEach(id => {
+                            const el = document.getElementById(id);
+                            if (el) el.innerHTML = options;
+                        });
+                    }
+                } catch(e) { console.error('Failed to load products:', e); }
+            }
+
+            async function loadColorsForVariant() {
+                const productId = document.getElementById('variantProductId').value;
+                const colorSelect = document.getElementById('variantColorId');
+                colorSelect.innerHTML = '<option value="">Select Color</option>';
+                if (!productId) return;
+                
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/product-colors?product_id=${productId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const colors = await res.json();
+                    colorSelect.innerHTML = '<option value="">Select Color</option>' + 
+                        colors.map(c => `<option value="${c.id}">${escapeHTML(c.color_name)} ${c.color_code ? '('+c.color_code+')' : ''}</option>`).join('');
+                } catch(e) {}
+            }
+
+            async function loadSizesForVariant() {
+                const colorId = document.getElementById('variantColorId').value;
+                const sizeSelect = document.getElementById('variantSizeId');
+                sizeSelect.innerHTML = '<option value="">Select Size</option>';
+                if (!colorId) return;
+                
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/color-sizes?color_id=${colorId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const sizes = await res.json();
+                    sizeSelect.innerHTML = '<option value="">Select Size</option>' + 
+                        sizes.map(s => `<option value="${s.id}">${escapeHTML(s.size_name)}</option>`).join('');
+                } catch(e) {}
+            }
+
+            // ==================== TAB SWITCHING ====================
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tab = this.dataset.tab;
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+                    document.getElementById(`tab-${tab}`).style.display = 'block';
+                    if (tab === 'colors') loadColors();
+                    else loadVariants();
+                });
+            });
+
+            // ==================== COLORS ====================
+            async function loadColors() {
+                const productId = document.getElementById('colorProductFilter').value;
+                const container = document.getElementById('colorsContainer');
+                const emptyState = document.getElementById('colorsEmptyState');
+                
+                if (!productId) {
+                    container.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                activeProductId = productId;
+                container.innerHTML = '<div class="skeleton" style="width:100%;height:200px;"></div>';
+                emptyState.style.display = 'none';
+
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/product-colors?product_id=${productId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const colors = await res.json();
+                    
+                    if (!colors.length) {
+                        container.innerHTML = '';
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+
+                    // Load sizes for all colors
+                    const colorIds = colors.map(c => c.id).join(',');
+                    const sizesRes = await fetch(`${API_BASE_URL}/api/color-sizes?ids=${colorIds}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const allSizes = await sizesRes.json();
+
+                    container.innerHTML = colors.map(color => {
+                        const colorSizes = allSizes.filter(s => s.color_id === color.id);
+                        const colorStyle = color.color_code ? `background:${color.color_code};` : 'background:#ccc;';
+                        
+                        let sizesHTML = '';
+                        if (colorSizes.length > 0) {
+                            sizesHTML = '<div class="size-tags">' + colorSizes.map(s => `
+                                <span class="size-tag has-variant" title="Click to manage">
+                                    ${escapeHTML(s.size_name)}
+                                    <button class="action-btn delete" style="width:20px;height:20px;border-radius:50%;font-size:8px;padding:0;" 
+                                        onclick="event.stopPropagation(); openDeleteConfirm(${s.id}, 'size', 'Size ${escapeHTML(s.size_name)}', () => { deleteSize(${s.id}).then(() => loadColors()); })">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </span>
+                            `).join('') + '</div>';
+                        } else {
+                            sizesHTML = '<p style="font-size:12px;color:var(--accent);margin:8px 0;">No sizes defined</p>';
+                        }
+
+                        return `
+                            <div class="color-card">
+                                <div class="color-card-header">
+                                    <div class="color-info">
+                                        <div class="color-preview" style="${colorStyle}">
+                                            ${!color.color_code ? color.color_name?.charAt(0)?.toUpperCase() || '?' : ''}
+                                        </div>
+                                        <div>
+                                            <div class="color-name">${escapeHTML(color.color_name)}</div>
+                                            <div class="color-meta">Stock: ${color.color_stock || 0} | Order: ${color.sort_order || 0}</div>
+                                        </div>
+                                    </div>
+                                    <div class="actions-cell">
+                                        <button class="action-btn add" onclick="openSizeModalForColor(${color.id})" title="Add Size">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                        <button class="action-btn edit" onclick="openColorModalForEdit(${color.id})" title="Edit Color">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
+                                        <button class="action-btn delete" onclick="openDeleteConfirm(${color.id}, 'color', 'Color ${escapeHTML(color.color_name)}', () => { deleteColor(${color.id}).then(() => loadColors()); })" title="Delete Color">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                ${sizesHTML}
+                            </div>
+                        `;
+                    }).join('');
+                } catch(e) {
+                    container.innerHTML = '<p style="color:#dc2626;text-align:center;">Failed to load colors. <button onclick="loadColors()" style="color:#007aff;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></p>';
+                }
+            }
+
+            async function openColorModal(colorId = null) {
+                await loadProductDropdowns();
+                document.getElementById('colorModalTitle').textContent = colorId ? 'Edit Color' : 'Add Color';
+                document.getElementById('colorId').value = colorId || '';
+                
+                if (colorId) {
+                    const token = getAdminToken();
+                    const res = await fetch(`${API_BASE_URL}/api/product-colors/${colorId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const color = await res.json();
+                    document.getElementById('colorProductId').value = color.product_id || '';
+                    document.getElementById('colorName').value = color.color_name || '';
+                    document.getElementById('colorCode').value = color.color_code || '';
+                    document.getElementById('colorImage').value = color.color_image || '';
+                    document.getElementById('colorSortOrder').value = color.sort_order || 0;
+                } else {
+                    document.getElementById('colorForm').reset();
+                    document.getElementById('colorSortOrder').value = 0;
+                    if (activeProductId) document.getElementById('colorProductId').value = activeProductId;
+                }
+                updateColorPreview();
+                document.getElementById('colorModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function openColorModalForEdit(id) { openColorModal(id); }
+            function closeColorModal() { document.getElementById('colorModal').classList.remove('show'); document.body.style.overflow = ''; }
+
+            function updateColorPreview() {
+                const code = document.getElementById('colorCode').value;
+                const preview = document.getElementById('colorPreview');
+                const name = document.getElementById('colorName').value;
+                if (code) {
+                    preview.style.background = code;
+                    preview.textContent = '';
+                } else {
+                    preview.style.background = '#ccc';
+                    preview.textContent = name ? name.charAt(0).toUpperCase() : '?';
+                }
+            }
+
+            async function saveColor() {
+                const productId = document.getElementById('colorProductId').value;
+                const colorName = document.getElementById('colorName').value.trim();
+                if (!productId || !colorName) { showToast('Product and color name are required', 'error'); return; }
+                
+                const token = getAdminToken();
+                const colorData = {
+                    product_id: parseInt(productId),
+                    color_name: colorName,
+                    color_code: document.getElementById('colorCode').value.trim() || null,
+                    color_image: document.getElementById('colorImage').value.trim() || null,
+                    sort_order: parseInt(document.getElementById('colorSortOrder').value) || 0
+                };
+
+                const id = document.getElementById('colorId').value;
+                const url = id ? `${API_BASE_URL}/api/product-colors/${id}` : `${API_BASE_URL}/api/product-colors`;
+                const method = id ? 'PUT' : 'POST';
+
+                const btn = document.getElementById('colorSaveBtn');
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
+                try {
+                    const res = await fetch(url, { method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(colorData) });
+                    const data = await res.json();
+                    if (res.ok) { showToast('Color saved', 'success'); closeColorModal(); loadColors(); }
+                    else throw new Error(data.error || 'Failed');
+                } catch(e) { showToast(e.message, 'error'); }
+                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Color</span>'; }
+            }
+
+            async function deleteColor(id) {
+                const token = getAdminToken();
+                const res = await fetch(`${API_BASE_URL}/api/product-colors/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                if (res.ok) { showToast('Color deleted', 'success'); return true; }
+                throw new Error(data.error);
+            }
+
+            // ==================== SIZES ====================
+            async function openSizeModalForColor(colorId) {
+                document.getElementById('sizeId').value = '';
+                document.getElementById('sizeColorId').value = colorId;
+                document.getElementById('sizeName').value = '';
+                document.getElementById('sizeSortOrder').value = 0;
+                document.getElementById('sizeModalTitle').textContent = 'Add Size';
+                
+                // Load colors for the dropdown
+                const token = getAdminToken();
+                const productId = document.getElementById('colorProductFilter').value;
+                if (productId) {
+                    const res = await fetch(`${API_BASE_URL}/api/product-colors?product_id=${productId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const colors = await res.json();
+                    document.getElementById('sizeColorSelect').innerHTML = colors.map(c => 
+                        `<option value="${c.id}" ${c.id == colorId ? 'selected' : ''}>${escapeHTML(c.color_name)}</option>`
+                    ).join('');
+                }
+                
+                document.getElementById('sizeModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSizeModal() { document.getElementById('sizeModal').classList.remove('show'); document.body.style.overflow = ''; }
+
+            async function saveSize() {
+                const colorId = document.getElementById('sizeColorSelect').value || document.getElementById('sizeColorId').value;
+                const sizeName = document.getElementById('sizeName').value.trim();
+                if (!colorId || !sizeName) { showToast('Color and size name are required', 'error'); return; }
+                
+                const token = getAdminToken();
+                const sizeData = {
+                    color_id: parseInt(colorId),
+                    size_name: sizeName,
+                    sort_order: parseInt(document.getElementById('sizeSortOrder').value) || 0
+                };
+
+                const id = document.getElementById('sizeId').value;
+                const url = id ? `${API_BASE_URL}/api/color-sizes/${id}` : `${API_BASE_URL}/api/color-sizes`;
+                const method = id ? 'PUT' : 'POST';
+
+                const btn = document.getElementById('sizeSaveBtn');
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
+                try {
+                    const res = await fetch(url, { method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(sizeData) });
+                    const data = await res.json();
+                    if (res.ok) { showToast('Size saved', 'success'); closeSizeModal(); loadColors(); }
+                    else throw new Error(data.error || 'Failed');
+                } catch(e) { showToast(e.message, 'error'); }
+                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Size</span>'; }
+            }
+
+            async function deleteSize(id) {
+                const token = getAdminToken();
+                const res = await fetch(`${API_BASE_URL}/api/color-sizes/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                if (res.ok) { showToast('Size deleted', 'success'); return true; }
+                throw new Error(data.error);
+            }
+
+            // ==================== VARIANTS ====================
+            async function loadVariants() {
+                const productId = document.getElementById('variantProductFilter').value;
+                const colorId = document.getElementById('variantColorFilter').value;
+                const tbody = document.getElementById('variantsTableBody');
+                const emptyState = document.getElementById('variantsEmptyState');
+                
+                if (!productId) {
+                    tbody.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                tbody.innerHTML = '<tr><td colspan="7"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
+                emptyState.style.display = 'none';
+
+                // Load colors for filter
+                const token = getAdminToken();
+                try {
+                    const colorsRes = await fetch(`${API_BASE_URL}/api/product-colors?product_id=${productId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const colors = await colorsRes.json();
+                    document.getElementById('variantColorFilter').innerHTML = '<option value="">All Colors</option>' + 
+                        colors.map(c => `<option value="${c.id}" ${c.id == colorId ? 'selected' : ''}>${escapeHTML(c.color_name)}</option>`).join('');
+
+                    let url = `${API_BASE_URL}/api/product-variants?product_id=${productId}`;
+                    if (colorId) url += `&color_id=${colorId}`;
+
+                    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const variants = await res.json();
+                    
+                    if (!variants.length) {
+                        tbody.innerHTML = '';
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+
+                    tbody.innerHTML = variants.map(v => `
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div class="color-preview" style="background:${v.color_code || '#ccc'};width:24px;height:24px;border-radius:6px;"></div>
+                                    ${escapeHTML(v.color_name || 'N/A')}
+                                </div>
+                            </td>
+                            <td><span style="font-weight:600;">${escapeHTML(v.size_name || 'N/A')}</span></td>
+                            <td><span style="font-family:'Sora',monospace;font-size:11px;">${v.sku || '—'}</span></td>
+                            <td>
+                                <span style="font-weight:700;">৳${v.price || 0}</span>
+                                ${v.old_price ? `<span style="font-size:10px;color:var(--accent);text-decoration:line-through;margin-left:4px;">৳${v.old_price}</span>` : ''}
+                            </td>
+                            <td>
+                                <input type="number" class="stock-input" value="${v.stock || 0}" 
+                                    onchange="quickUpdateVariant(${v.id}, 'stock', this.value)" 
+                                    style="width:70px;">
+                            </td>
+                            <td>
+                                <span class="status-badge ${v.is_active ? 'active' : 'inactive'}">
+                                    <span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>
+                                    ${v.is_active ? 'Active' : 'Inactive'}
+                                </span>
+                            </td>
+                            <td style="text-align:right;">
+                                <div class="actions-cell" style="justify-content:flex-end;">
+                                    <button class="action-btn edit" onclick="openVariantModalForEdit(${v.id})" title="Edit">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <button class="action-btn" onclick="toggleVariantStatus(${v.id})" title="Toggle Status" style="color:${v.is_active ? '#059669' : '#dc2626'};">
+                                        <i class="fa-solid fa-${v.is_active ? 'eye' : 'eye-slash'}"></i>
+                                    </button>
+                                    <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'variant', 'Variant #${v.id}', () => { deleteVariant(${v.id}).then(() => loadVariants()); })" title="Delete">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch(e) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load variants. <button onclick="loadVariants()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>';
+                }
+            }
+
+            async function openVariantModal(variantId = null) {
+                await loadProductDropdowns();
+                document.getElementById('variantModalTitle').textContent = variantId ? 'Edit Variant' : 'Add Variant';
+                document.getElementById('variantId').value = variantId || '';
+                
+                if (variantId) {
+                    const token = getAdminToken();
+                    const res = await fetch(`${API_BASE_URL}/api/product-variants/${variantId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const variant = await res.json();
+                    document.getElementById('variantProductId').value = variant.product_id || '';
+                    await loadColorsForVariant();
+                    document.getElementById('variantColorId').value = variant.color_id || '';
+                    await loadSizesForVariant();
+                    document.getElementById('variantSizeId').value = variant.size_id || '';
+                    document.getElementById('variantSku').value = variant.sku || '';
+                    document.getElementById('variantBarcode').value = variant.barcode || '';
+                    document.getElementById('variantMaterial').value = variant.material || '';
+                    document.getElementById('variantPrice').value = variant.price || 0;
+                    document.getElementById('variantOldPrice').value = variant.old_price || '';
+                    document.getElementById('variantWeight').value = variant.weight || 0;
+                    document.getElementById('variantStock').value = variant.stock || 0;
+                    document.getElementById('variantSortOrder').value = variant.sort_order || 0;
+                    document.getElementById('variantIsActive').checked = variant.is_active;
+                } else {
+                    document.getElementById('variantForm').reset();
+                    document.getElementById('variantStock').value = 0;
+                    document.getElementById('variantSortOrder').value = 0;
+                    document.getElementById('variantIsActive').checked = true;
+                    const activeProduct = document.getElementById('variantProductFilter').value;
+                    if (activeProduct) document.getElementById('variantProductId').value = activeProduct;
+                }
+                document.getElementById('variantModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function openVariantModalForEdit(id) { openVariantModal(id); }
+            function closeVariantModal() { document.getElementById('variantModal').classList.remove('show'); document.body.style.overflow = ''; }
+
+            async function saveVariant() {
+                const productId = document.getElementById('variantProductId').value;
+                const colorId = document.getElementById('variantColorId').value;
+                const sizeId = document.getElementById('variantSizeId').value;
+                const price = document.getElementById('variantPrice').value;
+                
+                if (!productId || !colorId || !sizeId || !price) { 
+                    showToast('Product, color, size, and price are required', 'error'); 
+                    return; 
+                }
+                
+                const token = getAdminToken();
+                const variantData = {
+                    product_id: parseInt(productId),
+                    color_id: parseInt(colorId),
+                    size_id: parseInt(sizeId),
+                    sku: document.getElementById('variantSku').value.trim() || null,
+                    barcode: document.getElementById('variantBarcode').value.trim() || null,
+                    material: document.getElementById('variantMaterial').value.trim() || null,
+                    price: parseFloat(price),
+                    old_price: document.getElementById('variantOldPrice').value ? parseFloat(document.getElementById('variantOldPrice').value) : null,
+                    weight: parseFloat(document.getElementById('variantWeight').value) || 0,
+                    stock: parseInt(document.getElementById('variantStock').value) || 0,
+                    sort_order: parseInt(document.getElementById('variantSortOrder').value) || 0,
+                    is_active: document.getElementById('variantIsActive').checked
+                };
+
+                const id = document.getElementById('variantId').value;
+                const url = id ? `${API_BASE_URL}/api/product-variants/${id}` : `${API_BASE_URL}/api/product-variants`;
+                const method = id ? 'PUT' : 'POST';
+
+                const btn = document.getElementById('variantSaveBtn');
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
+                try {
+                    const res = await fetch(url, { method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(variantData) });
+                    const data = await res.json();
+                    if (res.ok) { showToast('Variant saved', 'success'); closeVariantModal(); loadVariants(); loadColors(); }
+                    else throw new Error(data.error || 'Failed');
+                } catch(e) { showToast(e.message, 'error'); }
+                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Variant</span>'; }
+            }
+
+            async function quickUpdateVariant(id, field, value) {
+                const token = getAdminToken();
+                try {
+                    const updateData = {};
+                    if (field === 'stock') updateData.stock = parseInt(value) || 0;
+                    
+                    const res = await fetch(`${API_BASE_URL}/api/product-variants/${id}`, { 
+                        method: 'PUT', 
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify(updateData) 
+                    });
+                    if (res.ok) { showToast('Updated', 'success'); loadColors(); }
+                } catch(e) { showToast('Update failed', 'error'); }
+            }
+
+            async function toggleVariantStatus(id) {
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/product-variants/${id}`, { 
+                        method: 'PUT', 
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify({ is_active: null }) // Server should toggle
+                    });
+                    if (res.ok) { showToast('Status toggled', 'success'); loadVariants(); }
+                } catch(e) { showToast('Failed', 'error'); }
+            }
+
+            async function deleteVariant(id) {
+                const token = getAdminToken();
+                const res = await fetch(`${API_BASE_URL}/api/product-variants/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                if (res.ok) { showToast('Variant deleted', 'success'); return true; }
+                throw new Error(data.error);
+            }
+
+            async function bulkGenerateVariants() {
+                const productId = document.getElementById('variantProductFilter').value;
+                if (!productId) { showToast('Select a product first', 'error'); return; }
+                
+                const token = getAdminToken();
+                try {
+                    // Get all colors and sizes for the product
+                    const colorsRes = await fetch(`${API_BASE_URL}/api/product-colors?product_id=${productId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const colors = await colorsRes.json();
+                    
+                    if (!colors.length) { showToast('No colors defined for this product', 'error'); return; }
+                    
+                    const colorIds = colors.map(c => c.id).join(',');
+                    const sizesRes = await fetch(`${API_BASE_URL}/api/color-sizes?ids=${colorIds}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const allSizes = await sizesRes.json();
+                    
+                    // Generate variants for all combinations
+                    const variants = [];
+                    colors.forEach(color => {
+                        const colorSizes = allSizes.filter(s => s.color_id === color.id);
+                        colorSizes.forEach(size => {
+                            variants.push({
+                                product_id: parseInt(productId),
+                                color_id: color.id,
+                                size_id: size.id,
+                                price: 0,
+                                stock: 0,
+                                is_active: true,
+                                sort_order: 0
+                            });
+                        });
+                    });
+                    
+                    if (!variants.length) { showToast('No color-size combinations found', 'error'); return; }
+                    
+                    const res = await fetch(`${API_BASE_URL}/api/product-variants/bulk`, { 
+                        method: 'POST', 
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify({ product_id: parseInt(productId), variants }) 
+                    });
+                    const data = await res.json();
+                    if (res.ok) { 
+                        showToast(`${variants.length} variants generated`, 'success'); 
+                        loadVariants(); 
+                        loadColors(); 
+                    }
+                    else throw new Error(data.error || 'Failed');
+                } catch(e) { showToast(e.message, 'error'); }
+            }
+
+            // ==================== DELETE CONFIRMATION ====================
+            function openDeleteConfirm(id, type, name, callback) {
+                deleteTargetId = id;
+                deleteTargetType = type;
+                deleteCallback = callback;
+                document.getElementById('deleteConfirmTitle').textContent = `Delete ${type === 'color' ? 'Color' : type === 'size' ? 'Size' : 'Variant'}?`;
+                document.getElementById('deleteConfirmText').innerHTML = `Are you sure you want to delete "<strong>${escapeHTML(name || 'Untitled')}</strong>"? This will also delete related ${type === 'color' ? 'sizes and variants' : type === 'size' ? 'variants' : 'data'}.`;
+                document.getElementById('deleteConfirm').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDeleteConfirm() { 
+                deleteTargetId = null; 
+                deleteTargetType = null; 
+                deleteCallback = null;
+                document.getElementById('deleteConfirm').classList.remove('show'); 
+                document.body.style.overflow = ''; 
+            }
+
+            async function confirmDelete() {
+                if (deleteCallback) {
+                    try {
+                        await deleteCallback();
+                    } catch(e) {
+                        showToast(e.message, 'error');
+                    }
+                }
+                closeDeleteConfirm();
+            }
+
+            function escapeHTML(str) { 
+                if (!str) return ''; 
+                const div = document.createElement('div'); 
+                div.textContent = str; 
+                return div.innerHTML; 
+            }
+
+            // ==================== INITIALIZATION ====================
+            document.addEventListener('DOMContentLoaded', () => {
+                if (!checkAdminAuth()) return;
+                
+                // Close modals on overlay click
+                ['colorModal', 'sizeModal', 'variantModal'].forEach(id => {
+                    document.getElementById(id).addEventListener('click', function(e) { 
+                        if (e.target === this) { 
+                            if(id === 'colorModal') closeColorModal(); 
+                            else if(id === 'sizeModal') closeSizeModal(); 
+                            else closeVariantModal(); 
+                        } 
+                    });
+                });
+                
+                document.getElementById('deleteConfirm').addEventListener('click', function(e) { 
+                    if (e.target === this) closeDeleteConfirm(); 
+                });
+                
+                document.addEventListener('keydown', e => { 
+                    if (e.key === 'Escape') { 
+                        closeColorModal(); 
+                        closeSizeModal(); 
+                        closeVariantModal(); 
+                        closeDeleteConfirm(); 
+                    } 
+                });
+
+                // Initialize components
+                if (window.JAYENWARE?.Components) {
+                    JAYENWARE.Components.initAll({ sidebarSelector: '#sidebar', topBarSelector: '#topBar' });
+                    JAYENWARE.Components.onLogout(() => { 
+                        localStorage.removeItem('jayenware_admin_session'); 
+                        sessionStorage.removeItem('jayenware_admin_session'); 
+                        window.location.href = '/'; 
+                    });
+                }
+
+                loadProductDropdowns();
+            });
+        })();
+    </script>
+</body>
+</html>
