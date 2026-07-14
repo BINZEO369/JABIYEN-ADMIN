@@ -175,28 +175,147 @@
             font-size: 13px; color: var(--accent); margin: 4px 0 0;
         }
 
-        /* Product Selector */
-        .product-selector-bar {
-            display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
-            margin-bottom: 24px; padding: 16px 20px; background: #fafafa;
-            border-radius: 16px; border: 1px solid #e5e5ea;
+        /* Product Selector Card */
+        .product-selector-card {
+            background: #fafafa;
+            border: 1.5px solid #e5e5ea;
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
         }
-        .product-selector-bar .form-select {
-            width: auto; min-width: 250px; padding: 10px 16px; font-size: 14px;
-            border-radius: 12px; background: #fff; font-weight: 500;
+        .product-selector-card .ps-label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+            white-space: nowrap;
         }
-        .product-selector-bar .form-input {
-            width: auto; min-width: 200px; padding: 10px 16px; font-size: 14px;
-            border-radius: 12px; background: #fff;
+        .product-selector-card select {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 16px;
+            border: 1.5px solid #e5e5ea;
+            border-radius: 14px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: #fff;
+            color: var(--primary);
+            outline: none;
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2386868b'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            cursor: pointer;
+        }
+        .product-selector-card select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(29,29,31,0.06);
+        }
+        .selected-product-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: #fff;
+            border-radius: 14px;
+            border: 1px solid #e5e5ea;
+            flex-shrink: 0;
+        }
+        .selected-product-info img {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid #e5e5ea;
+        }
+        .selected-product-info .sp-details h5 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 2px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .selected-product-info .sp-details span {
+            font-size: 11px;
+            color: var(--accent);
+            font-family: 'Sora', monospace;
         }
 
+        /* Tab Navigation */
+        .tab-main-nav {
+            display: flex;
+            gap: 4px;
+            background: #f5f5f7;
+            padding: 5px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab-main-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border-radius: 13px;
+            border: none;
+            background: transparent;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .tab-main-btn.active {
+            background: #fff;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .tab-main-btn:hover:not(.active) { color: var(--primary); }
+        .tab-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            padding: 0 6px;
+            border-radius: 11px;
+            font-size: 10px;
+            font-weight: 700;
+            background: #e5e5ea;
+            color: var(--accent);
+        }
+        .tab-main-btn.active .tab-badge {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Table */
         .table-container {
             background: #ffffff; border: 1px solid #e5e5ea;
             border-radius: 16px; overflow: hidden; margin-bottom: 24px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
-        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
         thead { background: #f8f8fa; border-bottom: 1px solid #e5e5ea; }
         th { padding: 14px 16px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); white-space: nowrap; }
         td { padding: 14px 16px; font-size: 13px; color: var(--primary); border-bottom: 1px solid #f0f0f5; vertical-align: middle; }
@@ -204,17 +323,34 @@
         tr:hover td { background: #fafafa; }
 
         .color-swatch {
-            width: 32px; height: 32px; border-radius: 8px;
-            border: 2px solid #e5e5ea; display: inline-flex;
-            align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 700; color: #fff;
-            flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #e5e5ea;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 10px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
-        .color-swatch-img {
-            width: 100%; height: 100%; border-radius: 6px;
-            object-fit: cover;
+        .size-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 28px;
+            padding: 0 10px;
+            background: #f5f5f7;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Sora', monospace;
         }
-        
+
         .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
         .status-badge.active { background: #e6fff0; color: #059669; }
         .status-badge.inactive { background: #fef2f2; color: #dc2626; }
@@ -228,76 +364,88 @@
         .action-btn:hover, .action-btn:active { background: #f5f5f7; border-color: #d1d1d6; color: var(--primary); transform: scale(1.05); }
         .action-btn.edit:hover { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
         .action-btn.delete:hover { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
-        .action-btn.toggle:hover { background: #f0fdf4; border-color: #bbf7d0; color: #059669; }
-        .action-btn.stock:hover { background: #fefce8; border-color: #fde68a; color: #ca8a04; }
 
-        .tab-nav {
-            display: flex; gap: 4px; background: #f5f5f7; padding: 4px;
-            border-radius: 14px; margin-bottom: 24px;
+        /* Variant Matrix */
+        .variant-matrix {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #e5e5ea;
+            border-radius: 16px;
+            background: #fff;
         }
-        .tab-btn {
-            flex: 1; padding: 12px 20px; border-radius: 11px; border: none;
-            background: transparent; color: var(--accent); font-size: 14px;
-            font-weight: 600; cursor: pointer; transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif; white-space: nowrap;
-        }
-        .tab-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        .tab-btn:hover:not(.active) { color: var(--primary); }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .variant-matrix-table {
+        .matrix-table {
             min-width: 600px;
+            border-collapse: collapse;
         }
-        .variant-matrix-table th:first-child {
-            position: sticky; left: 0; background: #f8f8fa; z-index: 2;
-            min-width: 100px;
+        .matrix-table th, .matrix-table td {
+            padding: 10px 14px;
+            text-align: center;
+            border: 1px solid #f0f0f5;
+            font-size: 12px;
+            vertical-align: middle;
         }
-        .variant-matrix-table td:first-child {
-            position: sticky; left: 0; background: #fff; z-index: 1;
-            font-weight: 600; font-size: 12px;
+        .matrix-table th {
+            background: #f8f8fa;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
-        tr:hover td:first-child { background: #fafafa; }
-
+        .matrix-color-header {
+            background: #fafafa !important;
+            font-weight: 700;
+            color: var(--primary);
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            min-width: 120px;
+            text-align: left !important;
+        }
         .matrix-cell {
-            text-align: center; min-width: 100px; padding: 8px 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 90px;
+            position: relative;
         }
-        .matrix-variant-card {
-            background: #fafafa; border: 1px solid #e5e5ea; border-radius: 10px;
-            padding: 8px; text-align: center; cursor: pointer;
-            transition: all 0.2s ease; position: relative; min-height: 70px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 2px;
+        .matrix-cell:hover { background: #f0fdf4; }
+        .matrix-cell.has-variant {
+            background: #e6fff0;
+            border-color: #bbf7d0;
         }
-        .matrix-variant-card:hover { border-color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); background: #fff; }
-        .matrix-variant-card.empty { background: #fef2f2; border-style: dashed; border-color: #fecaca; min-height: 70px; }
-        .matrix-variant-card .variant-sku {
-            font-family: 'Sora', monospace; font-size: 10px; color: var(--accent);
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 90px;
+        .matrix-cell.no-variant {
+            background: #fef2f2;
+            color: #dc2626;
+            font-style: italic;
+            font-size: 11px;
         }
-        .matrix-variant-card .variant-price {
-            font-size: 13px; font-weight: 700; color: var(--primary);
+        .matrix-cell .variant-price {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--primary);
         }
-        .matrix-variant-card .variant-stock {
-            font-size: 10px; font-weight: 600;
+        .matrix-cell .variant-stock {
+            font-size: 10px;
+            color: var(--accent);
+            display: block;
         }
-        .matrix-variant-card .variant-stock.in-stock { color: #059669; }
-        .matrix-variant-card .variant-stock.out-of-stock { color: #dc2626; }
+        .matrix-cell .variant-sku {
+            font-size: 9px;
+            font-family: 'Sora', monospace;
+            color: var(--accent);
+            display: block;
+        }
 
-        .size-tag {
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 6px 12px; background: #f0f0f5; border-radius: 8px;
-            font-size: 12px; font-weight: 600; color: var(--primary);
-            margin: 2px;
-        }
-
+        /* Modal */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.25s ease; }
         .modal-overlay.show { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .modal { background: #fff; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25); animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
-        .modal.wide { max-width: 700px; }
+        .modal.wide { max-width: 800px; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
         .modal-header { padding: 20px 24px; border-bottom: 1px solid #e5e5ea; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; z-index: 10; }
@@ -314,35 +462,41 @@
         .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08); }
         .form-hint { font-size: 12px; color: var(--accent); margin-top: 6px; }
         .form-row { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        @media (min-width: 640px) { .form-row-2 { grid-template-columns: 1fr 1fr; } .form-row-3 { grid-template-columns: 1fr 1fr 1fr; } .form-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+        @media (min-width: 640px) { .form-row-2 { grid-template-columns: 1fr 1fr; } .form-row-3 { grid-template-columns: 1fr 1fr 1fr; } }
         
         .form-check { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-top: 6px; }
         .form-check input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; border-radius: 6px; }
         .form-check label { font-size: 14px; font-weight: 500; color: var(--primary); cursor: pointer; }
 
-        .color-picker-wrapper {
-            display: flex; align-items: center; gap: 10px;
-        }
-        .color-picker-wrapper input[type="color"] {
-            width: 48px; height: 48px; border: 2px solid #e5e5ea; border-radius: 12px;
-            cursor: pointer; padding: 2px; background: #fff;
+        .empty-state { text-align: center; padding: 60px 20px; display: none; }
+        .empty-state-icon { width: 72px; height: 72px; border-radius: 50%; background: #f5f5f7; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: #d1d1d6; }
+        .empty-state h3 { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0 0 8px; }
+        .empty-state p { font-size: 14px; color: var(--accent); margin: 0 0 24px; }
+
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: inline-block; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        .count-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 2px 10px; background: #f0f0f5; border-radius: 12px;
+            font-size: 11px; font-weight: 600; color: var(--accent);
         }
 
-        .info-card {
-            background: #f9fafb; border: 1px solid #e5e5ea; border-radius: 14px;
-            padding: 16px; margin-bottom: 16px;
+        .variant-info-card {
+            background: #fafafa;
+            border: 1px solid #e5e5ea;
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
         }
-        .info-card-title {
-            font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700;
-            color: var(--primary); margin: 0 0 12px; display: flex; align-items: center; gap: 8px;
+        .variant-info-card:hover {
+            border-color: #d1d1d6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .info-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 6px 0; border-bottom: 1px solid #f0f0f5; font-size: 13px;
-        }
-        .info-row:last-child { border-bottom: none; }
-        .info-label { color: var(--accent); font-weight: 500; }
-        .info-value { font-weight: 700; color: var(--primary); }
 
         .toast-container { position: fixed; top: 20px; right: 20px; left: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; pointer-events: none; align-items: center; }
         @media (min-width: 640px) { .toast-container { left: auto; align-items: flex-end; } }
@@ -361,43 +515,41 @@
         .confirm-actions { display: flex; gap: 12px; justify-content: center; }
         .confirm-actions .btn { flex: 1; }
 
-        .empty-state { text-align: center; padding: 60px 20px; display: none; }
-        .empty-state-icon { width: 72px; height: 72px; border-radius: 50%; background: #f5f5f7; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: #d1d1d6; }
-        .empty-state h3 { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0 0 8px; }
-        .empty-state p { font-size: 14px; color: var(--accent); margin: 0 0 24px; }
-
-        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: inline-block; }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-
-        .count-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 2px 10px; background: #f0f0f5; border-radius: 12px;
-            font-size: 11px; font-weight: 600; color: var(--accent);
+        /* Stock input */
+        .stock-input-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-
-        .product-quick-info {
-            display: flex; align-items: center; gap: 14px; padding: 12px 16px;
-            background: #fafafa; border-radius: 14px; margin-bottom: 16px;
+        .stock-input-group input {
+            width: 70px;
+            padding: 6px 8px;
+            border: 1.5px solid #e5e5ea;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+            font-family: 'Sora', monospace;
+            font-weight: 600;
+        }
+        .stock-input-group button {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
             border: 1px solid #e5e5ea;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            color: var(--primary);
         }
-        .product-quick-info .pq-thumb {
-            width: 56px; height: 56px; border-radius: 12px; background: #e5e5ea;
-            display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;
+        .stock-input-group button:hover {
+            background: #f5f5f7;
+            border-color: #d1d1d6;
         }
-        .product-quick-info .pq-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .product-quick-info .pq-info h4 { font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700; color: var(--primary); margin: 0 0 4px; }
-        .product-quick-info .pq-info p { font-size: 12px; color: var(--accent); margin: 0; }
-
-        .chip {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 12px; background: #f0f0f5; border-radius: 20px;
-            font-size: 12px; font-weight: 600; color: var(--primary);
-            cursor: pointer; transition: all 0.2s ease; border: 1px solid transparent;
-        }
-        .chip:hover { border-color: #d1d1d6; background: #e8e8ed; }
-        .chip.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
-        .chip .chip-remove { width: 16px; height: 16px; border-radius: 50%; background: rgba(255,255,255,0.3); display: inline-flex; align-items: center; justify-content: center; font-size: 10px; margin-left: 2px; }
-        .chip .chip-remove:hover { background: rgba(255,255,255,0.5); }
 
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
@@ -407,16 +559,13 @@
         @media (max-width: 639px) {
             .content-area { padding: 16px 12px; }
             .page-header-bar { padding: 40px 16px 24px; }
-            .product-selector-bar { flex-direction: column; align-items: stretch; }
-            .product-selector-bar .form-select, .product-selector-bar .form-input { width: 100%; min-width: auto; }
+            .product-selector-card { flex-direction: column; align-items: stretch; }
+            .product-selector-card select { min-width: auto; }
             .modal-overlay { align-items: flex-end; padding: 0; }
             .modal { max-width: 100%; border-radius: 24px 24px 0 0; max-height: 85vh; margin: 0; }
             .modal-footer { flex-direction: column-reverse; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
             .modal-footer .btn { width: 100%; }
-            .actions-cell { flex-wrap: wrap; }
-            .tab-btn { font-size: 12px; padding: 10px 12px; }
-            .variant-matrix-table { font-size: 11px; }
-            .matrix-cell { min-width: 80px; }
+            .tab-main-btn { font-size: 11px; padding: 10px 12px; min-width: auto; }
         }
     </style>
 </head>
@@ -430,103 +579,175 @@
             <header class="top-bar" id="topBar"></header>
 
             <div class="page-header-bar">
-                <h1 class="page-header-title">Variant Management</h1>
-                <p class="page-header-subtitle">Manage product colors, sizes & variants — control stock, pricing, and availability</p>
+                <h1 class="page-header-title">Product Variants</h1>
+                <p class="page-header-subtitle">Manage colors, sizes & variant combinations for each product</p>
             </div>
 
             <div class="content-area">
                 <!-- Product Selector -->
-                <div class="product-selector-bar">
-                    <select class="form-select" id="productSelector" onchange="onProductSelect()">
-                        <option value="">-- Select a Product --</option>
+                <div class="product-selector-card" id="productSelectorCard">
+                    <span class="ps-label">Select Product</span>
+                    <select id="productSelect" onchange="onProductChange()">
+                        <option value="">— Choose a product —</option>
                     </select>
-                    <input type="text" class="form-input" id="productSearchInput" placeholder="Search product..." oninput="filterProductList()">
-                    <span class="count-badge" id="selectedProductInfo" style="display:none;">
-                        <i class="fa-solid fa-box"></i> <span id="selectedProductTitle">-</span>
-                    </span>
+                    <div class="selected-product-info" id="selectedProductInfo" style="display:none;">
+                        <img id="spImage" src="" alt="" onerror="this.style.display='none'">
+                        <div class="sp-details">
+                            <h5 id="spTitle">-</h5>
+                            <span id="spSku">-</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="refreshAll()" title="Refresh Data">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
                 </div>
 
-                <!-- Product Quick Info -->
-                <div class="product-quick-info" id="productQuickInfo" style="display:none;">
-                    <div class="pq-thumb" id="pqThumb">
-                        <i class="fa-solid fa-image"></i>
-                    </div>
-                    <div class="pq-info" style="flex:1;">
-                        <h4 id="pqTitle">-</h4>
-                        <p id="pqMeta">SKU: - | Price: - | Category: -</p>
-                    </div>
-                    <div style="display:flex;gap:8px;">
-                        <button class="btn btn-sm btn-outline" onclick="openColorModal()"><i class="fa-solid fa-palette"></i> Add Color</button>
-                        <button class="btn btn-sm btn-success" onclick="generateAllVariants()"><i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Generate Variants</button>
-                    </div>
+                <!-- Tab Navigation -->
+                <div class="tab-main-nav" id="tabNav">
+                    <button class="tab-main-btn active" data-tab="colors">
+                        <i class="fa-solid fa-palette"></i> Colors
+                        <span class="tab-badge" id="colorTabCount">0</span>
+                    </button>
+                    <button class="tab-main-btn" data-tab="sizes">
+                        <i class="fa-solid fa-ruler"></i> Sizes
+                        <span class="tab-badge" id="sizeTabCount">0</span>
+                    </button>
+                    <button class="tab-main-btn" data-tab="variants">
+                        <i class="fa-solid fa-diagram-project"></i> Variants
+                        <span class="tab-badge" id="variantTabCount">0</span>
+                    </button>
+                    <button class="tab-main-btn" data-tab="matrix">
+                        <i class="fa-solid fa-table-cells"></i> Matrix
+                        <span class="tab-badge" id="matrixTabCount">0</span>
+                    </button>
                 </div>
 
-                <!-- Tabs -->
-                <div class="tab-nav" id="mainTabs">
-                    <button class="tab-btn active" data-tab="colors">🎨 Colors & Sizes</button>
-                    <button class="tab-btn" data-tab="matrix">📊 Variant Matrix</button>
-                    <button class="tab-btn" data-tab="variants">📋 All Variants</button>
-                    <button class="tab-btn" data-tab="stats">📈 Stats</button>
-                </div>
-
-                <!-- Colors & Sizes Tab -->
+                <!-- ==================== COLORS TAB ==================== -->
                 <div class="tab-content active" id="tab-colors">
                     <div class="section-header">
                         <div>
                             <h2 class="section-title">Product Colors</h2>
-                            <p class="section-subtitle">Manage colors and their available sizes</p>
+                            <p class="section-subtitle" id="colorSectionSubtitle">Select a product to manage colors</p>
                         </div>
-                    </div>
-                    <div id="colorsList"></div>
-                    <div class="empty-state" id="colorsEmpty">
-                        <div class="empty-state-icon"><i class="fa-solid fa-palette"></i></div>
-                        <h3>No Colors Added</h3>
-                        <p>Select a product and add colors to get started.</p>
-                    </div>
-                </div>
-
-                <!-- Variant Matrix Tab -->
-                <div class="tab-content" id="tab-matrix">
-                    <div class="section-header">
-                        <div>
-                            <h2 class="section-title">Variant Matrix</h2>
-                            <p class="section-subtitle">Color × Size combination grid — click cells to edit</p>
-                        </div>
-                        <button class="btn btn-sm btn-outline" onclick="refreshMatrix()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
-                    </div>
-                    <div class="table-container">
-                        <div class="table-wrapper">
-                            <table class="variant-matrix-table" id="variantMatrixTable">
-                                <thead id="variantMatrixHead"></thead>
-                                <tbody id="variantMatrixBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="empty-state" id="matrixEmpty">
-                        <div class="empty-state-icon"><i class="fa-solid fa-border-all"></i></div>
-                        <h3>No Matrix Data</h3>
-                        <p>Add colors and sizes to see the variant matrix.</p>
-                    </div>
-                </div>
-
-                <!-- All Variants Tab -->
-                <div class="tab-content" id="tab-variants">
-                    <div class="section-header">
-                        <div>
-                            <h2 class="section-title">All Variants</h2>
-                            <p class="section-subtitle">Complete list of all color-size combinations</p>
-                        </div>
-                        <button class="btn btn-sm btn-primary" onclick="openVariantModal()"><i class="fa-solid fa-plus"></i> Add Variant</button>
+                        <button class="btn btn-primary btn-sm" onclick="openColorModal()" id="addColorBtn" disabled>
+                            <i class="fa-solid fa-plus"></i><span>Add Color</span>
+                        </button>
                     </div>
                     <div class="table-container">
                         <div class="table-wrapper">
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>ID</th>
+                                        <th>Swatch</th>
+                                        <th>Color Name</th>
+                                        <th>Color Code</th>
+                                        <th>Image</th>
+                                        <th>Total Stock</th>
+                                        <th>Sizes</th>
+                                        <th>Order</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="colorsTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state" id="colorsEmptyState">
+                            <div class="empty-state-icon"><i class="fa-solid fa-palette"></i></div>
+                            <h3>No Colors</h3>
+                            <p>Add colors to this product to start managing variants.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== SIZES TAB ==================== -->
+                <div class="tab-content" id="tab-sizes">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Color Sizes</h2>
+                            <p class="section-subtitle" id="sizeSectionSubtitle">Select a color to manage its sizes</p>
+                        </div>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <select class="form-select" id="sizeColorFilter" onchange="loadSizes()" style="min-width:200px;width:auto;">
+                                <option value="">— Select a Color —</option>
+                            </select>
+                            <button class="btn btn-primary btn-sm" onclick="openSizeModal()" id="addSizeBtn" disabled>
+                                <i class="fa-solid fa-plus"></i><span>Add Size</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Size Name</th>
+                                        <th>Color</th>
+                                        <th>Order</th>
+                                        <th>Created</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sizesTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state" id="sizesEmptyState">
+                            <div class="empty-state-icon"><i class="fa-solid fa-ruler"></i></div>
+                            <h3>No Sizes</h3>
+                            <p>Select a color and add sizes to it.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== VARIANTS TAB ==================== -->
+                <div class="tab-content" id="tab-variants">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Product Variants</h2>
+                            <p class="section-subtitle" id="variantSectionSubtitle">Color + Size combinations with price & stock</p>
+                        </div>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <button class="btn btn-success btn-sm" onclick="generateAllVariants()" id="generateVariantsBtn" disabled title="Auto-generate all missing variants">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate All</span>
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="openVariantModal()" id="addVariantBtn" disabled>
+                                <i class="fa-solid fa-plus"></i><span>Add Variant</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Variant Stats -->
+                    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;" id="variantStatsRow">
+                        <div style="flex:1;min-width:120px;background:#fafafa;border:1px solid #e5e5ea;border-radius:14px;padding:16px;text-align:center;">
+                            <div style="font-size:24px;font-weight:800;color:var(--primary);font-family:'Manrope',sans-serif;" id="statTotalVariants">0</div>
+                            <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;">Total</div>
+                        </div>
+                        <div style="flex:1;min-width:120px;background:#e6fff0;border:1px solid #bbf7d0;border-radius:14px;padding:16px;text-align:center;">
+                            <div style="font-size:24px;font-weight:800;color:#059669;font-family:'Manrope',sans-serif;" id="statActiveVariants">0</div>
+                            <div style="font-size:11px;color:#059669;text-transform:uppercase;letter-spacing:0.05em;">Active</div>
+                        </div>
+                        <div style="flex:1;min-width:120px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:16px;text-align:center;">
+                            <div style="font-size:24px;font-weight:800;color:#2563eb;font-family:'Manrope',sans-serif;" id="statTotalStock">0</div>
+                            <div style="font-size:11px;color:#2563eb;text-transform:uppercase;letter-spacing:0.05em;">Total Stock</div>
+                        </div>
+                        <div style="flex:1;min-width:120px;background:#fefce8;border:1px solid #fde68a;border-radius:14px;padding:16px;text-align:center;">
+                            <div style="font-size:24px;font-weight:800;color:#ca8a04;font-family:'Manrope',sans-serif;" id="statTotalValue">৳0</div>
+                            <div style="font-size:11px;color:#ca8a04;text-transform:uppercase;letter-spacing:0.05em;">Stock Value</div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
                                         <th>SKU</th>
                                         <th>Color</th>
                                         <th>Size</th>
                                         <th>Price</th>
+                                        <th>Old Price</th>
                                         <th>Stock</th>
                                         <th>Status</th>
                                         <th style="text-align:right;">Actions</th>
@@ -535,51 +756,57 @@
                                 <tbody id="variantsTableBody"></tbody>
                             </table>
                         </div>
-                    </div>
-                    <div class="empty-state" id="variantsEmpty">
-                        <div class="empty-state-icon"><i class="fa-solid fa-cubes"></i></div>
-                        <h3>No Variants Found</h3>
-                        <p>Create variants for this product.</p>
+                        <div class="empty-state" id="variantsEmptyState">
+                            <div class="empty-state-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                            <h3>No Variants</h3>
+                            <p>Add colors and sizes first, then create variants or use "Generate All".</p>
+                            <button class="btn btn-success" onclick="generateAllVariants()" id="generateVariantsEmptyBtn" disabled>
+                                <i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate All Variants</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Stats Tab -->
-                <div class="tab-content" id="tab-stats">
-                    <div id="variantStatsContent">
-                        <div class="empty-state">
-                            <div class="empty-state-icon"><i class="fa-solid fa-chart-bar"></i></div>
-                            <h3>Select a Product</h3>
-                            <p>Choose a product to view variant statistics.</p>
+                <!-- ==================== MATRIX TAB ==================== -->
+                <div class="tab-content" id="tab-matrix">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Variant Matrix</h2>
+                            <p class="section-subtitle" id="matrixSectionSubtitle">Color × Size grid view — click cells to manage</p>
                         </div>
+                    </div>
+                    <div class="variant-matrix" id="variantMatrixContainer">
+                        <div class="empty-state" id="matrixEmptyState" style="display:block;">
+                            <div class="empty-state-icon"><i class="fa-solid fa-table-cells"></i></div>
+                            <h3>No Matrix Data</h3>
+                            <p>Select a product with colors and sizes to view the matrix.</p>
+                        </div>
+                        <div id="matrixTableWrapper" style="display:none;overflow-x:auto;"></div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Color Modal -->
+    <!-- ==================== COLOR MODAL ==================== -->
     <div class="modal-overlay" id="colorModal">
         <div class="modal">
             <div class="modal-header">
                 <h3 class="modal-title" id="colorModalTitle">Add Color</h3>
-                <button class="modal-close" onclick="closeColorModal()" aria-label="Close">
-                    <i class="fa-solid fa-times"></i>
-                </button>
+                <button class="modal-close" onclick="closeColorModal()"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="modal-body">
                 <form id="colorForm" onsubmit="return false;">
                     <input type="hidden" id="colorId" value="">
                     <div class="form-group">
                         <label class="form-label">Color Name *</label>
-                        <input type="text" class="form-input" id="colorName" placeholder="e.g., Red, Navy Blue, Black" required>
+                        <input type="text" class="form-input" id="colorName" placeholder="e.g., Red, Navy Blue" required maxlength="100">
                     </div>
                     <div class="form-row form-row-2">
                         <div class="form-group">
-                            <label class="form-label">Color Code (HEX)</label>
-                            <div class="color-picker-wrapper">
-                                <input type="color" id="colorCode" value="#000000">
-                                <input type="text" class="form-input" id="colorCodeText" placeholder="#000000" oninput="syncColorPicker()" style="flex:1;">
-                            </div>
+                            <label class="form-label">Color Code (Hex)</label>
+                            <input type="text" class="form-input" id="colorCode" placeholder="#FF0000" maxlength="20">
+                            <div id="colorCodePreview" style="width:40px;height:40px;border-radius:50%;border:2px solid #e5e5ea;margin-top:8px;background:#ccc;"></div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Color Image URL</label>
@@ -588,60 +815,61 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Sort Order</label>
-                        <input type="number" class="form-input" id="colorSortOrder" value="0" min="0">
+                        <input type="number" class="form-input" id="colorSortOrder" value="0" min="0" max="999">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline" onclick="closeColorModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveColor()" id="colorSaveBtn">
+                <button class="btn btn-outline" onclick="closeColorModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveColor()" id="colorSaveBtn">
                     <i class="fa-solid fa-check"></i><span>Save Color</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Size Modal -->
+    <!-- ==================== SIZE MODAL ==================== -->
     <div class="modal-overlay" id="sizeModal">
         <div class="modal">
             <div class="modal-header">
                 <h3 class="modal-title" id="sizeModalTitle">Add Size</h3>
-                <button class="modal-close" onclick="closeSizeModal()" aria-label="Close">
-                    <i class="fa-solid fa-times"></i>
-                </button>
+                <button class="modal-close" onclick="closeSizeModal()"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="modal-body">
                 <form id="sizeForm" onsubmit="return false;">
                     <input type="hidden" id="sizeId" value="">
-                    <input type="hidden" id="sizeColorId" value="">
+                    <div class="form-group">
+                        <label class="form-label">Color *</label>
+                        <select class="form-select" id="sizeColorId" required>
+                            <option value="">Select Color</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label class="form-label">Size Name *</label>
-                        <input type="text" class="form-input" id="sizeName" placeholder="e.g., S, M, L, XL, 32, 34" required>
-                        <p class="form-hint">Use standard notation: XS, S, M, L, XL, XXL, or numeric: 28, 30, 32</p>
+                        <input type="text" class="form-input" id="sizeName" placeholder="e.g., S, M, L, XL, XXL" required maxlength="50">
+                        <p class="form-hint">Standard sizes: XS, S, M, L, XL, XXL, XXXL, 4XL, 5XL</p>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Sort Order</label>
-                        <input type="number" class="form-input" id="sizeSortOrder" value="0" min="0">
+                        <input type="number" class="form-input" id="sizeSortOrder" value="0" min="0" max="999">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline" onclick="closeSizeModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveSize()" id="sizeSaveBtn">
+                <button class="btn btn-outline" onclick="closeSizeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSize()" id="sizeSaveBtn">
                     <i class="fa-solid fa-check"></i><span>Save Size</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Variant Modal -->
+    <!-- ==================== VARIANT MODAL ==================== -->
     <div class="modal-overlay" id="variantModal">
         <div class="modal wide">
             <div class="modal-header">
                 <h3 class="modal-title" id="variantModalTitle">Add Variant</h3>
-                <button class="modal-close" onclick="closeVariantModal()" aria-label="Close">
-                    <i class="fa-solid fa-times"></i>
-                </button>
+                <button class="modal-close" onclick="closeVariantModal()"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="modal-body">
                 <form id="variantForm" onsubmit="return false;">
@@ -649,7 +877,7 @@
                     <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Color *</label>
-                            <select class="form-select" id="variantColorId" required>
+                            <select class="form-select" id="variantColorId" required onchange="onVariantColorChange()">
                                 <option value="">Select Color</option>
                             </select>
                         </div>
@@ -671,83 +899,37 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Stock</label>
-                            <input type="number" class="form-input" id="variantStock" placeholder="0" min="0" value="0">
+                            <input type="number" class="form-input" id="variantStock" value="0" min="0" max="999999">
                         </div>
                     </div>
-                    <div class="form-row form-row-3">
+                    <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Material</label>
-                            <input type="text" class="form-input" id="variantMaterial" placeholder="e.g., 100% Cotton">
+                            <input type="text" class="form-input" id="variantMaterial" placeholder="e.g., Cotton" maxlength="200">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Weight (g)</label>
-                            <input type="number" class="form-input" id="variantWeight" placeholder="0" min="0" step="0.01" value="0">
+                            <label class="form-label">Weight</label>
+                            <input type="number" class="form-input" id="variantWeight" value="0" min="0" step="0.01">
                         </div>
+                    </div>
+                    <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Sort Order</label>
-                            <input type="number" class="form-input" id="variantSortOrder" value="0" min="0">
+                            <input type="number" class="form-input" id="variantSortOrder" value="0" min="0" max="999">
                         </div>
-                    </div>
-                    <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
-                        <div class="form-check">
-                            <input type="checkbox" id="variantIsActive" checked>
-                            <label for="variantIsActive">Active Status</label>
+                        <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
+                            <div class="form-check">
+                                <input type="checkbox" id="variantIsActive" checked>
+                                <label for="variantIsActive">Active Status</label>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline" onclick="closeVariantModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveVariant()" id="variantSaveBtn">
+                <button class="btn btn-outline" onclick="closeVariantModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveVariant()" id="variantSaveBtn">
                     <i class="fa-solid fa-check"></i><span>Save Variant</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bulk Variant Modal -->
-    <div class="modal-overlay" id="bulkVariantModal">
-        <div class="modal wide">
-            <div class="modal-header">
-                <h3 class="modal-title">Bulk Create Variants</h3>
-                <button class="modal-close" onclick="closeBulkVariantModal()" aria-label="Close">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="bulkVariantForm" onsubmit="return false;">
-                    <div class="form-group">
-                        <label class="form-label">Color *</label>
-                        <select class="form-select" id="bulkColorId" required>
-                            <option value="">Select Color</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Sizes * (Select multiple)</label>
-                        <div id="bulkSizeCheckboxes" style="display:flex;flex-wrap:wrap;gap:8px;padding:8px 0;">
-                            <p style="color:var(--accent);font-size:13px;">Select a color first</p>
-                        </div>
-                    </div>
-                    <div class="form-row form-row-3">
-                        <div class="form-group">
-                            <label class="form-label">Default Price *</label>
-                            <input type="number" class="form-input" id="bulkPrice" placeholder="0.00" min="0" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Default Old Price</label>
-                            <input type="number" class="form-input" id="bulkOldPrice" placeholder="0.00" min="0" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Default Stock</label>
-                            <input type="number" class="form-input" id="bulkStock" placeholder="0" min="0" value="0">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline" onclick="closeBulkVariantModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveBulkVariants()" id="bulkSaveBtn">
-                    <i class="fa-solid fa-check"></i><span>Create Variants</span>
                 </button>
             </div>
         </div>
@@ -758,7 +940,7 @@
         <div class="confirm-dialog">
             <div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
             <h3 class="confirm-title" id="deleteConfirmTitle">Delete Item?</h3>
-            <p class="confirm-text" id="deleteConfirmText">Are you sure you want to delete this item? This action cannot be undone.</p>
+            <p class="confirm-text" id="deleteConfirmText">Are you sure? This cannot be undone.</p>
             <div class="confirm-actions">
                 <button class="btn btn-outline" onclick="closeDeleteConfirm()">Cancel</button>
                 <button class="btn btn-danger" onclick="confirmDelete()">
@@ -776,15 +958,15 @@
         (function() {
             const API_BASE_URL = window.location.origin;
             
-            let selectedProductId = null;
-            let selectedProduct = null;
+            let activeProductId = null;
+            let activeTab = 'colors';
             let deleteTargetId = null;
             let deleteTargetType = null;
-            let activeTab = 'colors';
-            let allProducts = [];
-            let colorsData = [];
-            let matrixData = null;
+            let allColors = [];
+            let allSizes = [];
+            let allVariants = [];
 
+            // ==================== AUTH ====================
             function getAdminToken() {
                 const stored = localStorage.getItem('jayenware_admin_session');
                 if (stored) { try { const p = JSON.parse(stored); if (p?.access_token) return p.access_token; } catch(e) {} }
@@ -807,442 +989,624 @@
                 setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateY(-20px)'; toast.style.transition='all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
             }
 
-            // ==================== PRODUCT LOADER ====================
-            async function loadAllProducts() {
+            function escapeHTML(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+
+            // ==================== LOAD PRODUCTS DROPDOWN ====================
+            async function loadProductsDropdown() {
                 const token = getAdminToken();
                 if (!token) return;
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/all`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/all`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
                     const data = await res.json();
-                    if (data.success) {
-                        allProducts = data.products || [];
-                        renderProductSelector();
+                    if (data.success && data.products) {
+                        const select = document.getElementById('productSelect');
+                        const currentVal = select.value;
+                        select.innerHTML = '<option value="">— Choose a product —</option>' +
+                            data.products.map(p => `<option value="${p.id}">#${p.id} — ${escapeHTML(p.title)} ${p.sku ? '('+escapeHTML(p.sku)+')' : ''}</option>`).join('');
+                        if (currentVal) select.value = currentVal;
                     }
-                } catch(e) { console.error('Failed to load products:', e); }
+                } catch(e) {
+                    showToast('Failed to load products', 'error');
+                }
             }
 
-            function renderProductSelector(filter = '') {
-                const select = document.getElementById('productSelector');
-                const filtered = filter ? allProducts.filter(p => p.title.toLowerCase().includes(filter.toLowerCase()) || (p.sku && p.sku.toLowerCase().includes(filter.toLowerCase()))) : allProducts;
-                select.innerHTML = '<option value="">-- Select a Product --</option>' + filtered.map(p => `<option value="${p.id}" ${selectedProductId == p.id ? 'selected' : ''}>#${p.id} — ${escapeHTML(p.title)} ${p.sku ? '(' + escapeHTML(p.sku) + ')' : ''}</option>`).join('');
-            }
+            // ==================== PRODUCT CHANGE ====================
+            async function onProductChange() {
+                const productId = document.getElementById('productSelect').value;
+                activeProductId = productId ? parseInt(productId) : null;
+                
+                const infoEl = document.getElementById('selectedProductInfo');
+                const spImage = document.getElementById('spImage');
+                const spTitle = document.getElementById('spTitle');
+                const spSku = document.getElementById('spSku');
 
-            function filterProductList() {
-                renderProductSelector(document.getElementById('productSearchInput').value);
-            }
-
-            async function onProductSelect() {
-                const productId = document.getElementById('productSelector').value;
-                if (!productId) {
-                    selectedProductId = null;
-                    selectedProduct = null;
-                    document.getElementById('selectedProductInfo').style.display = 'none';
-                    document.getElementById('productQuickInfo').style.display = 'none';
+                if (!activeProductId) {
+                    infoEl.style.display = 'none';
                     clearAllTabs();
+                    updateButtons(false);
                     return;
                 }
-                selectedProductId = parseInt(productId);
-                selectedProduct = allProducts.find(p => p.id === selectedProductId);
-                document.getElementById('selectedProductInfo').style.display = 'inline-flex';
-                document.getElementById('selectedProductTitle').textContent = selectedProduct?.title || 'Selected Product';
-                document.getElementById('productQuickInfo').style.display = 'flex';
-                document.getElementById('pqTitle').textContent = selectedProduct?.title || '-';
-                document.getElementById('pqMeta').textContent = `SKU: ${selectedProduct?.sku || 'N/A'} | Price: ৳${selectedProduct?.price || 0} | Category: ${selectedProduct?.category_name || '-'}`;
+
+                // Fetch product details
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (data.success && data.product) {
+                        const p = data.product;
+                        infoEl.style.display = 'flex';
+                        spTitle.textContent = p.title || 'Untitled';
+                        spSku.textContent = p.sku || 'No SKU';
+                        if (p.img) {
+                            spImage.src = p.img;
+                            spImage.style.display = 'block';
+                        } else {
+                            spImage.style.display = 'none';
+                        }
+                    }
+                } catch(e) {}
+
+                updateButtons(true);
+                await refreshAll();
+            }
+
+            function updateButtons(enabled) {
+                document.getElementById('addColorBtn').disabled = !enabled;
+                document.getElementById('generateVariantsBtn').disabled = !enabled;
+                document.getElementById('generateVariantsEmptyBtn').disabled = !enabled;
+                document.getElementById('addVariantBtn').disabled = !enabled;
                 
-                const thumb = document.getElementById('pqThumb');
-                if (selectedProduct?.img) {
-                    thumb.innerHTML = `<img src="${escapeHTML(selectedProduct.img)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">`;
-                } else {
-                    thumb.innerHTML = '<i class="fa-solid fa-image"></i>';
+                if (!enabled) {
+                    document.getElementById('addSizeBtn').disabled = true;
                 }
-                
-                await refreshAllTabs();
             }
 
             function clearAllTabs() {
-                document.getElementById('colorsList').innerHTML = '';
-                document.getElementById('colorsEmpty').style.display = 'block';
-                document.getElementById('variantMatrixBody').innerHTML = '';
-                document.getElementById('variantMatrixHead').innerHTML = '';
-                document.getElementById('matrixEmpty').style.display = 'block';
+                document.getElementById('colorsTableBody').innerHTML = '';
+                document.getElementById('sizesTableBody').innerHTML = '';
                 document.getElementById('variantsTableBody').innerHTML = '';
-                document.getElementById('variantsEmpty').style.display = 'block';
-                document.getElementById('variantStatsContent').innerHTML = `<div class="empty-state"><div class="empty-state-icon"><i class="fa-solid fa-chart-bar"></i></div><h3>Select a Product</h3><p>Choose a product to view variant statistics.</p></div>`;
+                document.getElementById('matrixTableWrapper').innerHTML = '';
+                document.getElementById('matrixTableWrapper').style.display = 'none';
+                document.getElementById('matrixEmptyState').style.display = 'block';
+                
+                document.getElementById('colorsEmptyState').style.display = 'block';
+                document.getElementById('sizesEmptyState').style.display = 'block';
+                document.getElementById('variantsEmptyState').style.display = 'block';
+                
+                document.getElementById('colorTabCount').textContent = '0';
+                document.getElementById('sizeTabCount').textContent = '0';
+                document.getElementById('variantTabCount').textContent = '0';
+                document.getElementById('matrixTabCount').textContent = '0';
+                
+                document.getElementById('colorSectionSubtitle').textContent = 'Select a product to manage colors';
+                document.getElementById('sizeSectionSubtitle').textContent = 'Select a color to manage its sizes';
+                document.getElementById('variantSectionSubtitle').textContent = 'Color + Size combinations with price & stock';
+                document.getElementById('matrixSectionSubtitle').textContent = 'Color × Size grid view — click cells to manage';
+                
+                document.getElementById('statTotalVariants').textContent = '0';
+                document.getElementById('statActiveVariants').textContent = '0';
+                document.getElementById('statTotalStock').textContent = '0';
+                document.getElementById('statTotalValue').textContent = '৳0';
+                
+                allColors = [];
+                allSizes = [];
+                allVariants = [];
+                
+                document.getElementById('sizeColorFilter').innerHTML = '<option value="">— Select a Color —</option>';
             }
 
-            async function refreshAllTabs() {
-                if (!selectedProductId) return;
-                if (activeTab === 'colors') await loadColors();
-                else if (activeTab === 'matrix') await loadMatrix();
-                else if (activeTab === 'variants') await loadVariants();
-                else if (activeTab === 'stats') await loadStats();
+            async function refreshAll() {
+                if (!activeProductId) return;
+                await Promise.all([
+                    loadColors(),
+                    loadVariantStats()
+                ]);
+                if (activeTab === 'colors') loadColors();
+                else if (activeTab === 'sizes') loadSizes();
+                else if (activeTab === 'variants') loadVariants();
+                else if (activeTab === 'matrix') loadMatrix();
             }
 
-            // ==================== COLORS & SIZES ====================
+            // ==================== COLORS ====================
             async function loadColors() {
-                if (!selectedProductId) return;
+                if (!activeProductId) return;
                 const token = getAdminToken();
-                const listEl = document.getElementById('colorsList');
-                const emptyEl = document.getElementById('colorsEmpty');
-                listEl.innerHTML = '<div class="skeleton" style="width:100%;height:80px;"></div>';
-                emptyEl.style.display = 'none';
+                const tbody = document.getElementById('colorsTableBody');
+                const emptyState = document.getElementById('colorsEmptyState');
+                tbody.innerHTML = '<tr><td colspan="9"><div class="skeleton" style="width:100%;height:50px;"></div></td></tr>';
+                emptyState.style.display = 'none';
 
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${selectedProductId}/colors`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/colors`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
                     const data = await res.json();
                     if (data.success) {
-                        colorsData = data.colors || [];
-                        if (!colorsData.length) { listEl.innerHTML = ''; emptyEl.style.display = 'block'; return; }
+                        allColors = data.colors || [];
+                        document.getElementById('colorTabCount').textContent = allColors.length;
+                        document.getElementById('colorSectionSubtitle').textContent = `${allColors.length} color(s) for this product`;
                         
-                        let html = '';
-                        for (const color of colorsData) {
-                            const sizesRes = await fetch(`${API_BASE_URL}/api/admin/product-colors/${color.id}/sizes`, { headers: { 'Authorization': `Bearer ${token}` } });
-                            const sizesData = await sizesRes.json();
-                            const sizes = sizesData.success ? (sizesData.sizes || []) : [];
-                            
-                            html += `
-                            <div class="info-card">
-                                <div class="info-card-title">
-                                    <div class="color-swatch" style="background:${color.color_code || '#ccc'};">
-                                        ${color.color_image ? `<img src="${escapeHTML(color.color_image)}" class="color-swatch-img" onerror="this.style.display='none';">` : ''}
-                                    </div>
-                                    ${escapeHTML(color.color_name)}
-                                    <span class="count-badge">Stock: ${color.color_stock || 0}</span>
-                                </div>
-                                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-                                    ${sizes.map(s => `<span class="size-tag">${escapeHTML(s.size_name)} <i class="fa-solid fa-times" style="cursor:pointer;color:var(--accent);margin-left:4px;font-size:10px;" onclick="openDeleteConfirm(${s.id}, 'size', '${escapeHTML(s.size_name)}')"></i></span>`).join('')}
-                                    <span class="size-tag" style="border:1.5px dashed #d1d1d6;background:#fff;cursor:pointer;" onclick="openSizeModal(${color.id}, '${escapeHTML(color.color_name)}')"><i class="fa-solid fa-plus"></i> Add Size</span>
-                                </div>
-                                <div style="display:flex;gap:8px;justify-content:flex-end;">
-                                    <button class="btn btn-xs btn-outline" onclick="openBulkVariantModalForColor(${color.id})"><i class="fa-solid fa-layer-group"></i> Bulk Create Variants</button>
-                                    <button class="btn btn-xs btn-outline" onclick="openColorModal(${color.id})"><i class="fa-solid fa-pen"></i> Edit</button>
-                                    <button class="btn btn-xs btn-danger" onclick="openDeleteConfirm(${color.id}, 'color', '${escapeHTML(color.color_name)}')"><i class="fa-solid fa-trash-can"></i> Delete</button>
-                                </div>
-                            </div>`;
+                        if (!allColors.length) {
+                            tbody.innerHTML = '';
+                            emptyState.style.display = 'block';
+                        } else {
+                            tbody.innerHTML = allColors.map(c => `
+                                <tr>
+                                    <td><span style="font-family:'Sora',monospace;font-size:12px;font-weight:600;">#${c.id}</span></td>
+                                    <td>
+                                        <div class="color-swatch" style="background:${c.color_code || '#ccc'};" title="${escapeHTML(c.color_name)}">
+                                            ${!c.color_code ? c.color_name?.charAt(0)?.toUpperCase() || '?' : ''}
+                                        </div>
+                                    </td>
+                                    <td><span style="font-weight:600;">${escapeHTML(c.color_name)}</span></td>
+                                    <td><span style="font-family:'Sora',monospace;font-size:12px;">${c.color_code || '-'}</span></td>
+                                    <td>
+                                        ${c.color_image ? `<div class="img-thumb" style="width:40px;height:40px;border-radius:8px;display:inline-flex;"><img src="${escapeHTML(c.color_image)}" onerror="this.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'"></div>` : '<span style="color:var(--accent);">-</span>'}
+                                    </td>
+                                    <td><span style="font-weight:700;">${c.color_stock || 0}</span></td>
+                                    <td><span class="count-badge" style="cursor:pointer;" onclick="switchToSizesTab(${c.id})" title="View Sizes"><i class="fa-solid fa-ruler"></i> View Sizes</span></td>
+                                    <td>${c.sort_order || 0}</td>
+                                    <td style="text-align:right;">
+                                        <div class="actions-cell" style="justify-content:flex-end;">
+                                            <button class="action-btn edit" onclick="openColorModal(${c.id})"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="action-btn delete" onclick="openDeleteConfirm(${c.id}, 'color', '${escapeHTML(c.color_name).replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('');
                         }
-                        listEl.innerHTML = html;
+
+                        // Update size color filter dropdown
+                        const sizeFilter = document.getElementById('sizeColorFilter');
+                        sizeFilter.innerHTML = '<option value="">— Select a Color —</option>' +
+                            allColors.map(c => `<option value="${c.id}">${escapeHTML(c.color_name)} ${c.color_code ? '('+c.color_code+')' : ''}</option>`).join('');
+                        
+                        // Update variant color dropdown
+                        const variantColorSelect = document.getElementById('variantColorId');
+                        variantColorSelect.innerHTML = '<option value="">Select Color</option>' +
+                            allColors.map(c => `<option value="${c.id}">${escapeHTML(c.color_name)} ${c.color_code ? '('+c.color_code+')' : ''}</option>`).join('');
+                        
+                        // Update size modal color dropdown
+                        document.getElementById('sizeColorId').innerHTML = '<option value="">Select Color</option>' +
+                            allColors.map(c => `<option value="${c.id}">${escapeHTML(c.color_name)} ${c.color_code ? '('+c.color_code+')' : ''}</option>`).join('');
                     }
-                } catch(e) { listEl.innerHTML = '<p style="color:#dc2626;text-align:center;">Failed to load. <button onclick="loadColors()" style="color:#007aff;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></p>'; }
+                } catch(e) {
+                    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#dc2626;">Failed to load colors</td></tr>';
+                }
             }
 
-            // ==================== COLOR MODAL ====================
-            async function openColorModal(colorId = null) {
-                if (!selectedProductId && !colorId) { showToast('Please select a product first', 'error'); return; }
-                document.getElementById('colorModalTitle').textContent = colorId ? 'Edit Color' : 'Add Color';
+            function openColorModal(colorId = null) {
+                if (!activeProductId) { showToast('Please select a product first', 'error'); return; }
                 document.getElementById('colorId').value = colorId || '';
+                document.getElementById('colorModalTitle').textContent = colorId ? 'Edit Color' : 'Add Color';
                 
                 if (colorId) {
-                    const token = getAdminToken();
-                    const res = await fetch(`${API_BASE_URL}/api/admin/product-colors/${colorId}`, { headers: { 'Authorization': `Bearer ${token}` } });
-                    const data = await res.json();
-                    if (data.success) {
-                        document.getElementById('colorName').value = data.color.color_name || '';
-                        document.getElementById('colorCode').value = data.color.color_code || '#000000';
-                        document.getElementById('colorCodeText').value = data.color.color_code || '#000000';
-                        document.getElementById('colorImage').value = data.color.color_image || '';
-                        document.getElementById('colorSortOrder').value = data.color.sort_order || 0;
+                    const color = allColors.find(c => c.id === colorId);
+                    if (color) {
+                        document.getElementById('colorName').value = color.color_name || '';
+                        document.getElementById('colorCode').value = color.color_code || '';
+                        document.getElementById('colorImage').value = color.color_image || '';
+                        document.getElementById('colorSortOrder').value = color.sort_order || 0;
+                        updateColorPreview(color.color_code);
                     }
                 } else {
                     document.getElementById('colorForm').reset();
-                    document.getElementById('colorCode').value = '#000000';
-                    document.getElementById('colorCodeText').value = '#000000';
-                    document.getElementById('colorSortOrder').value = colorsData.length;
+                    document.getElementById('colorSortOrder').value = allColors.length;
+                    updateColorPreview('');
                 }
                 document.getElementById('colorModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
 
-            function closeColorModal() { document.getElementById('colorModal').classList.remove('show'); document.body.style.overflow = ''; }
-
-            function syncColorPicker() {
-                const hex = document.getElementById('colorCodeText').value;
-                if (/^#[0-9A-Fa-f]{6}$/.test(hex)) document.getElementById('colorCode').value = hex;
+            function closeColorModal() {
+                document.getElementById('colorModal').classList.remove('show');
+                document.body.style.overflow = '';
             }
-            document.getElementById('colorCode').addEventListener('input', function() {
-                document.getElementById('colorCodeText').value = this.value;
-            });
-            document.getElementById('colorCodeText').addEventListener('input', syncColorPicker);
 
             async function saveColor() {
                 const colorName = document.getElementById('colorName').value.trim();
                 if (!colorName) { showToast('Color name is required', 'error'); return; }
+                if (!activeProductId) return;
+
                 const token = getAdminToken();
                 const colorData = {
-                    product_id: selectedProductId,
+                    product_id: activeProductId,
                     color_name: colorName,
-                    color_code: document.getElementById('colorCode').value,
+                    color_code: document.getElementById('colorCode').value.trim() || null,
                     color_image: document.getElementById('colorImage').value.trim() || null,
                     sort_order: parseInt(document.getElementById('colorSortOrder').value) || 0
                 };
+
                 const colorId = document.getElementById('colorId').value;
-                const url = colorId ? `${API_BASE_URL}/api/admin/product-colors/${colorId}` : `${API_BASE_URL}/api/admin/product-colors`;
+                const url = colorId 
+                    ? `${API_BASE_URL}/api/admin/product-colors/${colorId}`
+                    : `${API_BASE_URL}/api/admin/product-colors`;
+                const method = colorId ? 'PUT' : 'POST';
+
                 const btn = document.getElementById('colorSaveBtn');
                 btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
+                
                 try {
-                    const res = await fetch(url, { method: colorId ? 'PUT' : 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(colorData) });
+                    const res = await fetch(url, {
+                        method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify(colorData)
+                    });
                     const data = await res.json();
-                    if (res.ok && data.success) { showToast('Color saved', 'success'); closeColorModal(); await loadColors(); }
-                    else throw new Error(data.error);
+                    if (res.ok && data.success) {
+                        showToast(colorId ? 'Color updated' : 'Color created', 'success');
+                        closeColorModal();
+                        await loadColors();
+                    } else throw new Error(data.error || 'Failed');
                 } catch(e) { showToast(e.message, 'error'); }
                 finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Color</span>'; }
             }
 
-            // ==================== SIZE MODAL ====================
-            function openSizeModal(colorId, colorName) {
-                document.getElementById('sizeId').value = '';
-                document.getElementById('sizeColorId').value = colorId;
-                document.getElementById('sizeName').value = '';
-                document.getElementById('sizeSortOrder').value = 0;
-                document.getElementById('sizeModalTitle').textContent = `Add Size for ${colorName}`;
+            function updateColorPreview(code) {
+                const preview = document.getElementById('colorCodePreview');
+                if (code && /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(code)) {
+                    preview.style.background = code;
+                } else {
+                    preview.style.background = '#ccc';
+                }
+            }
+
+            // ==================== SIZES ====================
+            function switchToSizesTab(colorId) {
+                document.getElementById('sizeColorFilter').value = colorId;
+                document.querySelectorAll('.tab-main-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-tab="sizes"]').classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById('tab-sizes').classList.add('active');
+                activeTab = 'sizes';
+                loadSizes();
+            }
+
+            async function loadSizes() {
+                const colorId = document.getElementById('sizeColorFilter').value;
+                const tbody = document.getElementById('sizesTableBody');
+                const emptyState = document.getElementById('sizesEmptyState');
+                const addBtn = document.getElementById('addSizeBtn');
+                
+                if (!colorId) {
+                    tbody.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    document.getElementById('sizeTabCount').textContent = '0';
+                    document.getElementById('sizeSectionSubtitle').textContent = 'Select a color to manage its sizes';
+                    addBtn.disabled = true;
+                    allSizes = [];
+                    return;
+                }
+
+                addBtn.disabled = false;
+                const token = getAdminToken();
+                tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:50px;"></div></td></tr>';
+                emptyState.style.display = 'none';
+
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/product-colors/${colorId}/sizes`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        allSizes = data.sizes || [];
+                        document.getElementById('sizeTabCount').textContent = allSizes.length;
+                        document.getElementById('sizeSectionSubtitle').textContent = `${allSizes.length} size(s) for selected color`;
+                        
+                        if (!allSizes.length) {
+                            tbody.innerHTML = '';
+                            emptyState.style.display = 'block';
+                        } else {
+                            const selectedColor = allColors.find(c => c.id === parseInt(colorId));
+                            tbody.innerHTML = allSizes.map(s => `
+                                <tr>
+                                    <td><span style="font-family:'Sora',monospace;font-size:12px;font-weight:600;">#${s.id}</span></td>
+                                    <td><span class="size-badge">${escapeHTML(s.size_name)}</span></td>
+                                    <td>
+                                        <div style="display:flex;align-items:center;gap:8px;">
+                                            <div class="color-swatch" style="background:${selectedColor?.color_code || '#ccc'};width:20px;height:20px;"></div>
+                                            <span style="font-size:13px;">${escapeHTML(selectedColor?.color_name || 'Unknown')}</span>
+                                        </div>
+                                    </td>
+                                    <td>${s.sort_order || 0}</td>
+                                    <td><span style="font-size:12px;color:var(--accent);">${new Date(s.created_at).toLocaleDateString()}</span></td>
+                                    <td style="text-align:right;">
+                                        <div class="actions-cell" style="justify-content:flex-end;">
+                                            <button class="action-btn edit" onclick="openSizeModal(${s.id})"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="action-btn delete" onclick="openDeleteConfirm(${s.id}, 'size', '${escapeHTML(s.size_name).replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('');
+                        }
+                    }
+                } catch(e) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#dc2626;">Failed to load sizes</td></tr>';
+                }
+            }
+
+            function openSizeModal(sizeId = null) {
+                if (!activeProductId) { showToast('Please select a product first', 'error'); return; }
+                document.getElementById('sizeId').value = sizeId || '';
+                document.getElementById('sizeModalTitle').textContent = sizeId ? 'Edit Size' : 'Add Size';
+                
+                if (sizeId) {
+                    const size = allSizes.find(s => s.id === sizeId);
+                    if (size) {
+                        document.getElementById('sizeColorId').value = size.color_id;
+                        document.getElementById('sizeName').value = size.size_name;
+                        document.getElementById('sizeSortOrder').value = size.sort_order || 0;
+                    }
+                } else {
+                    document.getElementById('sizeForm').reset();
+                    document.getElementById('sizeSortOrder').value = allSizes.length;
+                    const currentFilter = document.getElementById('sizeColorFilter').value;
+                    if (currentFilter) document.getElementById('sizeColorId').value = currentFilter;
+                }
                 document.getElementById('sizeModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
 
-            function closeSizeModal() { document.getElementById('sizeModal').classList.remove('show'); document.body.style.overflow = ''; }
+            function closeSizeModal() {
+                document.getElementById('sizeModal').classList.remove('show');
+                document.body.style.overflow = '';
+            }
 
             async function saveSize() {
+                const colorId = parseInt(document.getElementById('sizeColorId').value);
                 const sizeName = document.getElementById('sizeName').value.trim();
-                const colorId = document.getElementById('sizeColorId').value;
-                if (!sizeName || !colorId) { showToast('Size name and color are required', 'error'); return; }
+                if (!colorId || !sizeName) { showToast('Color and size name are required', 'error'); return; }
+
                 const token = getAdminToken();
                 const sizeData = {
-                    color_id: parseInt(colorId),
+                    color_id: colorId,
                     size_name: sizeName,
                     sort_order: parseInt(document.getElementById('sizeSortOrder').value) || 0
                 };
+
+                const sizeId = document.getElementById('sizeId').value;
+                const url = sizeId
+                    ? `${API_BASE_URL}/api/admin/color-sizes/${sizeId}`
+                    : `${API_BASE_URL}/api/admin/color-sizes`;
+                const method = sizeId ? 'PUT' : 'POST';
+
                 const btn = document.getElementById('sizeSaveBtn');
                 btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
+                
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/color-sizes`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(sizeData) });
+                    const res = await fetch(url, {
+                        method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify(sizeData)
+                    });
                     const data = await res.json();
-                    if (res.ok && data.success) { showToast('Size added', 'success'); closeSizeModal(); await loadColors(); }
-                    else throw new Error(data.error);
+                    if (res.ok && data.success) {
+                        showToast(sizeId ? 'Size updated' : 'Size created', 'success');
+                        closeSizeModal();
+                        document.getElementById('sizeColorFilter').value = colorId;
+                        await loadSizes();
+                    } else throw new Error(data.error || 'Failed');
                 } catch(e) { showToast(e.message, 'error'); }
                 finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Size</span>'; }
             }
 
-            // ==================== MATRIX ====================
-            async function loadMatrix() {
-                if (!selectedProductId) return;
-                const token = getAdminToken();
-                const bodyEl = document.getElementById('variantMatrixBody');
-                const headEl = document.getElementById('variantMatrixHead');
-                const emptyEl = document.getElementById('matrixEmpty');
-                bodyEl.innerHTML = '<tr><td colspan="10"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
-                emptyEl.style.display = 'none';
-
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${selectedProductId}/variants-matrix`, { headers: { 'Authorization': `Bearer ${token}` } });
-                    const data = await res.json();
-                    if (data.success) {
-                        matrixData = data;
-                        const { matrix, allSizes } = data;
-                        
-                        if (!matrix.length) { bodyEl.innerHTML = ''; headEl.innerHTML = ''; emptyEl.style.display = 'block'; return; }
-
-                        // Get unique sizes across all colors (sorted)
-                        const uniqueSizes = [];
-                        const sizeMap = new Map();
-                        allSizes.forEach(s => {
-                            if (!sizeMap.has(s.size_name)) {
-                                sizeMap.set(s.size_name, s);
-                                uniqueSizes.push(s);
-                            }
-                        });
-                        uniqueSizes.sort((a, b) => a.sort_order - b.sort_order);
-
-                        // Build header
-                        headEl.innerHTML = '<tr><th>Color</th>' + uniqueSizes.map(s => `<th style="text-align:center;">${escapeHTML(s.size_name)}</th>`).join('') + '</tr>';
-
-                        // Build body
-                        bodyEl.innerHTML = matrix.map(colorRow => {
-                            const cells = uniqueSizes.map(size => {
-                                const variant = colorRow.sizes.find(s => s.size_name === size.size_name);
-                                if (variant && variant.variant) {
-                                    const v = variant.variant;
-                                    return `<td class="matrix-cell">
-                                        <div class="matrix-variant-card" onclick="openVariantModalForEdit(${v.id})" title="Click to edit">
-                                            <span class="variant-sku">${escapeHTML(v.sku || 'N/A')}</span>
-                                            <span class="variant-price">৳${v.price}</span>
-                                            <span class="variant-stock ${v.stock > 0 ? 'in-stock' : 'out-of-stock'}">${v.stock > 0 ? '● ' + v.stock + ' in stock' : '○ Out of stock'}</span>
-                                        </div>
-                                    </td>`;
-                                } else {
-                                    return `<td class="matrix-cell">
-                                        <div class="matrix-variant-card empty" onclick="quickCreateVariant(${colorRow.color_id}, ${variant?.size_id || size.id})" title="Click to create variant">
-                                            <i class="fa-solid fa-plus" style="color:#dc2626;font-size:18px;"></i>
-                                            <span style="font-size:10px;color:#dc2626;">Create</span>
-                                        </div>
-                                    </td>`;
-                                }
-                            }).join('');
-
-                            return `<tr>
-                                <td>
-                                    <div style="display:flex;align-items:center;gap:10px;">
-                                        <div class="color-swatch" style="background:${colorRow.color_code || '#ccc'};">
-                                            ${colorRow.color_image ? `<img src="${escapeHTML(colorRow.color_image)}" class="color-swatch-img" onerror="this.style.display='none';">` : ''}
-                                        </div>
-                                        <div>
-                                            <span style="font-weight:600;">${escapeHTML(colorRow.color_name)}</span>
-                                            <span style="font-size:10px;color:var(--accent);display:block;">Stock: ${colorRow.color_stock}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                ${cells}
-                            </tr>`;
-                        }).join('');
-                    }
-                } catch(e) { bodyEl.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadMatrix()" style="color:#007aff;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>'; }
-            }
-
-            function refreshMatrix() { loadMatrix(); }
-
-            async function quickCreateVariant(colorId, sizeId) {
-                if (!selectedProductId) return;
-                document.getElementById('variantId').value = '';
-                await loadVariantDropdowns(colorId, sizeId);
-                document.getElementById('variantPrice').value = selectedProduct?.price || 0;
-                document.getElementById('variantOldPrice').value = selectedProduct?.old_price || '';
-                document.getElementById('variantStock').value = 0;
-                document.getElementById('variantMaterial').value = '';
-                document.getElementById('variantWeight').value = 0;
-                document.getElementById('variantSortOrder').value = 0;
-                document.getElementById('variantIsActive').checked = true;
-                document.getElementById('variantModalTitle').textContent = 'Quick Create Variant';
-                document.getElementById('variantModal').classList.add('show');
-                document.body.style.overflow = 'hidden';
-            }
-
-            // ==================== VARIANTS LIST ====================
+            // ==================== VARIANTS ====================
             async function loadVariants() {
-                if (!selectedProductId) return;
+                if (!activeProductId) return;
                 const token = getAdminToken();
                 const tbody = document.getElementById('variantsTableBody');
-                const emptyEl = document.getElementById('variantsEmpty');
-                tbody.innerHTML = '<tr><td colspan="7"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
-                emptyEl.style.display = 'none';
+                const emptyState = document.getElementById('variantsEmptyState');
+                tbody.innerHTML = '<tr><td colspan="9"><div class="skeleton" style="width:100%;height:50px;"></div></td></tr>';
+                emptyState.style.display = 'none';
 
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${selectedProductId}/variants`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/variants`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
                     const data = await res.json();
                     if (data.success) {
-                        const variants = data.variants || [];
-                        if (!variants.length) { tbody.innerHTML = ''; emptyEl.style.display = 'block'; return; }
-                        tbody.innerHTML = variants.map(v => `
-                            <tr>
-                                <td><span style="font-family:'Sora',monospace;font-size:12px;font-weight:600;">${escapeHTML(v.sku || 'N/A')}</span></td>
-                                <td>
-                                    <div style="display:flex;align-items:center;gap:8px;">
-                                        <div class="color-swatch" style="background:${v.color?.color_code || '#ccc'};width:24px;height:24px;border-radius:6px;"></div>
-                                        ${escapeHTML(v.color?.color_name || v.name?.split(' / ')[0] || '-')}
-                                    </div>
-                                </td>
-                                <td><span class="size-tag">${escapeHTML(v.size?.size_name || v.name?.split(' / ')[1] || '-')}</span></td>
-                                <td>
-                                    <span style="font-weight:700;">৳${v.price}</span>
-                                    ${v.old_price ? `<span style="font-size:11px;color:var(--accent);text-decoration:line-through;margin-left:4px;">৳${v.old_price}</span>` : ''}
-                                </td>
-                                <td>
-                                    <span style="font-weight:700;color:${v.stock > 0 ? '#059669' : '#dc2626'};">${v.stock}</span>
-                                    <button class="btn btn-xs btn-outline" style="margin-left:8px;" onclick="quickStockUpdate(${v.id}, ${v.stock})" title="Update Stock"><i class="fa-solid fa-pen"></i></button>
-                                </td>
-                                <td><span class="status-badge ${v.is_active ? 'active' : 'inactive'}"><span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>${v.is_active ? 'Active' : 'Inactive'}</span></td>
-                                <td style="text-align:right;">
-                                    <div class="actions-cell" style="justify-content:flex-end;">
-                                        <button class="action-btn edit" onclick="openVariantModalForEdit(${v.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                        <button class="action-btn toggle" onclick="toggleVariant(${v.id})" title="Toggle"><i class="fa-solid fa-${v.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                        <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'variant', '${escapeHTML(v.sku || v.name)}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        `).join('');
+                        allVariants = data.variants || [];
+                        document.getElementById('variantTabCount').textContent = allVariants.length;
+                        document.getElementById('variantSectionSubtitle').textContent = `${allVariants.length} variant(s) for this product`;
+                        
+                        if (!allVariants.length) {
+                            tbody.innerHTML = '';
+                            emptyState.style.display = 'block';
+                        } else {
+                            tbody.innerHTML = allVariants.map(v => `
+                                <tr>
+                                    <td><span style="font-family:'Sora',monospace;font-size:12px;font-weight:600;">#${v.id}</span></td>
+                                    <td><span style="font-family:'Sora',monospace;font-size:11px;color:var(--accent);">${escapeHTML(v.sku || '-')}</span></td>
+                                    <td>
+                                        <div style="display:flex;align-items:center;gap:8px;">
+                                            <div class="color-swatch" style="background:${v.color?.color_code || '#ccc'};width:20px;height:20px;"></div>
+                                            <span style="font-size:13px;">${escapeHTML(v.color?.color_name || '-')}</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="size-badge">${escapeHTML(v.size?.size_name || '-')}</span></td>
+                                    <td><span style="font-weight:700;">৳${v.price || 0}</span></td>
+                                    <td>${v.old_price ? `<span style="text-decoration:line-through;color:var(--accent);">৳${v.old_price}</span>` : '-'}</td>
+                                    <td>
+                                        <div class="stock-input-group">
+                                            <button onclick="updateVariantStock(${v.id}, 'subtract')" title="Decrease">−</button>
+                                            <input type="text" value="${v.stock || 0}" readonly style="width:50px;">
+                                            <button onclick="updateVariantStock(${v.id}, 'add')" title="Increase">+</button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge ${v.is_active ? 'active' : 'inactive'}">
+                                            <span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>
+                                            ${v.is_active ? 'Active' : 'Inactive'}
+                                        </span>
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <div class="actions-cell" style="justify-content:flex-end;">
+                                            <button class="action-btn edit" onclick="openVariantModal(${v.id})"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="action-btn toggle" onclick="toggleVariantStatus(${v.id})" title="${v.is_active ? 'Deactivate' : 'Activate'}">
+                                                <i class="fa-solid fa-${v.is_active ? 'eye-slash' : 'eye'}"></i>
+                                            </button>
+                                            <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'variant', 'Variant #${v.id}')"><i class="fa-solid fa-trash-can"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('');
+                        }
                     }
-                } catch(e) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadVariants()" style="color:#007aff;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>'; }
+                } catch(e) {
+                    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#dc2626;">Failed to load variants</td></tr>';
+                }
             }
 
-            // ==================== VARIANT MODAL ====================
-            async function loadVariantDropdowns(selectedColorId = null, selectedSizeId = null) {
-                if (!selectedProductId) return;
+            async function loadVariantStats() {
+                if (!activeProductId) return;
                 const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/variants-stats`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (data.success && data.stats) {
+                        document.getElementById('statTotalVariants').textContent = data.stats.totalVariants || 0;
+                        document.getElementById('statActiveVariants').textContent = data.stats.activeVariants || 0;
+                        document.getElementById('statTotalStock').textContent = data.stats.totalStock || 0;
+                        document.getElementById('statTotalValue').textContent = '৳' + (data.stats.totalValue || 0).toLocaleString();
+                    }
+                } catch(e) {}
+            }
+
+            async function updateVariantStock(variantId, action) {
+                const token = getAdminToken();
+                if (!token) return;
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/product-variants/${variantId}/stock`, {
+                        method: 'PATCH',
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action, quantity: 1 })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        showToast(`Stock updated: ${data.new_stock}`, 'success');
+                        await loadVariants();
+                        await loadVariantStats();
+                        await loadColors();
+                    } else throw new Error(data.error);
+                } catch(e) { showToast(e.message, 'error'); }
+            }
+
+            async function toggleVariantStatus(variantId) {
+                const token = getAdminToken();
+                if (!token) return;
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/product-variants/${variantId}/toggle`, {
+                        method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        showToast(`Variant ${data.variant.is_active ? 'activated' : 'deactivated'}`, 'success');
+                        await loadVariants();
+                        await loadVariantStats();
+                    } else throw new Error(data.error);
+                } catch(e) { showToast(e.message, 'error'); }
+            }
+
+            async function generateAllVariants() {
+                if (!activeProductId) { showToast('Please select a product first', 'error'); return; }
+                const token = getAdminToken();
+                if (!token) return;
                 
-                // Load colors
-                const colorRes = await fetch(`${API_BASE_URL}/api/admin/products/${selectedProductId}/colors`, { headers: { 'Authorization': `Bearer ${token}` } });
-                const colorData = await colorRes.json();
-                const colorSelect = document.getElementById('variantColorId');
-                const bulkColorSelect = document.getElementById('bulkColorId');
-                if (colorData.success) {
-                    const options = '<option value="">Select Color</option>' + colorData.colors.map(c => `<option value="${c.id}" ${selectedColorId == c.id ? 'selected' : ''}>${escapeHTML(c.color_name)}</option>`).join('');
-                    colorSelect.innerHTML = options;
-                    bulkColorSelect.innerHTML = options;
-                }
+                // Use product price as default
+                let defaultPrice = 0;
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (data.success && data.product) defaultPrice = data.product.price || 0;
+                } catch(e) {}
 
-                // Load sizes if color selected
-                if (selectedColorId) {
-                    const sizeRes = await fetch(`${API_BASE_URL}/api/admin/product-colors/${selectedColorId}/sizes`, { headers: { 'Authorization': `Bearer ${token}` } });
-                    const sizeData = await sizeRes.json();
-                    const sizeSelect = document.getElementById('variantSizeId');
-                    if (sizeData.success) {
-                        sizeSelect.innerHTML = '<option value="">Select Size</option>' + sizeData.sizes.map(s => `<option value="${s.id}" ${selectedSizeId == s.id ? 'selected' : ''}>${escapeHTML(s.size_name)}</option>`).join('');
-                    }
-                }
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/generate-variants`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ default_price: defaultPrice, default_stock: 0 })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        showToast(`${data.created || 0} variants generated`, 'success');
+                        await refreshAll();
+                    } else throw new Error(data.error || 'Failed');
+                } catch(e) { showToast(e.message, 'error'); }
             }
 
-            document.getElementById('variantColorId').addEventListener('change', async function() {
-                const colorId = this.value;
-                const sizeSelect = document.getElementById('variantSizeId');
-                if (!colorId) { sizeSelect.innerHTML = '<option value="">Select Size</option>'; return; }
-                const token = getAdminToken();
-                const res = await fetch(`${API_BASE_URL}/api/admin/product-colors/${colorId}/sizes`, { headers: { 'Authorization': `Bearer ${token}` } });
-                const data = await res.json();
-                if (data.success) sizeSelect.innerHTML = '<option value="">Select Size</option>' + data.sizes.map(s => `<option value="${s.id}">${escapeHTML(s.size_name)}</option>`).join('');
-            });
-
-            async function openVariantModal(variantId = null) {
-                if (!selectedProductId) { showToast('Please select a product first', 'error'); return; }
+            function openVariantModal(variantId = null) {
+                if (!activeProductId) { showToast('Please select a product first', 'error'); return; }
                 document.getElementById('variantId').value = variantId || '';
                 document.getElementById('variantModalTitle').textContent = variantId ? 'Edit Variant' : 'Add Variant';
                 
                 if (variantId) {
-                    const token = getAdminToken();
-                    const res = await fetch(`${API_BASE_URL}/api/admin/product-variants/${variantId}`, { headers: { 'Authorization': `Bearer ${token}` } });
-                    const data = await res.json();
-                    if (data.success) {
-                        const v = data.variant;
-                        await loadVariantDropdowns(v.color_id, v.size_id);
-                        document.getElementById('variantPrice').value = v.price;
-                        document.getElementById('variantOldPrice').value = v.old_price || '';
-                        document.getElementById('variantStock').value = v.stock || 0;
-                        document.getElementById('variantMaterial').value = v.material || '';
-                        document.getElementById('variantWeight').value = v.weight || 0;
-                        document.getElementById('variantSortOrder').value = v.sort_order || 0;
-                        document.getElementById('variantIsActive').checked = v.is_active;
+                    const variant = allVariants.find(v => v.id === variantId);
+                    if (variant) {
+                        document.getElementById('variantColorId').value = variant.color_id;
+                        onVariantColorChange();
+                        setTimeout(() => { document.getElementById('variantSizeId').value = variant.size_id; }, 300);
+                        document.getElementById('variantPrice').value = variant.price || 0;
+                        document.getElementById('variantOldPrice').value = variant.old_price || '';
+                        document.getElementById('variantStock').value = variant.stock || 0;
+                        document.getElementById('variantMaterial').value = variant.material || '';
+                        document.getElementById('variantWeight').value = variant.weight || 0;
+                        document.getElementById('variantSortOrder').value = variant.sort_order || 0;
+                        document.getElementById('variantIsActive').checked = variant.is_active;
                     }
                 } else {
                     document.getElementById('variantForm').reset();
-                    await loadVariantDropdowns();
                     document.getElementById('variantStock').value = 0;
                     document.getElementById('variantWeight').value = 0;
                     document.getElementById('variantSortOrder').value = 0;
                     document.getElementById('variantIsActive').checked = true;
-                    document.getElementById('variantPrice').value = selectedProduct?.price || 0;
+                    document.getElementById('variantSizeId').innerHTML = '<option value="">Select Size</option>';
                 }
                 document.getElementById('variantModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
 
-            function openVariantModalForEdit(variantId) { openVariantModal(variantId); }
+            function closeVariantModal() {
+                document.getElementById('variantModal').classList.remove('show');
+                document.body.style.overflow = '';
+            }
 
-            function closeVariantModal() { document.getElementById('variantModal').classList.remove('show'); document.body.style.overflow = ''; }
+            async function onVariantColorChange() {
+                const colorId = document.getElementById('variantColorId').value;
+                const sizeSelect = document.getElementById('variantSizeId');
+                sizeSelect.innerHTML = '<option value="">Select Size</option>';
+                if (!colorId) return;
+
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/product-colors/${colorId}/sizes`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (data.success && data.sizes) {
+                        sizeSelect.innerHTML = '<option value="">Select Size</option>' +
+                            data.sizes.map(s => `<option value="${s.id}">${escapeHTML(s.size_name)}</option>`).join('');
+                    }
+                } catch(e) {}
+            }
 
             async function saveVariant() {
                 const colorId = parseInt(document.getElementById('variantColorId').value);
                 const sizeId = parseInt(document.getElementById('variantSizeId').value);
                 const price = parseFloat(document.getElementById('variantPrice').value);
-                if (!colorId || !sizeId || isNaN(price)) { showToast('Color, size and price are required', 'error'); return; }
+                
+                if (!activeProductId || !colorId || !sizeId || isNaN(price)) {
+                    showToast('Color, size and price are required', 'error'); return;
+                }
+
                 const token = getAdminToken();
                 const variantData = {
-                    product_id: selectedProductId,
+                    product_id: activeProductId,
                     color_id: colorId,
                     size_id: sizeId,
                     price: price,
@@ -1253,253 +1617,279 @@
                     sort_order: parseInt(document.getElementById('variantSortOrder').value) || 0,
                     is_active: document.getElementById('variantIsActive').checked
                 };
+
                 const variantId = document.getElementById('variantId').value;
-                const url = variantId ? `${API_BASE_URL}/api/admin/product-variants/${variantId}` : `${API_BASE_URL}/api/admin/product-variants`;
+                const url = variantId
+                    ? `${API_BASE_URL}/api/admin/product-variants/${variantId}`
+                    : `${API_BASE_URL}/api/admin/product-variants`;
+                const method = variantId ? 'PUT' : 'POST';
+
                 const btn = document.getElementById('variantSaveBtn');
                 btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
+                
                 try {
-                    const res = await fetch(url, { method: variantId ? 'PUT' : 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(variantData) });
+                    const res = await fetch(url, {
+                        method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify(variantData)
+                    });
                     const data = await res.json();
-                    if (res.ok && data.success) { showToast('Variant saved', 'success'); closeVariantModal(); refreshAllTabs(); }
-                    else throw new Error(data.error);
+                    if (res.ok && data.success) {
+                        showToast(variantId ? 'Variant updated' : 'Variant created', 'success');
+                        closeVariantModal();
+                        await refreshAll();
+                    } else throw new Error(data.error || 'Failed');
                 } catch(e) { showToast(e.message, 'error'); }
                 finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Variant</span>'; }
             }
 
-            async function toggleVariant(id) {
+            // ==================== MATRIX ====================
+            async function loadMatrix() {
+                if (!activeProductId) return;
                 const token = getAdminToken();
+                const matrixWrapper = document.getElementById('matrixTableWrapper');
+                const matrixEmpty = document.getElementById('matrixEmptyState');
+                matrixWrapper.innerHTML = '<div class="skeleton" style="width:100%;height:200px;"></div>';
+                matrixWrapper.style.display = 'block';
+                matrixEmpty.style.display = 'none';
+
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/product-variants/${id}/toggle`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/variants-matrix`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
                     const data = await res.json();
-                    if (res.ok) { showToast('Status toggled', 'success'); refreshAllTabs(); }
-                } catch(e) { showToast(e.message, 'error'); }
-            }
+                    if (data.success && data.matrix && data.matrix.length > 0) {
+                        const matrix = data.matrix;
+                        document.getElementById('matrixTabCount').textContent = data.variants?.length || 0;
+                        document.getElementById('matrixSectionSubtitle').textContent = `${matrix.length} colors × sizes grid`;
+                        
+                        // Collect all unique size names
+                        const sizeNames = new Set();
+                        matrix.forEach(color => {
+                            color.sizes.forEach(s => sizeNames.add(s.size_name));
+                        });
+                        const sizeNamesArr = Array.from(sizeNames).sort((a, b) => {
+                            const order = ['XS','S','M','L','XL','XXL','XXXL','4XL','5XL'];
+                            const ai = order.indexOf(a.toUpperCase());
+                            const bi = order.indexOf(b.toUpperCase());
+                            if (ai !== -1 && bi !== -1) return ai - bi;
+                            if (ai !== -1) return -1;
+                            if (bi !== -1) return 1;
+                            return a.localeCompare(b);
+                        });
 
-            async function quickStockUpdate(variantId, currentStock) {
-                const newStock = prompt('Enter new stock quantity:', currentStock);
-                if (newStock === null) return;
-                const stock = parseInt(newStock);
-                if (isNaN(stock) || stock < 0) { showToast('Invalid stock value', 'error'); return; }
-                const token = getAdminToken();
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/product-variants/${variantId}/stock`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'set', quantity: stock }) });
-                    const data = await res.json();
-                    if (res.ok) { showToast(`Stock updated to ${stock}`, 'success'); refreshAllTabs(); }
-                    else throw new Error(data.error);
-                } catch(e) { showToast(e.message, 'error'); }
-            }
+                        let html = '<table class="matrix-table"><thead><tr><th class="matrix-color-header">Color \\ Size</th>';
+                        sizeNamesArr.forEach(size => {
+                            html += `<th>${size}</th>`;
+                        });
+                        html += '</tr></thead><tbody>';
 
-            // ==================== BULK VARIANTS ====================
-            async function openBulkVariantModalForColor(colorId) {
-                if (!selectedProductId) return;
-                document.getElementById('bulkColorId').value = colorId;
-                await loadBulkSizes(colorId);
-                document.getElementById('bulkPrice').value = selectedProduct?.price || 0;
-                document.getElementById('bulkOldPrice').value = '';
-                document.getElementById('bulkStock').value = 0;
-                document.getElementById('bulkVariantModal').classList.add('show');
-                document.body.style.overflow = 'hidden';
-            }
+                        matrix.forEach(color => {
+                            html += `<tr><td class="matrix-color-header">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div class="color-swatch" style="background:${color.color_code || '#ccc'};width:22px;height:22px;"></div>
+                                    <span>${escapeHTML(color.color_name)}</span>
+                                </div>
+                                <span style="font-size:10px;color:var(--accent);">Stock: ${color.color_stock || 0}</span>
+                            </td>`;
+                            
+                            sizeNamesArr.forEach(sizeName => {
+                                const sizeData = color.sizes.find(s => s.size_name === sizeName);
+                                if (sizeData && sizeData.variant) {
+                                    const v = sizeData.variant;
+                                    html += `<td class="matrix-cell has-variant" onclick="openVariantModal(${v.id})" title="Click to edit">
+                                        <span class="variant-price">৳${v.price || 0}</span>
+                                        <span class="variant-stock">Stock: ${v.stock || 0}</span>
+                                        <span class="variant-sku">${v.sku || '-'}</span>
+                                        <span class="status-badge ${v.is_active ? 'active' : 'inactive'}" style="font-size:9px;padding:2px 6px;margin-top:4px;">
+                                            ${v.is_active ? 'Active' : 'Inactive'}
+                                        </span>
+                                    </td>`;
+                                } else {
+                                    html += `<td class="matrix-cell no-variant" onclick="openVariantModalForMatrix(${color.color_id}, '${sizeName.replace(/'/g, "\\'")}')" title="Click to create variant">
+                                        <i class="fa-solid fa-plus" style="font-size:10px;"></i> No variant
+                                    </td>`;
+                                }
+                            });
+                            html += '</tr>';
+                        });
 
-            document.getElementById('bulkColorId').addEventListener('change', async function() {
-                await loadBulkSizes(this.value);
-            });
-
-            async function loadBulkSizes(colorId) {
-                const container = document.getElementById('bulkSizeCheckboxes');
-                if (!colorId) { container.innerHTML = '<p style="color:var(--accent);font-size:13px;">Select a color first</p>'; return; }
-                const token = getAdminToken();
-                const res = await fetch(`${API_BASE_URL}/api/admin/product-colors/${colorId}/sizes`, { headers: { 'Authorization': `Bearer ${token}` } });
-                const data = await res.json();
-                if (data.success) {
-                    container.innerHTML = data.sizes.map(s => `
-                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 12px;background:#f5f5f7;border-radius:8px;font-size:13px;font-weight:500;">
-                            <input type="checkbox" class="bulk-size-checkbox" value="${s.id}"> ${escapeHTML(s.size_name)}
-                        </label>
-                    `).join('') || '<p style="color:var(--accent);font-size:13px;">No sizes for this color</p>';
+                        html += '</tbody></table>';
+                        matrixWrapper.innerHTML = html;
+                        matrixWrapper.style.display = 'block';
+                        matrixEmpty.style.display = 'none';
+                    } else {
+                        matrixWrapper.style.display = 'none';
+                        matrixEmpty.style.display = 'block';
+                        document.getElementById('matrixTabCount').textContent = '0';
+                    }
+                } catch(e) {
+                    matrixWrapper.innerHTML = '<p style="text-align:center;padding:40px;color:#dc2626;">Failed to load matrix</p>';
                 }
             }
 
-            function closeBulkVariantModal() { document.getElementById('bulkVariantModal').classList.remove('show'); document.body.style.overflow = ''; }
-
-            async function saveBulkVariants() {
-                const colorId = parseInt(document.getElementById('bulkColorId').value);
-                const price = parseFloat(document.getElementById('bulkPrice').value);
-                if (!colorId || isNaN(price)) { showToast('Color and price required', 'error'); return; }
-                const selectedSizes = Array.from(document.querySelectorAll('.bulk-size-checkbox:checked')).map(cb => parseInt(cb.value));
-                if (!selectedSizes.length) { showToast('Select at least one size', 'error'); return; }
-                const token = getAdminToken();
-                const data = {
-                    product_id: selectedProductId,
-                    color_id: colorId,
-                    size_ids: selectedSizes,
-                    price: price,
-                    old_price: document.getElementById('bulkOldPrice').value ? parseFloat(document.getElementById('bulkOldPrice').value) : null,
-                    stock: parseInt(document.getElementById('bulkStock').value) || 0
-                };
-                const btn = document.getElementById('bulkSaveBtn');
-                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Creating...</span>';
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/product-variants/bulk`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-                    const result = await res.json();
-                    if (res.ok && result.success) { showToast(result.message, 'success'); closeBulkVariantModal(); refreshAllTabs(); }
-                    else throw new Error(result.error);
-                } catch(e) { showToast(e.message, 'error'); }
-                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Create Variants</span>'; }
-            }
-
-            // ==================== AUTO GENERATE ====================
-            async function generateAllVariants() {
-                if (!selectedProductId) { showToast('Select a product first', 'error'); return; }
-                const defaultPrice = prompt('Enter default price for new variants:', selectedProduct?.price || '0');
-                if (defaultPrice === null) return;
-                const price = parseFloat(defaultPrice);
-                if (isNaN(price)) { showToast('Invalid price', 'error'); return; }
-                const token = getAdminToken();
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${selectedProductId}/generate-variants`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ default_price: price, default_stock: 0 }) });
-                    const data = await res.json();
-                    if (res.ok && data.success) { showToast(data.message, 'success'); refreshAllTabs(); }
-                    else throw new Error(data.error);
-                } catch(e) { showToast(e.message, 'error'); }
-            }
-
-            // ==================== STATS ====================
-            async function loadStats() {
-                if (!selectedProductId) return;
-                const token = getAdminToken();
-                const container = document.getElementById('variantStatsContent');
-                container.innerHTML = '<div class="skeleton" style="width:100%;height:100px;"></div>';
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${selectedProductId}/variants-stats`, { headers: { 'Authorization': `Bearer ${token}` } });
-                    const data = await res.json();
-                    if (data.success) {
-                        const s = data.stats;
-                        container.innerHTML = `
-                            <div class="form-row form-row-4" style="margin-bottom:20px;">
-                                <div class="info-card"><div class="info-card-title">📦 Total Variants</div><div style="font-size:28px;font-weight:800;">${s.totalVariants}</div></div>
-                                <div class="info-card"><div class="info-card-title">✅ Active</div><div style="font-size:28px;font-weight:800;color:#059669;">${s.activeVariants}</div></div>
-                                <div class="info-card"><div class="info-card-title">📦 In Stock</div><div style="font-size:28px;font-weight:800;color:#2563eb;">${s.inStockVariants}</div></div>
-                                <div class="info-card"><div class="info-card-title">❌ Out of Stock</div><div style="font-size:28px;font-weight:800;color:#dc2626;">${s.outOfStockVariants}</div></div>
-                            </div>
-                            <div class="form-row form-row-4">
-                                <div class="info-card">
-                                    <div class="info-card-title"><i class="fa-solid fa-cubes"></i> Total Stock</div>
-                                    <div style="font-size:28px;font-weight:800;">${s.totalStock}</div>
-                                </div>
-                                <div class="info-card">
-                                    <div class="info-card-title"><i class="fa-solid fa-tag"></i> Total Value</div>
-                                    <div style="font-size:28px;font-weight:800;">৳${s.totalValue.toLocaleString()}</div>
-                                </div>
-                                <div class="info-card">
-                                    <div class="info-card-title"><i class="fa-solid fa-palette"></i> Colors</div>
-                                    <div style="font-size:28px;font-weight:800;">${s.colors}</div>
-                                </div>
-                                <div class="info-card">
-                                    <div class="info-card-title"><i class="fa-solid fa-ruler"></i> Unique Sizes</div>
-                                    <div style="font-size:28px;font-weight:800;">${s.sizes}</div>
-                                </div>
-                            </div>
-                            <div class="info-card" style="margin-top:16px;">
-                                <div class="info-card-title">📊 Average Price</div>
-                                <div style="font-size:24px;font-weight:800;">৳${s.averagePrice.toFixed(2)}</div>
-                            </div>
-                        `;
+            function openVariantModalForMatrix(colorId, sizeName) {
+                if (!activeProductId) return;
+                document.getElementById('variantId').value = '';
+                document.getElementById('variantForm').reset();
+                document.getElementById('variantColorId').value = colorId;
+                document.getElementById('variantStock').value = 0;
+                document.getElementById('variantWeight').value = 0;
+                document.getElementById('variantSortOrder').value = 0;
+                document.getElementById('variantIsActive').checked = true;
+                
+                onVariantColorChange();
+                setTimeout(() => {
+                    const sizeSelect = document.getElementById('variantSizeId');
+                    for (let opt of sizeSelect.options) {
+                        if (opt.text === sizeName) {
+                            sizeSelect.value = opt.value;
+                            break;
+                        }
                     }
-                } catch(e) { container.innerHTML = '<p style="color:#dc2626;text-align:center;">Failed to load stats.</p>'; }
+                }, 500);
+                
+                document.getElementById('variantModalTitle').textContent = 'Create Variant from Matrix';
+                document.getElementById('variantModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
             }
 
             // ==================== DELETE ====================
             function openDeleteConfirm(id, type, name) {
-                deleteTargetId = id; deleteTargetType = type;
-                document.getElementById('deleteConfirmTitle').textContent = `Delete ${type==='color'?'Color':type==='size'?'Size':'Variant'}?`;
-                document.getElementById('deleteConfirmText').innerHTML = `Are you sure you want to delete "<strong>${escapeHTML(name||'Untitled')}</strong>"? This may also delete related variants.`;
+                deleteTargetId = id;
+                deleteTargetType = type;
+                document.getElementById('deleteConfirmTitle').textContent = `Delete ${type.charAt(0).toUpperCase() + type.slice(1)}?`;
+                document.getElementById('deleteConfirmText').innerHTML = `Are you sure you want to delete "<strong>${escapeHTML(name || 'Untitled')}</strong>"? This will also delete related variants and cannot be undone.`;
                 document.getElementById('deleteConfirm').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
-            function closeDeleteConfirm() { deleteTargetId = null; deleteTargetType = null; document.getElementById('deleteConfirm').classList.remove('show'); document.body.style.overflow = ''; }
+
+            function closeDeleteConfirm() {
+                deleteTargetId = null;
+                deleteTargetType = null;
+                document.getElementById('deleteConfirm').classList.remove('show');
+                document.body.style.overflow = '';
+            }
 
             async function confirmDelete() {
                 if (!deleteTargetId || !deleteTargetType) return;
                 const token = getAdminToken();
-                let endpoint = deleteTargetType === 'color' ? `/api/admin/product-colors/${deleteTargetId}` : deleteTargetType === 'size' ? `/api/admin/color-sizes/${deleteTargetId}` : `/api/admin/product-variants/${deleteTargetId}`;
+                if (!token) return;
+
+                let endpoint;
+                switch (deleteTargetType) {
+                    case 'color': endpoint = `${API_BASE_URL}/api/admin/product-colors/${deleteTargetId}`; break;
+                    case 'size': endpoint = `${API_BASE_URL}/api/admin/color-sizes/${deleteTargetId}`; break;
+                    case 'variant': endpoint = `${API_BASE_URL}/api/admin/product-variants/${deleteTargetId}`; break;
+                    default: return;
+                }
+
                 try {
-                    const res = await fetch(`${API_BASE_URL}${endpoint}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(endpoint, {
+                        method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
+                    });
                     const data = await res.json();
-                    if (res.ok && data.success) { showToast('Deleted successfully', 'success'); closeDeleteConfirm(); refreshAllTabs(); }
-                    else throw new Error(data.error || 'Failed');
+                    if (res.ok && data.success) {
+                        showToast('Deleted successfully', 'success');
+                        closeDeleteConfirm();
+                        await refreshAll();
+                    } else throw new Error(data.error || 'Failed');
                 } catch(e) { showToast(e.message, 'error'); closeDeleteConfirm(); }
             }
 
-            // ==================== HELPERS ====================
-            function escapeHTML(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+            // ==================== INIT ====================
+            document.addEventListener('DOMContentLoaded', () => {
+                if (!checkAdminAuth()) return;
+
+                // Init sidebar & topbar
+                if (window.JAYENWARE?.Components) {
+                    JAYENWARE.Components.initAll({ sidebarSelector: '#sidebar', topBarSelector: '#topBar' });
+                    JAYENWARE.Components.onLogout(() => {
+                        localStorage.removeItem('jayenware_admin_session');
+                        sessionStorage.removeItem('jayenware_admin_session');
+                        window.location.href = '/';
+                    });
+                }
+
+                // Tab switching
+                document.querySelectorAll('.tab-main-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const tab = this.dataset.tab;
+                        document.querySelectorAll('.tab-main-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        document.getElementById(`tab-${tab}`).classList.add('active');
+                        activeTab = tab;
+                        
+                        if (!activeProductId) return;
+                        if (tab === 'colors') loadColors();
+                        else if (tab === 'sizes') loadSizes();
+                        else if (tab === 'variants') { loadVariants(); loadVariantStats(); }
+                        else if (tab === 'matrix') loadMatrix();
+                    });
+                });
+
+                // Modal close on overlay click
+                ['colorModal','sizeModal','variantModal'].forEach(id => {
+                    document.getElementById(id).addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            if (id === 'colorModal') closeColorModal();
+                            else if (id === 'sizeModal') closeSizeModal();
+                            else closeVariantModal();
+                        }
+                    });
+                });
+
+                document.getElementById('deleteConfirm').addEventListener('click', function(e) {
+                    if (e.target === this) closeDeleteConfirm();
+                });
+
+                // ESC key
+                document.addEventListener('keydown', e => {
+                    if (e.key === 'Escape') {
+                        closeColorModal(); closeSizeModal(); closeVariantModal(); closeDeleteConfirm();
+                    }
+                });
+
+                // Color code preview
+                document.getElementById('colorCode').addEventListener('input', function() {
+                    updateColorPreview(this.value.trim());
+                });
+
+                // Size color filter change
+                document.getElementById('sizeColorFilter').addEventListener('change', function() {
+                    loadSizes();
+                });
+
+                // Load products dropdown
+                loadProductsDropdown();
+            });
 
             // Global exposure
-            window.onProductSelect = onProductSelect;
-            window.filterProductList = filterProductList;
+            window.onProductChange = onProductChange;
+            window.refreshAll = refreshAll;
             window.openColorModal = openColorModal;
             window.closeColorModal = closeColorModal;
             window.saveColor = saveColor;
-            window.syncColorPicker = syncColorPicker;
             window.openSizeModal = openSizeModal;
             window.closeSizeModal = closeSizeModal;
             window.saveSize = saveSize;
             window.openVariantModal = openVariantModal;
-            window.openVariantModalForEdit = openVariantModalForEdit;
             window.closeVariantModal = closeVariantModal;
             window.saveVariant = saveVariant;
-            window.toggleVariant = toggleVariant;
-            window.quickStockUpdate = quickStockUpdate;
-            window.openBulkVariantModalForColor = openBulkVariantModalForColor;
-            window.closeBulkVariantModal = closeBulkVariantModal;
-            window.saveBulkVariants = saveBulkVariants;
             window.generateAllVariants = generateAllVariants;
-            window.refreshMatrix = refreshMatrix;
-            window.quickCreateVariant = quickCreateVariant;
+            window.updateVariantStock = updateVariantStock;
+            window.toggleVariantStatus = toggleVariantStatus;
+            window.onVariantColorChange = onVariantColorChange;
+            window.switchToSizesTab = switchToSizesTab;
+            window.openVariantModalForMatrix = openVariantModalForMatrix;
             window.openDeleteConfirm = openDeleteConfirm;
             window.closeDeleteConfirm = closeDeleteConfirm;
             window.confirmDelete = confirmDelete;
             window.loadColors = loadColors;
-            window.loadMatrix = loadMatrix;
+            window.loadSizes = loadSizes;
             window.loadVariants = loadVariants;
-            window.loadStats = loadStats;
-
-            document.addEventListener('DOMContentLoaded', () => {
-                if (!checkAdminAuth()) return;
-
-                // Close modals on overlay click
-                ['colorModal','sizeModal','variantModal','bulkVariantModal'].forEach(id => {
-                    document.getElementById(id).addEventListener('click', function(e) { 
-                        if (e.target === this) { 
-                            if(id==='colorModal') closeColorModal(); 
-                            else if(id==='sizeModal') closeSizeModal();
-                            else if(id==='variantModal') closeVariantModal(); 
-                            else closeBulkVariantModal(); 
-                        } 
-                    });
-                });
-                document.getElementById('deleteConfirm').addEventListener('click', function(e) { if (e.target === this) closeDeleteConfirm(); });
-                document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeColorModal(); closeSizeModal(); closeVariantModal(); closeBulkVariantModal(); closeDeleteConfirm(); } });
-
-                // Tab switching
-                document.querySelectorAll('.tab-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        activeTab = this.dataset.tab;
-                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                        document.getElementById(`tab-${activeTab}`).classList.add('active');
-                        refreshAllTabs();
-                    });
-                });
-
-                if (window.JAYENWARE?.Components) {
-                    JAYENWARE.Components.initAll({ sidebarSelector: '#sidebar', topBarSelector: '#topBar' });
-                    JAYENWARE.Components.onLogout(() => { localStorage.removeItem('jayenware_admin_session'); sessionStorage.removeItem('jayenware_admin_session'); window.location.href = '/'; });
-                }
-
-                loadAllProducts();
-            });
+            window.loadMatrix = loadMatrix;
+            window.loadVariantStats = loadVariantStats;
         })();
     </script>
 </body>
