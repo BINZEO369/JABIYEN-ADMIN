@@ -139,49 +139,6 @@
             font-weight: 400;
         }
 
-        /* Tab Navigation */
-        .tab-navigation {
-            display: flex;
-            gap: 4px;
-            background: #f5f5f7;
-            padding: 4px;
-            border-radius: 50px;
-            margin-top: 8px;
-        }
-
-        .tab-btn {
-            padding: 10px 24px;
-            border-radius: 50px;
-            border: none;
-            background: transparent;
-            color: var(--accent);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            white-space: nowrap;
-        }
-
-        .tab-btn.active {
-            background: #fff;
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .tab-btn:hover:not(.active) {
-            color: var(--primary);
-            background: rgba(255,255,255,0.5);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
             gap: 8px; padding: 10px 24px; border-radius: 50px;
@@ -291,13 +248,15 @@
         .action-btn.edit:hover { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
         .action-btn.delete:hover { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
         .action-btn.toggle:hover { background: #f0fdf4; border-color: #bbf7d0; color: #059669; }
+        .action-btn.view:hover { background: #fefce8; border-color: #fde68a; color: #ca8a04; }
 
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.25s ease; }
         .modal-overlay.show { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .modal { background: #fff; border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25); animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
-        .modal.wide { max-width: 800px; }
+        .modal.wide { max-width: 900px; }
+        .modal.xl { max-width: 1100px; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
         .modal-header { padding: 20px 24px; border-bottom: 1px solid #e5e5ea; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; z-index: 10; }
@@ -335,6 +294,41 @@
         .collapsible-content { display: none; }
         .collapsible-content.open { display: block; }
 
+        .tab-mini-nav {
+            display: flex; gap: 4px; background: #f5f5f7; padding: 4px;
+            border-radius: 12px; margin-bottom: 20px;
+        }
+        .tab-mini-btn {
+            flex: 1; padding: 10px 16px; border-radius: 10px; border: none;
+            background: transparent; color: var(--accent); font-size: 13px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif; white-space: nowrap;
+        }
+        .tab-mini-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+        .tab-mini-btn:hover:not(.active) { color: var(--primary); }
+
+        .media-card {
+            background: #fafafa; border: 1px solid #e5e5ea; border-radius: 12px;
+            padding: 14px; display: flex; align-items: center; gap: 14px;
+            margin-bottom: 10px; transition: all 0.2s ease;
+        }
+        .media-card:hover { border-color: #d1d1d6; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .media-card .media-thumb {
+            width: 80px; height: 56px; border-radius: 8px; background: #e5e5ea;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; flex-shrink: 0;
+        }
+        .media-card .media-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .media-card .media-info { flex: 1; min-width: 0; }
+        .media-card .media-info h5 {
+            font-size: 13px; font-weight: 600; color: var(--primary);
+            margin: 0 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .media-card .media-info p {
+            font-size: 11px; color: var(--accent); margin: 0;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
         .toast-container { position: fixed; top: 20px; right: 20px; left: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; pointer-events: none; align-items: center; }
         @media (min-width: 640px) { .toast-container { left: auto; align-items: flex-end; } }
         .toast { padding: 14px 20px; border-radius: 14px; font-size: 13px; font-weight: 600; color: #fff; animation: slideInDown 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); max-width: 380px; width: 100%; display: flex; align-items: center; gap: 12px; pointer-events: auto; }
@@ -367,6 +361,12 @@
         .pagination button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
         .pagination span { font-size: 13px; color: var(--accent); font-weight: 500; }
 
+        .count-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 2px 10px; background: #f0f0f5; border-radius: 12px;
+            font-size: 11px; font-weight: 600; color: var(--accent);
+        }
+
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
@@ -375,8 +375,6 @@
         @media (max-width: 639px) {
             .content-area { padding: 16px 12px; }
             .page-header-bar { padding: 40px 16px 24px; }
-            .tab-navigation { flex-wrap: wrap; justify-content: center; }
-            .tab-btn { font-size: 12px; padding: 8px 16px; }
             .filter-bar { flex-direction: column; align-items: stretch; }
             .filter-bar .form-select, .filter-bar .form-input { width: 100%; min-width: auto; }
             .modal-overlay { align-items: flex-end; padding: 0; }
@@ -385,6 +383,7 @@
             .modal-footer .btn { width: 100%; }
             .actions-cell { flex-wrap: wrap; }
             .flag-badges { max-width: 120px; }
+            .tab-mini-btn { font-size: 11px; padding: 8px 10px; }
         }
     </style>
 </head>
@@ -399,200 +398,89 @@
 
             <div class="page-header-bar">
                 <h1 class="page-header-title">Product Management</h1>
-                <p class="page-header-subtitle">Manage products, videos and promotional banners</p>
-
-                <div class="tab-navigation" id="tabNavigation">
-                    <button class="tab-btn active" data-tab="products">
-                        <i class="fa-solid fa-box"></i> Products
-                    </button>
-                    <button class="tab-btn" data-tab="videos">
-                        <i class="fa-solid fa-video"></i> Product Videos
-                    </button>
-                    <button class="tab-btn" data-tab="banners">
-                        <i class="fa-solid fa-image"></i> Product Banners
-                    </button>
-                </div>
+                <p class="page-header-subtitle">Manage products, videos and promotional banners — all in one place</p>
             </div>
 
             <div class="content-area">
-                <!-- Products Tab -->
-                <div class="tab-content active" id="tab-products">
-                    <div class="section-header">
-                        <div>
-                            <h2 class="section-title">All Products</h2>
-                            <p class="section-subtitle">Manage your product catalog with advanced filters</p>
-                        </div>
-                        <div style="display:flex;gap:12px;align-items:center;">
-                            <div style="display:flex;align-items:center;background:#f5f5f7;padding:6px 14px;border-radius:30px;">
-                                <span style="font-size:13px;font-weight:600;color:var(--accent);">Total:</span>
-                                <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:var(--primary);margin-left:6px;" id="productTotalCount">0</span>
-                            </div>
-                            <button class="btn btn-primary btn-sm" onclick="openProductModal()">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Add Product</span>
-                            </button>
-                        </div>
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">All Products</h2>
+                        <p class="section-subtitle">Manage your product catalog with videos & banners</p>
                     </div>
-
-                    <!-- Filter Bar -->
-                    <div class="filter-bar">
-                        <input type="text" class="form-input" id="productSearch" placeholder="Search by title, SKU, barcode..." oninput="debounceLoadProducts()">
-                        <select class="form-select" id="productCategoryFilter" onchange="loadProducts()">
-                            <option value="">All Categories</option>
-                        </select>
-                        <select class="form-select" id="productGenderFilter" onchange="loadProducts()">
-                            <option value="">All Gender</option>
-                            <option value="Men">Men</option>
-                            <option value="Women">Women</option>
-                            <option value="Unisex">Unisex</option>
-                            <option value="Kids">Kids</option>
-                            <option value="Babies">Babies</option>
-                        </select>
-                        <select class="form-select" id="productFlagFilter" onchange="loadProducts()">
-                            <option value="">All Flags</option>
-                            <option value="is_featured">Featured</option>
-                            <option value="is_new_arrival">New Arrival</option>
-                            <option value="is_on_sale">On Sale</option>
-                            <option value="is_best">Best Seller</option>
-                            <option value="is_hot">Hot</option>
-                            <option value="is_limited_edition">Limited Edition</option>
-                            <option value="is_out_of_stock">Out of Stock</option>
-                        </select>
-                    </div>
-
-                    <div class="table-container">
-                        <div class="table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Image</th>
-                                        <th>Title / SKU</th>
-                                        <th>Category</th>
-                                        <th>Price</th>
-                                        <th>Flags</th>
-                                        <th>Status</th>
-                                        <th style="text-align:right;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="productTableBody"></tbody>
-                            </table>
+                    <div style="display:flex;gap:12px;align-items:center;">
+                        <div style="display:flex;align-items:center;background:#f5f5f7;padding:6px 14px;border-radius:30px;">
+                            <span style="font-size:13px;font-weight:600;color:var(--accent);">Total:</span>
+                            <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:var(--primary);margin-left:6px;" id="productTotalCount">0</span>
                         </div>
-                        <div class="pagination" id="productPagination"></div>
-                        <div class="empty-state" id="productEmptyState">
-                            <div class="empty-state-icon">
-                                <i class="fa-solid fa-box-open"></i>
-                            </div>
-                            <h3>No Products Yet</h3>
-                            <p>Create your first product to start selling.</p>
-                            <button class="btn btn-primary" onclick="openProductModal()">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Add First Product</span>
-                            </button>
-                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="openProductModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add Product</span>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Videos Tab -->
-                <div class="tab-content" id="tab-videos">
-                    <div class="section-header">
-                        <div>
-                            <h2 class="section-title">Product Videos</h2>
-                            <p class="section-subtitle">Manage video content by Product ID</p>
-                        </div>
-                        <div style="display:flex;gap:12px;align-items:center;">
-                            <select class="form-select" id="videoProductFilter" style="width:auto;min-width:200px;" onchange="loadProductVideos()">
-                                <option value="">All Products</option>
-                            </select>
-                            <button class="btn btn-primary btn-sm" onclick="openVideoModal()">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Add Video</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="table-container">
-                        <div class="table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Video</th>
-                                        <th>Title</th>
-                                        <th>Product ID</th>
-                                        <th>Order</th>
-                                        <th>Status</th>
-                                        <th style="text-align:right;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="videoTableBody"></tbody>
-                            </table>
-                        </div>
-                        <div class="empty-state" id="videoEmptyState">
-                            <div class="empty-state-icon">
-                                <i class="fa-solid fa-video"></i>
-                            </div>
-                            <h3>No Product Videos Yet</h3>
-                            <p>Add videos to showcase your products.</p>
-                            <button class="btn btn-primary" onclick="openVideoModal()">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Add First Video</span>
-                            </button>
-                        </div>
-                    </div>
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <input type="text" class="form-input" id="productSearch" placeholder="Search by title, SKU, barcode..." oninput="debounceLoadProducts()">
+                    <select class="form-select" id="productCategoryFilter" onchange="loadProducts()">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select class="form-select" id="productGenderFilter" onchange="loadProducts()">
+                        <option value="">All Gender</option>
+                        <option value="Men">Men</option>
+                        <option value="Women">Women</option>
+                        <option value="Unisex">Unisex</option>
+                        <option value="Kids">Kids</option>
+                        <option value="Babies">Babies</option>
+                    </select>
+                    <select class="form-select" id="productFlagFilter" onchange="loadProducts()">
+                        <option value="">All Flags</option>
+                        <option value="is_featured">Featured</option>
+                        <option value="is_new_arrival">New Arrival</option>
+                        <option value="is_on_sale">On Sale</option>
+                        <option value="is_best">Best Seller</option>
+                        <option value="is_hot">Hot</option>
+                        <option value="is_limited_edition">Limited Edition</option>
+                        <option value="is_out_of_stock">Out of Stock</option>
+                    </select>
                 </div>
 
-                <!-- Banners Tab -->
-                <div class="tab-content" id="tab-banners">
-                    <div class="section-header">
-                        <div>
-                            <h2 class="section-title">Product Banners</h2>
-                            <p class="section-subtitle">Manage promotional banners by Product ID</p>
-                        </div>
-                        <div style="display:flex;gap:12px;align-items:center;">
-                            <select class="form-select" id="bannerProductFilter" style="width:auto;min-width:200px;" onchange="loadProductBanners()">
-                                <option value="">All Products</option>
-                            </select>
-                            <button class="btn btn-primary btn-sm" onclick="openBannerModal()">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Add Banner</span>
-                            </button>
-                        </div>
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Image</th>
+                                    <th>Title / SKU</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Media</th>
+                                    <th>Status</th>
+                                    <th style="text-align:right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody"></tbody>
+                        </table>
                     </div>
-
-                    <div class="table-container">
-                        <div class="table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Banner</th>
-                                        <th>Title</th>
-                                        <th>Product ID</th>
-                                        <th>Order</th>
-                                        <th>Status</th>
-                                        <th style="text-align:right;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="bannerTableBody"></tbody>
-                            </table>
+                    <div class="pagination" id="productPagination"></div>
+                    <div class="empty-state" id="productEmptyState">
+                        <div class="empty-state-icon">
+                            <i class="fa-solid fa-box-open"></i>
                         </div>
-                        <div class="empty-state" id="bannerEmptyState">
-                            <div class="empty-state-icon">
-                                <i class="fa-solid fa-image"></i>
-                            </div>
-                            <h3>No Product Banners Yet</h3>
-                            <p>Create banners to promote your products.</p>
-                            <button class="btn btn-primary" onclick="openBannerModal()">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Add First Banner</span>
-                            </button>
-                        </div>
+                        <h3>No Products Yet</h3>
+                        <p>Create your first product to start selling.</p>
+                        <button class="btn btn-primary" onclick="openProductModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add First Product</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Product Modal -->
+    <!-- Product Modal (Create/Edit) -->
     <div class="modal-overlay" id="productModal">
         <div class="modal wide">
             <div class="modal-header">
@@ -699,81 +587,92 @@
                         <textarea class="form-textarea" id="productDescription" placeholder="Detailed product description" rows="3"></textarea>
                     </div>
 
-                    <!-- Product Flags -->
                     <div class="collapsible-header" id="productFlagsHeader" onclick="toggleProductFlags()">
-                        <h4>
-                            <i class="fa-solid fa-flag"></i>
-                            Product Flags & Status
-                        </h4>
+                        <h4><i class="fa-solid fa-flag"></i>Product Flags & Status</h4>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                     <div class="collapsible-content" id="productFlagsContent">
                         <div class="form-row form-row-4">
-                            <div class="form-check">
-                                <input type="checkbox" id="productIsFeatured">
-                                <label for="productIsFeatured">Featured</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="productIsNewArrival">
-                                <label for="productIsNewArrival">New Arrival</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="productIsOnSale">
-                                <label for="productIsOnSale">On Sale</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="productIsBest">
-                                <label for="productIsBest">Best Seller</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="productIsHot">
-                                <label for="productIsHot">Hot</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="productIsLimitedEdition">
-                                <label for="productIsLimitedEdition">Limited Edition</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="productIsOutOfStock">
-                                <label for="productIsOutOfStock">Out of Stock</label>
-                            </div>
+                            <div class="form-check"><input type="checkbox" id="productIsFeatured"><label for="productIsFeatured">Featured</label></div>
+                            <div class="form-check"><input type="checkbox" id="productIsNewArrival"><label for="productIsNewArrival">New Arrival</label></div>
+                            <div class="form-check"><input type="checkbox" id="productIsOnSale"><label for="productIsOnSale">On Sale</label></div>
+                            <div class="form-check"><input type="checkbox" id="productIsBest"><label for="productIsBest">Best Seller</label></div>
+                            <div class="form-check"><input type="checkbox" id="productIsHot"><label for="productIsHot">Hot</label></div>
+                            <div class="form-check"><input type="checkbox" id="productIsLimitedEdition"><label for="productIsLimitedEdition">Limited Edition</label></div>
+                            <div class="form-check"><input type="checkbox" id="productIsOutOfStock"><label for="productIsOutOfStock">Out of Stock</label></div>
                         </div>
                     </div>
 
-                    <!-- SEO Metadata -->
                     <div class="collapsible-header" id="productSeoHeader" onclick="toggleProductSeo()">
-                        <h4>
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            SEO Metadata
-                        </h4>
+                        <h4><i class="fa-solid fa-magnifying-glass"></i>SEO Metadata</h4>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                     <div class="collapsible-content" id="productSeoContent">
-                        <div class="form-group">
-                            <label class="form-label">SEO Title</label>
-                            <input type="text" class="form-input" id="productSeoTitle" placeholder="SEO title" maxlength="200">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Google SEO</label>
-                            <input type="text" class="form-input" id="productGoogleSeo" placeholder="Google SEO field" maxlength="300">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">SEO Description</label>
-                            <textarea class="form-textarea" id="productSeoDescription" placeholder="SEO description" rows="2" maxlength="300"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">SEO Keywords</label>
-                            <input type="text" class="form-input" id="productSeoKeywords" placeholder="keyword1, keyword2, keyword3" maxlength="500">
-                        </div>
+                        <div class="form-group"><label class="form-label">SEO Title</label><input type="text" class="form-input" id="productSeoTitle" placeholder="SEO title" maxlength="200"></div>
+                        <div class="form-group"><label class="form-label">Google SEO</label><input type="text" class="form-input" id="productGoogleSeo" placeholder="Google SEO field" maxlength="300"></div>
+                        <div class="form-group"><label class="form-label">SEO Description</label><textarea class="form-textarea" id="productSeoDescription" placeholder="SEO description" rows="2" maxlength="300"></textarea></div>
+                        <div class="form-group"><label class="form-label">SEO Keywords</label><input type="text" class="form-input" id="productSeoKeywords" placeholder="keyword1, keyword2, keyword3" maxlength="500"></div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeProductModal()">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="saveProduct()" id="productSaveBtn">
-                    <i class="fa-solid fa-check"></i>
-                    <span>Save Product</span>
+                    <i class="fa-solid fa-check"></i><span>Save Product</span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal (Videos + Banners) -->
+    <div class="modal-overlay" id="productDetailModal">
+        <div class="modal xl">
+            <div class="modal-header">
+                <h3 class="modal-title" id="productDetailTitle">Product Details</h3>
+                <button class="modal-close" onclick="closeProductDetailModal()" aria-label="Close">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-mini-nav" id="productDetailTabs">
+                    <button class="tab-mini-btn active" data-subtab="videos">
+                        <i class="fa-solid fa-video"></i> Videos <span class="count-badge" id="videoCountBadge">0</span>
+                    </button>
+                    <button class="tab-mini-btn" data-subtab="banners">
+                        <i class="fa-solid fa-image"></i> Banners <span class="count-badge" id="bannerCountBadge">0</span>
+                    </button>
+                </div>
+                <div>
+                    <div class="subtab-content active" id="subtab-videos">
+                        <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+                            <button class="btn btn-primary btn-sm" onclick="openVideoModalForProduct()">
+                                <i class="fa-solid fa-plus"></i><span>Add Video</span>
+                            </button>
+                        </div>
+                        <div id="productVideoList"></div>
+                        <div class="empty-state" id="videoEmptyStateInline">
+                            <div class="empty-state-icon"><i class="fa-solid fa-video"></i></div>
+                            <h3>No Videos</h3>
+                            <p>Add videos to showcase this product.</p>
+                        </div>
+                    </div>
+                    <div class="subtab-content" id="subtab-banners">
+                        <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+                            <button class="btn btn-primary btn-sm" onclick="openBannerModalForProduct()">
+                                <i class="fa-solid fa-plus"></i><span>Add Banner</span>
+                            </button>
+                        </div>
+                        <div id="productBannerList"></div>
+                        <div class="empty-state" id="bannerEmptyStateInline">
+                            <div class="empty-state-icon"><i class="fa-solid fa-image"></i></div>
+                            <h3>No Banners</h3>
+                            <p>Create banners to promote this product.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeProductDetailModal()">Close</button>
             </div>
         </div>
     </div>
@@ -790,28 +689,25 @@
             <div class="modal-body">
                 <form id="videoForm" onsubmit="return false;">
                     <input type="hidden" id="videoId" value="">
+                    <input type="hidden" id="videoProductIdHidden" value="">
                     
                     <div class="form-group">
                         <label class="form-label">Product ID *</label>
                         <input type="number" class="form-input" id="videoProductId" placeholder="Enter Product ID" required min="1">
                         <p class="form-hint">Enter the numeric Product ID (e.g., 1, 2, 3)</p>
                     </div>
-
                     <div class="form-group">
                         <label class="form-label">Video Title</label>
                         <input type="text" class="form-input" id="videoTitle" placeholder="Video title" maxlength="200">
                     </div>
-
                     <div class="form-group">
                         <label class="form-label">Subtitle</label>
                         <input type="text" class="form-input" id="videoSubtitle" placeholder="Video subtitle" maxlength="300">
                     </div>
-
                     <div class="form-group">
                         <label class="form-label">Video URL *</label>
                         <input type="url" class="form-input" id="videoUrl" placeholder="https://example.com/video.mp4" required>
                     </div>
-
                     <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Thumbnail URL</label>
@@ -822,7 +718,6 @@
                             <input type="text" class="form-input" id="videoClickLink" placeholder="/product/slug or URL">
                         </div>
                     </div>
-
                     <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Sort Order</label>
@@ -840,8 +735,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeVideoModal()">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="saveVideo()" id="videoSaveBtn">
-                    <i class="fa-solid fa-check"></i>
-                    <span>Save Video</span>
+                    <i class="fa-solid fa-check"></i><span>Save Video</span>
                 </button>
             </div>
         </div>
@@ -859,23 +753,21 @@
             <div class="modal-body">
                 <form id="bannerForm" onsubmit="return false;">
                     <input type="hidden" id="bannerId" value="">
+                    <input type="hidden" id="bannerProductIdHidden" value="">
                     
                     <div class="form-group">
                         <label class="form-label">Product ID *</label>
                         <input type="number" class="form-input" id="bannerProductId" placeholder="Enter Product ID" required min="1">
                         <p class="form-hint">Enter the numeric Product ID (e.g., 1, 2, 3)</p>
                     </div>
-
                     <div class="form-group">
                         <label class="form-label">Banner Title</label>
                         <input type="text" class="form-input" id="bannerTitle" placeholder="Banner title" maxlength="200">
                     </div>
-
                     <div class="form-group">
                         <label class="form-label">Subtitle</label>
                         <input type="text" class="form-input" id="bannerSubtitle" placeholder="Banner subtitle" maxlength="300">
                     </div>
-
                     <div class="form-group">
                         <label class="form-label">Banner Image URL *</label>
                         <input type="url" class="form-input" id="bannerImageUrl" placeholder="https://example.com/banner.jpg" required>
@@ -883,7 +775,6 @@
                             <i class="fa-solid fa-image"></i>
                         </div>
                     </div>
-
                     <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Click Link</label>
@@ -894,7 +785,6 @@
                             <input type="number" class="form-input" id="bannerSortOrder" placeholder="0" value="0" min="0" max="999">
                         </div>
                     </div>
-
                     <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
                         <div class="form-check">
                             <input type="checkbox" id="bannerIsActive" checked>
@@ -906,8 +796,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeBannerModal()">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="saveBanner()" id="bannerSaveBtn">
-                    <i class="fa-solid fa-check"></i>
-                    <span>Save Banner</span>
+                    <i class="fa-solid fa-check"></i><span>Save Banner</span>
                 </button>
             </div>
         </div>
@@ -916,22 +805,18 @@
     <!-- Delete Confirmation Modal -->
     <div class="confirm-overlay" id="deleteConfirm">
         <div class="confirm-dialog">
-            <div class="confirm-icon">
-                <i class="fa-solid fa-trash-can"></i>
-            </div>
+            <div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
             <h3 class="confirm-title" id="deleteConfirmTitle">Delete Item?</h3>
             <p class="confirm-text" id="deleteConfirmText">Are you sure you want to delete this item? This action cannot be undone.</p>
             <div class="confirm-actions">
                 <button class="btn btn-outline" onclick="closeDeleteConfirm()">Cancel</button>
                 <button class="btn btn-danger" onclick="confirmDelete()">
-                    <i class="fa-solid fa-trash-can"></i>
-                    <span>Delete</span>
+                    <i class="fa-solid fa-trash-can"></i><span>Delete</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="/components.js"></script>
@@ -940,22 +825,19 @@
         (function() {
             const API_BASE_URL = window.location.origin;
             
-            // State
-            let activeTab = 'products';
             let deleteTargetId = null;
             let deleteTargetType = null;
             let productFlagsOpen = false;
             let productSeoOpen = false;
             let currentPage = 1;
-            let totalPages = 1;
             let debounceTimer = null;
+            let activeProductId = null;
+            let activeSubtab = 'videos';
 
-            // Endpoints
             const productsEndpoint = '/api/admin/products';
             const videosEndpoint = '/api/admin/product-videos';
             const bannersEndpoint = '/api/admin/product-banners';
 
-            // ✅ Auth
             function getAdminToken() {
                 const stored = localStorage.getItem('jayenware_admin_session');
                 if (stored) { try { const p = JSON.parse(stored); if (p?.access_token) return p.access_token; } catch(e) {} }
@@ -976,18 +858,6 @@
                 toast.innerHTML = `<i class="fa-solid fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i> <span>${escapeHTML(message)}</span>`;
                 container.appendChild(toast);
                 setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateY(-20px)'; toast.style.transition='all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
-            }
-
-            // Tab Switching
-            function switchTab(tabName) {
-                activeTab = tabName;
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.querySelector(`[data-tab="${tabName}"]`)?.classList.add('active');
-                document.getElementById(`tab-${tabName}`)?.classList.add('active');
-                if (tabName === 'products') loadProducts();
-                else if (tabName === 'videos') loadProductVideos();
-                else if (tabName === 'banners') loadProductBanners();
             }
 
             // ==================== PRODUCTS ====================
@@ -1019,7 +889,6 @@
                     if (data.success) {
                         renderProductsTable(data.products || []);
                         document.getElementById('productTotalCount').textContent = data.pagination?.total || 0;
-                        totalPages = data.pagination?.totalPages || 1;
                         renderPagination(data.pagination);
                     }
                 } catch(e) {
@@ -1070,10 +939,16 @@
                             <span style="font-weight:700;">৳${p.price || 0}</span>
                             ${p.old_price ? `<span style="font-size:11px;color:var(--accent);text-decoration:line-through;margin-left:6px;">৳${p.old_price}</span>` : ''}
                         </td>
-                        <td><div class="flag-badges">${flags.join('') || '<span style="color:#d1d1d6;">-</span>'}</div></td>
+                        <td>
+                            <div style="display:flex;gap:6px;align-items:center;">
+                                <span class="count-badge" style="cursor:pointer;" onclick="openProductDetailModal(${p.id}, 'videos')" title="View Videos"><i class="fa-solid fa-video"></i> ${p.video_count || 0}</span>
+                                <span class="count-badge" style="cursor:pointer;" onclick="openProductDetailModal(${p.id}, 'banners')" title="View Banners"><i class="fa-solid fa-image"></i> ${p.banner_count || 0}</span>
+                            </div>
+                        </td>
                         <td><span class="status-badge ${p.is_out_of_stock ? 'warning' : 'active'}"><span class="status-dot ${p.is_out_of_stock ? 'inactive' : 'active'}"></span>${p.is_out_of_stock ? 'Out of Stock' : 'Available'}</span></td>
                         <td style="text-align:right;">
                             <div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn view" onclick="openProductDetailModal(${p.id})" title="Media"><i class="fa-solid fa-photo-film"></i></button>
                                 <button class="action-btn edit" onclick="openProductModal(${p.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
                                 <button class="action-btn toggle" onclick="duplicateProduct(${p.id})" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
                                 <button class="action-btn delete" onclick="openDeleteConfirm(${p.id}, 'product', '${escapeHTML(p.title).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
@@ -1083,6 +958,7 @@
                 }).join('');
             }
 
+            // ==================== PRODUCT MODAL ====================
             async function openProductModal(productId = null) {
                 await loadCategoryDropdowns();
                 document.getElementById('productModalTitle').textContent = productId ? 'Edit Product' : 'Add New Product';
@@ -1131,10 +1007,7 @@
                     document.getElementById('productSubcategoryId').innerHTML = '<option value="">Select Subcategory</option>';
                     resetProductImagePreview();
                 }
-                document.getElementById('productFlagsHeader').classList.remove('open');
-                document.getElementById('productFlagsContent').classList.remove('open');
-                document.getElementById('productSeoHeader').classList.remove('open');
-                document.getElementById('productSeoContent').classList.remove('open');
+                resetCollapsibles();
                 document.getElementById('productModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
@@ -1206,43 +1079,146 @@
                 } catch(e) { showToast(e.message, 'error'); }
             }
 
-            // ==================== VIDEOS ====================
-            async function loadProductVideos() {
+            // ==================== PRODUCT DETAIL MODAL (Videos + Banners) ====================
+            async function openProductDetailModal(productId, subtab = 'videos') {
+                activeProductId = productId;
+                document.getElementById('productDetailTitle').textContent = `Product #${productId} — Media`;
+                document.getElementById('productDetailModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+                
+                document.querySelectorAll('.tab-mini-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector(`[data-subtab="${subtab}"]`)?.classList.add('active');
+                
+                document.querySelectorAll('.subtab-content').forEach(c => c.style.display = 'none');
+                document.getElementById(`subtab-${subtab}`).style.display = 'block';
+                activeSubtab = subtab;
+                
+                if (subtab === 'videos') await loadVideosForProduct(productId);
+                else await loadBannersForProduct(productId);
+            }
+
+            function closeProductDetailModal() {
+                document.getElementById('productDetailModal').classList.remove('show');
+                document.body.style.overflow = '';
+                activeProductId = null;
+            }
+
+            async function loadVideosForProduct(productId) {
                 const token = getAdminToken();
                 if (!token) return;
-                const tbody = document.getElementById('videoTableBody');
-                const emptyState = document.getElementById('videoEmptyState');
-                tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
-                emptyState.style.display = 'none';
-
-                let url = `${API_BASE_URL}${videosEndpoint}`;
-                const productFilter = document.getElementById('videoProductFilter')?.value;
-                if (productFilter) {
-                    url = `${API_BASE_URL}/api/admin/products/${productFilter}/videos`;
-                }
+                const listEl = document.getElementById('productVideoList');
+                const emptyEl = document.getElementById('videoEmptyStateInline');
+                listEl.innerHTML = '<div class="skeleton" style="width:100%;height:60px;"></div>';
+                emptyEl.style.display = 'none';
 
                 try {
-                    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${productId}/videos`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
                     if (data.success) {
                         const videos = data.videos || [];
-                        if (!videos.length) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
-                        tbody.innerHTML = videos.map(v => `<tr>
-                            <td><div class="img-thumb" style="background:#1d1d1f;"><i class="fa-solid fa-play" style="color:#fff;font-size:12px;"></i></div></td>
-                            <td><span style="font-weight:600;">${escapeHTML(v.title || 'Untitled')}</span></td>
-                            <td><span class="product-id-badge">#${v.product_id}</span></td>
-                            <td>${v.sort_order || 0}</td>
-                            <td><span class="status-badge ${v.is_active ? 'active' : 'inactive'}"><span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>${v.is_active ? 'Active' : 'Inactive'}</span></td>
-                            <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
-                                <button class="action-btn edit" onclick="openVideoModal(${v.id})"><i class="fa-solid fa-pen"></i></button>
-                                <button class="action-btn toggle" onclick="toggleVideoStatus(${v.id})"><i class="fa-solid fa-${v.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'video', 'Video #${v.id}')"><i class="fa-solid fa-trash-can"></i></button>
-                            </div></td>
-                        </tr>`).join('');
+                        document.getElementById('videoCountBadge').textContent = videos.length;
+                        if (!videos.length) { listEl.innerHTML = ''; emptyEl.style.display = 'block'; return; }
+                        listEl.innerHTML = videos.map(v => `
+                            <div class="media-card">
+                                <div class="media-thumb" style="background:#1d1d1f;">
+                                    ${v.thumbnail_url ? `<img src="${escapeHTML(v.thumbnail_url)}" onerror="this.innerHTML='<i class=\\'fa-solid fa-play\\' style=\\'color:#fff;font-size:14px;\\'></i>'">` : '<i class="fa-solid fa-play" style="color:#fff;font-size:14px;"></i>'}
+                                </div>
+                                <div class="media-info">
+                                    <h5>${escapeHTML(v.title || 'Untitled Video')}</h5>
+                                    <p>${escapeHTML(v.subtitle || 'No subtitle')} | Order: ${v.sort_order || 0}</p>
+                                    <span class="status-badge ${v.is_active ? 'active' : 'inactive'}"><span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>${v.is_active ? 'Active' : 'Inactive'}</span>
+                                </div>
+                                <div class="actions-cell">
+                                    <button class="action-btn edit" onclick="openVideoModalForEdit(${v.id})"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="action-btn toggle" onclick="toggleVideoStatusFromDetail(${v.id}, ${productId})"><i class="fa-solid fa-${v.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                    <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'video', 'Video #${v.id}')"><i class="fa-solid fa-trash-can"></i></button>
+                                </div>
+                            </div>
+                        `).join('');
                     }
-                } catch(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadProductVideos()" style="color:#007aff;text-decoration:underline;cursor:pointer;">Retry</button></td></tr>'; }
+                } catch(e) { listEl.innerHTML = '<p style="color:#dc2626;text-align:center;">Failed to load videos. <button onclick="loadVideosForProduct(' + productId + ')" style="color:#007aff;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></p>'; }
             }
 
+            async function loadBannersForProduct(productId) {
+                const token = getAdminToken();
+                if (!token) return;
+                const listEl = document.getElementById('productBannerList');
+                const emptyEl = document.getElementById('bannerEmptyStateInline');
+                listEl.innerHTML = '<div class="skeleton" style="width:100%;height:60px;"></div>';
+                emptyEl.style.display = 'none';
+
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${productId}/banners`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success) {
+                        const banners = data.banners || [];
+                        document.getElementById('bannerCountBadge').textContent = banners.length;
+                        if (!banners.length) { listEl.innerHTML = ''; emptyEl.style.display = 'block'; return; }
+                        listEl.innerHTML = banners.map(b => `
+                            <div class="media-card">
+                                <div class="media-thumb">
+                                    ${b.banner_url ? `<img src="${escapeHTML(b.banner_url)}" onerror="this.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}
+                                </div>
+                                <div class="media-info">
+                                    <h5>${escapeHTML(b.title || 'Untitled Banner')}</h5>
+                                    <p>${escapeHTML(b.subtitle || 'No subtitle')} | Order: ${b.sort_order || 0}</p>
+                                    <span class="status-badge ${b.is_active ? 'active' : 'inactive'}"><span class="status-dot ${b.is_active ? 'active' : 'inactive'}"></span>${b.is_active ? 'Active' : 'Inactive'}</span>
+                                </div>
+                                <div class="actions-cell">
+                                    <button class="action-btn edit" onclick="openBannerModalForEdit(${b.id})"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="action-btn toggle" onclick="toggleBannerStatusFromDetail(${b.id}, ${productId})"><i class="fa-solid fa-${b.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                    <button class="action-btn delete" onclick="openDeleteConfirm(${b.id}, 'banner', 'Banner #${b.id}')"><i class="fa-solid fa-trash-can"></i></button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } catch(e) { listEl.innerHTML = '<p style="color:#dc2626;text-align:center;">Failed to load banners. <button onclick="loadBannersForProduct(' + productId + ')" style="color:#007aff;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></p>'; }
+            }
+
+            function openVideoModalForProduct() {
+                if (!activeProductId) return;
+                document.getElementById('videoProductId').value = activeProductId;
+                document.getElementById('videoId').value = '';
+                document.getElementById('videoForm').reset();
+                document.getElementById('videoSortOrder').value = 0;
+                document.getElementById('videoProductId').value = activeProductId;
+                document.getElementById('videoIsActive').checked = true;
+                document.getElementById('videoModalTitle').textContent = `Add Video for Product #${activeProductId}`;
+                document.getElementById('videoModal').classList.add('show');
+            }
+
+            function openBannerModalForProduct() {
+                if (!activeProductId) return;
+                document.getElementById('bannerProductId').value = activeProductId;
+                document.getElementById('bannerId').value = '';
+                document.getElementById('bannerForm').reset();
+                resetBannerPreview();
+                document.getElementById('bannerSortOrder').value = 0;
+                document.getElementById('bannerProductId').value = activeProductId;
+                document.getElementById('bannerIsActive').checked = true;
+                document.getElementById('bannerModalTitle').textContent = `Add Banner for Product #${activeProductId}`;
+                document.getElementById('bannerModal').classList.add('show');
+            }
+
+            async function openVideoModalForEdit(videoId) {
+                await openVideoModal(videoId);
+            }
+
+            async function openBannerModalForEdit(bannerId) {
+                await openBannerModal(bannerId);
+            }
+
+            async function toggleVideoStatusFromDetail(videoId, productId) {
+                await toggleVideoStatus(videoId);
+                await loadVideosForProduct(productId);
+            }
+
+            async function toggleBannerStatusFromDetail(bannerId, productId) {
+                await toggleBannerStatus(bannerId);
+                await loadBannersForProduct(productId);
+            }
+
+            // ==================== VIDEO MODAL ====================
             async function openVideoModal(videoId = null) {
                 document.getElementById('videoModalTitle').textContent = videoId ? 'Edit Video' : 'Add Product Video';
                 document.getElementById('videoId').value = videoId || '';
@@ -1261,7 +1237,11 @@
                         document.getElementById('videoSortOrder').value = v.sort_order || 0;
                         document.getElementById('videoIsActive').checked = v.is_active;
                     }
-                } else { document.getElementById('videoForm').reset(); document.getElementById('videoSortOrder').value = 0; }
+                } else { 
+                    document.getElementById('videoForm').reset(); 
+                    document.getElementById('videoSortOrder').value = 0;
+                    if (activeProductId) document.getElementById('videoProductId').value = activeProductId;
+                }
                 document.getElementById('videoModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
@@ -1288,8 +1268,12 @@
                 try {
                     const res = await fetch(url, { method: id ? 'PUT' : 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(videoData) });
                     const data = await res.json();
-                    if (res.ok && data.success) { showToast('Video saved', 'success'); closeVideoModal(); loadProductVideos(); }
-                    else throw new Error(data.error);
+                    if (res.ok && data.success) { 
+                        showToast('Video saved', 'success'); 
+                        closeVideoModal(); 
+                        if (activeProductId) await loadVideosForProduct(activeProductId);
+                        else loadProducts(currentPage);
+                    } else throw new Error(data.error);
                 } catch(e) { showToast(e.message, 'error'); }
                 finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Video</span>'; }
             }
@@ -1299,45 +1283,12 @@
                 try {
                     const res = await fetch(`${API_BASE_URL}${videosEndpoint}/${id}/toggle`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
-                    if (res.ok) { showToast('Status updated', 'success'); loadProductVideos(); }
+                    if (res.ok) { showToast('Status updated', 'success'); return true; }
                 } catch(e) { showToast(e.message, 'error'); }
+                return false;
             }
 
-            // ==================== BANNERS ====================
-            async function loadProductBanners() {
-                const token = getAdminToken();
-                if (!token) return;
-                const tbody = document.getElementById('bannerTableBody');
-                const emptyState = document.getElementById('bannerEmptyState');
-                tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
-                emptyState.style.display = 'none';
-
-                let url = `${API_BASE_URL}${bannersEndpoint}`;
-                const productFilter = document.getElementById('bannerProductFilter')?.value;
-                if (productFilter) url = `${API_BASE_URL}/api/admin/products/${productFilter}/banners`;
-
-                try {
-                    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
-                    const data = await res.json();
-                    if (data.success) {
-                        const banners = data.banners || [];
-                        if (!banners.length) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
-                        tbody.innerHTML = banners.map(b => `<tr>
-                            <td><div class="img-thumb">${b.banner_url ? `<img src="${escapeHTML(b.banner_url)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}</div></td>
-                            <td><span style="font-weight:600;">${escapeHTML(b.title || 'Untitled')}</span></td>
-                            <td><span class="product-id-badge">#${b.product_id}</span></td>
-                            <td>${b.sort_order || 0}</td>
-                            <td><span class="status-badge ${b.is_active ? 'active' : 'inactive'}"><span class="status-dot ${b.is_active ? 'active' : 'inactive'}"></span>${b.is_active ? 'Active' : 'Inactive'}</span></td>
-                            <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
-                                <button class="action-btn edit" onclick="openBannerModal(${b.id})"><i class="fa-solid fa-pen"></i></button>
-                                <button class="action-btn toggle" onclick="toggleBannerStatus(${b.id})"><i class="fa-solid fa-${b.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                <button class="action-btn delete" onclick="openDeleteConfirm(${b.id}, 'banner', 'Banner #${b.id}')"><i class="fa-solid fa-trash-can"></i></button>
-                            </div></td>
-                        </tr>`).join('');
-                    }
-                } catch(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadProductBanners()" style="color:#007aff;text-decoration:underline;cursor:pointer;">Retry</button></td></tr>'; }
-            }
-
+            // ==================== BANNER MODAL ====================
             async function openBannerModal(bannerId = null) {
                 document.getElementById('bannerModalTitle').textContent = bannerId ? 'Edit Banner' : 'Add Product Banner';
                 document.getElementById('bannerId').value = bannerId || '';
@@ -1356,7 +1307,12 @@
                         document.getElementById('bannerIsActive').checked = b.is_active;
                         updateBannerPreview(b.banner_url);
                     }
-                } else { document.getElementById('bannerForm').reset(); resetBannerPreview(); document.getElementById('bannerSortOrder').value = 0; }
+                } else { 
+                    document.getElementById('bannerForm').reset(); 
+                    resetBannerPreview(); 
+                    document.getElementById('bannerSortOrder').value = 0;
+                    if (activeProductId) document.getElementById('bannerProductId').value = activeProductId;
+                }
                 document.getElementById('bannerModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
@@ -1382,8 +1338,12 @@
                 try {
                     const res = await fetch(url, { method: id ? 'PUT' : 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(bannerData) });
                     const data = await res.json();
-                    if (res.ok && data.success) { showToast('Banner saved', 'success'); closeBannerModal(); loadProductBanners(); }
-                    else throw new Error(data.error);
+                    if (res.ok && data.success) { 
+                        showToast('Banner saved', 'success'); 
+                        closeBannerModal(); 
+                        if (activeProductId) await loadBannersForProduct(activeProductId);
+                        else loadProducts(currentPage);
+                    } else throw new Error(data.error);
                 } catch(e) { showToast(e.message, 'error'); }
                 finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Banner</span>'; }
             }
@@ -1393,8 +1353,9 @@
                 try {
                     const res = await fetch(`${API_BASE_URL}${bannersEndpoint}/${id}/toggle`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
-                    if (res.ok) { showToast('Status updated', 'success'); loadProductBanners(); }
+                    if (res.ok) { showToast('Status updated', 'success'); return true; }
                 } catch(e) { showToast(e.message, 'error'); }
+                return false;
             }
 
             // ==================== HELPERS ====================
@@ -1424,19 +1385,6 @@
                 } catch(e) {}
             }
 
-            async function loadProductsDropdown(selectId) {
-                const token = getAdminToken();
-                try {
-                    const res = await fetch(`${API_BASE_URL}${productsEndpoint}/all`, { headers: { 'Authorization': `Bearer ${token}` } });
-                    const data = await res.json();
-                    if (data.success) {
-                        const options = '<option value="">All Products</option>' + data.products.map(p => `<option value="${p.id}">#${p.id} - ${escapeHTML(p.title)}</option>`).join('');
-                        if (selectId === 'videoProductFilter') document.getElementById('videoProductFilter').innerHTML = options;
-                        else if (selectId === 'bannerProductFilter') document.getElementById('bannerProductFilter').innerHTML = options;
-                    }
-                } catch(e) {}
-            }
-
             function updateProductImagePreview(url) {
                 const container = document.getElementById('productImagePreview');
                 if (url) container.innerHTML = `<img src="${escapeHTML(url)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">`;
@@ -1461,6 +1409,13 @@
                 document.getElementById('productSeoHeader').classList.toggle('open', productSeoOpen);
                 document.getElementById('productSeoContent').classList.toggle('open', productSeoOpen);
             }
+            function resetCollapsibles() {
+                productFlagsOpen = false; productSeoOpen = false;
+                document.getElementById('productFlagsHeader').classList.remove('open');
+                document.getElementById('productFlagsContent').classList.remove('open');
+                document.getElementById('productSeoHeader').classList.remove('open');
+                document.getElementById('productSeoContent').classList.remove('open');
+            }
 
             // Delete
             function openDeleteConfirm(id, type, name) {
@@ -1483,8 +1438,11 @@
                         showToast('Deleted successfully', 'success');
                         closeDeleteConfirm();
                         if (deleteTargetType === 'product') loadProducts(currentPage);
-                        else if (deleteTargetType === 'video') loadProductVideos();
-                        else loadProductBanners();
+                        else if (activeProductId) {
+                            if (deleteTargetType === 'video') await loadVideosForProduct(activeProductId);
+                            else await loadBannersForProduct(activeProductId);
+                            loadProducts(currentPage);
+                        }
                     } else throw new Error(data.error || 'Failed');
                 } catch(e) { showToast(e.message, 'error'); closeDeleteConfirm(); }
             }
@@ -1492,44 +1450,70 @@
             function escapeHTML(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
 
             // Global exposure
-            window.switchTab = switchTab;
             window.loadProducts = loadProducts;
             window.debounceLoadProducts = debounceLoadProducts;
             window.openProductModal = openProductModal;
             window.closeProductModal = closeProductModal;
             window.saveProduct = saveProduct;
             window.duplicateProduct = duplicateProduct;
+            window.openProductDetailModal = openProductDetailModal;
+            window.closeProductDetailModal = closeProductDetailModal;
             window.openVideoModal = openVideoModal;
             window.closeVideoModal = closeVideoModal;
             window.saveVideo = saveVideo;
             window.toggleVideoStatus = toggleVideoStatus;
+            window.openVideoModalForEdit = openVideoModalForEdit;
+            window.toggleVideoStatusFromDetail = toggleVideoStatusFromDetail;
             window.openBannerModal = openBannerModal;
             window.closeBannerModal = closeBannerModal;
             window.saveBanner = saveBanner;
             window.toggleBannerStatus = toggleBannerStatus;
+            window.openBannerModalForEdit = openBannerModalForEdit;
+            window.toggleBannerStatusFromDetail = toggleBannerStatusFromDetail;
             window.openDeleteConfirm = openDeleteConfirm;
             window.closeDeleteConfirm = closeDeleteConfirm;
             window.confirmDelete = confirmDelete;
             window.toggleProductFlags = toggleProductFlags;
             window.toggleProductSeo = toggleProductSeo;
             window.loadSubcategoriesForProduct = loadSubcategoriesForProduct;
-            window.loadProductVideos = loadProductVideos;
-            window.loadProductBanners = loadProductBanners;
+            window.loadVideosForProduct = loadVideosForProduct;
+            window.loadBannersForProduct = loadBannersForProduct;
+            window.openVideoModalForProduct = openVideoModalForProduct;
+            window.openBannerModalForProduct = openBannerModalForProduct;
 
-            // Init
             document.addEventListener('DOMContentLoaded', () => {
                 if (!checkAdminAuth()) return;
                 
-                document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
-                
-                ['productModal','videoModal','bannerModal'].forEach(id => {
-                    document.getElementById(id).addEventListener('click', function(e) { if (e.target === this) { if(id==='productModal')closeProductModal(); else if(id==='videoModal')closeVideoModal(); else closeBannerModal(); } });
+                ['productModal','productDetailModal','videoModal','bannerModal'].forEach(id => {
+                    document.getElementById(id).addEventListener('click', function(e) { 
+                        if (e.target === this) { 
+                            if(id==='productModal') closeProductModal(); 
+                            else if(id==='productDetailModal') closeProductDetailModal();
+                            else if(id==='videoModal') closeVideoModal(); 
+                            else closeBannerModal(); 
+                        } 
+                    });
                 });
                 document.getElementById('deleteConfirm').addEventListener('click', function(e) { if (e.target === this) closeDeleteConfirm(); });
-                document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeProductModal(); closeVideoModal(); closeBannerModal(); closeDeleteConfirm(); } });
+                document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeProductModal(); closeProductDetailModal(); closeVideoModal(); closeBannerModal(); closeDeleteConfirm(); } });
 
                 document.getElementById('productImage').addEventListener('input', function() { updateProductImagePreview(this.value.trim()); });
                 document.getElementById('bannerImageUrl').addEventListener('input', function() { updateBannerPreview(this.value.trim()); });
+
+                document.querySelectorAll('.tab-mini-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const subtab = this.dataset.subtab;
+                        document.querySelectorAll('.tab-mini-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        document.querySelectorAll('.subtab-content').forEach(c => c.style.display = 'none');
+                        document.getElementById(`subtab-${subtab}`).style.display = 'block';
+                        activeSubtab = subtab;
+                        if (activeProductId) {
+                            if (subtab === 'videos') loadVideosForProduct(activeProductId);
+                            else loadBannersForProduct(activeProductId);
+                        }
+                    });
+                });
 
                 if (window.JAYENWARE?.Components) {
                     JAYENWARE.Components.initAll({ sidebarSelector: '#sidebar', topBarSelector: '#topBar' });
@@ -1537,8 +1521,6 @@
                 }
 
                 loadCategoryDropdowns();
-                loadProductsDropdown('videoProductFilter');
-                loadProductsDropdown('bannerProductFilter');
                 loadProducts();
             });
         })();
