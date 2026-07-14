@@ -3,1110 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Product Variants Management | JAYENWARE Admin</title>
-    <meta name="description" content="Manage product colors, sizes and variants for JAYENWARE">
+    <title>Product Variants | JAYENWARE Admin</title>
+    <meta name="description" content="Manage product colors, sizes and variants">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#1d1d1f">
     <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/logo.png">
-    <link rel="apple-touch-icon" href="/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        primary: '#1d1d1f',
-                        accent: '#86868b',
-                        soft: '#f5f5f7',
-                        blue: '#007aff'
-                    },
-                    fontFamily: {
-                        sans: ["'Inter', 'sans-serif'"],
-                        serif: ["'Manrope', 'sans-serif'"],
-                        mono: ["'Sora', 'sans-serif'"]
-                    }
+                    colors: { primary: '#1d1d1f', accent: '#86868b', soft: '#f5f5f7', blue: '#007aff' },
+                    fontFamily: { sans: ["'Inter', 'sans-serif'"], serif: ["'Manrope', 'sans-serif'"], mono: ["'Sora', 'sans-serif'"] }
                 }
             }
         }
     </script>
-
     <style>
-        :root {
-            --primary: #1d1d1f;
-            --accent: #86868b;
-            --soft: #f5f5f7;
-            --blue: #007aff;
-            --sidebar-width: 280px;
-        }
-
-        * {
-            -webkit-tap-highlight-color: transparent;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #ffffff;
-            color: #1d1d1f;
-            overflow-x: hidden;
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-
-        .admin-layout {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        .sidebar {
-            width: var(--sidebar-width);
-            background: #fafafa;
-            border-right: 1px solid #e5e5ea;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0; left: 0; bottom: 0;
-            z-index: 40;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .top-bar {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid #e5e5ea;
-            padding: 16px 28px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 30;
-            gap: 16px;
-        }
-
-        .main-content {
-            flex: 1;
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @media (min-width: 1025px) {
-            .main-content { margin-left: var(--sidebar-width); }
-        }
-
-        .page-header-bar {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e5ea;
-            padding: 40px 24px 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            text-align: center;
-        }
-
-        .page-header-title {
-            font-family: 'Manrope', sans-serif;
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -0.01em;
-            margin: 0 0 10px 0;
-        }
-        
-        .page-header-subtitle {
-            font-size: 14px;
-            color: var(--accent);
-            margin: 0 0 12px 0;
-            font-weight: 400;
-        }
-
-        .btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            gap: 8px; padding: 10px 24px; border-radius: 50px;
-            font-size: 14px; font-weight: 600; cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
-            border: none; font-family: 'Inter', sans-serif;
-            text-decoration: none; white-space: nowrap; min-height: 42px;
-        }
+        :root { --primary: #1d1d1f; --accent: #86868b; --soft: #f5f5f7; --blue: #007aff; --sidebar-width: 280px; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        body { background: #ffffff; color: #1d1d1f; overflow-x: hidden; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; margin: 0; padding: 0; }
+        .admin-layout { display: flex; min-height: 100vh; position: relative; }
+        .sidebar { width: var(--sidebar-width); background: #fafafa; border-right: 1px solid #e5e5ea; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 40; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
+        .top-bar { background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid #e5e5ea; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30; gap: 16px; }
+        .main-content { flex: 1; width: 100%; min-height: 100vh; display: flex; flex-direction: column; transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        @media (min-width: 1025px) { .main-content { margin-left: var(--sidebar-width); } }
+        .page-header-bar { background: #ffffff; border-bottom: 1px solid #e5e5ea; padding: 40px 24px 30px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+        .page-header-title { font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 800; color: var(--primary); letter-spacing: -0.01em; margin: 0; }
+        .page-header-subtitle { font-size: 14px; color: var(--accent); margin: 0; font-weight: 400; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 24px; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.25s ease; border: none; font-family: 'Inter', sans-serif; text-decoration: none; white-space: nowrap; min-height: 42px; }
         .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .btn-primary:hover, .btn-primary:active { background: #333; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+        .btn-primary:hover { background: #333; transform: translateY(-1px); }
         .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid #d1d1d6; }
-        .btn-outline:hover, .btn-outline:active { border-color: var(--primary); background: #f5f5f7; }
+        .btn-outline:hover { border-color: var(--primary); background: #f5f5f7; }
         .btn-danger { background: #dc2626; color: #fff; }
-        .btn-danger:hover, .btn-danger:active { background: #b91c1c; }
         .btn-success { background: #059669; color: #fff; }
-        .btn-success:hover, .btn-success:active { background: #047857; }
         .btn-sm { padding: 6px 14px; font-size: 12px; min-height: 32px; }
         .btn-xs { padding: 4px 10px; font-size: 11px; min-height: 26px; border-radius: 20px; }
+        .content-area { flex: 1; padding: 30px 24px; max-width: 1400px; width: 100%; margin: 0 auto; }
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+        .section-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0; }
+        .section-subtitle { font-size: 13px; color: var(--accent); margin: 4px 0 0; }
+        
+        /* Product ID Input Card */
+        .pid-card { background: #fafafa; border: 1.5px solid #e5e5ea; border-radius: 20px; padding: 20px 24px; margin-bottom: 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .pid-card .pid-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); white-space: nowrap; }
+        .pid-card input { flex: 1; min-width: 200px; padding: 12px 16px; border: 1.5px solid #e5e5ea; border-radius: 14px; font-size: 16px; font-family: 'Sora', monospace; background: #fff; color: var(--primary); outline: none; transition: all 0.2s ease; font-weight: 600; }
+        .pid-card input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(29,29,31,0.06); }
+        .pid-card input::placeholder { font-weight: 400; color: #c5c5ca; }
+        .pid-info { display: flex; align-items: center; gap: 12px; padding: 8px 16px; background: #fff; border-radius: 14px; border: 1px solid #e5e5ea; flex-shrink: 0; display: none; }
+        .pid-info img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; border: 1px solid #e5e5ea; }
+        .pid-info .pd h5 { font-size: 13px; font-weight: 700; color: var(--primary); margin: 0 0 2px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .pid-info .pd span { font-size: 11px; color: var(--accent); font-family: 'Sora', monospace; }
 
-        .content-area {
-            flex: 1; padding: 30px 24px; max-width: 1400px;
-            width: 100%; margin: 0 auto;
-        }
-
-        .section-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
-        }
-        .section-title {
-            font-family: 'Manrope', sans-serif; font-size: 18px;
-            font-weight: 700; color: var(--primary); margin: 0;
-        }
-        .section-subtitle {
-            font-size: 13px; color: var(--accent); margin: 4px 0 0;
-        }
-
-        /* Product Selector Card */
-        .product-selector-card {
-            background: #fafafa;
-            border: 1.5px solid #e5e5ea;
-            border-radius: 20px;
-            padding: 20px 24px;
-            margin-bottom: 28px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-        .product-selector-card .ps-label {
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--accent);
-            white-space: nowrap;
-        }
-        .product-selector-card select {
-            flex: 1;
-            min-width: 250px;
-            padding: 12px 16px;
-            border: 1.5px solid #e5e5ea;
-            border-radius: 14px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            background: #fff;
-            color: var(--primary);
-            outline: none;
-            transition: all 0.2s ease;
-            -webkit-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2386868b'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            cursor: pointer;
-        }
-        .product-selector-card select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(29,29,31,0.06);
-        }
-        .selected-product-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 16px;
-            background: #fff;
-            border-radius: 14px;
-            border: 1px solid #e5e5ea;
-            flex-shrink: 0;
-        }
-        .selected-product-info img {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            object-fit: cover;
-            border: 1px solid #e5e5ea;
-        }
-        .selected-product-info .sp-details h5 {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 0 0 2px;
-            max-width: 200px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .selected-product-info .sp-details span {
-            font-size: 11px;
-            color: var(--accent);
-            font-family: 'Sora', monospace;
-        }
-
-        /* Tab Navigation */
-        .tab-main-nav {
-            display: flex;
-            gap: 4px;
-            background: #f5f5f7;
-            padding: 5px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .tab-main-btn {
-            flex: 1;
-            min-width: 120px;
-            padding: 12px 20px;
-            border-radius: 13px;
-            border: none;
-            background: transparent;
-            color: var(--accent);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .tab-main-btn.active {
-            background: #fff;
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
+        .tab-main-nav { display: flex; gap: 4px; background: #f5f5f7; padding: 5px; border-radius: 16px; margin-bottom: 24px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .tab-main-btn { flex: 1; min-width: 100px; padding: 12px 16px; border-radius: 13px; border: none; background: transparent; color: var(--accent); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .tab-main-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         .tab-main-btn:hover:not(.active) { color: var(--primary); }
-        .tab-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 22px;
-            height: 22px;
-            padding: 0 6px;
-            border-radius: 11px;
-            font-size: 10px;
-            font-weight: 700;
-            background: #e5e5ea;
-            color: var(--accent);
-        }
-        .tab-main-btn.active .tab-badge {
-            background: var(--primary);
-            color: #fff;
-        }
-
+        .tab-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; font-size: 10px; font-weight: 700; background: #e5e5ea; color: var(--accent); }
+        .tab-main-btn.active .tab-badge { background: var(--primary); color: #fff; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Table */
-        .table-container {
-            background: #ffffff; border: 1px solid #e5e5ea;
-            border-radius: 16px; overflow: hidden; margin-bottom: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-        }
+        .table-container { background: #ffffff; border: 1px solid #e5e5ea; border-radius: 16px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        table { width: 100%; border-collapse: collapse; min-width: 700px; }
         thead { background: #f8f8fa; border-bottom: 1px solid #e5e5ea; }
-        th { padding: 14px 16px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); white-space: nowrap; }
-        td { padding: 14px 16px; font-size: 13px; color: var(--primary); border-bottom: 1px solid #f0f0f5; vertical-align: middle; }
+        th { padding: 12px 14px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); white-space: nowrap; }
+        td { padding: 12px 14px; font-size: 13px; color: var(--primary); border-bottom: 1px solid #f0f0f5; vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #fafafa; }
-
-        .color-swatch {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid #e5e5ea;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 10px;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-        .size-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 36px;
-            height: 28px;
-            padding: 0 10px;
-            background: #f5f5f7;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--primary);
-            font-family: 'Sora', monospace;
-        }
-
-        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+        .color-swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #e5e5ea; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 9px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .size-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; height: 26px; padding: 0 8px; background: #f5f5f7; border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--primary); font-family: 'Sora', monospace; }
+        .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; white-space: nowrap; }
         .status-badge.active { background: #e6fff0; color: #059669; }
         .status-badge.inactive { background: #fef2f2; color: #dc2626; }
-        .status-badge.warning { background: #fefce8; color: #ca8a04; }
-        .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .status-dot { width: 5px; height: 5px; border-radius: 50%; }
         .status-dot.active { background: #059669; }
         .status-dot.inactive { background: #dc2626; }
-
-        .actions-cell { display: flex; gap: 8px; align-items: center; }
-        .action-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid #e5e5ea; background: #fff; color: #555; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 13px; flex-shrink: 0; }
-        .action-btn:hover, .action-btn:active { background: #f5f5f7; border-color: #d1d1d6; color: var(--primary); transform: scale(1.05); }
+        .actions-cell { display: flex; gap: 6px; align-items: center; }
+        .action-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e5e5ea; background: #fff; color: #555; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 12px; flex-shrink: 0; }
+        .action-btn:hover { background: #f5f5f7; border-color: #d1d1d6; color: var(--primary); }
         .action-btn.edit:hover { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
         .action-btn.delete:hover { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
 
-        /* Variant Matrix */
-        .variant-matrix {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border: 1px solid #e5e5ea;
-            border-radius: 16px;
-            background: #fff;
-        }
-        .matrix-table {
-            min-width: 600px;
-            border-collapse: collapse;
-        }
-        .matrix-table th, .matrix-table td {
-            padding: 10px 14px;
-            text-align: center;
-            border: 1px solid #f0f0f5;
-            font-size: 12px;
-            vertical-align: middle;
-        }
-        .matrix-table th {
-            background: #f8f8fa;
-            font-weight: 700;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--accent);
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-        .matrix-color-header {
-            background: #fafafa !important;
-            font-weight: 700;
-            color: var(--primary);
-            position: sticky;
-            left: 0;
-            z-index: 1;
-            min-width: 120px;
-            text-align: left !important;
-        }
-        .matrix-cell {
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 90px;
-            position: relative;
-        }
+        .variant-matrix { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid #e5e5ea; border-radius: 16px; background: #fff; }
+        .matrix-table { min-width: 500px; border-collapse: collapse; width: 100%; }
+        .matrix-table th, .matrix-table td { padding: 8px 10px; text-align: center; border: 1px solid #f0f0f5; font-size: 11px; vertical-align: middle; }
+        .matrix-table th { background: #f8f8fa; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); position: sticky; top: 0; z-index: 2; }
+        .matrix-color-header { background: #fafafa !important; font-weight: 700; color: var(--primary); position: sticky; left: 0; z-index: 1; min-width: 110px; text-align: left !important; font-size: 12px !important; }
+        .matrix-cell { cursor: pointer; transition: all 0.2s ease; min-width: 80px; }
         .matrix-cell:hover { background: #f0fdf4; }
-        .matrix-cell.has-variant {
-            background: #e6fff0;
-            border-color: #bbf7d0;
-        }
-        .matrix-cell.no-variant {
-            background: #fef2f2;
-            color: #dc2626;
-            font-style: italic;
-            font-size: 11px;
-        }
-        .matrix-cell .variant-price {
-            font-weight: 700;
-            font-size: 13px;
-            color: var(--primary);
-        }
-        .matrix-cell .variant-stock {
-            font-size: 10px;
-            color: var(--accent);
-            display: block;
-        }
-        .matrix-cell .variant-sku {
-            font-size: 9px;
-            font-family: 'Sora', monospace;
-            color: var(--accent);
-            display: block;
-        }
+        .matrix-cell.has-variant { background: #e6fff0; border-color: #bbf7d0; }
+        .matrix-cell.no-variant { background: #fef2f2; color: #dc2626; font-style: italic; font-size: 10px; }
+        .matrix-cell .variant-price { font-weight: 700; font-size: 12px; color: var(--primary); }
+        .matrix-cell .variant-stock { font-size: 9px; color: var(--accent); display: block; }
 
-        /* Modal */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.25s ease; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.25s ease; }
         .modal-overlay.show { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .modal { background: #fff; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25); animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
-        .modal.wide { max-width: 800px; }
+        .modal { background: #fff; border-radius: 20px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
+        .modal.wide { max-width: 700px; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        
-        .modal-header { padding: 20px 24px; border-bottom: 1px solid #e5e5ea; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; z-index: 10; }
-        .modal-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0; }
-        .modal-close { width: 36px; height: 36px; border-radius: 50%; background: #f5f5f7; border: none; color: #666; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 16px; }
+        .modal-header { padding: 18px 20px; border-bottom: 1px solid #e5e5ea; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; z-index: 10; }
+        .modal-title { font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700; color: var(--primary); margin: 0; }
+        .modal-close { width: 32px; height: 32px; border-radius: 50%; background: #f5f5f7; border: none; color: #666; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
         .modal-close:hover { background: #e8e8ed; color: var(--primary); }
-        .modal-body { padding: 24px; flex: 1; }
-        .modal-footer { padding: 16px 24px; display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #e5e5ea; position: sticky; bottom: 0; background: #fff; z-index: 10; }
-
-        .form-group { margin-bottom: 18px; }
-        .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .form-input, .form-textarea, .form-select { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5ea; border-radius: 12px; font-size: 16px; font-family: 'Inter', sans-serif; color: var(--primary); background: #fafafa; transition: all 0.2s ease; outline: none; -webkit-appearance: none; }
-        @media (min-width: 640px) { .form-input, .form-textarea, .form-select { font-size: 14px; } }
-        .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08); }
-        .form-hint { font-size: 12px; color: var(--accent); margin-top: 6px; }
-        .form-row { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        .modal-body { padding: 20px; flex: 1; }
+        .modal-footer { padding: 14px 20px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #e5e5ea; position: sticky; bottom: 0; background: #fff; z-index: 10; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-input, .form-select { width: 100%; padding: 10px 12px; border: 1.5px solid #e5e5ea; border-radius: 10px; font-size: 15px; font-family: 'Inter', sans-serif; color: var(--primary); background: #fafafa; transition: all 0.2s ease; outline: none; -webkit-appearance: none; }
+        @media (min-width: 640px) { .form-input, .form-select { font-size: 13px; } }
+        .form-input:focus, .form-select:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(29,29,31,0.08); }
+        .form-hint { font-size: 11px; color: var(--accent); margin-top: 4px; }
+        .form-row { display: grid; grid-template-columns: 1fr; gap: 12px; }
         @media (min-width: 640px) { .form-row-2 { grid-template-columns: 1fr 1fr; } .form-row-3 { grid-template-columns: 1fr 1fr 1fr; } }
-        
-        .form-check { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-top: 6px; }
-        .form-check input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; border-radius: 6px; }
-        .form-check label { font-size: 14px; font-weight: 500; color: var(--primary); cursor: pointer; }
+        .form-check { display: flex; align-items: center; gap: 8px; cursor: pointer; padding-top: 4px; }
+        .form-check input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+        .form-check label { font-size: 13px; font-weight: 500; color: var(--primary); cursor: pointer; }
 
-        .empty-state { text-align: center; padding: 60px 20px; display: none; }
-        .empty-state-icon { width: 72px; height: 72px; border-radius: 50%; background: #f5f5f7; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: #d1d1d6; }
-        .empty-state h3 { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0 0 8px; }
-        .empty-state p { font-size: 14px; color: var(--accent); margin: 0 0 24px; }
-
-        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: inline-block; }
+        .empty-state { text-align: center; padding: 50px 20px; display: none; }
+        .empty-state-icon { width: 60px; height: 60px; border-radius: 50%; background: #f5f5f7; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; color: #d1d1d6; }
+        .empty-state h3 { font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700; color: var(--primary); margin: 0 0 6px; }
+        .empty-state p { font-size: 13px; color: var(--accent); margin: 0 0 20px; }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: block; height: 40px; }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-        .count-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 2px 10px; background: #f0f0f5; border-radius: 12px;
-            font-size: 11px; font-weight: 600; color: var(--accent);
-        }
+        .stock-input-group { display: flex; align-items: center; gap: 4px; }
+        .stock-input-group input { width: 55px; padding: 4px 6px; border: 1.5px solid #e5e5ea; border-radius: 6px; font-size: 12px; text-align: center; font-family: 'Sora', monospace; font-weight: 600; background: #fff; }
+        .stock-input-group button { width: 24px; height: 24px; border-radius: 6px; border: 1px solid #e5e5ea; background: #fff; cursor: pointer; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; color: var(--primary); }
+        .stock-input-group button:hover { background: #f5f5f7; }
 
-        .variant-info-card {
-            background: #fafafa;
-            border: 1px solid #e5e5ea;
-            border-radius: 14px;
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-            transition: all 0.2s ease;
-        }
-        .variant-info-card:hover {
-            border-color: #d1d1d6;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-
-        .toast-container { position: fixed; top: 20px; right: 20px; left: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; pointer-events: none; align-items: center; }
-        @media (min-width: 640px) { .toast-container { left: auto; align-items: flex-end; } }
-        .toast { padding: 14px 20px; border-radius: 14px; font-size: 13px; font-weight: 600; color: #fff; animation: slideInDown 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); max-width: 380px; width: 100%; display: flex; align-items: center; gap: 12px; pointer-events: auto; }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 200; display: flex; flex-direction: column; gap: 8px; pointer-events: none; align-items: flex-end; }
+        @media (max-width: 639px) { .toast-container { left: 20px; align-items: center; } }
+        .toast { padding: 12px 18px; border-radius: 12px; font-size: 12px; font-weight: 600; color: #fff; animation: slideInDown 0.3s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.2); max-width: 350px; width: 100%; display: flex; align-items: center; gap: 10px; pointer-events: auto; }
         .toast.success { background: #059669; }
         .toast.error { background: #dc2626; }
         .toast.info { background: #2563eb; }
         @keyframes slideInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 150; align-items: center; justify-content: center; padding: 20px; }
+        .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 150; align-items: center; justify-content: center; padding: 20px; }
         .confirm-overlay.show { display: flex; }
-        .confirm-dialog { background: #fff; border-radius: 20px; padding: 28px; max-width: 400px; width: 100%; text-align: center; animation: slideUp 0.25s ease; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-        .confirm-icon { width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; color: #dc2626; }
-        .confirm-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--primary); margin: 0 0 8px; }
-        .confirm-text { font-size: 14px; color: var(--accent); margin: 0 0 24px; line-height: 1.5; }
-        .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+        .confirm-dialog { background: #fff; border-radius: 20px; padding: 24px; max-width: 380px; width: 100%; text-align: center; animation: slideUp 0.25s ease; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .confirm-icon { width: 48px; height: 48px; border-radius: 50%; background: #fef2f2; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 20px; color: #dc2626; }
+        .confirm-title { font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700; color: var(--primary); margin: 0 0 6px; }
+        .confirm-text { font-size: 13px; color: var(--accent); margin: 0 0 20px; line-height: 1.5; }
+        .confirm-actions { display: flex; gap: 10px; justify-content: center; }
         .confirm-actions .btn { flex: 1; }
 
-        /* Stock input */
-        .stock-input-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .stock-input-group input {
-            width: 70px;
-            padding: 6px 8px;
-            border: 1.5px solid #e5e5ea;
-            border-radius: 8px;
-            font-size: 13px;
-            text-align: center;
-            font-family: 'Sora', monospace;
-            font-weight: 600;
-        }
-        .stock-input-group button {
-            width: 28px;
-            height: 28px;
-            border-radius: 7px;
-            border: 1px solid #e5e5ea;
-            background: #fff;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            color: var(--primary);
-        }
-        .stock-input-group button:hover {
-            background: #f5f5f7;
-            border-color: #d1d1d6;
-        }
+        .stat-card { flex: 1; min-width: 100px; background: #fafafa; border: 1px solid #e5e5ea; border-radius: 12px; padding: 14px; text-align: center; }
+        .stat-card .stat-value { font-size: 20px; font-weight: 800; font-family: 'Manrope', sans-serif; }
+        .stat-card .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-top: 2px; }
 
-        @media (max-width: 1024px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-        }
+        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } }
         @media (max-width: 639px) {
-            .content-area { padding: 16px 12px; }
-            .page-header-bar { padding: 40px 16px 24px; }
-            .product-selector-card { flex-direction: column; align-items: stretch; }
-            .product-selector-card select { min-width: auto; }
+            .content-area { padding: 16px 10px; }
+            .page-header-bar { padding: 32px 14px 20px; }
+            .pid-card { flex-direction: column; align-items: stretch; }
+            .pid-card input { min-width: auto; }
             .modal-overlay { align-items: flex-end; padding: 0; }
-            .modal { max-width: 100%; border-radius: 24px 24px 0 0; max-height: 85vh; margin: 0; }
-            .modal-footer { flex-direction: column-reverse; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+            .modal { max-width: 100%; border-radius: 20px 20px 0 0; max-height: 85vh; margin: 0; }
+            .modal-footer { flex-direction: column-reverse; padding-bottom: max(14px, env(safe-area-inset-bottom)); }
             .modal-footer .btn { width: 100%; }
-            .tab-main-btn { font-size: 11px; padding: 10px 12px; min-width: auto; }
+            .tab-main-btn { font-size: 11px; padding: 10px 8px; min-width: auto; }
         }
     </style>
 </head>
 <body class="antialiased">
     <div class="admin-layout">
-        
         <aside class="sidebar" id="sidebar"></aside>
-
         <main class="main-content" id="mainContent">
-            
             <header class="top-bar" id="topBar"></header>
-
             <div class="page-header-bar">
                 <h1 class="page-header-title">Product Variants</h1>
-                <p class="page-header-subtitle">Manage colors, sizes & variant combinations for each product</p>
+                <p class="page-header-subtitle">Manage colors, sizes & variant combinations</p>
             </div>
-
             <div class="content-area">
-                <!-- Product Selector -->
-                <div class="product-selector-card" id="productSelectorCard">
-                    <span class="ps-label">Select Product</span>
-                    <select id="productSelect" onchange="onProductChange()">
-                        <option value="">— Choose a product —</option>
-                    </select>
-                    <div class="selected-product-info" id="selectedProductInfo" style="display:none;">
-                        <img id="spImage" src="" alt="" onerror="this.style.display='none'">
-                        <div class="sp-details">
-                            <h5 id="spTitle">-</h5>
-                            <span id="spSku">-</span>
-                        </div>
+                <!-- Product ID Input -->
+                <div class="pid-card">
+                    <span class="pid-label">Product ID</span>
+                    <input type="number" id="productIdInput" placeholder="Enter Product ID (e.g., 1, 2, 3)" min="1" onchange="onProductIdChange()" onkeyup="if(event.key==='Enter')onProductIdChange()">
+                    <div class="pid-info" id="pidInfo">
+                        <img id="pidImage" src="" alt="" onerror="this.style.display='none'">
+                        <div class="pd"><h5 id="pidTitle">-</h5><span id="pidSku">-</span></div>
                     </div>
-                    <button class="btn btn-outline btn-sm" onclick="refreshAll()" title="Refresh Data">
-                        <i class="fa-solid fa-arrows-rotate"></i>
-                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="refreshAll()" title="Refresh"><i class="fa-solid fa-arrows-rotate"></i></button>
+                    <button class="btn btn-primary btn-sm" onclick="loadProductById()" id="pidLoadBtn"><i class="fa-solid fa-search"></i><span>Load</span></button>
                 </div>
 
-                <!-- Tab Navigation -->
-                <div class="tab-main-nav" id="tabNav">
-                    <button class="tab-main-btn active" data-tab="colors">
-                        <i class="fa-solid fa-palette"></i> Colors
-                        <span class="tab-badge" id="colorTabCount">0</span>
-                    </button>
-                    <button class="tab-main-btn" data-tab="sizes">
-                        <i class="fa-solid fa-ruler"></i> Sizes
-                        <span class="tab-badge" id="sizeTabCount">0</span>
-                    </button>
-                    <button class="tab-main-btn" data-tab="variants">
-                        <i class="fa-solid fa-diagram-project"></i> Variants
-                        <span class="tab-badge" id="variantTabCount">0</span>
-                    </button>
-                    <button class="tab-main-btn" data-tab="matrix">
-                        <i class="fa-solid fa-table-cells"></i> Matrix
-                        <span class="tab-badge" id="matrixTabCount">0</span>
-                    </button>
+                <!-- Tabs -->
+                <div class="tab-main-nav">
+                    <button class="tab-main-btn active" data-tab="colors"><i class="fa-solid fa-palette"></i> Colors <span class="tab-badge" id="colorTabCount">0</span></button>
+                    <button class="tab-main-btn" data-tab="sizes"><i class="fa-solid fa-ruler"></i> Sizes <span class="tab-badge" id="sizeTabCount">0</span></button>
+                    <button class="tab-main-btn" data-tab="variants"><i class="fa-solid fa-diagram-project"></i> Variants <span class="tab-badge" id="variantTabCount">0</span></button>
+                    <button class="tab-main-btn" data-tab="matrix"><i class="fa-solid fa-table-cells"></i> Matrix <span class="tab-badge" id="matrixTabCount">0</span></button>
                 </div>
 
-                <!-- ==================== COLORS TAB ==================== -->
+                <!-- COLORS TAB -->
                 <div class="tab-content active" id="tab-colors">
                     <div class="section-header">
-                        <div>
-                            <h2 class="section-title">Product Colors</h2>
-                            <p class="section-subtitle" id="colorSectionSubtitle">Select a product to manage colors</p>
-                        </div>
-                        <button class="btn btn-primary btn-sm" onclick="openColorModal()" id="addColorBtn" disabled>
-                            <i class="fa-solid fa-plus"></i><span>Add Color</span>
-                        </button>
+                        <div><h2 class="section-title">Colors</h2><p class="section-subtitle" id="colorSubtitle">Enter a Product ID to manage colors</p></div>
+                        <button class="btn btn-primary btn-sm" onclick="openColorModal()" id="addColorBtn" disabled><i class="fa-solid fa-plus"></i><span>Add Color</span></button>
                     </div>
-                    <div class="table-container">
-                        <div class="table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Swatch</th>
-                                        <th>Color Name</th>
-                                        <th>Color Code</th>
-                                        <th>Image</th>
-                                        <th>Total Stock</th>
-                                        <th>Sizes</th>
-                                        <th>Order</th>
-                                        <th style="text-align:right;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="colorsTableBody"></tbody>
-                            </table>
-                        </div>
-                        <div class="empty-state" id="colorsEmptyState">
-                            <div class="empty-state-icon"><i class="fa-solid fa-palette"></i></div>
-                            <h3>No Colors</h3>
-                            <p>Add colors to this product to start managing variants.</p>
-                        </div>
-                    </div>
+                    <div class="table-container"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Swatch</th><th>Name</th><th>Code</th><th>Image</th><th>Stock</th><th>Sizes</th><th>Order</th><th style="text-align:right;">Actions</th></tr></thead><tbody id="colorsTbody"></tbody></table></div><div class="empty-state" id="colorsEmpty"><div class="empty-state-icon"><i class="fa-solid fa-palette"></i></div><h3>No Colors</h3><p>Add colors to this product.</p></div></div>
                 </div>
 
-                <!-- ==================== SIZES TAB ==================== -->
+                <!-- SIZES TAB -->
                 <div class="tab-content" id="tab-sizes">
                     <div class="section-header">
-                        <div>
-                            <h2 class="section-title">Color Sizes</h2>
-                            <p class="section-subtitle" id="sizeSectionSubtitle">Select a color to manage its sizes</p>
-                        </div>
-                        <div style="display:flex;gap:10px;align-items:center;">
-                            <select class="form-select" id="sizeColorFilter" onchange="loadSizes()" style="min-width:200px;width:auto;">
-                                <option value="">— Select a Color —</option>
-                            </select>
-                            <button class="btn btn-primary btn-sm" onclick="openSizeModal()" id="addSizeBtn" disabled>
-                                <i class="fa-solid fa-plus"></i><span>Add Size</span>
-                            </button>
+                        <div><h2 class="section-title">Sizes</h2><p class="section-subtitle" id="sizeSubtitle">Select a color to manage its sizes</p></div>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <select class="form-select" id="sizeColorFilter" onchange="loadSizes()" style="min-width:180px;width:auto;"><option value="">— Select Color —</option></select>
+                            <button class="btn btn-primary btn-sm" onclick="openSizeModal()" id="addSizeBtn" disabled><i class="fa-solid fa-plus"></i><span>Add Size</span></button>
                         </div>
                     </div>
-                    <div class="table-container">
-                        <div class="table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Size Name</th>
-                                        <th>Color</th>
-                                        <th>Order</th>
-                                        <th>Created</th>
-                                        <th style="text-align:right;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="sizesTableBody"></tbody>
-                            </table>
-                        </div>
-                        <div class="empty-state" id="sizesEmptyState">
-                            <div class="empty-state-icon"><i class="fa-solid fa-ruler"></i></div>
-                            <h3>No Sizes</h3>
-                            <p>Select a color and add sizes to it.</p>
-                        </div>
-                    </div>
+                    <div class="table-container"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Size</th><th>Color</th><th>Order</th><th>Created</th><th style="text-align:right;">Actions</th></tr></thead><tbody id="sizesTbody"></tbody></table></div><div class="empty-state" id="sizesEmpty"><div class="empty-state-icon"><i class="fa-solid fa-ruler"></i></div><h3>No Sizes</h3><p>Select a color and add sizes.</p></div></div>
                 </div>
 
-                <!-- ==================== VARIANTS TAB ==================== -->
+                <!-- VARIANTS TAB -->
                 <div class="tab-content" id="tab-variants">
                     <div class="section-header">
-                        <div>
-                            <h2 class="section-title">Product Variants</h2>
-                            <p class="section-subtitle" id="variantSectionSubtitle">Color + Size combinations with price & stock</p>
-                        </div>
-                        <div style="display:flex;gap:10px;align-items:center;">
-                            <button class="btn btn-success btn-sm" onclick="generateAllVariants()" id="generateVariantsBtn" disabled title="Auto-generate all missing variants">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate All</span>
-                            </button>
-                            <button class="btn btn-primary btn-sm" onclick="openVariantModal()" id="addVariantBtn" disabled>
-                                <i class="fa-solid fa-plus"></i><span>Add Variant</span>
-                            </button>
+                        <div><h2 class="section-title">Variants</h2><p class="section-subtitle" id="variantSubtitle">Color + Size combinations</p></div>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <button class="btn btn-success btn-sm" onclick="generateAllVariants()" id="genVariantsBtn" disabled><i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate All</span></button>
+                            <button class="btn btn-primary btn-sm" onclick="openVariantModal()" id="addVariantBtn" disabled><i class="fa-solid fa-plus"></i><span>Add Variant</span></button>
                         </div>
                     </div>
-
-                    <!-- Variant Stats -->
-                    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;" id="variantStatsRow">
-                        <div style="flex:1;min-width:120px;background:#fafafa;border:1px solid #e5e5ea;border-radius:14px;padding:16px;text-align:center;">
-                            <div style="font-size:24px;font-weight:800;color:var(--primary);font-family:'Manrope',sans-serif;" id="statTotalVariants">0</div>
-                            <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;">Total</div>
-                        </div>
-                        <div style="flex:1;min-width:120px;background:#e6fff0;border:1px solid #bbf7d0;border-radius:14px;padding:16px;text-align:center;">
-                            <div style="font-size:24px;font-weight:800;color:#059669;font-family:'Manrope',sans-serif;" id="statActiveVariants">0</div>
-                            <div style="font-size:11px;color:#059669;text-transform:uppercase;letter-spacing:0.05em;">Active</div>
-                        </div>
-                        <div style="flex:1;min-width:120px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:16px;text-align:center;">
-                            <div style="font-size:24px;font-weight:800;color:#2563eb;font-family:'Manrope',sans-serif;" id="statTotalStock">0</div>
-                            <div style="font-size:11px;color:#2563eb;text-transform:uppercase;letter-spacing:0.05em;">Total Stock</div>
-                        </div>
-                        <div style="flex:1;min-width:120px;background:#fefce8;border:1px solid #fde68a;border-radius:14px;padding:16px;text-align:center;">
-                            <div style="font-size:24px;font-weight:800;color:#ca8a04;font-family:'Manrope',sans-serif;" id="statTotalValue">৳0</div>
-                            <div style="font-size:11px;color:#ca8a04;text-transform:uppercase;letter-spacing:0.05em;">Stock Value</div>
-                        </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+                        <div class="stat-card"><div class="stat-value" id="statTotal" style="color:var(--primary);">0</div><div class="stat-label">Total</div></div>
+                        <div class="stat-card" style="border-color:#bbf7d0;"><div class="stat-value" id="statActive" style="color:#059669;">0</div><div class="stat-label">Active</div></div>
+                        <div class="stat-card" style="border-color:#bfdbfe;"><div class="stat-value" id="statStock" style="color:#2563eb;">0</div><div class="stat-label">Total Stock</div></div>
+                        <div class="stat-card" style="border-color:#fde68a;"><div class="stat-value" id="statValue" style="color:#ca8a04;">৳0</div><div class="stat-label">Stock Value</div></div>
                     </div>
-
-                    <div class="table-container">
-                        <div class="table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>SKU</th>
-                                        <th>Color</th>
-                                        <th>Size</th>
-                                        <th>Price</th>
-                                        <th>Old Price</th>
-                                        <th>Stock</th>
-                                        <th>Status</th>
-                                        <th style="text-align:right;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="variantsTableBody"></tbody>
-                            </table>
-                        </div>
-                        <div class="empty-state" id="variantsEmptyState">
-                            <div class="empty-state-icon"><i class="fa-solid fa-diagram-project"></i></div>
-                            <h3>No Variants</h3>
-                            <p>Add colors and sizes first, then create variants or use "Generate All".</p>
-                            <button class="btn btn-success" onclick="generateAllVariants()" id="generateVariantsEmptyBtn" disabled>
-                                <i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate All Variants</span>
-                            </button>
-                        </div>
-                    </div>
+                    <div class="table-container"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>SKU</th><th>Color</th><th>Size</th><th>Price</th><th>Old Price</th><th>Stock</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead><tbody id="variantsTbody"></tbody></table></div><div class="empty-state" id="variantsEmpty"><div class="empty-state-icon"><i class="fa-solid fa-diagram-project"></i></div><h3>No Variants</h3><p>Add colors & sizes first, then use "Generate All".</p><button class="btn btn-success" onclick="generateAllVariants()" id="genEmptyBtn" disabled><i class="fa-solid fa-wand-magic-sparkles"></i><span>Generate All Variants</span></button></div></div>
                 </div>
 
-                <!-- ==================== MATRIX TAB ==================== -->
+                <!-- MATRIX TAB -->
                 <div class="tab-content" id="tab-matrix">
-                    <div class="section-header">
-                        <div>
-                            <h2 class="section-title">Variant Matrix</h2>
-                            <p class="section-subtitle" id="matrixSectionSubtitle">Color × Size grid view — click cells to manage</p>
-                        </div>
-                    </div>
-                    <div class="variant-matrix" id="variantMatrixContainer">
-                        <div class="empty-state" id="matrixEmptyState" style="display:block;">
-                            <div class="empty-state-icon"><i class="fa-solid fa-table-cells"></i></div>
-                            <h3>No Matrix Data</h3>
-                            <p>Select a product with colors and sizes to view the matrix.</p>
-                        </div>
-                        <div id="matrixTableWrapper" style="display:none;overflow-x:auto;"></div>
-                    </div>
+                    <div class="section-header"><div><h2 class="section-title">Variant Matrix</h2><p class="section-subtitle" id="matrixSubtitle">Color × Size grid</p></div></div>
+                    <div class="variant-matrix"><div class="empty-state" id="matrixEmpty" style="display:block;"><div class="empty-state-icon"><i class="fa-solid fa-table-cells"></i></div><h3>No Data</h3><p>Load a product with colors & sizes.</p></div><div id="matrixWrapper" style="display:none;overflow-x:auto;"></div></div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- ==================== COLOR MODAL ==================== -->
-    <div class="modal-overlay" id="colorModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title" id="colorModalTitle">Add Color</h3>
-                <button class="modal-close" onclick="closeColorModal()"><i class="fa-solid fa-times"></i></button>
-            </div>
-            <div class="modal-body">
-                <form id="colorForm" onsubmit="return false;">
-                    <input type="hidden" id="colorId" value="">
-                    <div class="form-group">
-                        <label class="form-label">Color Name *</label>
-                        <input type="text" class="form-input" id="colorName" placeholder="e.g., Red, Navy Blue" required maxlength="100">
-                    </div>
-                    <div class="form-row form-row-2">
-                        <div class="form-group">
-                            <label class="form-label">Color Code (Hex)</label>
-                            <input type="text" class="form-input" id="colorCode" placeholder="#FF0000" maxlength="20">
-                            <div id="colorCodePreview" style="width:40px;height:40px;border-radius:50%;border:2px solid #e5e5ea;margin-top:8px;background:#ccc;"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Color Image URL</label>
-                            <input type="url" class="form-input" id="colorImage" placeholder="https://...">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Sort Order</label>
-                        <input type="number" class="form-input" id="colorSortOrder" value="0" min="0" max="999">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeColorModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveColor()" id="colorSaveBtn">
-                    <i class="fa-solid fa-check"></i><span>Save Color</span>
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- COLOR MODAL -->
+    <div class="modal-overlay" id="colorModal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="colorModalTitle">Add Color</h3><button class="modal-close" onclick="closeColorModal()"><i class="fa-solid fa-times"></i></button></div><div class="modal-body"><form id="colorForm" onsubmit="return false;"><input type="hidden" id="colorId"><div class="form-group"><label class="form-label">Color Name *</label><input type="text" class="form-input" id="colorName" placeholder="e.g., Red, Navy Blue" required maxlength="100"></div><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Color Code (Hex)</label><input type="text" class="form-input" id="colorCode" placeholder="#FF0000" maxlength="20"><div id="colorPreview" style="width:36px;height:36px;border-radius:50%;border:2px solid #e5e5ea;margin-top:6px;background:#ccc;"></div></div><div class="form-group"><label class="form-label">Color Image URL</label><input type="url" class="form-input" id="colorImage" placeholder="https://..."></div></div><div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="colorSortOrder" value="0" min="0"></div></form></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeColorModal()">Cancel</button><button class="btn btn-primary" onclick="saveColor()" id="colorSaveBtn"><i class="fa-solid fa-check"></i><span>Save Color</span></button></div></div></div>
 
-    <!-- ==================== SIZE MODAL ==================== -->
-    <div class="modal-overlay" id="sizeModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title" id="sizeModalTitle">Add Size</h3>
-                <button class="modal-close" onclick="closeSizeModal()"><i class="fa-solid fa-times"></i></button>
-            </div>
-            <div class="modal-body">
-                <form id="sizeForm" onsubmit="return false;">
-                    <input type="hidden" id="sizeId" value="">
-                    <div class="form-group">
-                        <label class="form-label">Color *</label>
-                        <select class="form-select" id="sizeColorId" required>
-                            <option value="">Select Color</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Size Name *</label>
-                        <input type="text" class="form-input" id="sizeName" placeholder="e.g., S, M, L, XL, XXL" required maxlength="50">
-                        <p class="form-hint">Standard sizes: XS, S, M, L, XL, XXL, XXXL, 4XL, 5XL</p>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Sort Order</label>
-                        <input type="number" class="form-input" id="sizeSortOrder" value="0" min="0" max="999">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeSizeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveSize()" id="sizeSaveBtn">
-                    <i class="fa-solid fa-check"></i><span>Save Size</span>
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- SIZE MODAL -->
+    <div class="modal-overlay" id="sizeModal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="sizeModalTitle">Add Size</h3><button class="modal-close" onclick="closeSizeModal()"><i class="fa-solid fa-times"></i></button></div><div class="modal-body"><form id="sizeForm" onsubmit="return false;"><input type="hidden" id="sizeId"><div class="form-group"><label class="form-label">Color *</label><select class="form-select" id="sizeColorId" required><option value="">Select Color</option></select></div><div class="form-group"><label class="form-label">Size Name *</label><input type="text" class="form-input" id="sizeName" placeholder="e.g., S, M, L, XL, XXL" required maxlength="50"><p class="form-hint">Standard: XS, S, M, L, XL, XXL, XXXL, 4XL, 5XL</p></div><div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="sizeSortOrder" value="0" min="0"></div></form></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeSizeModal()">Cancel</button><button class="btn btn-primary" onclick="saveSize()" id="sizeSaveBtn"><i class="fa-solid fa-check"></i><span>Save Size</span></button></div></div></div>
 
-    <!-- ==================== VARIANT MODAL ==================== -->
-    <div class="modal-overlay" id="variantModal">
-        <div class="modal wide">
-            <div class="modal-header">
-                <h3 class="modal-title" id="variantModalTitle">Add Variant</h3>
-                <button class="modal-close" onclick="closeVariantModal()"><i class="fa-solid fa-times"></i></button>
-            </div>
-            <div class="modal-body">
-                <form id="variantForm" onsubmit="return false;">
-                    <input type="hidden" id="variantId" value="">
-                    <div class="form-row form-row-2">
-                        <div class="form-group">
-                            <label class="form-label">Color *</label>
-                            <select class="form-select" id="variantColorId" required onchange="onVariantColorChange()">
-                                <option value="">Select Color</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Size *</label>
-                            <select class="form-select" id="variantSizeId" required>
-                                <option value="">Select Size</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row form-row-3">
-                        <div class="form-group">
-                            <label class="form-label">Price *</label>
-                            <input type="number" class="form-input" id="variantPrice" placeholder="0.00" min="0" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Old Price</label>
-                            <input type="number" class="form-input" id="variantOldPrice" placeholder="0.00" min="0" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Stock</label>
-                            <input type="number" class="form-input" id="variantStock" value="0" min="0" max="999999">
-                        </div>
-                    </div>
-                    <div class="form-row form-row-2">
-                        <div class="form-group">
-                            <label class="form-label">Material</label>
-                            <input type="text" class="form-input" id="variantMaterial" placeholder="e.g., Cotton" maxlength="200">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Weight</label>
-                            <input type="number" class="form-input" id="variantWeight" value="0" min="0" step="0.01">
-                        </div>
-                    </div>
-                    <div class="form-row form-row-2">
-                        <div class="form-group">
-                            <label class="form-label">Sort Order</label>
-                            <input type="number" class="form-input" id="variantSortOrder" value="0" min="0" max="999">
-                        </div>
-                        <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
-                            <div class="form-check">
-                                <input type="checkbox" id="variantIsActive" checked>
-                                <label for="variantIsActive">Active Status</label>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeVariantModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveVariant()" id="variantSaveBtn">
-                    <i class="fa-solid fa-check"></i><span>Save Variant</span>
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- VARIANT MODAL -->
+    <div class="modal-overlay" id="variantModal"><div class="modal wide"><div class="modal-header"><h3 class="modal-title" id="variantModalTitle">Add Variant</h3><button class="modal-close" onclick="closeVariantModal()"><i class="fa-solid fa-times"></i></button></div><div class="modal-body"><form id="variantForm" onsubmit="return false;"><input type="hidden" id="variantId"><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Color *</label><select class="form-select" id="variantColorId" required onchange="onVariantColorChange()"><option value="">Select Color</option></select></div><div class="form-group"><label class="form-label">Size *</label><select class="form-select" id="variantSizeId" required><option value="">Select Size</option></select></div></div><div class="form-row form-row-3"><div class="form-group"><label class="form-label">Price *</label><input type="number" class="form-input" id="variantPrice" placeholder="0.00" min="0" step="0.01" required></div><div class="form-group"><label class="form-label">Old Price</label><input type="number" class="form-input" id="variantOldPrice" placeholder="0.00" min="0" step="0.01"></div><div class="form-group"><label class="form-label">Stock</label><input type="number" class="form-input" id="variantStock" value="0" min="0"></div></div><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Material</label><input type="text" class="form-input" id="variantMaterial" placeholder="e.g., Cotton"></div><div class="form-group"><label class="form-label">Weight</label><input type="number" class="form-input" id="variantWeight" value="0" min="0" step="0.01"></div></div><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="variantSortOrder" value="0" min="0"></div><div class="form-group"><div class="form-check"><input type="checkbox" id="variantIsActive" checked><label for="variantIsActive">Active</label></div></div></div></form></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeVariantModal()">Cancel</button><button class="btn btn-primary" onclick="saveVariant()" id="variantSaveBtn"><i class="fa-solid fa-check"></i><span>Save Variant</span></button></div></div></div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="confirm-overlay" id="deleteConfirm">
-        <div class="confirm-dialog">
-            <div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
-            <h3 class="confirm-title" id="deleteConfirmTitle">Delete Item?</h3>
-            <p class="confirm-text" id="deleteConfirmText">Are you sure? This cannot be undone.</p>
-            <div class="confirm-actions">
-                <button class="btn btn-outline" onclick="closeDeleteConfirm()">Cancel</button>
-                <button class="btn btn-danger" onclick="confirmDelete()">
-                    <i class="fa-solid fa-trash-can"></i><span>Delete</span>
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- DELETE CONFIRM -->
+    <div class="confirm-overlay" id="deleteConfirm"><div class="confirm-dialog"><div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div><h3 class="confirm-title" id="delTitle">Delete?</h3><p class="confirm-text" id="delText">This cannot be undone.</p><div class="confirm-actions"><button class="btn btn-outline" onclick="closeDeleteConfirm()">Cancel</button><button class="btn btn-danger" onclick="confirmDelete()"><i class="fa-solid fa-trash-can"></i><span>Delete</span></button></div></div></div>
 
     <div class="toast-container" id="toastContainer"></div>
-
     <script src="/components.js"></script>
 
     <script>
         (function() {
-            const API_BASE_URL = window.location.origin;
-            
-            let activeProductId = null;
-            let activeTab = 'colors';
-            let deleteTargetId = null;
-            let deleteTargetType = null;
-            let allColors = [];
-            let allSizes = [];
-            let allVariants = [];
+            const API = window.location.origin;
+            let activeProductId = null, activeTab = 'colors', delId = null, delType = null;
+            let allColors = [], allSizes = [], allVariants = [];
 
-            // ==================== AUTH ====================
-            function getAdminToken() {
-                const stored = localStorage.getItem('jayenware_admin_session');
-                if (stored) { try { const p = JSON.parse(stored); if (p?.access_token) return p.access_token; } catch(e) {} }
+            function token() {
+                const s = localStorage.getItem('jayenware_admin_session');
+                if (s) { try { const p = JSON.parse(s); if (p?.access_token) return p.access_token; } catch(e) {} }
                 const ss = sessionStorage.getItem('jayenware_admin_session');
                 if (ss) { try { const p = JSON.parse(ss); if (p?.access_token) { localStorage.setItem('jayenware_admin_session', JSON.stringify(p)); return p.access_token; } } catch(e) {} }
                 return null;
             }
+            if (!token()) { window.location.href = '/signin?type=admin&message=admin_required'; return; }
 
-            function checkAdminAuth() {
-                if (!getAdminToken()) { window.location.href = '/signin?type=admin&message=admin_required'; return false; }
-                return true;
+            function toast(msg, type='info') {
+                const c = document.getElementById('toastContainer');
+                const t = document.createElement('div');
+                t.className = `toast ${type}`;
+                t.innerHTML = `<i class="fa-solid fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i> ${esc(msg)}`;
+                c.appendChild(t);
+                setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(-15px)'; t.style.transition='all 0.3s'; setTimeout(() => t.remove(), 300); }, 3000);
             }
+            function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-            function showToast(message, type = 'info') {
-                const container = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = `<i class="fa-solid fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i> <span>${escapeHTML(message)}</span>`;
-                container.appendChild(toast);
-                setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateY(-20px)'; toast.style.transition='all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
-            }
-
-            function escapeHTML(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
-
-            // ==================== LOAD PRODUCTS DROPDOWN ====================
-            async function loadProductsDropdown() {
-                const token = getAdminToken();
-                if (!token) return;
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/all`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    const data = await res.json();
-                    if (data.success && data.products) {
-                        const select = document.getElementById('productSelect');
-                        const currentVal = select.value;
-                        select.innerHTML = '<option value="">— Choose a product —</option>' +
-                            data.products.map(p => `<option value="${p.id}">#${p.id} — ${escapeHTML(p.title)} ${p.sku ? '('+escapeHTML(p.sku)+')' : ''}</option>`).join('');
-                        if (currentVal) select.value = currentVal;
-                    }
-                } catch(e) {
-                    showToast('Failed to load products', 'error');
-                }
-            }
-
-            // ==================== PRODUCT CHANGE ====================
-            async function onProductChange() {
-                const productId = document.getElementById('productSelect').value;
-                activeProductId = productId ? parseInt(productId) : null;
-                
-                const infoEl = document.getElementById('selectedProductInfo');
-                const spImage = document.getElementById('spImage');
-                const spTitle = document.getElementById('spTitle');
-                const spSku = document.getElementById('spSku');
-
-                if (!activeProductId) {
-                    infoEl.style.display = 'none';
-                    clearAllTabs();
-                    updateButtons(false);
-                    return;
-                }
-
-                // Fetch product details
-                const token = getAdminToken();
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    const data = await res.json();
-                    if (data.success && data.product) {
-                        const p = data.product;
-                        infoEl.style.display = 'flex';
-                        spTitle.textContent = p.title || 'Untitled';
-                        spSku.textContent = p.sku || 'No SKU';
-                        if (p.img) {
-                            spImage.src = p.img;
-                            spImage.style.display = 'block';
-                        } else {
-                            spImage.style.display = 'none';
-                        }
-                    }
-                } catch(e) {}
-
-                updateButtons(true);
+            // ==================== PRODUCT ID LOAD ====================
+            async function loadProductById() {
+                const pid = parseInt(document.getElementById('productIdInput').value);
+                if (!pid || pid < 1) { toast('Please enter a valid Product ID', 'error'); return; }
+                activeProductId = pid;
+                await fetchProductInfo();
                 await refreshAll();
             }
 
-            function updateButtons(enabled) {
-                document.getElementById('addColorBtn').disabled = !enabled;
-                document.getElementById('generateVariantsBtn').disabled = !enabled;
-                document.getElementById('generateVariantsEmptyBtn').disabled = !enabled;
-                document.getElementById('addVariantBtn').disabled = !enabled;
-                
-                if (!enabled) {
-                    document.getElementById('addSizeBtn').disabled = true;
+            function onProductIdChange() {
+                const pid = parseInt(document.getElementById('productIdInput').value);
+                if (!pid || pid < 1) {
+                    activeProductId = null;
+                    document.getElementById('pidInfo').style.display = 'none';
+                    clearAll();
+                    toggleButtons(false);
+                    return;
                 }
+                activeProductId = pid;
+                fetchProductInfo();
+                refreshAll();
             }
 
-            function clearAllTabs() {
-                document.getElementById('colorsTableBody').innerHTML = '';
-                document.getElementById('sizesTableBody').innerHTML = '';
-                document.getElementById('variantsTableBody').innerHTML = '';
-                document.getElementById('matrixTableWrapper').innerHTML = '';
-                document.getElementById('matrixTableWrapper').style.display = 'none';
-                document.getElementById('matrixEmptyState').style.display = 'block';
-                
-                document.getElementById('colorsEmptyState').style.display = 'block';
-                document.getElementById('sizesEmptyState').style.display = 'block';
-                document.getElementById('variantsEmptyState').style.display = 'block';
-                
-                document.getElementById('colorTabCount').textContent = '0';
-                document.getElementById('sizeTabCount').textContent = '0';
-                document.getElementById('variantTabCount').textContent = '0';
-                document.getElementById('matrixTabCount').textContent = '0';
-                
-                document.getElementById('colorSectionSubtitle').textContent = 'Select a product to manage colors';
-                document.getElementById('sizeSectionSubtitle').textContent = 'Select a color to manage its sizes';
-                document.getElementById('variantSectionSubtitle').textContent = 'Color + Size combinations with price & stock';
-                document.getElementById('matrixSectionSubtitle').textContent = 'Color × Size grid view — click cells to manage';
-                
-                document.getElementById('statTotalVariants').textContent = '0';
-                document.getElementById('statActiveVariants').textContent = '0';
-                document.getElementById('statTotalStock').textContent = '0';
-                document.getElementById('statTotalValue').textContent = '৳0';
-                
-                allColors = [];
-                allSizes = [];
-                allVariants = [];
-                
-                document.getElementById('sizeColorFilter').innerHTML = '<option value="">— Select a Color —</option>';
+            async function fetchProductInfo() {
+                if (!activeProductId) return;
+                const info = document.getElementById('pidInfo');
+                try {
+                    const res = await fetch(`${API}/api/admin/products/${activeProductId}`, { headers: { 'Authorization': `Bearer ${token()}` } });
+                    const data = await res.json();
+                    if (data.success && data.product) {
+                        const p = data.product;
+                        info.style.display = 'flex';
+                        document.getElementById('pidTitle').textContent = p.title || 'Untitled';
+                        document.getElementById('pidSku').textContent = p.sku || 'No SKU';
+                        const img = document.getElementById('pidImage');
+                        if (p.img) { img.src = p.img; img.style.display = 'block'; } else { img.style.display = 'none'; }
+                    }
+                } catch(e) {}
+                toggleButtons(true);
+            }
+
+            function toggleButtons(on) {
+                document.getElementById('addColorBtn').disabled = !on;
+                document.getElementById('genVariantsBtn').disabled = !on;
+                document.getElementById('genEmptyBtn').disabled = !on;
+                document.getElementById('addVariantBtn').disabled = !on;
+                if (!on) document.getElementById('addSizeBtn').disabled = true;
+            }
+
+            function clearAll() {
+                ['colorsTbody','sizesTbody','variantsTbody'].forEach(id => document.getElementById(id).innerHTML = '');
+                ['colorsEmpty','sizesEmpty','variantsEmpty'].forEach(id => document.getElementById(id).style.display = 'block');
+                document.getElementById('matrixWrapper').innerHTML = ''; document.getElementById('matrixWrapper').style.display = 'none';
+                document.getElementById('matrixEmpty').style.display = 'block';
+                ['colorTabCount','sizeTabCount','variantTabCount','matrixTabCount'].forEach(id => document.getElementById(id).textContent = '0');
+                ['colorSubtitle','sizeSubtitle','variantSubtitle','matrixSubtitle'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = el.textContent.replace(/\d+.*/, '').trim() || 'Enter a Product ID';
+                });
+                document.getElementById('statTotal').textContent = '0';
+                document.getElementById('statActive').textContent = '0';
+                document.getElementById('statStock').textContent = '0';
+                document.getElementById('statValue').textContent = '৳0';
+                allColors = []; allSizes = []; allVariants = [];
+                document.getElementById('sizeColorFilter').innerHTML = '<option value="">— Select Color —</option>';
             }
 
             async function refreshAll() {
                 if (!activeProductId) return;
-                await Promise.all([
-                    loadColors(),
-                    loadVariantStats()
-                ]);
-                if (activeTab === 'colors') loadColors();
-                else if (activeTab === 'sizes') loadSizes();
+                await loadColors();
+                await loadVariantStats();
+                if (activeTab === 'sizes') loadSizes();
                 else if (activeTab === 'variants') loadVariants();
                 else if (activeTab === 'matrix') loadMatrix();
             }
@@ -1114,84 +371,56 @@
             // ==================== COLORS ====================
             async function loadColors() {
                 if (!activeProductId) return;
-                const token = getAdminToken();
-                const tbody = document.getElementById('colorsTableBody');
-                const emptyState = document.getElementById('colorsEmptyState');
-                tbody.innerHTML = '<tr><td colspan="9"><div class="skeleton" style="width:100%;height:50px;"></div></td></tr>';
-                emptyState.style.display = 'none';
-
+                const tbody = document.getElementById('colorsTbody');
+                const empty = document.getElementById('colorsEmpty');
+                tbody.innerHTML = '<tr><td colspan="9"><div class="skeleton"></div></td></tr>';
+                empty.style.display = 'none';
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/colors`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`${API}/api/admin/products/${activeProductId}/colors`, { headers: { 'Authorization': `Bearer ${token()}` } });
                     const data = await res.json();
                     if (data.success) {
                         allColors = data.colors || [];
                         document.getElementById('colorTabCount').textContent = allColors.length;
-                        document.getElementById('colorSectionSubtitle').textContent = `${allColors.length} color(s) for this product`;
-                        
-                        if (!allColors.length) {
-                            tbody.innerHTML = '';
-                            emptyState.style.display = 'block';
-                        } else {
+                        document.getElementById('colorSubtitle').textContent = allColors.length ? `${allColors.length} color(s)` : 'No colors yet';
+                        if (!allColors.length) { tbody.innerHTML = ''; empty.style.display = 'block'; }
+                        else {
                             tbody.innerHTML = allColors.map(c => `
                                 <tr>
-                                    <td><span style="font-family:'Sora',monospace;font-size:12px;font-weight:600;">#${c.id}</span></td>
-                                    <td>
-                                        <div class="color-swatch" style="background:${c.color_code || '#ccc'};" title="${escapeHTML(c.color_name)}">
-                                            ${!c.color_code ? c.color_name?.charAt(0)?.toUpperCase() || '?' : ''}
-                                        </div>
-                                    </td>
-                                    <td><span style="font-weight:600;">${escapeHTML(c.color_name)}</span></td>
-                                    <td><span style="font-family:'Sora',monospace;font-size:12px;">${c.color_code || '-'}</span></td>
-                                    <td>
-                                        ${c.color_image ? `<div class="img-thumb" style="width:40px;height:40px;border-radius:8px;display:inline-flex;"><img src="${escapeHTML(c.color_image)}" onerror="this.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'"></div>` : '<span style="color:var(--accent);">-</span>'}
-                                    </td>
-                                    <td><span style="font-weight:700;">${c.color_stock || 0}</span></td>
-                                    <td><span class="count-badge" style="cursor:pointer;" onclick="switchToSizesTab(${c.id})" title="View Sizes"><i class="fa-solid fa-ruler"></i> View Sizes</span></td>
-                                    <td>${c.sort_order || 0}</td>
-                                    <td style="text-align:right;">
-                                        <div class="actions-cell" style="justify-content:flex-end;">
-                                            <button class="action-btn edit" onclick="openColorModal(${c.id})"><i class="fa-solid fa-pen"></i></button>
-                                            <button class="action-btn delete" onclick="openDeleteConfirm(${c.id}, 'color', '${escapeHTML(c.color_name).replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `).join('');
+                                    <td><span style="font-family:'Sora',monospace;font-size:11px;font-weight:600;">#${c.id}</span></td>
+                                    <td><div class="color-swatch" style="background:${c.color_code||'#ccc'};" title="${esc(c.color_name)}">${!c.color_code ? (c.color_name||'?')[0].toUpperCase() : ''}</div></td>
+                                    <td><strong>${esc(c.color_name)}</strong></td>
+                                    <td><span style="font-family:'Sora',monospace;font-size:11px;">${c.color_code||'-'}</span></td>
+                                    <td>${c.color_image ? `<img src="${esc(c.color_image)}" style="width:32px;height:32px;border-radius:6px;object-fit:cover;" onerror="this.outerHTML='-'">` : '-'}</td>
+                                    <td><strong>${c.color_stock||0}</strong></td>
+                                    <td><span class="size-badge" style="cursor:pointer;font-size:10px;" onclick="switchToSizes(${c.id})">View</span></td>
+                                    <td>${c.sort_order||0}</td>
+                                    <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
+                                        <button class="action-btn edit" onclick="openColorModal(${c.id})"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="action-btn delete" onclick="openDelete(${c.id},'color','${esc(c.color_name).replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
+                                    </div></td>
+                                </tr>`).join('');
                         }
-
-                        // Update size color filter dropdown
-                        const sizeFilter = document.getElementById('sizeColorFilter');
-                        sizeFilter.innerHTML = '<option value="">— Select a Color —</option>' +
-                            allColors.map(c => `<option value="${c.id}">${escapeHTML(c.color_name)} ${c.color_code ? '('+c.color_code+')' : ''}</option>`).join('');
-                        
-                        // Update variant color dropdown
-                        const variantColorSelect = document.getElementById('variantColorId');
-                        variantColorSelect.innerHTML = '<option value="">Select Color</option>' +
-                            allColors.map(c => `<option value="${c.id}">${escapeHTML(c.color_name)} ${c.color_code ? '('+c.color_code+')' : ''}</option>`).join('');
-                        
-                        // Update size modal color dropdown
-                        document.getElementById('sizeColorId').innerHTML = '<option value="">Select Color</option>' +
-                            allColors.map(c => `<option value="${c.id}">${escapeHTML(c.color_name)} ${c.color_code ? '('+c.color_code+')' : ''}</option>`).join('');
+                        // Update dropdowns
+                        const opts = '<option value="">Select Color</option>' + allColors.map(c => `<option value="${c.id}">${esc(c.color_name)} ${c.color_code?'('+c.color_code+')':''}</option>`).join('');
+                        document.getElementById('sizeColorFilter').innerHTML = '<option value="">— Select Color —</option>' + allColors.map(c => `<option value="${c.id}">${esc(c.color_name)}</option>`).join('');
+                        document.getElementById('variantColorId').innerHTML = opts;
+                        document.getElementById('sizeColorId').innerHTML = opts;
                     }
-                } catch(e) {
-                    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#dc2626;">Failed to load colors</td></tr>';
-                }
+                } catch(e) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#dc2626;">Error loading colors</td></tr>'; }
             }
 
-            function openColorModal(colorId = null) {
-                if (!activeProductId) { showToast('Please select a product first', 'error'); return; }
-                document.getElementById('colorId').value = colorId || '';
-                document.getElementById('colorModalTitle').textContent = colorId ? 'Edit Color' : 'Add Color';
-                
-                if (colorId) {
-                    const color = allColors.find(c => c.id === colorId);
-                    if (color) {
-                        document.getElementById('colorName').value = color.color_name || '';
-                        document.getElementById('colorCode').value = color.color_code || '';
-                        document.getElementById('colorImage').value = color.color_image || '';
-                        document.getElementById('colorSortOrder').value = color.sort_order || 0;
-                        updateColorPreview(color.color_code);
+            function openColorModal(id = null) {
+                if (!activeProductId) { toast('Enter Product ID first', 'error'); return; }
+                document.getElementById('colorId').value = id || '';
+                document.getElementById('colorModalTitle').textContent = id ? 'Edit Color' : 'Add Color';
+                if (id) {
+                    const c = allColors.find(x => x.id === id);
+                    if (c) {
+                        document.getElementById('colorName').value = c.color_name || '';
+                        document.getElementById('colorCode').value = c.color_code || '';
+                        document.getElementById('colorImage').value = c.color_image || '';
+                        document.getElementById('colorSortOrder').value = c.sort_order || 0;
+                        updateColorPreview(c.color_code);
                     }
                 } else {
                     document.getElementById('colorForm').reset();
@@ -1199,63 +428,38 @@
                     updateColorPreview('');
                 }
                 document.getElementById('colorModal').classList.add('show');
-                document.body.style.overflow = 'hidden';
             }
-
-            function closeColorModal() {
-                document.getElementById('colorModal').classList.remove('show');
-                document.body.style.overflow = '';
+            function closeColorModal() { document.getElementById('colorModal').classList.remove('show'); }
+            function updateColorPreview(code) {
+                const p = document.getElementById('colorPreview');
+                p.style.background = (code && /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(code)) ? code : '#ccc';
             }
 
             async function saveColor() {
-                const colorName = document.getElementById('colorName').value.trim();
-                if (!colorName) { showToast('Color name is required', 'error'); return; }
+                const name = document.getElementById('colorName').value.trim();
+                if (!name) { toast('Color name required', 'error'); return; }
                 if (!activeProductId) return;
-
-                const token = getAdminToken();
-                const colorData = {
-                    product_id: activeProductId,
-                    color_name: colorName,
+                const body = {
+                    product_id: activeProductId, color_name: name,
                     color_code: document.getElementById('colorCode').value.trim() || null,
                     color_image: document.getElementById('colorImage').value.trim() || null,
                     sort_order: parseInt(document.getElementById('colorSortOrder').value) || 0
                 };
-
-                const colorId = document.getElementById('colorId').value;
-                const url = colorId 
-                    ? `${API_BASE_URL}/api/admin/product-colors/${colorId}`
-                    : `${API_BASE_URL}/api/admin/product-colors`;
-                const method = colorId ? 'PUT' : 'POST';
-
+                const id = document.getElementById('colorId').value;
+                const url = id ? `${API}/api/admin/product-colors/${id}` : `${API}/api/admin/product-colors`;
                 const btn = document.getElementById('colorSaveBtn');
-                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
-                
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Saving...';
                 try {
-                    const res = await fetch(url, {
-                        method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify(colorData)
-                    });
+                    const res = await fetch(url, { method: id?'PUT':'POST', headers: { 'Authorization': `Bearer ${token()}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
                     const data = await res.json();
-                    if (res.ok && data.success) {
-                        showToast(colorId ? 'Color updated' : 'Color created', 'success');
-                        closeColorModal();
-                        await loadColors();
-                    } else throw new Error(data.error || 'Failed');
-                } catch(e) { showToast(e.message, 'error'); }
-                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Color</span>'; }
-            }
-
-            function updateColorPreview(code) {
-                const preview = document.getElementById('colorCodePreview');
-                if (code && /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(code)) {
-                    preview.style.background = code;
-                } else {
-                    preview.style.background = '#ccc';
-                }
+                    if (res.ok && data.success) { toast(id?'Color updated':'Color created','success'); closeColorModal(); await loadColors(); }
+                    else throw new Error(data.error||'Failed');
+                } catch(e) { toast(e.message, 'error'); }
+                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i> Save Color'; }
             }
 
             // ==================== SIZES ====================
-            function switchToSizesTab(colorId) {
+            function switchToSizes(colorId) {
                 document.getElementById('sizeColorFilter').value = colorId;
                 document.querySelectorAll('.tab-main-btn').forEach(b => b.classList.remove('active'));
                 document.querySelector('[data-tab="sizes"]').classList.add('active');
@@ -1267,331 +471,189 @@
 
             async function loadSizes() {
                 const colorId = document.getElementById('sizeColorFilter').value;
-                const tbody = document.getElementById('sizesTableBody');
-                const emptyState = document.getElementById('sizesEmptyState');
-                const addBtn = document.getElementById('addSizeBtn');
-                
-                if (!colorId) {
-                    tbody.innerHTML = '';
-                    emptyState.style.display = 'block';
-                    document.getElementById('sizeTabCount').textContent = '0';
-                    document.getElementById('sizeSectionSubtitle').textContent = 'Select a color to manage its sizes';
-                    addBtn.disabled = true;
-                    allSizes = [];
-                    return;
-                }
-
-                addBtn.disabled = false;
-                const token = getAdminToken();
-                tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:50px;"></div></td></tr>';
-                emptyState.style.display = 'none';
-
+                const tbody = document.getElementById('sizesTbody');
+                const empty = document.getElementById('sizesEmpty');
+                const btn = document.getElementById('addSizeBtn');
+                if (!colorId) { tbody.innerHTML = ''; empty.style.display = 'block'; btn.disabled = true; document.getElementById('sizeTabCount').textContent = '0'; allSizes = []; return; }
+                btn.disabled = false;
+                tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton"></div></td></tr>';
+                empty.style.display = 'none';
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/product-colors/${colorId}/sizes`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`${API}/api/admin/product-colors/${colorId}/sizes`, { headers: { 'Authorization': `Bearer ${token()}` } });
                     const data = await res.json();
                     if (data.success) {
                         allSizes = data.sizes || [];
                         document.getElementById('sizeTabCount').textContent = allSizes.length;
-                        document.getElementById('sizeSectionSubtitle').textContent = `${allSizes.length} size(s) for selected color`;
-                        
-                        if (!allSizes.length) {
-                            tbody.innerHTML = '';
-                            emptyState.style.display = 'block';
-                        } else {
-                            const selectedColor = allColors.find(c => c.id === parseInt(colorId));
+                        document.getElementById('sizeSubtitle').textContent = `${allSizes.length} size(s)`;
+                        if (!allSizes.length) { tbody.innerHTML = ''; empty.style.display = 'block'; }
+                        else {
+                            const selColor = allColors.find(c => c.id === parseInt(colorId));
                             tbody.innerHTML = allSizes.map(s => `
                                 <tr>
-                                    <td><span style="font-family:'Sora',monospace;font-size:12px;font-weight:600;">#${s.id}</span></td>
-                                    <td><span class="size-badge">${escapeHTML(s.size_name)}</span></td>
-                                    <td>
-                                        <div style="display:flex;align-items:center;gap:8px;">
-                                            <div class="color-swatch" style="background:${selectedColor?.color_code || '#ccc'};width:20px;height:20px;"></div>
-                                            <span style="font-size:13px;">${escapeHTML(selectedColor?.color_name || 'Unknown')}</span>
-                                        </div>
-                                    </td>
-                                    <td>${s.sort_order || 0}</td>
-                                    <td><span style="font-size:12px;color:var(--accent);">${new Date(s.created_at).toLocaleDateString()}</span></td>
-                                    <td style="text-align:right;">
-                                        <div class="actions-cell" style="justify-content:flex-end;">
-                                            <button class="action-btn edit" onclick="openSizeModal(${s.id})"><i class="fa-solid fa-pen"></i></button>
-                                            <button class="action-btn delete" onclick="openDeleteConfirm(${s.id}, 'size', '${escapeHTML(s.size_name).replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `).join('');
+                                    <td><span style="font-family:'Sora',monospace;font-size:11px;">#${s.id}</span></td>
+                                    <td><span class="size-badge">${esc(s.size_name)}</span></td>
+                                    <td><div style="display:flex;align-items:center;gap:6px;"><div class="color-swatch" style="background:${selColor?.color_code||'#ccc'};width:18px;height:18px;"></div><span>${esc(selColor?.color_name||'?')}</span></div></td>
+                                    <td>${s.sort_order||0}</td>
+                                    <td><span style="font-size:11px;color:var(--accent);">${new Date(s.created_at).toLocaleDateString()}</span></td>
+                                    <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
+                                        <button class="action-btn edit" onclick="openSizeModal(${s.id})"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="action-btn delete" onclick="openDelete(${s.id},'size','${esc(s.size_name).replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
+                                    </div></td>
+                                </tr>`).join('');
                         }
                     }
-                } catch(e) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#dc2626;">Failed to load sizes</td></tr>';
-                }
+                } catch(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#dc2626;">Error</td></tr>'; }
             }
 
-            function openSizeModal(sizeId = null) {
-                if (!activeProductId) { showToast('Please select a product first', 'error'); return; }
-                document.getElementById('sizeId').value = sizeId || '';
-                document.getElementById('sizeModalTitle').textContent = sizeId ? 'Edit Size' : 'Add Size';
-                
-                if (sizeId) {
-                    const size = allSizes.find(s => s.id === sizeId);
-                    if (size) {
-                        document.getElementById('sizeColorId').value = size.color_id;
-                        document.getElementById('sizeName').value = size.size_name;
-                        document.getElementById('sizeSortOrder').value = size.sort_order || 0;
-                    }
+            function openSizeModal(id = null) {
+                if (!activeProductId) { toast('Enter Product ID first', 'error'); return; }
+                document.getElementById('sizeId').value = id || '';
+                document.getElementById('sizeModalTitle').textContent = id ? 'Edit Size' : 'Add Size';
+                if (id) {
+                    const s = allSizes.find(x => x.id === id);
+                    if (s) { document.getElementById('sizeColorId').value = s.color_id; document.getElementById('sizeName').value = s.size_name; document.getElementById('sizeSortOrder').value = s.sort_order||0; }
                 } else {
                     document.getElementById('sizeForm').reset();
                     document.getElementById('sizeSortOrder').value = allSizes.length;
-                    const currentFilter = document.getElementById('sizeColorFilter').value;
-                    if (currentFilter) document.getElementById('sizeColorId').value = currentFilter;
+                    const cf = document.getElementById('sizeColorFilter').value;
+                    if (cf) document.getElementById('sizeColorId').value = cf;
                 }
                 document.getElementById('sizeModal').classList.add('show');
-                document.body.style.overflow = 'hidden';
             }
-
-            function closeSizeModal() {
-                document.getElementById('sizeModal').classList.remove('show');
-                document.body.style.overflow = '';
-            }
+            function closeSizeModal() { document.getElementById('sizeModal').classList.remove('show'); }
 
             async function saveSize() {
                 const colorId = parseInt(document.getElementById('sizeColorId').value);
-                const sizeName = document.getElementById('sizeName').value.trim();
-                if (!colorId || !sizeName) { showToast('Color and size name are required', 'error'); return; }
-
-                const token = getAdminToken();
-                const sizeData = {
-                    color_id: colorId,
-                    size_name: sizeName,
-                    sort_order: parseInt(document.getElementById('sizeSortOrder').value) || 0
-                };
-
-                const sizeId = document.getElementById('sizeId').value;
-                const url = sizeId
-                    ? `${API_BASE_URL}/api/admin/color-sizes/${sizeId}`
-                    : `${API_BASE_URL}/api/admin/color-sizes`;
-                const method = sizeId ? 'PUT' : 'POST';
-
+                const name = document.getElementById('sizeName').value.trim();
+                if (!colorId || !name) { toast('Color and size name required', 'error'); return; }
+                const body = { color_id: colorId, size_name: name, sort_order: parseInt(document.getElementById('sizeSortOrder').value)||0 };
+                const id = document.getElementById('sizeId').value;
+                const url = id ? `${API}/api/admin/color-sizes/${id}` : `${API}/api/admin/color-sizes`;
                 const btn = document.getElementById('sizeSaveBtn');
-                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
-                
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Saving...';
                 try {
-                    const res = await fetch(url, {
-                        method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify(sizeData)
-                    });
+                    const res = await fetch(url, { method: id?'PUT':'POST', headers: { 'Authorization': `Bearer ${token()}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
                     const data = await res.json();
-                    if (res.ok && data.success) {
-                        showToast(sizeId ? 'Size updated' : 'Size created', 'success');
-                        closeSizeModal();
-                        document.getElementById('sizeColorFilter').value = colorId;
-                        await loadSizes();
-                    } else throw new Error(data.error || 'Failed');
-                } catch(e) { showToast(e.message, 'error'); }
-                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Size</span>'; }
+                    if (res.ok && data.success) { toast(id?'Size updated':'Size created','success'); closeSizeModal(); document.getElementById('sizeColorFilter').value = colorId; await loadSizes(); }
+                    else throw new Error(data.error||'Failed');
+                } catch(e) { toast(e.message, 'error'); }
+                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i> Save Size'; }
             }
 
             // ==================== VARIANTS ====================
             async function loadVariants() {
                 if (!activeProductId) return;
-                const token = getAdminToken();
-                const tbody = document.getElementById('variantsTableBody');
-                const emptyState = document.getElementById('variantsEmptyState');
-                tbody.innerHTML = '<tr><td colspan="9"><div class="skeleton" style="width:100%;height:50px;"></div></td></tr>';
-                emptyState.style.display = 'none';
-
+                const tbody = document.getElementById('variantsTbody');
+                const empty = document.getElementById('variantsEmpty');
+                tbody.innerHTML = '<tr><td colspan="9"><div class="skeleton"></div></td></tr>';
+                empty.style.display = 'none';
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/variants`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`${API}/api/admin/products/${activeProductId}/variants`, { headers: { 'Authorization': `Bearer ${token()}` } });
                     const data = await res.json();
                     if (data.success) {
                         allVariants = data.variants || [];
                         document.getElementById('variantTabCount').textContent = allVariants.length;
-                        document.getElementById('variantSectionSubtitle').textContent = `${allVariants.length} variant(s) for this product`;
-                        
-                        if (!allVariants.length) {
-                            tbody.innerHTML = '';
-                            emptyState.style.display = 'block';
-                        } else {
+                        document.getElementById('variantSubtitle').textContent = `${allVariants.length} variant(s)`;
+                        if (!allVariants.length) { tbody.innerHTML = ''; empty.style.display = 'block'; }
+                        else {
                             tbody.innerHTML = allVariants.map(v => `
                                 <tr>
-                                    <td><span style="font-family:'Sora',monospace;font-size:12px;font-weight:600;">#${v.id}</span></td>
-                                    <td><span style="font-family:'Sora',monospace;font-size:11px;color:var(--accent);">${escapeHTML(v.sku || '-')}</span></td>
-                                    <td>
-                                        <div style="display:flex;align-items:center;gap:8px;">
-                                            <div class="color-swatch" style="background:${v.color?.color_code || '#ccc'};width:20px;height:20px;"></div>
-                                            <span style="font-size:13px;">${escapeHTML(v.color?.color_name || '-')}</span>
-                                        </div>
-                                    </td>
-                                    <td><span class="size-badge">${escapeHTML(v.size?.size_name || '-')}</span></td>
-                                    <td><span style="font-weight:700;">৳${v.price || 0}</span></td>
-                                    <td>${v.old_price ? `<span style="text-decoration:line-through;color:var(--accent);">৳${v.old_price}</span>` : '-'}</td>
-                                    <td>
-                                        <div class="stock-input-group">
-                                            <button onclick="updateVariantStock(${v.id}, 'subtract')" title="Decrease">−</button>
-                                            <input type="text" value="${v.stock || 0}" readonly style="width:50px;">
-                                            <button onclick="updateVariantStock(${v.id}, 'add')" title="Increase">+</button>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="status-badge ${v.is_active ? 'active' : 'inactive'}">
-                                            <span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>
-                                            ${v.is_active ? 'Active' : 'Inactive'}
-                                        </span>
-                                    </td>
-                                    <td style="text-align:right;">
-                                        <div class="actions-cell" style="justify-content:flex-end;">
-                                            <button class="action-btn edit" onclick="openVariantModal(${v.id})"><i class="fa-solid fa-pen"></i></button>
-                                            <button class="action-btn toggle" onclick="toggleVariantStatus(${v.id})" title="${v.is_active ? 'Deactivate' : 'Activate'}">
-                                                <i class="fa-solid fa-${v.is_active ? 'eye-slash' : 'eye'}"></i>
-                                            </button>
-                                            <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'variant', 'Variant #${v.id}')"><i class="fa-solid fa-trash-can"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `).join('');
+                                    <td><span style="font-family:'Sora',monospace;font-size:11px;">#${v.id}</span></td>
+                                    <td><span style="font-family:'Sora',monospace;font-size:10px;color:var(--accent);">${esc(v.sku||'-')}</span></td>
+                                    <td><div style="display:flex;align-items:center;gap:5px;"><div class="color-swatch" style="background:${v.color?.color_code||'#ccc'};width:16px;height:16px;"></div>${esc(v.color?.color_name||'-')}</div></td>
+                                    <td><span class="size-badge">${esc(v.size?.size_name||'-')}</span></td>
+                                    <td><strong>৳${v.price||0}</strong></td>
+                                    <td>${v.old_price?`<span style="text-decoration:line-through;color:var(--accent);">৳${v.old_price}</span>`:'-'}</td>
+                                    <td><div class="stock-input-group"><button onclick="updateStock(${v.id},'subtract')">−</button><input value="${v.stock||0}" readonly><button onclick="updateStock(${v.id},'add')">+</button></div></td>
+                                    <td><span class="status-badge ${v.is_active?'active':'inactive'}"><span class="status-dot ${v.is_active?'active':'inactive'}"></span>${v.is_active?'Active':'Inactive'}</span></td>
+                                    <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
+                                        <button class="action-btn edit" onclick="openVariantModal(${v.id})"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="action-btn" onclick="toggleVariant(${v.id})" title="${v.is_active?'Deactivate':'Activate'}"><i class="fa-solid fa-${v.is_active?'eye-slash':'eye'}"></i></button>
+                                        <button class="action-btn delete" onclick="openDelete(${v.id},'variant','#${v.id}')"><i class="fa-solid fa-trash-can"></i></button>
+                                    </div></td>
+                                </tr>`).join('');
                         }
                     }
-                } catch(e) {
-                    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#dc2626;">Failed to load variants</td></tr>';
-                }
+                } catch(e) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#dc2626;">Error</td></tr>'; }
             }
 
             async function loadVariantStats() {
                 if (!activeProductId) return;
-                const token = getAdminToken();
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/variants-stats`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`${API}/api/admin/products/${activeProductId}/variants-stats`, { headers: { 'Authorization': `Bearer ${token()}` } });
                     const data = await res.json();
                     if (data.success && data.stats) {
-                        document.getElementById('statTotalVariants').textContent = data.stats.totalVariants || 0;
-                        document.getElementById('statActiveVariants').textContent = data.stats.activeVariants || 0;
-                        document.getElementById('statTotalStock').textContent = data.stats.totalStock || 0;
-                        document.getElementById('statTotalValue').textContent = '৳' + (data.stats.totalValue || 0).toLocaleString();
+                        document.getElementById('statTotal').textContent = data.stats.totalVariants||0;
+                        document.getElementById('statActive').textContent = data.stats.activeVariants||0;
+                        document.getElementById('statStock').textContent = data.stats.totalStock||0;
+                        document.getElementById('statValue').textContent = '৳'+(data.stats.totalValue||0).toLocaleString();
                     }
                 } catch(e) {}
             }
 
-            async function updateVariantStock(variantId, action) {
-                const token = getAdminToken();
-                if (!token) return;
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/product-variants/${variantId}/stock`, {
-                        method: 'PATCH',
-                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action, quantity: 1 })
-                    });
-                    const data = await res.json();
-                    if (res.ok && data.success) {
-                        showToast(`Stock updated: ${data.new_stock}`, 'success');
-                        await loadVariants();
-                        await loadVariantStats();
-                        await loadColors();
-                    } else throw new Error(data.error);
-                } catch(e) { showToast(e.message, 'error'); }
+            async function updateStock(vid, action) {
+                const res = await fetch(`${API}/api/admin/product-variants/${vid}/stock`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token()}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ action, quantity: 1 }) });
+                const data = await res.json();
+                if (res.ok) { toast(`Stock: ${data.new_stock}`, 'success'); await loadVariants(); await loadVariantStats(); await loadColors(); }
+                else toast(data.error, 'error');
             }
 
-            async function toggleVariantStatus(variantId) {
-                const token = getAdminToken();
-                if (!token) return;
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/product-variants/${variantId}/toggle`, {
-                        method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    const data = await res.json();
-                    if (res.ok) {
-                        showToast(`Variant ${data.variant.is_active ? 'activated' : 'deactivated'}`, 'success');
-                        await loadVariants();
-                        await loadVariantStats();
-                    } else throw new Error(data.error);
-                } catch(e) { showToast(e.message, 'error'); }
+            async function toggleVariant(vid) {
+                const res = await fetch(`${API}/api/admin/product-variants/${vid}/toggle`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token()}` } });
+                const data = await res.json();
+                if (res.ok) { toast(data.variant.is_active?'Activated':'Deactivated', 'success'); await loadVariants(); await loadVariantStats(); }
+                else toast(data.error, 'error');
             }
 
             async function generateAllVariants() {
-                if (!activeProductId) { showToast('Please select a product first', 'error'); return; }
-                const token = getAdminToken();
-                if (!token) return;
-                
-                // Use product price as default
-                let defaultPrice = 0;
+                if (!activeProductId) { toast('Enter Product ID first', 'error'); return; }
+                let defPrice = 0;
+                try { const r = await fetch(`${API}/api/admin/products/${activeProductId}`, { headers: { 'Authorization': `Bearer ${token()}` } }); const d = await r.json(); if (d.success) defPrice = d.product.price||0; } catch(e) {}
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`${API}/api/admin/products/${activeProductId}/generate-variants`, { method: 'POST', headers: { 'Authorization': `Bearer ${token()}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ default_price: defPrice, default_stock: 0 }) });
                     const data = await res.json();
-                    if (data.success && data.product) defaultPrice = data.product.price || 0;
-                } catch(e) {}
-
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/generate-variants`, {
-                        method: 'POST',
-                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ default_price: defaultPrice, default_stock: 0 })
-                    });
-                    const data = await res.json();
-                    if (res.ok && data.success) {
-                        showToast(`${data.created || 0} variants generated`, 'success');
-                        await refreshAll();
-                    } else throw new Error(data.error || 'Failed');
-                } catch(e) { showToast(e.message, 'error'); }
+                    if (res.ok) { toast(`${data.created||0} variants generated`, 'success'); await refreshAll(); }
+                    else throw new Error(data.error);
+                } catch(e) { toast(e.message, 'error'); }
             }
 
-            function openVariantModal(variantId = null) {
-                if (!activeProductId) { showToast('Please select a product first', 'error'); return; }
-                document.getElementById('variantId').value = variantId || '';
-                document.getElementById('variantModalTitle').textContent = variantId ? 'Edit Variant' : 'Add Variant';
-                
-                if (variantId) {
-                    const variant = allVariants.find(v => v.id === variantId);
-                    if (variant) {
-                        document.getElementById('variantColorId').value = variant.color_id;
+            function openVariantModal(id = null) {
+                if (!activeProductId) { toast('Enter Product ID first', 'error'); return; }
+                document.getElementById('variantId').value = id || '';
+                document.getElementById('variantModalTitle').textContent = id ? 'Edit Variant' : 'Add Variant';
+                if (id) {
+                    const v = allVariants.find(x => x.id === id);
+                    if (v) {
+                        document.getElementById('variantColorId').value = v.color_id;
                         onVariantColorChange();
-                        setTimeout(() => { document.getElementById('variantSizeId').value = variant.size_id; }, 300);
-                        document.getElementById('variantPrice').value = variant.price || 0;
-                        document.getElementById('variantOldPrice').value = variant.old_price || '';
-                        document.getElementById('variantStock').value = variant.stock || 0;
-                        document.getElementById('variantMaterial').value = variant.material || '';
-                        document.getElementById('variantWeight').value = variant.weight || 0;
-                        document.getElementById('variantSortOrder').value = variant.sort_order || 0;
-                        document.getElementById('variantIsActive').checked = variant.is_active;
+                        setTimeout(() => { document.getElementById('variantSizeId').value = v.size_id; }, 400);
+                        document.getElementById('variantPrice').value = v.price||0;
+                        document.getElementById('variantOldPrice').value = v.old_price||'';
+                        document.getElementById('variantStock').value = v.stock||0;
+                        document.getElementById('variantMaterial').value = v.material||'';
+                        document.getElementById('variantWeight').value = v.weight||0;
+                        document.getElementById('variantSortOrder').value = v.sort_order||0;
+                        document.getElementById('variantIsActive').checked = v.is_active;
                     }
                 } else {
                     document.getElementById('variantForm').reset();
-                    document.getElementById('variantStock').value = 0;
-                    document.getElementById('variantWeight').value = 0;
-                    document.getElementById('variantSortOrder').value = 0;
-                    document.getElementById('variantIsActive').checked = true;
+                    document.getElementById('variantStock').value = 0; document.getElementById('variantWeight').value = 0;
+                    document.getElementById('variantSortOrder').value = 0; document.getElementById('variantIsActive').checked = true;
                     document.getElementById('variantSizeId').innerHTML = '<option value="">Select Size</option>';
                 }
                 document.getElementById('variantModal').classList.add('show');
-                document.body.style.overflow = 'hidden';
             }
-
-            function closeVariantModal() {
-                document.getElementById('variantModal').classList.remove('show');
-                document.body.style.overflow = '';
-            }
+            function closeVariantModal() { document.getElementById('variantModal').classList.remove('show'); }
 
             async function onVariantColorChange() {
-                const colorId = document.getElementById('variantColorId').value;
-                const sizeSelect = document.getElementById('variantSizeId');
-                sizeSelect.innerHTML = '<option value="">Select Size</option>';
-                if (!colorId) return;
-
-                const token = getAdminToken();
+                const cid = document.getElementById('variantColorId').value;
+                const sel = document.getElementById('variantSizeId');
+                sel.innerHTML = '<option value="">Select Size</option>';
+                if (!cid) return;
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/product-colors/${colorId}/sizes`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`${API}/api/admin/product-colors/${cid}/sizes`, { headers: { 'Authorization': `Bearer ${token()}` } });
                     const data = await res.json();
-                    if (data.success && data.sizes) {
-                        sizeSelect.innerHTML = '<option value="">Select Size</option>' +
-                            data.sizes.map(s => `<option value="${s.id}">${escapeHTML(s.size_name)}</option>`).join('');
-                    }
+                    if (data.success && data.sizes) sel.innerHTML = '<option value="">Select Size</option>' + data.sizes.map(s => `<option value="${s.id}">${esc(s.size_name)}</option>`).join('');
                 } catch(e) {}
             }
 
@@ -1599,273 +661,125 @@
                 const colorId = parseInt(document.getElementById('variantColorId').value);
                 const sizeId = parseInt(document.getElementById('variantSizeId').value);
                 const price = parseFloat(document.getElementById('variantPrice').value);
-                
-                if (!activeProductId || !colorId || !sizeId || isNaN(price)) {
-                    showToast('Color, size and price are required', 'error'); return;
-                }
-
-                const token = getAdminToken();
-                const variantData = {
-                    product_id: activeProductId,
-                    color_id: colorId,
-                    size_id: sizeId,
-                    price: price,
+                if (!activeProductId || !colorId || !sizeId || isNaN(price)) { toast('Color, size & price required', 'error'); return; }
+                const body = {
+                    product_id: activeProductId, color_id: colorId, size_id: sizeId, price,
                     old_price: document.getElementById('variantOldPrice').value ? parseFloat(document.getElementById('variantOldPrice').value) : null,
-                    stock: parseInt(document.getElementById('variantStock').value) || 0,
-                    material: document.getElementById('variantMaterial').value.trim() || null,
-                    weight: parseFloat(document.getElementById('variantWeight').value) || 0,
-                    sort_order: parseInt(document.getElementById('variantSortOrder').value) || 0,
+                    stock: parseInt(document.getElementById('variantStock').value)||0,
+                    material: document.getElementById('variantMaterial').value.trim()||null,
+                    weight: parseFloat(document.getElementById('variantWeight').value)||0,
+                    sort_order: parseInt(document.getElementById('variantSortOrder').value)||0,
                     is_active: document.getElementById('variantIsActive').checked
                 };
-
-                const variantId = document.getElementById('variantId').value;
-                const url = variantId
-                    ? `${API_BASE_URL}/api/admin/product-variants/${variantId}`
-                    : `${API_BASE_URL}/api/admin/product-variants`;
-                const method = variantId ? 'PUT' : 'POST';
-
+                const id = document.getElementById('variantId').value;
+                const url = id ? `${API}/api/admin/product-variants/${id}` : `${API}/api/admin/product-variants`;
                 const btn = document.getElementById('variantSaveBtn');
-                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
-                
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Saving...';
                 try {
-                    const res = await fetch(url, {
-                        method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify(variantData)
-                    });
+                    const res = await fetch(url, { method: id?'PUT':'POST', headers: { 'Authorization': `Bearer ${token()}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
                     const data = await res.json();
-                    if (res.ok && data.success) {
-                        showToast(variantId ? 'Variant updated' : 'Variant created', 'success');
-                        closeVariantModal();
-                        await refreshAll();
-                    } else throw new Error(data.error || 'Failed');
-                } catch(e) { showToast(e.message, 'error'); }
-                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Variant</span>'; }
+                    if (res.ok && data.success) { toast(id?'Variant updated':'Variant created','success'); closeVariantModal(); await refreshAll(); }
+                    else throw new Error(data.error||'Failed');
+                } catch(e) { toast(e.message, 'error'); }
+                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i> Save Variant'; }
             }
 
             // ==================== MATRIX ====================
             async function loadMatrix() {
                 if (!activeProductId) return;
-                const token = getAdminToken();
-                const matrixWrapper = document.getElementById('matrixTableWrapper');
-                const matrixEmpty = document.getElementById('matrixEmptyState');
-                matrixWrapper.innerHTML = '<div class="skeleton" style="width:100%;height:200px;"></div>';
-                matrixWrapper.style.display = 'block';
-                matrixEmpty.style.display = 'none';
-
+                const wrapper = document.getElementById('matrixWrapper');
+                const empty = document.getElementById('matrixEmpty');
+                wrapper.innerHTML = '<div class="skeleton" style="height:150px;"></div>';
+                wrapper.style.display = 'block'; empty.style.display = 'none';
                 try {
-                    const res = await fetch(`${API_BASE_URL}/api/admin/products/${activeProductId}/variants-matrix`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`${API}/api/admin/products/${activeProductId}/variants-matrix`, { headers: { 'Authorization': `Bearer ${token()}` } });
                     const data = await res.json();
-                    if (data.success && data.matrix && data.matrix.length > 0) {
-                        const matrix = data.matrix;
-                        document.getElementById('matrixTabCount').textContent = data.variants?.length || 0;
-                        document.getElementById('matrixSectionSubtitle').textContent = `${matrix.length} colors × sizes grid`;
-                        
-                        // Collect all unique size names
-                        const sizeNames = new Set();
-                        matrix.forEach(color => {
-                            color.sizes.forEach(s => sizeNames.add(s.size_name));
-                        });
-                        const sizeNamesArr = Array.from(sizeNames).sort((a, b) => {
-                            const order = ['XS','S','M','L','XL','XXL','XXXL','4XL','5XL'];
-                            const ai = order.indexOf(a.toUpperCase());
-                            const bi = order.indexOf(b.toUpperCase());
-                            if (ai !== -1 && bi !== -1) return ai - bi;
-                            if (ai !== -1) return -1;
-                            if (bi !== -1) return 1;
-                            return a.localeCompare(b);
-                        });
-
-                        let html = '<table class="matrix-table"><thead><tr><th class="matrix-color-header">Color \\ Size</th>';
-                        sizeNamesArr.forEach(size => {
-                            html += `<th>${size}</th>`;
-                        });
-                        html += '</tr></thead><tbody>';
-
-                        matrix.forEach(color => {
-                            html += `<tr><td class="matrix-color-header">
-                                <div style="display:flex;align-items:center;gap:8px;">
-                                    <div class="color-swatch" style="background:${color.color_code || '#ccc'};width:22px;height:22px;"></div>
-                                    <span>${escapeHTML(color.color_name)}</span>
-                                </div>
-                                <span style="font-size:10px;color:var(--accent);">Stock: ${color.color_stock || 0}</span>
-                            </td>`;
-                            
-                            sizeNamesArr.forEach(sizeName => {
-                                const sizeData = color.sizes.find(s => s.size_name === sizeName);
-                                if (sizeData && sizeData.variant) {
-                                    const v = sizeData.variant;
-                                    html += `<td class="matrix-cell has-variant" onclick="openVariantModal(${v.id})" title="Click to edit">
-                                        <span class="variant-price">৳${v.price || 0}</span>
-                                        <span class="variant-stock">Stock: ${v.stock || 0}</span>
-                                        <span class="variant-sku">${v.sku || '-'}</span>
-                                        <span class="status-badge ${v.is_active ? 'active' : 'inactive'}" style="font-size:9px;padding:2px 6px;margin-top:4px;">
-                                            ${v.is_active ? 'Active' : 'Inactive'}
-                                        </span>
-                                    </td>`;
+                    if (data.success && data.matrix && data.matrix.length) {
+                        const m = data.matrix;
+                        document.getElementById('matrixTabCount').textContent = data.variants?.length||0;
+                        document.getElementById('matrixSubtitle').textContent = `${m.length} colors`;
+                        const sizes = new Set(); m.forEach(c => c.sizes.forEach(s => sizes.add(s.size_name)));
+                        const sArr = Array.from(sizes).sort((a,b) => { const o=['XS','S','M','L','XL','XXL','XXXL','4XL','5XL']; const ai=o.indexOf(a.toUpperCase()), bi=o.indexOf(b.toUpperCase()); if(ai!==-1&&bi!==-1)return ai-bi; if(ai!==-1)return -1; if(bi!==-1)return 1; return a.localeCompare(b); });
+                        let h = '<table class="matrix-table"><thead><tr><th class="matrix-color-header">Color \\ Size</th>';
+                        sArr.forEach(s => h += `<th>${s}</th>`);
+                        h += '</tr></thead><tbody>';
+                        m.forEach(color => {
+                            h += `<tr><td class="matrix-color-header"><div style="display:flex;align-items:center;gap:6px;"><div class="color-swatch" style="background:${color.color_code||'#ccc'};width:18px;height:18px;"></div><span>${esc(color.color_name)}</span></div></td>`;
+                            sArr.forEach(sn => {
+                                const sd = color.sizes.find(s => s.size_name === sn);
+                                if (sd && sd.variant) {
+                                    const v = sd.variant;
+                                    h += `<td class="matrix-cell has-variant" onclick="openVariantModal(${v.id})"><span class="variant-price">৳${v.price||0}</span><span class="variant-stock">Stock: ${v.stock||0}</span></td>`;
                                 } else {
-                                    html += `<td class="matrix-cell no-variant" onclick="openVariantModalForMatrix(${color.color_id}, '${sizeName.replace(/'/g, "\\'")}')" title="Click to create variant">
-                                        <i class="fa-solid fa-plus" style="font-size:10px;"></i> No variant
-                                    </td>`;
+                                    h += `<td class="matrix-cell no-variant" onclick="openVariantForMatrix(${color.color_id},'${sn.replace(/'/g,"\\'")}')"><i class="fa-solid fa-plus"></i> Add</td>`;
                                 }
                             });
-                            html += '</tr>';
+                            h += '</tr>';
                         });
-
-                        html += '</tbody></table>';
-                        matrixWrapper.innerHTML = html;
-                        matrixWrapper.style.display = 'block';
-                        matrixEmpty.style.display = 'none';
-                    } else {
-                        matrixWrapper.style.display = 'none';
-                        matrixEmpty.style.display = 'block';
-                        document.getElementById('matrixTabCount').textContent = '0';
-                    }
-                } catch(e) {
-                    matrixWrapper.innerHTML = '<p style="text-align:center;padding:40px;color:#dc2626;">Failed to load matrix</p>';
-                }
+                        h += '</tbody></table>';
+                        wrapper.innerHTML = h;
+                        wrapper.style.display = 'block'; empty.style.display = 'none';
+                    } else { wrapper.style.display = 'none'; empty.style.display = 'block'; }
+                } catch(e) { wrapper.innerHTML = '<p style="text-align:center;padding:30px;color:#dc2626;">Error</p>'; }
             }
 
-            function openVariantModalForMatrix(colorId, sizeName) {
-                if (!activeProductId) return;
+            function openVariantForMatrix(colorId, sizeName) {
                 document.getElementById('variantId').value = '';
                 document.getElementById('variantForm').reset();
                 document.getElementById('variantColorId').value = colorId;
-                document.getElementById('variantStock').value = 0;
-                document.getElementById('variantWeight').value = 0;
-                document.getElementById('variantSortOrder').value = 0;
-                document.getElementById('variantIsActive').checked = true;
-                
+                document.getElementById('variantStock').value = 0; document.getElementById('variantWeight').value = 0;
+                document.getElementById('variantSortOrder').value = 0; document.getElementById('variantIsActive').checked = true;
                 onVariantColorChange();
                 setTimeout(() => {
-                    const sizeSelect = document.getElementById('variantSizeId');
-                    for (let opt of sizeSelect.options) {
-                        if (opt.text === sizeName) {
-                            sizeSelect.value = opt.value;
-                            break;
-                        }
-                    }
+                    const sel = document.getElementById('variantSizeId');
+                    for (let o of sel.options) { if (o.text === sizeName) { sel.value = o.value; break; } }
                 }, 500);
-                
-                document.getElementById('variantModalTitle').textContent = 'Create Variant from Matrix';
+                document.getElementById('variantModalTitle').textContent = 'Create Variant';
                 document.getElementById('variantModal').classList.add('show');
-                document.body.style.overflow = 'hidden';
             }
 
             // ==================== DELETE ====================
-            function openDeleteConfirm(id, type, name) {
-                deleteTargetId = id;
-                deleteTargetType = type;
-                document.getElementById('deleteConfirmTitle').textContent = `Delete ${type.charAt(0).toUpperCase() + type.slice(1)}?`;
-                document.getElementById('deleteConfirmText').innerHTML = `Are you sure you want to delete "<strong>${escapeHTML(name || 'Untitled')}</strong>"? This will also delete related variants and cannot be undone.`;
-                document.getElementById('deleteConfirm').classList.add('show');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeDeleteConfirm() {
-                deleteTargetId = null;
-                deleteTargetType = null;
-                document.getElementById('deleteConfirm').classList.remove('show');
-                document.body.style.overflow = '';
-            }
-
+            function openDelete(id, type, name) { delId = id; delType = type; document.getElementById('delTitle').textContent = `Delete ${type}?`; document.getElementById('delText').innerHTML = `Delete "<strong>${esc(name||'Untitled')}</strong>"? Related items will also be deleted.`; document.getElementById('deleteConfirm').classList.add('show'); }
+            function closeDeleteConfirm() { delId = null; delType = null; document.getElementById('deleteConfirm').classList.remove('show'); }
             async function confirmDelete() {
-                if (!deleteTargetId || !deleteTargetType) return;
-                const token = getAdminToken();
-                if (!token) return;
-
-                let endpoint;
-                switch (deleteTargetType) {
-                    case 'color': endpoint = `${API_BASE_URL}/api/admin/product-colors/${deleteTargetId}`; break;
-                    case 'size': endpoint = `${API_BASE_URL}/api/admin/color-sizes/${deleteTargetId}`; break;
-                    case 'variant': endpoint = `${API_BASE_URL}/api/admin/product-variants/${deleteTargetId}`; break;
-                    default: return;
-                }
-
+                if (!delId || !delType) return;
+                const urls = { color: `${API}/api/admin/product-colors/${delId}`, size: `${API}/api/admin/color-sizes/${delId}`, variant: `${API}/api/admin/product-variants/${delId}` };
                 try {
-                    const res = await fetch(endpoint, {
-                        method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(urls[delType], { method: 'DELETE', headers: { 'Authorization': `Bearer ${token()}` } });
                     const data = await res.json();
-                    if (res.ok && data.success) {
-                        showToast('Deleted successfully', 'success');
-                        closeDeleteConfirm();
-                        await refreshAll();
-                    } else throw new Error(data.error || 'Failed');
-                } catch(e) { showToast(e.message, 'error'); closeDeleteConfirm(); }
+                    if (res.ok) { toast('Deleted', 'success'); closeDeleteConfirm(); await refreshAll(); }
+                    else throw new Error(data.error);
+                } catch(e) { toast(e.message, 'error'); closeDeleteConfirm(); }
             }
 
             // ==================== INIT ====================
             document.addEventListener('DOMContentLoaded', () => {
-                if (!checkAdminAuth()) return;
-
-                // Init sidebar & topbar
                 if (window.JAYENWARE?.Components) {
                     JAYENWARE.Components.initAll({ sidebarSelector: '#sidebar', topBarSelector: '#topBar' });
-                    JAYENWARE.Components.onLogout(() => {
-                        localStorage.removeItem('jayenware_admin_session');
-                        sessionStorage.removeItem('jayenware_admin_session');
-                        window.location.href = '/';
-                    });
+                    JAYENWARE.Components.onLogout(() => { localStorage.removeItem('jayenware_admin_session'); sessionStorage.removeItem('jayenware_admin_session'); window.location.href = '/'; });
                 }
-
-                // Tab switching
-                document.querySelectorAll('.tab-main-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const tab = this.dataset.tab;
-                        document.querySelectorAll('.tab-main-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                        document.getElementById(`tab-${tab}`).classList.add('active');
-                        activeTab = tab;
-                        
-                        if (!activeProductId) return;
-                        if (tab === 'colors') loadColors();
-                        else if (tab === 'sizes') loadSizes();
-                        else if (tab === 'variants') { loadVariants(); loadVariantStats(); }
-                        else if (tab === 'matrix') loadMatrix();
-                    });
-                });
-
-                // Modal close on overlay click
-                ['colorModal','sizeModal','variantModal'].forEach(id => {
-                    document.getElementById(id).addEventListener('click', function(e) {
-                        if (e.target === this) {
-                            if (id === 'colorModal') closeColorModal();
-                            else if (id === 'sizeModal') closeSizeModal();
-                            else closeVariantModal();
-                        }
-                    });
-                });
-
-                document.getElementById('deleteConfirm').addEventListener('click', function(e) {
-                    if (e.target === this) closeDeleteConfirm();
-                });
-
-                // ESC key
-                document.addEventListener('keydown', e => {
-                    if (e.key === 'Escape') {
-                        closeColorModal(); closeSizeModal(); closeVariantModal(); closeDeleteConfirm();
-                    }
-                });
-
-                // Color code preview
-                document.getElementById('colorCode').addEventListener('input', function() {
-                    updateColorPreview(this.value.trim());
-                });
-
-                // Size color filter change
-                document.getElementById('sizeColorFilter').addEventListener('change', function() {
-                    loadSizes();
-                });
-
-                // Load products dropdown
-                loadProductsDropdown();
+                document.querySelectorAll('.tab-main-btn').forEach(b => b.addEventListener('click', function() {
+                    const tab = this.dataset.tab;
+                    document.querySelectorAll('.tab-main-btn').forEach(x => x.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+                    document.getElementById(`tab-${tab}`).classList.add('active');
+                    activeTab = tab;
+                    if (!activeProductId) return;
+                    if (tab === 'colors') loadColors();
+                    else if (tab === 'sizes') loadSizes();
+                    else if (tab === 'variants') { loadVariants(); loadVariantStats(); }
+                    else if (tab === 'matrix') loadMatrix();
+                }));
+                ['colorModal','sizeModal','variantModal'].forEach(id => document.getElementById(id).addEventListener('click', function(e) { if (e.target===this) { if(id==='colorModal')closeColorModal(); else if(id==='sizeModal')closeSizeModal(); else closeVariantModal(); } }));
+                document.getElementById('deleteConfirm').addEventListener('click', function(e) { if (e.target===this) closeDeleteConfirm(); });
+                document.addEventListener('keydown', e => { if (e.key==='Escape') { closeColorModal(); closeSizeModal(); closeVariantModal(); closeDeleteConfirm(); } });
+                document.getElementById('colorCode').addEventListener('input', function() { updateColorPreview(this.value.trim()); });
+                document.getElementById('sizeColorFilter').addEventListener('change', loadSizes);
             });
 
-            // Global exposure
-            window.onProductChange = onProductChange;
+            window.loadProductById = loadProductById;
+            window.onProductIdChange = onProductIdChange;
             window.refreshAll = refreshAll;
             window.openColorModal = openColorModal;
             window.closeColorModal = closeColorModal;
@@ -1877,19 +791,18 @@
             window.closeVariantModal = closeVariantModal;
             window.saveVariant = saveVariant;
             window.generateAllVariants = generateAllVariants;
-            window.updateVariantStock = updateVariantStock;
-            window.toggleVariantStatus = toggleVariantStatus;
+            window.updateStock = updateStock;
+            window.toggleVariant = toggleVariant;
             window.onVariantColorChange = onVariantColorChange;
-            window.switchToSizesTab = switchToSizesTab;
-            window.openVariantModalForMatrix = openVariantModalForMatrix;
-            window.openDeleteConfirm = openDeleteConfirm;
+            window.switchToSizes = switchToSizes;
+            window.openVariantForMatrix = openVariantForMatrix;
+            window.openDelete = openDelete;
             window.closeDeleteConfirm = closeDeleteConfirm;
             window.confirmDelete = confirmDelete;
             window.loadColors = loadColors;
             window.loadSizes = loadSizes;
             window.loadVariants = loadVariants;
             window.loadMatrix = loadMatrix;
-            window.loadVariantStats = loadVariantStats;
         })();
     </script>
 </body>
