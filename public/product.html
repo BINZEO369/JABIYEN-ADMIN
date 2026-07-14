@@ -173,13 +173,8 @@
             background: rgba(255,255,255,0.5);
         }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
@@ -196,7 +191,6 @@
         .btn-danger { background: #dc2626; color: #fff; }
         .btn-danger:hover, .btn-danger:active { background: #b91c1c; }
         .btn-sm { padding: 6px 14px; font-size: 12px; min-height: 32px; }
-        .btn-xs { padding: 4px 10px; font-size: 11px; min-height: 26px; border-radius: 20px; }
 
         .content-area {
             flex: 1; padding: 30px 24px; max-width: 1400px;
@@ -222,11 +216,11 @@
         }
         .filter-bar .form-select {
             width: auto; min-width: 140px; padding: 8px 12px; font-size: 13px;
-            border-radius: 10px; background: #fff;
+            border-radius: 10px; background: #fff; border: 1.5px solid #e5e5ea;
         }
         .filter-bar .form-input {
             width: auto; min-width: 200px; padding: 8px 12px; font-size: 13px;
-            border-radius: 10px; background: #fff;
+            border-radius: 10px; background: #fff; border: 1.5px solid #e5e5ea;
         }
 
         .table-container {
@@ -235,12 +229,18 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
-        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        table { width: 100%; border-collapse: collapse; min-width: 950px; }
         thead { background: #f8f8fa; border-bottom: 1px solid #e5e5ea; }
         th { padding: 14px 16px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); white-space: nowrap; }
         td { padding: 14px 16px; font-size: 13px; color: var(--primary); border-bottom: 1px solid #f0f0f5; vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #fafafa; }
+
+        .id-badge {
+            display: inline-block; padding: 3px 8px; border-radius: 6px;
+            font-family: 'Sora', monospace; font-size: 11px; font-weight: 700;
+            background: #f0f0f5; color: var(--accent);
+        }
 
         .img-thumb {
             width: 48px; height: 48px; border-radius: 10px; 
@@ -248,12 +248,8 @@
             justify-content: center; border: 1px solid #e5e5ea; 
             overflow: hidden; flex-shrink: 0;
         }
-        .img-thumb img {
-            width: 100%; height: 100%; object-fit: cover;
-        }
-        .img-thumb i {
-            color: #d1d1d6; font-size: 18px;
-        }
+        .img-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .img-thumb i { color: #d1d1d6; font-size: 18px; }
         
         .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
         .status-badge.active { background: #e6fff0; color: #059669; }
@@ -282,7 +278,6 @@
         .action-btn.edit:hover { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
         .action-btn.delete:hover { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
         .action-btn.toggle:hover { background: #f0fdf4; border-color: #bbf7d0; color: #059669; }
-        .action-btn.copy:hover { background: #fefce8; border-color: #fef08a; color: #ca8a04; }
 
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.25s ease; }
         .modal-overlay.show { display: flex; }
@@ -358,13 +353,6 @@
         .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
         .pagination button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
         .pagination span { font-size: 13px; color: var(--accent); font-weight: 500; }
-
-        .video-thumb-container {
-            width: 68px; height: 44px; border-radius: 8px; 
-            background: #1d1d1f; display: flex; align-items: center; 
-            justify-content: center; border: 1px solid #333; flex-shrink: 0;
-        }
-        .video-thumb-container i { color: #fff; font-size: 14px; opacity: 0.9; }
 
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
@@ -463,6 +451,7 @@
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>ID</th>
                                         <th>Image</th>
                                         <th>Title / SKU</th>
                                         <th>Category</th>
@@ -477,10 +466,15 @@
                         </div>
                         <div class="pagination" id="productPagination"></div>
                         <div class="empty-state" id="productEmptyState">
-                            <div class="empty-state-icon"><i class="fa-solid fa-box-open"></i></div>
+                            <div class="empty-state-icon">
+                                <i class="fa-solid fa-box-open"></i>
+                            </div>
                             <h3>No Products Yet</h3>
                             <p>Create your first product to start selling.</p>
-                            <button class="btn btn-primary" onclick="openProductModal()"><i class="fa-solid fa-plus"></i><span>Add First Product</span></button>
+                            <button class="btn btn-primary" onclick="openProductModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add First Product</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -493,11 +487,9 @@
                             <p class="section-subtitle">Manage video content for individual products</p>
                         </div>
                         <div style="display:flex;gap:12px;align-items:center;">
-                            <select class="form-select" id="videoProductFilter" style="width:auto;min-width:200px;" onchange="loadProductVideos()">
-                                <option value="">All Products</option>
-                            </select>
                             <button class="btn btn-primary btn-sm" onclick="openVideoModal()">
-                                <i class="fa-solid fa-plus"></i><span>Add Video</span>
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Video</span>
                             </button>
                         </div>
                     </div>
@@ -509,7 +501,7 @@
                                     <tr>
                                         <th>Video</th>
                                         <th>Title</th>
-                                        <th>Product</th>
+                                        <th>Product ID</th>
                                         <th>Order</th>
                                         <th>Status</th>
                                         <th style="text-align:right;">Actions</th>
@@ -519,10 +511,15 @@
                             </table>
                         </div>
                         <div class="empty-state" id="videoEmptyState">
-                            <div class="empty-state-icon"><i class="fa-solid fa-video"></i></div>
+                            <div class="empty-state-icon">
+                                <i class="fa-solid fa-video"></i>
+                            </div>
                             <h3>No Product Videos Yet</h3>
                             <p>Add videos to showcase your products.</p>
-                            <button class="btn btn-primary" onclick="openVideoModal()"><i class="fa-solid fa-plus"></i><span>Add First Video</span></button>
+                            <button class="btn btn-primary" onclick="openVideoModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add First Video</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -535,11 +532,9 @@
                             <p class="section-subtitle">Manage promotional banners for products</p>
                         </div>
                         <div style="display:flex;gap:12px;align-items:center;">
-                            <select class="form-select" id="bannerProductFilter" style="width:auto;min-width:200px;" onchange="loadProductBanners()">
-                                <option value="">All Products</option>
-                            </select>
                             <button class="btn btn-primary btn-sm" onclick="openBannerModal()">
-                                <i class="fa-solid fa-plus"></i><span>Add Banner</span>
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Banner</span>
                             </button>
                         </div>
                     </div>
@@ -551,7 +546,7 @@
                                     <tr>
                                         <th>Banner</th>
                                         <th>Title</th>
-                                        <th>Product</th>
+                                        <th>Product ID</th>
                                         <th>Order</th>
                                         <th>Status</th>
                                         <th style="text-align:right;">Actions</th>
@@ -561,10 +556,15 @@
                             </table>
                         </div>
                         <div class="empty-state" id="bannerEmptyState">
-                            <div class="empty-state-icon"><i class="fa-solid fa-image"></i></div>
+                            <div class="empty-state-icon">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
                             <h3>No Product Banners Yet</h3>
                             <p>Create banners to promote your products.</p>
-                            <button class="btn btn-primary" onclick="openBannerModal()"><i class="fa-solid fa-plus"></i><span>Add First Banner</span></button>
+                            <button class="btn btn-primary" onclick="openBannerModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add First Banner</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -577,30 +577,43 @@
         <div class="modal wide">
             <div class="modal-header">
                 <h3 class="modal-title" id="productModalTitle">Add New Product</h3>
-                <button class="modal-close" onclick="closeProductModal()" aria-label="Close"><i class="fa-solid fa-times"></i></button>
+                <button class="modal-close" onclick="closeProductModal()" aria-label="Close">
+                    <i class="fa-solid fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <form id="productForm" onsubmit="return false;">
                     <input type="hidden" id="productId" value="">
+                    
                     <div class="form-group">
                         <label class="form-label">Product Title *</label>
                         <input type="text" class="form-input" id="productTitle" placeholder="Enter product title" maxlength="300" required>
                     </div>
+
                     <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Category</label>
-                            <select class="form-select" id="productCategoryId" onchange="loadSubcategoriesForProduct()"><option value="">Select Category</option></select>
+                            <select class="form-select" id="productCategoryId" onchange="loadSubcategoriesForProduct()">
+                                <option value="">Select Category</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Subcategory</label>
-                            <select class="form-select" id="productSubcategoryId"><option value="">Select Subcategory</option></select>
+                            <select class="form-select" id="productSubcategoryId">
+                                <option value="">Select Subcategory</option>
+                            </select>
                         </div>
                     </div>
+
                     <div class="form-row form-row-3">
                         <div class="form-group">
                             <label class="form-label">Gender</label>
                             <select class="form-select" id="productGender">
-                                <option value="Unisex">Unisex</option><option value="Men">Men</option><option value="Women">Women</option><option value="Kids">Kids</option><option value="Babies">Babies</option>
+                                <option value="Unisex">Unisex</option>
+                                <option value="Men">Men</option>
+                                <option value="Women">Women</option>
+                                <option value="Kids">Kids</option>
+                                <option value="Babies">Babies</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -610,32 +623,36 @@
                         <div class="form-group">
                             <label class="form-label">Old Price</label>
                             <input type="number" class="form-input" id="productOldPrice" placeholder="0.00" min="0" step="0.01">
-                            <p class="form-hint">For showing discount</p>
                         </div>
                     </div>
+
                     <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Main Image URL</label>
-                            <input type="url" class="form-input" id="productImage" placeholder="https://example.com/image.jpg" oninput="updateProductImagePreview(this.value.trim())">
-                            <div class="img-thumb" style="width:80px;height:60px;margin-top:8px;" id="productImagePreview"><i class="fa-solid fa-image"></i></div>
+                            <input type="url" class="form-input" id="productImage" placeholder="https://example.com/image.jpg">
+                            <div class="img-thumb" style="width:80px;height:60px;margin-top:8px;" id="productImagePreview">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Additional Images (JSON Array)</label>
                             <textarea class="form-textarea" id="productImages" placeholder='["url1.jpg","url2.jpg"]' rows="2" style="font-family:'Sora',monospace;font-size:12px;"></textarea>
-                            <p class="form-hint">JSON array of image URLs</p>
                         </div>
                     </div>
+
                     <div class="form-row form-row-3">
-                        <div class="form-group"><label class="form-label">Fabric Type</label><input type="text" class="form-input" id="productFabricType" placeholder="e.g., Cotton, Polyester"></div>
+                        <div class="form-group"><label class="form-label">Fabric Type</label><input type="text" class="form-input" id="productFabricType" placeholder="e.g., Cotton"></div>
                         <div class="form-group"><label class="form-label">GSM Type</label><input type="text" class="form-input" id="productGsmType" placeholder="e.g., 180 GSM"></div>
-                        <div class="form-group"><label class="form-label">Fit Type</label><input type="text" class="form-input" id="productFitType" placeholder="e.g., Regular, Slim"></div>
+                        <div class="form-group"><label class="form-label">Fit Type</label><input type="text" class="form-input" id="productFitType" placeholder="e.g., Regular"></div>
                     </div>
+
                     <div class="form-row form-row-2">
-                        <div class="form-group"><label class="form-label">Print Type</label><input type="text" class="form-input" id="productPrintType" placeholder="e.g., Digital, Screen"></div>
-                        <div class="form-group"><label class="form-label">Tags</label><input type="text" class="form-input" id="productTags" placeholder="tag1, tag2, tag3"><p class="form-hint">Comma-separated</p></div>
+                        <div class="form-group"><label class="form-label">Print Type</label><input type="text" class="form-input" id="productPrintType" placeholder="e.g., Digital"></div>
+                        <div class="form-group"><label class="form-label">Tags</label><input type="text" class="form-input" id="productTags" placeholder="tag1, tag2, tag3"></div>
                     </div>
-                    <div class="form-group"><label class="form-label">Short Description</label><textarea class="form-textarea" id="productShortDescription" placeholder="Brief product description" rows="2" maxlength="500"></textarea></div>
-                    <div class="form-group"><label class="form-label">Full Description</label><textarea class="form-textarea" id="productDescription" placeholder="Detailed product description" rows="3"></textarea></div>
+
+                    <div class="form-group"><label class="form-label">Short Description</label><textarea class="form-textarea" id="productShortDescription" rows="2" maxlength="500"></textarea></div>
+                    <div class="form-group"><label class="form-label">Full Description</label><textarea class="form-textarea" id="productDescription" rows="3"></textarea></div>
 
                     <div class="collapsible-header" id="productFlagsHeader" onclick="toggleProductFlags()">
                         <h4><i class="fa-solid fa-flag"></i>Product Flags & Status</h4>
@@ -658,16 +675,18 @@
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                     <div class="collapsible-content" id="productSeoContent">
-                        <div class="form-group"><label class="form-label">SEO Title</label><input type="text" class="form-input" id="productSeoTitle" placeholder="SEO title" maxlength="200"></div>
-                        <div class="form-group"><label class="form-label">Google SEO</label><input type="text" class="form-input" id="productGoogleSeo" placeholder="Google SEO field" maxlength="300"></div>
-                        <div class="form-group"><label class="form-label">SEO Description</label><textarea class="form-textarea" id="productSeoDescription" placeholder="SEO description" rows="2" maxlength="300"></textarea></div>
-                        <div class="form-group"><label class="form-label">SEO Keywords</label><input type="text" class="form-input" id="productSeoKeywords" placeholder="keyword1, keyword2, keyword3" maxlength="500"></div>
+                        <div class="form-group"><label class="form-label">SEO Title</label><input type="text" class="form-input" id="productSeoTitle" maxlength="200"></div>
+                        <div class="form-group"><label class="form-label">Google SEO</label><input type="text" class="form-input" id="productGoogleSeo" maxlength="300"></div>
+                        <div class="form-group"><label class="form-label">SEO Description</label><textarea class="form-textarea" id="productSeoDescription" rows="2" maxlength="300"></textarea></div>
+                        <div class="form-group"><label class="form-label">SEO Keywords</label><input type="text" class="form-input" id="productSeoKeywords" maxlength="500"></div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeProductModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveProduct()" id="productSaveBtn"><i class="fa-solid fa-check"></i><span>Save Product</span></button>
+                <button type="button" class="btn btn-primary" onclick="saveProduct()" id="productSaveBtn">
+                    <i class="fa-solid fa-check"></i><span>Save Product</span>
+                </button>
             </div>
         </div>
     </div>
@@ -677,28 +696,42 @@
         <div class="modal">
             <div class="modal-header">
                 <h3 class="modal-title" id="videoModalTitle">Add Product Video</h3>
-                <button class="modal-close" onclick="closeVideoModal()" aria-label="Close"><i class="fa-solid fa-times"></i></button>
+                <button class="modal-close" onclick="closeVideoModal()" aria-label="Close">
+                    <i class="fa-solid fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <form id="videoForm" onsubmit="return false;">
                     <input type="hidden" id="videoId" value="">
-                    <div class="form-group"><label class="form-label">Product *</label><select class="form-select" id="videoProductId" required><option value="">Select Product</option></select></div>
-                    <div class="form-group"><label class="form-label">Video Title</label><input type="text" class="form-input" id="videoTitle" placeholder="Video title" maxlength="200"></div>
-                    <div class="form-group"><label class="form-label">Subtitle</label><input type="text" class="form-input" id="videoSubtitle" placeholder="Video subtitle" maxlength="300"></div>
-                    <div class="form-group"><label class="form-label">Video URL *</label><input type="url" class="form-input" id="videoUrl" placeholder="https://example.com/video.mp4" required></div>
-                    <div class="form-row form-row-2">
-                        <div class="form-group"><label class="form-label">Thumbnail URL</label><input type="url" class="form-input" id="videoThumbnailUrl" placeholder="https://example.com/thumb.jpg"></div>
-                        <div class="form-group"><label class="form-label">Click Link</label><input type="text" class="form-input" id="videoClickLink" placeholder="/product/slug or URL"></div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Product ID *</label>
+                        <input type="number" class="form-input" id="videoProductId" placeholder="Enter Product ID" required min="1">
+                        <p class="form-hint">Enter the Product ID from the products table</p>
                     </div>
+
+                    <div class="form-group"><label class="form-label">Video Title</label><input type="text" class="form-input" id="videoTitle" maxlength="200"></div>
+                    <div class="form-group"><label class="form-label">Subtitle</label><input type="text" class="form-input" id="videoSubtitle" maxlength="300"></div>
+                    <div class="form-group"><label class="form-label">Video URL *</label><input type="url" class="form-input" id="videoUrl" required></div>
+
                     <div class="form-row form-row-2">
-                        <div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="videoSortOrder" placeholder="0" value="0" min="0" max="999"></div>
-                        <div class="form-group" style="display:flex;align-items:center;padding-top:16px;"><div class="form-check"><input type="checkbox" id="videoIsActive" checked><label for="videoIsActive">Active Status</label></div></div>
+                        <div class="form-group"><label class="form-label">Thumbnail URL</label><input type="url" class="form-input" id="videoThumbnailUrl"></div>
+                        <div class="form-group"><label class="form-label">Click Link</label><input type="text" class="form-input" id="videoClickLink"></div>
+                    </div>
+
+                    <div class="form-row form-row-2">
+                        <div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="videoSortOrder" value="0" min="0"></div>
+                        <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
+                            <div class="form-check"><input type="checkbox" id="videoIsActive" checked><label for="videoIsActive">Active Status</label></div>
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeVideoModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveVideo()" id="videoSaveBtn"><i class="fa-solid fa-check"></i><span>Save Video</span></button>
+                <button type="button" class="btn btn-primary" onclick="saveVideo()" id="videoSaveBtn">
+                    <i class="fa-solid fa-check"></i><span>Save Video</span>
+                </button>
             </div>
         </div>
     </div>
@@ -708,29 +741,45 @@
         <div class="modal">
             <div class="modal-header">
                 <h3 class="modal-title" id="bannerModalTitle">Add Product Banner</h3>
-                <button class="modal-close" onclick="closeBannerModal()" aria-label="Close"><i class="fa-solid fa-times"></i></button>
+                <button class="modal-close" onclick="closeBannerModal()" aria-label="Close">
+                    <i class="fa-solid fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <form id="bannerForm" onsubmit="return false;">
                     <input type="hidden" id="bannerId" value="">
-                    <div class="form-group"><label class="form-label">Product *</label><select class="form-select" id="bannerProductId" required><option value="">Select Product</option></select></div>
-                    <div class="form-group"><label class="form-label">Banner Title</label><input type="text" class="form-input" id="bannerTitle" placeholder="Banner title" maxlength="200"></div>
-                    <div class="form-group"><label class="form-label">Subtitle</label><input type="text" class="form-input" id="bannerSubtitle" placeholder="Banner subtitle" maxlength="300"></div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Product ID *</label>
+                        <input type="number" class="form-input" id="bannerProductId" placeholder="Enter Product ID" required min="1">
+                        <p class="form-hint">Enter the Product ID from the products table</p>
+                    </div>
+
+                    <div class="form-group"><label class="form-label">Banner Title</label><input type="text" class="form-input" id="bannerTitle" maxlength="200"></div>
+                    <div class="form-group"><label class="form-label">Subtitle</label><input type="text" class="form-input" id="bannerSubtitle" maxlength="300"></div>
                     <div class="form-group">
                         <label class="form-label">Banner Image URL *</label>
-                        <input type="url" class="form-input" id="bannerImageUrl" placeholder="https://example.com/banner.jpg" required oninput="updateBannerPreview(this.value.trim())">
-                        <div class="img-thumb" style="width:100%;height:120px;margin-top:8px;border-radius:12px;" id="bannerImagePreview"><i class="fa-solid fa-image"></i></div>
+                        <input type="url" class="form-input" id="bannerImageUrl" required>
+                        <div class="img-thumb" style="width:100%;height:120px;margin-top:8px;border-radius:12px;" id="bannerImagePreview">
+                            <i class="fa-solid fa-image"></i>
+                        </div>
                     </div>
+
                     <div class="form-row form-row-2">
-                        <div class="form-group"><label class="form-label">Click Link</label><input type="text" class="form-input" id="bannerClickLink" placeholder="/product/slug or URL"></div>
-                        <div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="bannerSortOrder" placeholder="0" value="0" min="0" max="999"></div>
+                        <div class="form-group"><label class="form-label">Click Link</label><input type="text" class="form-input" id="bannerClickLink"></div>
+                        <div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="bannerSortOrder" value="0" min="0"></div>
                     </div>
-                    <div class="form-group" style="display:flex;align-items:center;padding-top:16px;"><div class="form-check"><input type="checkbox" id="bannerIsActive" checked><label for="bannerIsActive">Active Status</label></div></div>
+
+                    <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
+                        <div class="form-check"><input type="checkbox" id="bannerIsActive" checked><label for="bannerIsActive">Active Status</label></div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeBannerModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveBanner()" id="bannerSaveBtn"><i class="fa-solid fa-check"></i><span>Save Banner</span></button>
+                <button type="button" class="btn btn-primary" onclick="saveBanner()" id="bannerSaveBtn">
+                    <i class="fa-solid fa-check"></i><span>Save Banner</span>
+                </button>
             </div>
         </div>
     </div>
@@ -764,15 +813,11 @@
             let currentPage = 1;
             let totalPages = 1;
             let debounceTimer = null;
-            
-            // ✅ Global product title cache - THIS IS THE KEY FIX
-            let productTitleCache = {};
 
             const productsEndpoint = '/api/admin/products';
             const videosEndpoint = '/api/admin/product-videos';
             const bannersEndpoint = '/api/admin/product-banners';
 
-            // ✅ Auth
             function getAdminToken() {
                 const stored = localStorage.getItem('jayenware_admin_session');
                 if (stored) { try { const p = JSON.parse(stored); if (p?.access_token) return p.access_token; } catch(e) {} }
@@ -795,29 +840,6 @@
                 setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateY(-20px)'; toast.style.transition='all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
             }
 
-            // ✅ Load all product titles into cache
-            async function refreshProductCache() {
-                const token = getAdminToken();
-                if (!token) return;
-                try {
-                    const res = await fetch(`${API_BASE_URL}${productsEndpoint}/all`, { headers: { 'Authorization': `Bearer ${token}` } });
-                    const data = await res.json();
-                    if (data.success) {
-                        productTitleCache = {};
-                        (data.products || []).forEach(p => { productTitleCache[p.id] = p.title || 'Unknown'; });
-                    }
-                } catch(e) { console.error('Failed to load product cache:', e); }
-            }
-
-            function getProductTitle(productId) {
-                if (!productId) return 'Unknown';
-                // First check cache
-                if (productTitleCache[productId]) return productTitleCache[productId];
-                // Check if product object was embedded in response
-                return 'Loading...';
-            }
-
-            // Tab Switching
             function switchTab(tabName) {
                 activeTab = tabName;
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -837,7 +859,7 @@
                 const tbody = document.getElementById('productTableBody');
                 const emptyState = document.getElementById('productEmptyState');
                 const pagination = document.getElementById('productPagination');
-                tbody.innerHTML = '<tr><td colspan="7"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
                 emptyState.style.display = 'none';
                 pagination.innerHTML = '';
 
@@ -856,15 +878,13 @@
                     if (res.status === 401 || res.status === 403) { localStorage.removeItem('jayenware_admin_session'); window.location.href = '/signin?type=admin'; return; }
                     const data = await res.json();
                     if (data.success) {
-                        // Update cache with product titles
-                        (data.products || []).forEach(p => { productTitleCache[p.id] = p.title || 'Unknown'; });
                         renderProductsTable(data.products || []);
                         document.getElementById('productTotalCount').textContent = data.pagination?.total || 0;
                         totalPages = data.pagination?.totalPages || 1;
                         renderPagination(data.pagination);
                     }
                 } catch(e) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load products. <button onclick="loadProducts()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#dc2626;">Failed to load products. <button onclick="loadProducts()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>';
                 }
             }
 
@@ -900,19 +920,23 @@
                     if (p.is_limited_edition) flags.push('<span class="flag-badge limited">Limited</span>');
                     if (p.is_out_of_stock) flags.push('<span class="flag-badge oos">OOS</span>');
                     return `<tr>
+                        <td><span class="id-badge">#${p.id}</span></td>
                         <td><div class="img-thumb">${p.img ? `<img src="${escapeHTML(p.img)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}</div></td>
                         <td>
                             <span style="font-weight:600;display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(p.title)}</span>
                             ${p.sku ? `<span style="font-size:11px;color:var(--accent);font-family:'Sora',monospace;">${escapeHTML(p.sku)}</span>` : ''}
                         </td>
                         <td><span style="font-size:12px;color:var(--accent);">${p.category?.name || '-'}</span></td>
-                        <td><span style="font-weight:700;">৳${p.price || 0}</span>${p.old_price ? `<span style="font-size:11px;color:var(--accent);text-decoration:line-through;margin-left:6px;">৳${p.old_price}</span>` : ''}</td>
+                        <td>
+                            <span style="font-weight:700;">৳${p.price || 0}</span>
+                            ${p.old_price ? `<span style="font-size:11px;color:var(--accent);text-decoration:line-through;margin-left:6px;">৳${p.old_price}</span>` : ''}
+                        </td>
                         <td><div class="flag-badges">${flags.join('') || '<span style="color:#d1d1d6;">-</span>'}</div></td>
                         <td><span class="status-badge ${p.is_out_of_stock ? 'warning' : 'active'}"><span class="status-dot ${p.is_out_of_stock ? 'inactive' : 'active'}"></span>${p.is_out_of_stock ? 'Out of Stock' : 'Available'}</span></td>
                         <td style="text-align:right;">
                             <div class="actions-cell" style="justify-content:flex-end;">
                                 <button class="action-btn edit" onclick="openProductModal(${p.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="action-btn copy" onclick="duplicateProduct(${p.id})" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
+                                <button class="action-btn toggle" onclick="duplicateProduct(${p.id})" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
                                 <button class="action-btn delete" onclick="openDeleteConfirm(${p.id}, 'product', '${escapeHTML(p.title).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         </td>
@@ -924,6 +948,7 @@
                 await loadCategoryDropdowns();
                 document.getElementById('productModalTitle').textContent = productId ? 'Edit Product' : 'Add New Product';
                 document.getElementById('productId').value = productId || '';
+                
                 if (productId) {
                     const token = getAdminToken();
                     const res = await fetch(`${API_BASE_URL}${productsEndpoint}/${productId}`, { headers: { 'Authorization': `Bearer ${token}` } });
@@ -975,13 +1000,17 @@
                 document.body.style.overflow = 'hidden';
             }
 
-            function closeProductModal() { document.getElementById('productModal').classList.remove('show'); document.body.style.overflow = ''; }
+            function closeProductModal() {
+                document.getElementById('productModal').classList.remove('show');
+                document.body.style.overflow = '';
+            }
 
             async function saveProduct() {
                 const title = document.getElementById('productTitle').value.trim();
                 if (!title) { showToast('Product title is required', 'error'); return; }
                 const token = getAdminToken();
                 if (!token) return;
+
                 const productData = {
                     title, category_id: document.getElementById('productCategoryId').value ? parseInt(document.getElementById('productCategoryId').value) : null,
                     subcategory_id: document.getElementById('productSubcategoryId').value ? parseInt(document.getElementById('productSubcategoryId').value) : null,
@@ -1009,9 +1038,11 @@
                     seo_description: document.getElementById('productSeoDescription').value.trim() || null,
                     seo_keywords: document.getElementById('productSeoKeywords').value.trim() || null
                 };
+
                 const productId = document.getElementById('productId').value;
                 const url = productId ? `${API_BASE_URL}${productsEndpoint}/${productId}` : `${API_BASE_URL}${productsEndpoint}`;
                 const method = productId ? 'PUT' : 'POST';
+
                 const btn = document.getElementById('productSaveBtn');
                 btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
                 try {
@@ -1036,7 +1067,7 @@
                 } catch(e) { showToast(e.message, 'error'); }
             }
 
-            // ==================== VIDEOS (FIXED) ====================
+            // ==================== VIDEOS ====================
             async function loadProductVideos() {
                 const token = getAdminToken();
                 if (!token) return;
@@ -1045,43 +1076,29 @@
                 tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
                 emptyState.style.display = 'none';
 
-                // Refresh cache first to ensure we have all product titles
-                await refreshProductCache();
-
-                let url = `${API_BASE_URL}${videosEndpoint}`;
-                const productFilter = document.getElementById('videoProductFilter')?.value;
-                if (productFilter) {
-                    url = `${API_BASE_URL}/api/admin/products/${productFilter}/videos`;
-                }
-
                 try {
-                    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE_URL}${videosEndpoint}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
                     if (data.success) {
                         const videos = data.videos || [];
                         if (!videos.length) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
-                        tbody.innerHTML = videos.map(v => {
-                            // ✅ FIX: Use cache for product title, fallback to embedded product object
-                            const productTitle = v.product?.title || getProductTitle(v.product_id) || `Product #${v.product_id || 'Unknown'}`;
-                            return `<tr>
-                                <td><div class="video-thumb-container"><i class="fa-solid fa-play"></i></div></td>
-                                <td><span style="font-weight:600;">${escapeHTML(v.title || 'Untitled')}</span></td>
-                                <td><span style="font-size:12px;color:var(--accent);">${escapeHTML(productTitle)}</span></td>
-                                <td>${v.sort_order || 0}</td>
-                                <td><span class="status-badge ${v.is_active ? 'active' : 'inactive'}"><span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>${v.is_active ? 'Active' : 'Inactive'}</span></td>
-                                <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
-                                    <button class="action-btn edit" onclick="openVideoModal(${v.id})"><i class="fa-solid fa-pen"></i></button>
-                                    <button class="action-btn toggle" onclick="toggleVideoStatus(${v.id})"><i class="fa-solid fa-${v.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                    <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'video', '${escapeHTML(v.title||'Untitled').replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
-                                </div></td>
-                            </tr>`;
-                        }).join('');
+                        tbody.innerHTML = videos.map(v => `<tr>
+                            <td><div class="img-thumb" style="background:#1d1d1f;"><i class="fa-solid fa-play" style="color:#fff;font-size:12px;"></i></div></td>
+                            <td><span style="font-weight:600;">${escapeHTML(v.title || 'Untitled')}</span></td>
+                            <td><span class="id-badge">#${v.product_id}</span></td>
+                            <td>${v.sort_order || 0}</td>
+                            <td><span class="status-badge ${v.is_active ? 'active' : 'inactive'}"><span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>${v.is_active ? 'Active' : 'Inactive'}</span></td>
+                            <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn edit" onclick="openVideoModal(${v.id})"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="toggleVideoStatus(${v.id})"><i class="fa-solid fa-${v.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'video', 'Video #${v.id}')"><i class="fa-solid fa-trash-can"></i></button>
+                            </div></td>
+                        </tr>`).join('');
                     }
                 } catch(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadProductVideos()" style="color:#007aff;text-decoration:underline;cursor:pointer;">Retry</button></td></tr>'; }
             }
 
             async function openVideoModal(videoId = null) {
-                await loadProductsDropdown('videoProductId');
                 document.getElementById('videoModalTitle').textContent = videoId ? 'Edit Video' : 'Add Product Video';
                 document.getElementById('videoId').value = videoId || '';
                 if (videoId) {
@@ -1099,7 +1116,7 @@
                         document.getElementById('videoSortOrder').value = v.sort_order || 0;
                         document.getElementById('videoIsActive').checked = v.is_active;
                     }
-                } else { document.getElementById('videoForm').reset(); }
+                } else { document.getElementById('videoForm').reset(); document.getElementById('videoSortOrder').value = 0; document.getElementById('videoIsActive').checked = true; }
                 document.getElementById('videoModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
@@ -1107,9 +1124,9 @@
             function closeVideoModal() { document.getElementById('videoModal').classList.remove('show'); document.body.style.overflow = ''; }
 
             async function saveVideo() {
-                const productId = document.getElementById('videoProductId').value;
+                const productId = document.getElementById('videoProductId').value.trim();
                 const videoUrl = document.getElementById('videoUrl').value.trim();
-                if (!productId || !videoUrl) { showToast('Product and video URL required', 'error'); return; }
+                if (!productId || !videoUrl) { showToast('Product ID and video URL required', 'error'); return; }
                 const token = getAdminToken();
                 const videoData = {
                     product_id: parseInt(productId), title: document.getElementById('videoTitle').value.trim() || null,
@@ -1141,7 +1158,7 @@
                 } catch(e) { showToast(e.message, 'error'); }
             }
 
-            // ==================== BANNERS (FIXED) ====================
+            // ==================== BANNERS ====================
             async function loadProductBanners() {
                 const token = getAdminToken();
                 if (!token) return;
@@ -1150,41 +1167,29 @@
                 tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
                 emptyState.style.display = 'none';
 
-                // Refresh cache first
-                await refreshProductCache();
-
-                let url = `${API_BASE_URL}${bannersEndpoint}`;
-                const productFilter = document.getElementById('bannerProductFilter')?.value;
-                if (productFilter) url = `${API_BASE_URL}/api/admin/products/${productFilter}/banners`;
-
                 try {
-                    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE_URL}${bannersEndpoint}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
                     if (data.success) {
                         const banners = data.banners || [];
                         if (!banners.length) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
-                        tbody.innerHTML = banners.map(b => {
-                            // ✅ FIX: Use cache for product title
-                            const productTitle = b.product?.title || getProductTitle(b.product_id) || `Product #${b.product_id || 'Unknown'}`;
-                            return `<tr>
-                                <td><div class="img-thumb">${b.banner_url ? `<img src="${escapeHTML(b.banner_url)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}</div></td>
-                                <td><span style="font-weight:600;">${escapeHTML(b.title || 'Untitled')}</span></td>
-                                <td><span style="font-size:12px;color:var(--accent);">${escapeHTML(productTitle)}</span></td>
-                                <td>${b.sort_order || 0}</td>
-                                <td><span class="status-badge ${b.is_active ? 'active' : 'inactive'}"><span class="status-dot ${b.is_active ? 'active' : 'inactive'}"></span>${b.is_active ? 'Active' : 'Inactive'}</span></td>
-                                <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
-                                    <button class="action-btn edit" onclick="openBannerModal(${b.id})"><i class="fa-solid fa-pen"></i></button>
-                                    <button class="action-btn toggle" onclick="toggleBannerStatus(${b.id})"><i class="fa-solid fa-${b.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                    <button class="action-btn delete" onclick="openDeleteConfirm(${b.id}, 'banner', '${escapeHTML(b.title||'Untitled').replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
-                                </div></td>
-                            </tr>`;
-                        }).join('');
+                        tbody.innerHTML = banners.map(b => `<tr>
+                            <td><div class="img-thumb">${b.banner_url ? `<img src="${escapeHTML(b.banner_url)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}</div></td>
+                            <td><span style="font-weight:600;">${escapeHTML(b.title || 'Untitled')}</span></td>
+                            <td><span class="id-badge">#${b.product_id}</span></td>
+                            <td>${b.sort_order || 0}</td>
+                            <td><span class="status-badge ${b.is_active ? 'active' : 'inactive'}"><span class="status-dot ${b.is_active ? 'active' : 'inactive'}"></span>${b.is_active ? 'Active' : 'Inactive'}</span></td>
+                            <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn edit" onclick="openBannerModal(${b.id})"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="toggleBannerStatus(${b.id})"><i class="fa-solid fa-${b.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${b.id}, 'banner', 'Banner #${b.id}')"><i class="fa-solid fa-trash-can"></i></button>
+                            </div></td>
+                        </tr>`).join('');
                     }
                 } catch(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadProductBanners()" style="color:#007aff;text-decoration:underline;cursor:pointer;">Retry</button></td></tr>'; }
             }
 
             async function openBannerModal(bannerId = null) {
-                await loadProductsDropdown('bannerProductId');
                 document.getElementById('bannerModalTitle').textContent = bannerId ? 'Edit Banner' : 'Add Product Banner';
                 document.getElementById('bannerId').value = bannerId || '';
                 if (bannerId) {
@@ -1202,7 +1207,7 @@
                         document.getElementById('bannerIsActive').checked = b.is_active;
                         updateBannerPreview(b.banner_url);
                     }
-                } else { document.getElementById('bannerForm').reset(); resetBannerPreview(); }
+                } else { document.getElementById('bannerForm').reset(); document.getElementById('bannerSortOrder').value = 0; document.getElementById('bannerIsActive').checked = true; resetBannerPreview(); }
                 document.getElementById('bannerModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
@@ -1210,9 +1215,9 @@
             function closeBannerModal() { document.getElementById('bannerModal').classList.remove('show'); document.body.style.overflow = ''; }
 
             async function saveBanner() {
-                const productId = document.getElementById('bannerProductId').value;
+                const productId = document.getElementById('bannerProductId').value.trim();
                 const bannerUrl = document.getElementById('bannerImageUrl').value.trim();
-                if (!productId || !bannerUrl) { showToast('Product and banner URL required', 'error'); return; }
+                if (!productId || !bannerUrl) { showToast('Product ID and banner URL required', 'error'); return; }
                 const token = getAdminToken();
                 const bannerData = {
                     product_id: parseInt(productId), title: document.getElementById('bannerTitle').value.trim() || null,
@@ -1270,35 +1275,12 @@
                 } catch(e) {}
             }
 
-            async function loadProductsDropdown(selectId) {
-                const token = getAdminToken();
-                try {
-                    const res = await fetch(`${API_BASE_URL}${productsEndpoint}/all`, { headers: { 'Authorization': `Bearer ${token}` } });
-                    const data = await res.json();
-                    if (data.success) {
-                        // Update global cache
-                        (data.products || []).forEach(p => { productTitleCache[p.id] = p.title || 'Unknown'; });
-                        
-                        const options = '<option value="">Select Product</option>' + data.products.map(p => `<option value="${p.id}">${escapeHTML(p.title)} (ID: ${p.id})</option>`).join('');
-                        document.getElementById(selectId).innerHTML = options;
-                        
-                        const videoFilter = document.getElementById('videoProductFilter');
-                        const bannerFilter = document.getElementById('bannerProductFilter');
-                        const filterOptions = '<option value="">All Products</option>' + data.products.map(p => `<option value="${p.id}">${escapeHTML(p.title)}</option>`).join('');
-                        if (videoFilter) videoFilter.innerHTML = filterOptions;
-                        if (bannerFilter) bannerFilter.innerHTML = filterOptions;
-                    }
-                } catch(e) { console.error('Failed to load products dropdown:', e); }
-            }
-
             function updateProductImagePreview(url) {
                 const container = document.getElementById('productImagePreview');
                 if (url) container.innerHTML = `<img src="${escapeHTML(url)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">`;
                 else resetProductImagePreview();
             }
-
             function resetProductImagePreview() { document.getElementById('productImagePreview').innerHTML = '<i class="fa-solid fa-image"></i>'; }
-            
             function updateBannerPreview(url) {
                 const container = document.getElementById('bannerImagePreview');
                 if (url) container.innerHTML = `<img src="${escapeHTML(url)}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">`;
@@ -1346,6 +1328,7 @@
             function escapeHTML(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
 
             // Global exposure
+            window.switchTab = switchTab;
             window.loadProducts = loadProducts;
             window.debounceLoadProducts = debounceLoadProducts;
             window.openProductModal = openProductModal;
@@ -1368,10 +1351,8 @@
             window.loadSubcategoriesForProduct = loadSubcategoriesForProduct;
             window.loadProductVideos = loadProductVideos;
             window.loadProductBanners = loadProductBanners;
-            window.switchTab = switchTab;
 
-            // Init
-            document.addEventListener('DOMContentLoaded', async () => {
+            document.addEventListener('DOMContentLoaded', () => {
                 if (!checkAdminAuth()) return;
                 
                 document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
@@ -1382,14 +1363,15 @@
                 document.getElementById('deleteConfirm').addEventListener('click', function(e) { if (e.target === this) closeDeleteConfirm(); });
                 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeProductModal(); closeVideoModal(); closeBannerModal(); closeDeleteConfirm(); } });
 
+                document.getElementById('productImage').addEventListener('input', function() { updateProductImagePreview(this.value.trim()); });
+                document.getElementById('bannerImageUrl').addEventListener('input', function() { updateBannerPreview(this.value.trim()); });
+
                 if (window.JAYENWARE?.Components) {
                     JAYENWARE.Components.initAll({ sidebarSelector: '#sidebar', topBarSelector: '#topBar' });
                     JAYENWARE.Components.onLogout(() => { localStorage.removeItem('jayenware_admin_session'); sessionStorage.removeItem('jayenware_admin_session'); window.location.href = '/'; });
                 }
 
-                // ✅ Preload product cache on init
-                await refreshProductCache();
-                await loadCategoryDropdowns();
+                loadCategoryDropdowns();
                 loadProducts();
             });
         })();
