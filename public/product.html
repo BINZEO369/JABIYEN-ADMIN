@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Product Management | JAYENWARE Admin</title>
-    <meta name="description" content="Manage products, product videos and banners for JAYENWARE">
+    <title>Products Management | JAYENWARE Admin</title>
+    <meta name="description" content="Manage products, videos and banners for JAYENWARE">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#1d1d1f">
     <link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
@@ -131,40 +131,55 @@
             letter-spacing: -0.01em;
             margin: 0 0 10px 0;
         }
-
+        
         .page-header-subtitle {
             font-size: 14px;
             color: var(--accent);
-            margin: 0 0 8px 0;
+            margin: 0 0 12px 0;
             font-weight: 400;
         }
 
-        .segmented-control {
-            display: inline-flex;
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            gap: 4px;
             background: #f5f5f7;
             padding: 4px;
-            border-radius: 12px;
-            margin-bottom: 4px;
-            flex-wrap: wrap;
-            justify-content: center;
+            border-radius: 50px;
+            margin-top: 8px;
         }
-        .segment-btn {
+
+        .tab-btn {
             padding: 10px 24px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--accent);
+            border-radius: 50px;
             border: none;
             background: transparent;
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
             white-space: nowrap;
         }
-        .segment-btn.active {
-            background: #ffffff;
+
+        .tab-btn.active {
+            background: #fff;
             color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--primary);
+            background: rgba(255,255,255,0.5);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .btn {
@@ -182,6 +197,7 @@
         .btn-danger { background: #dc2626; color: #fff; }
         .btn-danger:hover, .btn-danger:active { background: #b91c1c; }
         .btn-sm { padding: 6px 14px; font-size: 12px; min-height: 32px; }
+        .btn-xs { padding: 4px 10px; font-size: 11px; min-height: 26px; border-radius: 20px; }
 
         .content-area {
             flex: 1; padding: 30px 24px; max-width: 1400px;
@@ -200,6 +216,21 @@
             font-size: 13px; color: var(--accent); margin: 4px 0 0;
         }
 
+        /* Filter Bar */
+        .filter-bar {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            margin-bottom: 20px; padding: 14px 18px; background: #fafafa;
+            border-radius: 16px; border: 1px solid #e5e5ea;
+        }
+        .filter-bar .form-select {
+            width: auto; min-width: 140px; padding: 8px 12px; font-size: 13px;
+            border-radius: 10px; background: #fff;
+        }
+        .filter-bar .form-input {
+            width: auto; min-width: 200px; padding: 8px 12px; font-size: 13px;
+            border-radius: 10px; background: #fff;
+        }
+
         .table-container {
             background: #ffffff; border: 1px solid #e5e5ea;
             border-radius: 16px; overflow: hidden; margin-bottom: 24px;
@@ -213,26 +244,31 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #fafafa; }
 
-        .product-thumb { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; background: #e5e5ea; border: 1px solid #e5e5ea; flex-shrink: 0; }
-        .video-thumb-container {
-            width: 72px; height: 44px; border-radius: 8px; 
-            background: #1d1d1f; display: flex; align-items: center; 
+        .img-thumb {
+            width: 48px; height: 48px; border-radius: 10px; 
+            background: #f5f5f7; display: flex; align-items: center; 
             justify-content: center; border: 1px solid #e5e5ea; 
-            position: relative; overflow: hidden; flex-shrink: 0;
+            overflow: hidden; flex-shrink: 0;
         }
-        .video-thumb-container i { color: #fff; font-size: 14px; opacity: 0.9; }
+        .img-thumb img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        .img-thumb i {
+            color: #d1d1d6; font-size: 18px;
+        }
         
         .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
         .status-badge.active { background: #e6fff0; color: #059669; }
         .status-badge.inactive { background: #fef2f2; color: #dc2626; }
+        .status-badge.warning { background: #fefce8; color: #ca8a04; }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; }
         .status-dot.active { background: #059669; }
         .status-dot.inactive { background: #dc2626; }
 
+        .flag-badges { display: flex; gap: 4px; flex-wrap: wrap; }
         .flag-badge {
-            display: inline-block; padding: 2px 8px; border-radius: 10px;
-            font-size: 10px; font-weight: 700; margin: 1px 2px;
-            text-transform: uppercase; letter-spacing: 0.03em;
+            padding: 3px 8px; border-radius: 12px; font-size: 10px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
         }
         .flag-badge.featured { background: #eff6ff; color: #2563eb; }
         .flag-badge.new { background: #f0fdf4; color: #059669; }
@@ -240,7 +276,7 @@
         .flag-badge.hot { background: #fff7ed; color: #ea580c; }
         .flag-badge.best { background: #fefce8; color: #ca8a04; }
         .flag-badge.limited { background: #faf5ff; color: #7c3aed; }
-        .flag-badge.oos { background: #fef2f2; color: #dc2626; }
+        .flag-badge.oos { background: #f1f5f9; color: #64748b; }
 
         .actions-cell { display: flex; gap: 8px; align-items: center; }
         .action-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid #e5e5ea; background: #fff; color: #555; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 13px; flex-shrink: 0; }
@@ -248,13 +284,13 @@
         .action-btn.edit:hover { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
         .action-btn.delete:hover { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
         .action-btn.toggle:hover { background: #f0fdf4; border-color: #bbf7d0; color: #059669; }
-        .action-btn.duplicate:hover { background: #fefce8; border-color: #fef08a; color: #ca8a04; }
 
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.25s ease; }
         .modal-overlay.show { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .modal { background: #fff; border-radius: 20px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25); animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        .modal { background: #fff; border-radius: 20px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25); animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        .modal.wide { max-width: 800px; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
         .modal-header { padding: 20px 24px; border-bottom: 1px solid #e5e5ea; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; z-index: 10; }
@@ -272,9 +308,7 @@
         .form-textarea { resize: vertical; min-height: 80px; }
         .form-hint { font-size: 12px; color: var(--accent); margin-top: 6px; }
         .form-row { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        @media (min-width: 640px) { .form-row { grid-template-columns: 1fr 1fr; } }
-        .form-row-3 { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        @media (min-width: 640px) { .form-row-3 { grid-template-columns: 1fr 1fr 1fr; } }
+        @media (min-width: 640px) { .form-row-2 { grid-template-columns: 1fr 1fr; } .form-row-3 { grid-template-columns: 1fr 1fr 1fr; } .form-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; } }
         
         .form-check { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-top: 6px; }
         .form-check input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; border-radius: 6px; }
@@ -289,19 +323,10 @@
             font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700;
             color: var(--primary); margin: 0; display: flex; align-items: center; gap: 8px;
         }
-        .collapsible-header i { transition: transform 0.3s ease; color: var(--accent); }
-        .collapsible-header.open i { transform: rotate(180deg); }
+        .collapsible-header i.fa-chevron-down { transition: transform 0.3s ease; color: var(--accent); }
+        .collapsible-header.open i.fa-chevron-down { transform: rotate(180deg); }
         .collapsible-content { display: none; }
         .collapsible-content.open { display: block; }
-
-        .image-preview-container {
-            margin-top: 10px; border-radius: 12px; overflow: hidden;
-            background: #f5f5f7; min-height: 100px; display: flex;
-            align-items: center; justify-content: center; border: 1px dashed #d1d1d6;
-        }
-        .image-preview-container img {
-            width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px;
-        }
 
         .toast-container { position: fixed; top: 20px; right: 20px; left: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; pointer-events: none; align-items: center; }
         @media (min-width: 640px) { .toast-container { left: auto; align-items: flex-end; } }
@@ -328,25 +353,12 @@
         .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: inline-block; }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-        .pagination { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 20px; flex-wrap: wrap; }
-        .pagination button { width: 40px; height: 40px; border-radius: 10px; border: 1px solid #e5e5ea; background: #fff; color: var(--primary); font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: 'Inter', sans-serif; font-size: 14px; }
-        .pagination button:hover { background: #f5f5f7; }
-        .pagination button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .pagination { display: flex; gap: 8px; align-items: center; justify-content: center; padding: 20px; flex-wrap: wrap; }
+        .pagination button { padding: 8px 16px; border-radius: 10px; border: 1px solid #e5e5ea; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; color: var(--primary); }
+        .pagination button:hover:not(:disabled) { background: #f5f5f7; border-color: #d1d1d6; }
         .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .search-filter-bar {
-            display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;
-        }
-        .search-input-wrapper {
-            position: relative; flex: 1; min-width: 200px; max-width: 400px;
-        }
-        .search-input-wrapper input {
-            width: 100%; padding: 10px 14px 10px 40px; border: 1.5px solid #e5e5ea;
-            border-radius: 12px; font-size: 14px; font-family: 'Inter', sans-serif;
-            background: #fafafa; outline: none; transition: all 0.2s ease;
-        }
-        .search-input-wrapper input:focus { border-color: var(--primary); background: #fff; }
-        .search-input-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 14px; }
+        .pagination button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .pagination span { font-size: 13px; color: var(--accent); font-weight: 500; }
 
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
@@ -356,14 +368,16 @@
         @media (max-width: 639px) {
             .content-area { padding: 16px 12px; }
             .page-header-bar { padding: 40px 16px 24px; }
-            .segmented-control { width: 100%; display: flex; }
-            .segment-btn { flex: 1; padding: 10px 8px; font-size: 12px; }
+            .tab-navigation { flex-wrap: wrap; justify-content: center; }
+            .tab-btn { font-size: 12px; padding: 8px 16px; }
+            .filter-bar { flex-direction: column; align-items: stretch; }
+            .filter-bar .form-select, .filter-bar .form-input { width: 100%; min-width: auto; }
             .modal-overlay { align-items: flex-end; padding: 0; }
             .modal { max-width: 100%; border-radius: 24px 24px 0 0; max-height: 85vh; margin: 0; }
             .modal-footer { flex-direction: column-reverse; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
             .modal-footer .btn { width: 100%; }
             .actions-cell { flex-wrap: wrap; }
-            .form-row-3 { grid-template-columns: 1fr 1fr; }
+            .flag-badges { max-width: 120px; }
         }
     </style>
 </head>
@@ -378,55 +392,64 @@
 
             <div class="page-header-bar">
                 <h1 class="page-header-title">Product Management</h1>
-                <p class="page-header-subtitle">Manage products, videos, and promotional banners</p>
-                
-                <div class="segmented-control">
-                    <button class="segment-btn active" id="tabProducts" onclick="switchTab('products')">
+                <p class="page-header-subtitle">Manage products, videos and promotional banners</p>
+
+                <div class="tab-navigation" id="tabNavigation">
+                    <button class="tab-btn active" data-tab="products">
                         <i class="fa-solid fa-box"></i> Products
                     </button>
-                    <button class="segment-btn" id="tabVideos" onclick="switchTab('videos')">
-                        <i class="fa-solid fa-video"></i> Videos
+                    <button class="tab-btn" data-tab="videos">
+                        <i class="fa-solid fa-video"></i> Product Videos
                     </button>
-                    <button class="segment-btn" id="tabBanners" onclick="switchTab('banners')">
-                        <i class="fa-solid fa-image"></i> Banners
+                    <button class="tab-btn" data-tab="banners">
+                        <i class="fa-solid fa-image"></i> Product Banners
                     </button>
                 </div>
-
-                <button class="btn btn-primary" onclick="handleAddClick()">
-                    <i class="fa-solid fa-plus"></i>
-                    <span id="addBtnText">Add Product</span>
-                </button>
             </div>
 
             <div class="content-area">
                 <!-- Products Tab -->
-                <div id="content-products">
+                <div class="tab-content active" id="tab-products">
                     <div class="section-header">
                         <div>
                             <h2 class="section-title">All Products</h2>
-                            <p class="section-subtitle">Manage your product inventory with full control</p>
+                            <p class="section-subtitle">Manage your product catalog with advanced filters</p>
                         </div>
-                        <div style="display:flex;gap:8px;align-items:center;background:#f5f5f7;padding:6px 14px;border-radius:30px;">
-                            <span style="font-size:13px;font-weight:600;color:var(--accent);">Total:</span>
-                            <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:var(--primary);" id="productTotalCount">0</span>
+                        <div style="display:flex;gap:12px;align-items:center;">
+                            <div style="display:flex;align-items:center;background:#f5f5f7;padding:6px 14px;border-radius:30px;">
+                                <span style="font-size:13px;font-weight:600;color:var(--accent);">Total:</span>
+                                <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:var(--primary);margin-left:6px;" id="productTotalCount">0</span>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="openProductModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Product</span>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="search-filter-bar">
-                        <div class="search-input-wrapper">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="productSearch" placeholder="Search by title, SKU, barcode..." oninput="debounceSearch()">
-                        </div>
-                        <select class="form-select" id="productCategoryFilter" onchange="loadProducts()" style="width:auto;min-width:150px;">
+                    <!-- Filter Bar -->
+                    <div class="filter-bar">
+                        <input type="text" class="form-input" id="productSearch" placeholder="Search by title, SKU, barcode..." oninput="debounceLoadProducts()">
+                        <select class="form-select" id="productCategoryFilter" onchange="loadProducts()">
                             <option value="">All Categories</option>
                         </select>
-                        <select class="form-select" id="productGenderFilter" onchange="loadProducts()" style="width:auto;min-width:120px;">
+                        <select class="form-select" id="productGenderFilter" onchange="loadProducts()">
                             <option value="">All Gender</option>
                             <option value="Men">Men</option>
                             <option value="Women">Women</option>
                             <option value="Unisex">Unisex</option>
                             <option value="Kids">Kids</option>
                             <option value="Babies">Babies</option>
+                        </select>
+                        <select class="form-select" id="productFlagFilter" onchange="loadProducts()">
+                            <option value="">All Flags</option>
+                            <option value="is_featured">Featured</option>
+                            <option value="is_new_arrival">New Arrival</option>
+                            <option value="is_on_sale">On Sale</option>
+                            <option value="is_best">Best Seller</option>
+                            <option value="is_hot">Hot</option>
+                            <option value="is_limited_edition">Limited Edition</option>
+                            <option value="is_out_of_stock">Out of Stock</option>
                         </select>
                     </div>
 
@@ -450,10 +473,10 @@
                         <div class="pagination" id="productPagination"></div>
                         <div class="empty-state" id="productEmptyState">
                             <div class="empty-state-icon">
-                                <i class="fa-solid fa-box"></i>
+                                <i class="fa-solid fa-box-open"></i>
                             </div>
                             <h3>No Products Yet</h3>
-                            <p>Start adding products to your inventory.</p>
+                            <p>Create your first product to start selling.</p>
                             <button class="btn btn-primary" onclick="openProductModal()">
                                 <i class="fa-solid fa-plus"></i>
                                 <span>Add First Product</span>
@@ -463,20 +486,20 @@
                 </div>
 
                 <!-- Videos Tab -->
-                <div id="content-videos" style="display:none;">
+                <div class="tab-content" id="tab-videos">
                     <div class="section-header">
                         <div>
                             <h2 class="section-title">Product Videos</h2>
-                            <p class="section-subtitle">Manage product showcase videos</p>
+                            <p class="section-subtitle">Manage video content for individual products</p>
                         </div>
                         <div style="display:flex;gap:12px;align-items:center;">
-                            <select class="form-select" id="videoProductFilter" onchange="loadVideos()" style="width:auto;min-width:200px;">
+                            <select class="form-select" id="videoProductFilter" style="width:auto;min-width:200px;" onchange="loadProductVideos()">
                                 <option value="">All Products</option>
                             </select>
-                            <div style="display:flex;align-items:center;background:#f5f5f7;padding:6px 14px;border-radius:30px;">
-                                <span style="font-size:13px;font-weight:600;color:var(--accent);">Total:</span>
-                                <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:var(--primary);margin-left:6px;" id="videoTotalCount">0</span>
-                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="openVideoModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Video</span>
+                            </button>
                         </div>
                     </div>
 
@@ -488,7 +511,6 @@
                                         <th>Video</th>
                                         <th>Title</th>
                                         <th>Product</th>
-                                        <th>Link</th>
                                         <th>Order</th>
                                         <th>Status</th>
                                         <th style="text-align:right;">Actions</th>
@@ -501,8 +523,8 @@
                             <div class="empty-state-icon">
                                 <i class="fa-solid fa-video"></i>
                             </div>
-                            <h3>No Videos Yet</h3>
-                            <p>Add product showcase videos to engage customers.</p>
+                            <h3>No Product Videos Yet</h3>
+                            <p>Add videos to showcase your products.</p>
                             <button class="btn btn-primary" onclick="openVideoModal()">
                                 <i class="fa-solid fa-plus"></i>
                                 <span>Add First Video</span>
@@ -512,20 +534,20 @@
                 </div>
 
                 <!-- Banners Tab -->
-                <div id="content-banners" style="display:none;">
+                <div class="tab-content" id="tab-banners">
                     <div class="section-header">
                         <div>
                             <h2 class="section-title">Product Banners</h2>
-                            <p class="section-subtitle">Manage promotional product banners</p>
+                            <p class="section-subtitle">Manage promotional banners for products</p>
                         </div>
                         <div style="display:flex;gap:12px;align-items:center;">
-                            <select class="form-select" id="bannerProductFilter" onchange="loadBanners()" style="width:auto;min-width:200px;">
+                            <select class="form-select" id="bannerProductFilter" style="width:auto;min-width:200px;" onchange="loadProductBanners()">
                                 <option value="">All Products</option>
                             </select>
-                            <div style="display:flex;align-items:center;background:#f5f5f7;padding:6px 14px;border-radius:30px;">
-                                <span style="font-size:13px;font-weight:600;color:var(--accent);">Total:</span>
-                                <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:var(--primary);margin-left:6px;" id="bannerTotalCount">0</span>
-                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="openBannerModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Banner</span>
+                            </button>
                         </div>
                     </div>
 
@@ -537,7 +559,6 @@
                                         <th>Banner</th>
                                         <th>Title</th>
                                         <th>Product</th>
-                                        <th>Link</th>
                                         <th>Order</th>
                                         <th>Status</th>
                                         <th style="text-align:right;">Actions</th>
@@ -550,8 +571,8 @@
                             <div class="empty-state-icon">
                                 <i class="fa-solid fa-image"></i>
                             </div>
-                            <h3>No Banners Yet</h3>
-                            <p>Create promotional banners for your products.</p>
+                            <h3>No Product Banners Yet</h3>
+                            <p>Create banners to promote your products.</p>
                             <button class="btn btn-primary" onclick="openBannerModal()">
                                 <i class="fa-solid fa-plus"></i>
                                 <span>Add First Banner</span>
@@ -565,7 +586,7 @@
 
     <!-- Product Modal -->
     <div class="modal-overlay" id="productModal">
-        <div class="modal">
+        <div class="modal wide">
             <div class="modal-header">
                 <h3 class="modal-title" id="productModalTitle">Add New Product</h3>
                 <button class="modal-close" onclick="closeProductModal()" aria-label="Close">
@@ -579,13 +600,12 @@
                     <div class="form-group">
                         <label class="form-label">Product Title *</label>
                         <input type="text" class="form-input" id="productTitle" placeholder="Enter product title" maxlength="300" required>
-                        <p class="form-hint">Slug and SKU will be auto-generated</p>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Category</label>
-                            <select class="form-select" id="productCategoryId">
+                            <select class="form-select" id="productCategoryId" onchange="loadSubcategoriesForProduct()">
                                 <option value="">Select Category</option>
                             </select>
                         </div>
@@ -597,17 +617,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-textarea" id="productDescription" placeholder="Full product description" rows="3" maxlength="2000"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Short Description</label>
-                        <textarea class="form-textarea" id="productShortDescription" placeholder="Brief product summary" rows="2" maxlength="500"></textarea>
-                    </div>
-
-                    <div class="form-row-3">
+                    <div class="form-row form-row-3">
                         <div class="form-group">
                             <label class="form-label">Gender</label>
                             <select class="form-select" id="productGender">
@@ -619,98 +629,129 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Fabric Type</label>
-                            <input type="text" class="form-input" id="productFabricType" placeholder="e.g., Cotton" maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">GSM Type</label>
-                            <input type="text" class="form-input" id="productGsmType" placeholder="e.g., 180 GSM" maxlength="50">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Fit Type</label>
-                            <input type="text" class="form-input" id="productFitType" placeholder="e.g., Regular Fit" maxlength="100">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Print Type</label>
-                            <input type="text" class="form-input" id="productPrintType" placeholder="e.g., DTG, Screen Print" maxlength="100">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Price *</label>
-                            <input type="number" class="form-input" id="productPrice" placeholder="0.00" step="0.01" min="0" value="0">
+                            <label class="form-label">Price</label>
+                            <input type="number" class="form-input" id="productPrice" placeholder="0.00" min="0" step="0.01">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Old Price</label>
-                            <input type="number" class="form-input" id="productOldPrice" placeholder="0.00" step="0.01" min="0">
-                            <p class="form-hint">For showing discount (leave empty if none)</p>
+                            <input type="number" class="form-input" id="productOldPrice" placeholder="0.00" min="0" step="0.01">
+                            <p class="form-hint">For showing discount</p>
+                        </div>
+                    </div>
+
+                    <div class="form-row form-row-2">
+                        <div class="form-group">
+                            <label class="form-label">Main Image URL</label>
+                            <input type="url" class="form-input" id="productImage" placeholder="https://example.com/image.jpg">
+                            <div class="img-thumb" style="width:80px;height:60px;margin-top:8px;" id="productImagePreview">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Additional Images (JSON Array)</label>
+                            <textarea class="form-textarea" id="productImages" placeholder='["url1.jpg","url2.jpg"]' rows="2" style="font-family:'Sora',monospace;font-size:12px;"></textarea>
+                            <p class="form-hint">JSON array of image URLs</p>
+                        </div>
+                    </div>
+
+                    <div class="form-row form-row-3">
+                        <div class="form-group">
+                            <label class="form-label">Fabric Type</label>
+                            <input type="text" class="form-input" id="productFabricType" placeholder="e.g., Cotton, Polyester">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">GSM Type</label>
+                            <input type="text" class="form-input" id="productGsmType" placeholder="e.g., 180 GSM">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fit Type</label>
+                            <input type="text" class="form-input" id="productFitType" placeholder="e.g., Regular, Slim">
+                        </div>
+                    </div>
+
+                    <div class="form-row form-row-2">
+                        <div class="form-group">
+                            <label class="form-label">Print Type</label>
+                            <input type="text" class="form-input" id="productPrintType" placeholder="e.g., Digital, Screen">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tags</label>
+                            <input type="text" class="form-input" id="productTags" placeholder="tag1, tag2, tag3">
+                            <p class="form-hint">Comma-separated</p>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Main Image URL</label>
-                        <input type="url" class="form-input" id="productImage" placeholder="https://example.com/image.jpg">
-                        <div class="image-preview-container" id="productImagePreview">
-                            <span style="color:#a1a1a6;font-size:13px;">Image preview will appear here</span>
-                        </div>
+                        <label class="form-label">Short Description</label>
+                        <textarea class="form-textarea" id="productShortDescription" placeholder="Brief product description" rows="2" maxlength="500"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Additional Images (JSON Array)</label>
-                        <textarea class="form-textarea" id="productImages" placeholder='["url1.jpg","url2.jpg"]' rows="2" style="font-family:'Sora',monospace;font-size:12px;"></textarea>
-                        <p class="form-hint">JSON array of image URLs</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Tags</label>
-                        <input type="text" class="form-input" id="productTags" placeholder="tag1, tag2, tag3" maxlength="500">
-                        <p class="form-hint">Comma-separated display tags</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Search Tags</label>
-                        <input type="text" class="form-input" id="productSearchTags" placeholder="keyword1, keyword2, keyword3" maxlength="500">
-                        <p class="form-hint">Comma-separated search keywords</p>
+                        <label class="form-label">Full Description</label>
+                        <textarea class="form-textarea" id="productDescription" placeholder="Detailed product description" rows="3"></textarea>
                     </div>
 
                     <!-- Product Flags -->
                     <div class="collapsible-header" id="productFlagsHeader" onclick="toggleProductFlags()">
-                        <h4><i class="fa-solid fa-flag"></i> Product Flags & Badges</h4>
+                        <h4>
+                            <i class="fa-solid fa-flag"></i>
+                            Product Flags & Status
+                        </h4>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                     <div class="collapsible-content" id="productFlagsContent">
-                        <div class="form-row-3">
-                            <div class="form-check"><input type="checkbox" id="productIsFeatured"><label for="productIsFeatured">Featured</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsNewArrival"><label for="productIsNewArrival">New Arrival</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsOnSale"><label for="productIsOnSale">On Sale</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsBest"><label for="productIsBest">Best Seller</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsHot"><label for="productIsHot">Hot</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsLimitedEdition"><label for="productIsLimitedEdition">Limited Edition</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsOutOfStock"><label for="productIsOutOfStock">Out of Stock</label></div>
+                        <div class="form-row form-row-4">
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsFeatured">
+                                <label for="productIsFeatured">Featured</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsNewArrival">
+                                <label for="productIsNewArrival">New Arrival</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsOnSale">
+                                <label for="productIsOnSale">On Sale</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsBest">
+                                <label for="productIsBest">Best Seller</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsHot">
+                                <label for="productIsHot">Hot</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsLimitedEdition">
+                                <label for="productIsLimitedEdition">Limited Edition</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsOutOfStock">
+                                <label for="productIsOutOfStock">Out of Stock</label>
+                            </div>
                         </div>
                     </div>
 
                     <!-- SEO Metadata -->
                     <div class="collapsible-header" id="productSeoHeader" onclick="toggleProductSeo()">
-                        <h4><i class="fa-solid fa-magnifying-glass"></i> SEO Metadata</h4>
+                        <h4>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            SEO Metadata
+                        </h4>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                     <div class="collapsible-content" id="productSeoContent">
                         <div class="form-group">
                             <label class="form-label">SEO Title</label>
-                            <input type="text" class="form-input" id="productSeoTitle" placeholder="SEO meta title" maxlength="200">
+                            <input type="text" class="form-input" id="productSeoTitle" placeholder="SEO title" maxlength="200">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Google SEO</label>
-                            <input type="text" class="form-input" id="productGoogleSeo" placeholder="Google specific SEO" maxlength="200">
+                            <input type="text" class="form-input" id="productGoogleSeo" placeholder="Google SEO field" maxlength="300">
                         </div>
                         <div class="form-group">
                             <label class="form-label">SEO Description</label>
-                            <textarea class="form-textarea" id="productSeoDescription" placeholder="SEO meta description" maxlength="300" rows="2"></textarea>
+                            <textarea class="form-textarea" id="productSeoDescription" placeholder="SEO description" rows="2" maxlength="300"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="form-label">SEO Keywords</label>
@@ -751,34 +792,31 @@
 
                     <div class="form-group">
                         <label class="form-label">Video Title</label>
-                        <input type="text" class="form-input" id="videoTitle" placeholder="Enter video title" maxlength="200">
+                        <input type="text" class="form-input" id="videoTitle" placeholder="Video title" maxlength="200">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Subtitle</label>
-                        <input type="text" class="form-input" id="videoSubtitle" placeholder="Enter subtitle" maxlength="300">
+                        <input type="text" class="form-input" id="videoSubtitle" placeholder="Video subtitle" maxlength="300">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Video URL *</label>
                         <input type="url" class="form-input" id="videoUrl" placeholder="https://example.com/video.mp4" required>
-                        <div class="video-thumb-container" id="videoPreviewContainer" style="margin-top:10px;width:100%;height:auto;min-height:120px;border-radius:12px;display:flex;align-items:center;justify-content:center;">
-                            <span style="color:#a1a1a6;font-size:13px;">Video preview will appear here</span>
-                        </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Thumbnail URL</label>
                             <input type="url" class="form-input" id="videoThumbnailUrl" placeholder="https://example.com/thumb.jpg">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Click Link</label>
-                            <input type="text" class="form-input" id="videoClickLink" placeholder="/product/slug or https://..." maxlength="500">
+                            <input type="text" class="form-input" id="videoClickLink" placeholder="/product/slug or URL">
                         </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row form-row-2">
                         <div class="form-group">
                             <label class="form-label">Sort Order</label>
                             <input type="number" class="form-input" id="videoSortOrder" placeholder="0" value="0" min="0" max="999">
@@ -824,37 +862,37 @@
 
                     <div class="form-group">
                         <label class="form-label">Banner Title</label>
-                        <input type="text" class="form-input" id="bannerTitle" placeholder="Enter banner title" maxlength="200">
+                        <input type="text" class="form-input" id="bannerTitle" placeholder="Banner title" maxlength="200">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Subtitle</label>
-                        <input type="text" class="form-input" id="bannerSubtitle" placeholder="Enter subtitle" maxlength="300">
+                        <input type="text" class="form-input" id="bannerSubtitle" placeholder="Banner subtitle" maxlength="300">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Banner URL *</label>
-                        <input type="url" class="form-input" id="bannerUrl" placeholder="https://example.com/banner.jpg" required>
-                        <div class="image-preview-container" id="bannerPreviewContainer">
-                            <span style="color:#a1a1a6;font-size:13px;">Banner preview will appear here</span>
+                        <label class="form-label">Banner Image URL *</label>
+                        <input type="url" class="form-input" id="bannerImageUrl" placeholder="https://example.com/banner.jpg" required>
+                        <div class="img-thumb" style="width:100%;height:120px;margin-top:8px;border-radius:12px;" id="bannerImagePreview">
+                            <i class="fa-solid fa-image"></i>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Click Link</label>
-                        <input type="text" class="form-input" id="bannerClickLink" placeholder="/product/slug or https://..." maxlength="500">
-                    </div>
-
-                    <div class="form-row">
+                    <div class="form-row form-row-2">
+                        <div class="form-group">
+                            <label class="form-label">Click Link</label>
+                            <input type="text" class="form-input" id="bannerClickLink" placeholder="/product/slug or URL">
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Sort Order</label>
                             <input type="number" class="form-input" id="bannerSortOrder" placeholder="0" value="0" min="0" max="999">
                         </div>
-                        <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
-                            <div class="form-check">
-                                <input type="checkbox" id="bannerIsActive" checked>
-                                <label for="bannerIsActive">Active Status</label>
-                            </div>
+                    </div>
+
+                    <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
+                        <div class="form-check">
+                            <input type="checkbox" id="bannerIsActive" checked>
+                            <label for="bannerIsActive">Active Status</label>
                         </div>
                     </div>
                 </form>
@@ -898,49 +936,30 @@
             
             // State
             let activeTab = 'products';
-            let currentPage = 1;
-            let totalPages = 1;
             let deleteTargetId = null;
             let deleteTargetType = null;
-            let editingProductId = null;
-            let editingVideoId = null;
-            let editingBannerId = null;
-            let searchTimeout = null;
             let productFlagsOpen = false;
             let productSeoOpen = false;
+            let currentPage = 1;
+            let totalPages = 1;
+            let debounceTimer = null;
 
             // Endpoints
-            const endpoints = {
-                products: '/api/admin/products',
-                productVideos: '/api/admin/product-videos',
-                productBanners: '/api/admin/product-banners',
-                categories: '/api/admin/categories',
-                subcategories: '/api/admin/subcategories'
-            };
+            const productsEndpoint = '/api/admin/products';
+            const videosEndpoint = '/api/admin/product-videos';
+            const bannersEndpoint = '/api/admin/product-banners';
 
+            // ✅ Auth
             function getAdminToken() {
                 const stored = localStorage.getItem('jayenware_admin_session');
-                if (stored) {
-                    try { const parsed = JSON.parse(stored); if (parsed && parsed.access_token) return parsed.access_token; } catch(e) {}
-                }
-                const sessionStored = sessionStorage.getItem('jayenware_admin_session');
-                if (sessionStored) {
-                    try {
-                        const sessionParsed = JSON.parse(sessionStored);
-                        if (sessionParsed && sessionParsed.access_token) {
-                            localStorage.setItem('jayenware_admin_session', JSON.stringify(sessionParsed));
-                            return sessionParsed.access_token;
-                        }
-                    } catch(e) {}
-                }
+                if (stored) { try { const p = JSON.parse(stored); if (p?.access_token) return p.access_token; } catch(e) {} }
+                const ss = sessionStorage.getItem('jayenware_admin_session');
+                if (ss) { try { const p = JSON.parse(ss); if (p?.access_token) { localStorage.setItem('jayenware_admin_session', JSON.stringify(p)); return p.access_token; } } catch(e) {} }
                 return null;
             }
 
             function checkAdminAuth() {
-                if (!getAdminToken()) {
-                    window.location.href = '/signin?type=admin&message=admin_required';
-                    return false;
-                }
+                if (!getAdminToken()) { window.location.href = '/signin?type=admin&message=admin_required'; return false; }
                 return true;
             }
 
@@ -948,113 +967,167 @@
                 const container = document.getElementById('toastContainer');
                 const toast = document.createElement('div');
                 toast.className = `toast ${type}`;
-                const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-                toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.info]}"></i> <span>${escapeHTML(message)}</span>`;
+                toast.innerHTML = `<i class="fa-solid fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i> <span>${escapeHTML(message)}</span>`;
                 container.appendChild(toast);
-                setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-20px)'; toast.style.transition = 'all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
-            }
-
-            function escapeHTML(str) {
-                if (!str) return '';
-                const div = document.createElement('div');
-                div.textContent = str;
-                return div.innerHTML;
+                setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateY(-20px)'; toast.style.transition='all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
             }
 
             // Tab Switching
-            function switchTab(tab) {
-                activeTab = tab;
-                document.querySelectorAll('.segment-btn').forEach(btn => btn.classList.remove('active'));
-                document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
-                
-                document.getElementById('content-products').style.display = tab === 'products' ? 'block' : 'none';
-                document.getElementById('content-videos').style.display = tab === 'videos' ? 'block' : 'none';
-                document.getElementById('content-banners').style.display = tab === 'banners' ? 'block' : 'none';
-                
-                const addBtnText = document.getElementById('addBtnText');
-                if (tab === 'products') addBtnText.textContent = 'Add Product';
-                else if (tab === 'videos') addBtnText.textContent = 'Add Video';
-                else addBtnText.textContent = 'Add Banner';
-
-                if (tab === 'products') loadProducts();
-                else if (tab === 'videos') loadVideos();
-                else loadBanners();
-            }
-
-            function handleAddClick() {
-                if (activeTab === 'products') openProductModal();
-                else if (activeTab === 'videos') openVideoModal();
-                else openBannerModal();
-            }
-
-            function debounceSearch() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => { currentPage = 1; loadProducts(); }, 400);
+            function switchTab(tabName) {
+                activeTab = tabName;
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelector(`[data-tab="${tabName}"]`)?.classList.add('active');
+                document.getElementById(`tab-${tabName}`)?.classList.add('active');
+                if (tabName === 'products') loadProducts();
+                else if (tabName === 'videos') loadProductVideos();
+                else if (tabName === 'banners') loadProductBanners();
             }
 
             // ==================== PRODUCTS ====================
-            function toggleProductFlags() {
-                productFlagsOpen = !productFlagsOpen;
-                document.getElementById('productFlagsHeader').classList.toggle('open', productFlagsOpen);
-                document.getElementById('productFlagsContent').classList.toggle('open', productFlagsOpen);
+            async function loadProducts(page = 1) {
+                currentPage = page;
+                const token = getAdminToken();
+                if (!token) return;
+                const tbody = document.getElementById('productTableBody');
+                const emptyState = document.getElementById('productEmptyState');
+                const pagination = document.getElementById('productPagination');
+                tbody.innerHTML = '<tr><td colspan="7"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
+                emptyState.style.display = 'none';
+                pagination.innerHTML = '';
+
+                const params = new URLSearchParams({
+                    page: page, limit: 15,
+                    search: document.getElementById('productSearch')?.value || '',
+                    category_id: document.getElementById('productCategoryFilter')?.value || '',
+                    gender: document.getElementById('productGenderFilter')?.value || '',
+                    sort_by: 'created_at', sort_order: 'desc'
+                });
+                const flagFilter = document.getElementById('productFlagFilter')?.value;
+                if (flagFilter) params.set(flagFilter, 'true');
+
+                try {
+                    const res = await fetch(`${API_BASE_URL}${productsEndpoint}?${params}`, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
+                    if (res.status === 401 || res.status === 403) { localStorage.removeItem('jayenware_admin_session'); window.location.href = '/signin?type=admin'; return; }
+                    const data = await res.json();
+                    if (data.success) {
+                        renderProductsTable(data.products || []);
+                        document.getElementById('productTotalCount').textContent = data.pagination?.total || 0;
+                        totalPages = data.pagination?.totalPages || 1;
+                        renderPagination(data.pagination);
+                    }
+                } catch(e) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load products. <button onclick="loadProducts()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>';
+                }
             }
 
-            function toggleProductSeo() {
-                productSeoOpen = !productSeoOpen;
-                document.getElementById('productSeoHeader').classList.toggle('open', productSeoOpen);
-                document.getElementById('productSeoContent').classList.toggle('open', productSeoOpen);
+            function debounceLoadProducts() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => loadProducts(1), 400);
             }
 
-            async function openProductModal(product = null) {
-                editingProductId = product ? product.id : null;
-                productFlagsOpen = false;
-                productSeoOpen = false;
+            function renderPagination(pagination) {
+                const container = document.getElementById('productPagination');
+                if (!pagination || pagination.totalPages <= 1) { container.innerHTML = ''; return; }
+                let html = `<button ${pagination.page <= 1 ? 'disabled' : ''} onclick="loadProducts(${pagination.page - 1})"><i class="fa-solid fa-chevron-left"></i></button>`;
+                for (let i = 1; i <= pagination.totalPages; i++) {
+                    html += `<button class="${i === pagination.page ? 'active' : ''}" onclick="loadProducts(${i})">${i}</button>`;
+                }
+                html += `<button ${pagination.page >= pagination.totalPages ? 'disabled' : ''} onclick="loadProducts(${pagination.page + 1})"><i class="fa-solid fa-chevron-right"></i></button>`;
+                html += `<span>Page ${pagination.page} of ${pagination.totalPages}</span>`;
+                container.innerHTML = html;
+            }
+
+            function renderProductsTable(products) {
+                const tbody = document.getElementById('productTableBody');
+                const emptyState = document.getElementById('productEmptyState');
+                if (!products.length) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
+                emptyState.style.display = 'none';
+                tbody.innerHTML = products.map(p => {
+                    let flags = [];
+                    if (p.is_featured) flags.push('<span class="flag-badge featured">Featured</span>');
+                    if (p.is_new_arrival) flags.push('<span class="flag-badge new">New</span>');
+                    if (p.is_on_sale) flags.push('<span class="flag-badge sale">Sale</span>');
+                    if (p.is_best) flags.push('<span class="flag-badge best">Best</span>');
+                    if (p.is_hot) flags.push('<span class="flag-badge hot">Hot</span>');
+                    if (p.is_limited_edition) flags.push('<span class="flag-badge limited">Limited</span>');
+                    if (p.is_out_of_stock) flags.push('<span class="flag-badge oos">OOS</span>');
+                    return `<tr>
+                        <td><div class="img-thumb">${p.img ? `<img src="${escapeHTML(p.img)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}</div></td>
+                        <td>
+                            <span style="font-weight:600;display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(p.title)}</span>
+                            ${p.sku ? `<span style="font-size:11px;color:var(--accent);font-family:'Sora',monospace;">${escapeHTML(p.sku)}</span>` : ''}
+                        </td>
+                        <td><span style="font-size:12px;color:var(--accent);">${p.category?.name || '-'}</span></td>
+                        <td>
+                            <span style="font-weight:700;">৳${p.price || 0}</span>
+                            ${p.old_price ? `<span style="font-size:11px;color:var(--accent);text-decoration:line-through;margin-left:6px;">৳${p.old_price}</span>` : ''}
+                        </td>
+                        <td><div class="flag-badges">${flags.join('') || '<span style="color:#d1d1d6;">-</span>'}</div></td>
+                        <td><span class="status-badge ${p.is_out_of_stock ? 'warning' : 'active'}"><span class="status-dot ${p.is_out_of_stock ? 'inactive' : 'active'}"></span>${p.is_out_of_stock ? 'Out of Stock' : 'Available'}</span></td>
+                        <td style="text-align:right;">
+                            <div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn edit" onclick="openProductModal(${p.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="duplicateProduct(${p.id})" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${p.id}, 'product', '${escapeHTML(p.title).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('');
+            }
+
+            async function openProductModal(productId = null) {
+                await loadCategoryDropdowns();
+                document.getElementById('productModalTitle').textContent = productId ? 'Edit Product' : 'Add New Product';
+                document.getElementById('productId').value = productId || '';
                 
-                document.getElementById('productModalTitle').textContent = product ? 'Edit Product' : 'Add New Product';
-                document.getElementById('productId').value = product ? product.id : '';
-                document.getElementById('productTitle').value = product ? product.title : '';
-                document.getElementById('productDescription').value = product ? (product.description || '') : '';
-                document.getElementById('productShortDescription').value = product ? (product.short_description || '') : '';
-                document.getElementById('productGender').value = product ? (product.gender || 'Unisex') : 'Unisex';
-                document.getElementById('productFabricType').value = product ? (product.fabric_type || '') : '';
-                document.getElementById('productGsmType').value = product ? (product.gsm_type || '') : '';
-                document.getElementById('productFitType').value = product ? (product.fit_type || '') : '';
-                document.getElementById('productPrintType').value = product ? (product.print_type || '') : '';
-                document.getElementById('productPrice').value = product ? (product.price || 0) : 0;
-                document.getElementById('productOldPrice').value = product ? (product.old_price || '') : '';
-                document.getElementById('productImage').value = product ? (product.img || '') : '';
-                document.getElementById('productImages').value = product ? (product.images || '') : '';
-                document.getElementById('productTags').value = product ? (product.tags || '') : '';
-                document.getElementById('productSearchTags').value = product ? (product.search_tags || '') : '';
-                
-                document.getElementById('productIsFeatured').checked = product ? product.is_featured : false;
-                document.getElementById('productIsNewArrival').checked = product ? product.is_new_arrival : false;
-                document.getElementById('productIsOnSale').checked = product ? product.is_on_sale : false;
-                document.getElementById('productIsBest').checked = product ? product.is_best : false;
-                document.getElementById('productIsHot').checked = product ? product.is_hot : false;
-                document.getElementById('productIsLimitedEdition').checked = product ? product.is_limited_edition : false;
-                document.getElementById('productIsOutOfStock').checked = product ? product.is_out_of_stock : false;
-                
-                document.getElementById('productSeoTitle').value = product ? (product.seo_title || '') : '';
-                document.getElementById('productGoogleSeo').value = product ? (product.google_seo || '') : '';
-                document.getElementById('productSeoDescription').value = product ? (product.seo_description || '') : '';
-                document.getElementById('productSeoKeywords').value = product ? (product.seo_keywords || '') : '';
-                
-                document.getElementById('productSaveBtn').innerHTML = product ? '<i class="fa-solid fa-check"></i><span>Update Product</span>' : '<i class="fa-solid fa-check"></i><span>Save Product</span>';
-                
+                if (productId) {
+                    const token = getAdminToken();
+                    const res = await fetch(`${API_BASE_URL}${productsEndpoint}/${productId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success) {
+                        const p = data.product;
+                        document.getElementById('productTitle').value = p.title || '';
+                        document.getElementById('productCategoryId').value = p.category_id || '';
+                        await loadSubcategoriesForProduct();
+                        document.getElementById('productSubcategoryId').value = p.subcategory_id || '';
+                        document.getElementById('productGender').value = p.gender || 'Unisex';
+                        document.getElementById('productPrice').value = p.price || 0;
+                        document.getElementById('productOldPrice').value = p.old_price || '';
+                        document.getElementById('productImage').value = p.img || '';
+                        document.getElementById('productImages').value = p.images || '';
+                        document.getElementById('productFabricType').value = p.fabric_type || '';
+                        document.getElementById('productGsmType').value = p.gsm_type || '';
+                        document.getElementById('productFitType').value = p.fit_type || '';
+                        document.getElementById('productPrintType').value = p.print_type || '';
+                        document.getElementById('productTags').value = p.tags || '';
+                        document.getElementById('productShortDescription').value = p.short_description || '';
+                        document.getElementById('productDescription').value = p.description || '';
+                        document.getElementById('productIsFeatured').checked = p.is_featured;
+                        document.getElementById('productIsNewArrival').checked = p.is_new_arrival;
+                        document.getElementById('productIsOnSale').checked = p.is_on_sale;
+                        document.getElementById('productIsBest').checked = p.is_best;
+                        document.getElementById('productIsHot').checked = p.is_hot;
+                        document.getElementById('productIsLimitedEdition').checked = p.is_limited_edition;
+                        document.getElementById('productIsOutOfStock').checked = p.is_out_of_stock;
+                        document.getElementById('productSeoTitle').value = p.seo_title || '';
+                        document.getElementById('productGoogleSeo').value = p.google_seo || '';
+                        document.getElementById('productSeoDescription').value = p.seo_description || '';
+                        document.getElementById('productSeoKeywords').value = p.seo_keywords || '';
+                        updateProductImagePreview(p.img);
+                    }
+                } else {
+                    document.getElementById('productForm').reset();
+                    document.getElementById('productGender').value = 'Unisex';
+                    document.getElementById('productPrice').value = '';
+                    document.getElementById('productOldPrice').value = '';
+                    document.getElementById('productSubcategoryId').innerHTML = '<option value="">Select Subcategory</option>';
+                    resetProductImagePreview();
+                }
                 document.getElementById('productFlagsHeader').classList.remove('open');
                 document.getElementById('productFlagsContent').classList.remove('open');
                 document.getElementById('productSeoHeader').classList.remove('open');
                 document.getElementById('productSeoContent').classList.remove('open');
-                
-                await loadCategoriesForDropdown();
-                if (product) {
-                    document.getElementById('productCategoryId').value = product.category_id || '';
-                    await loadSubcategoriesForDropdown(product.category_id);
-                    document.getElementById('productSubcategoryId').value = product.subcategory_id || '';
-                }
-                
-                updateProductImagePreview(document.getElementById('productImage').value);
                 document.getElementById('productModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
@@ -1064,67 +1137,27 @@
                 document.body.style.overflow = '';
             }
 
-            async function loadCategoriesForDropdown() {
-                const token = getAdminToken();
-                if (!token) return;
-                try {
-                    const response = await fetch(`${API_BASE_URL}${endpoints.categories}`, {
-                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-                    });
-                    const data = await response.json();
-                    if (data.success) {
-                        const selects = ['productCategoryId', 'productCategoryFilter'];
-                        const options = '<option value="">Select Category</option>' + (data.categories || []).map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('');
-                        selects.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = id === 'productCategoryFilter' ? '<option value="">All Categories</option>' + (data.categories || []).map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('') : options; });
-                    }
-                } catch(e) { console.error('Failed to load categories:', e); }
-            }
-
-            async function loadSubcategoriesForDropdown(categoryId) {
-                const token = getAdminToken();
-                if (!token) return;
-                const select = document.getElementById('productSubcategoryId');
-                if (!categoryId) { select.innerHTML = '<option value="">Select Subcategory</option>'; return; }
-                try {
-                    const response = await fetch(`${API_BASE_URL}${endpoints.subcategories}?category_id=${categoryId}`, {
-                        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-                    });
-                    const data = await response.json();
-                    if (data.success) {
-                        select.innerHTML = '<option value="">Select Subcategory</option>' + (data.subcategories || []).map(s => `<option value="${s.id}">${escapeHTML(s.name)}</option>`).join('');
-                    }
-                } catch(e) { console.error('Failed to load subcategories:', e); }
-            }
-
-            function updateProductImagePreview(url) {
-                const container = document.getElementById('productImagePreview');
-                if (url) container.innerHTML = `<img src="${escapeHTML(url)}" alt="Preview" onerror="this.parentElement.innerHTML='<span style=color:#dc2626;font-size:13px;>Failed to load image</span>'">`;
-                else container.innerHTML = '<span style="color:#a1a1a6;font-size:13px;">Image preview will appear here</span>';
-            }
-
             async function saveProduct() {
                 const title = document.getElementById('productTitle').value.trim();
                 if (!title) { showToast('Product title is required', 'error'); return; }
-
                 const token = getAdminToken();
-                if (!token) { showToast('Session expired', 'error'); window.location.href = '/signin?type=admin'; return; }
+                if (!token) return;
 
                 const productData = {
                     title, category_id: document.getElementById('productCategoryId').value ? parseInt(document.getElementById('productCategoryId').value) : null,
                     subcategory_id: document.getElementById('productSubcategoryId').value ? parseInt(document.getElementById('productSubcategoryId').value) : null,
-                    description: document.getElementById('productDescription').value.trim() || null,
-                    short_description: document.getElementById('productShortDescription').value.trim() || null,
                     gender: document.getElementById('productGender').value,
-                    fabric_type: document.getElementById('productFabricType').value.trim() || null,
-                    gsm_type: document.getElementById('productGsmType').value.trim() || null,
-                    fit_type: document.getElementById('productFitType').value.trim() || null,
-                    print_type: document.getElementById('productPrintType').value.trim() || null,
                     price: parseFloat(document.getElementById('productPrice').value) || 0,
                     old_price: document.getElementById('productOldPrice').value ? parseFloat(document.getElementById('productOldPrice').value) : null,
                     img: document.getElementById('productImage').value.trim() || null,
                     images: document.getElementById('productImages').value.trim() || null,
+                    fabric_type: document.getElementById('productFabricType').value.trim() || null,
+                    gsm_type: document.getElementById('productGsmType').value.trim() || null,
+                    fit_type: document.getElementById('productFitType').value.trim() || null,
+                    print_type: document.getElementById('productPrintType').value.trim() || null,
                     tags: document.getElementById('productTags').value.trim() || null,
-                    search_tags: document.getElementById('productSearchTags').value.trim() || null,
+                    short_description: document.getElementById('productShortDescription').value.trim() || null,
+                    description: document.getElementById('productDescription').value.trim() || null,
                     is_featured: document.getElementById('productIsFeatured').checked,
                     is_new_arrival: document.getElementById('productIsNewArrival').checked,
                     is_on_sale: document.getElementById('productIsOnSale').checked,
@@ -1138,165 +1171,103 @@
                     seo_keywords: document.getElementById('productSeoKeywords').value.trim() || null
                 };
 
-                const isEditing = !!editingProductId;
-                const url = isEditing ? `${API_BASE_URL}${endpoints.products}/${editingProductId}` : `${API_BASE_URL}${endpoints.products}`;
-                const method = isEditing ? 'PUT' : 'POST';
+                const productId = document.getElementById('productId').value;
+                const url = productId ? `${API_BASE_URL}${productsEndpoint}/${productId}` : `${API_BASE_URL}${productsEndpoint}`;
+                const method = productId ? 'PUT' : 'POST';
 
-                const saveBtn = document.getElementById('productSaveBtn');
-                saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
-
+                const btn = document.getElementById('productSaveBtn');
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
                 try {
-                    const response = await fetch(url, { method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(productData) });
-                    const data = await response.json();
-                    if (response.ok && data.success) {
-                        showToast(isEditing ? 'Product updated' : 'Product created', 'success');
-                        closeProductModal(); loadProducts();
-                    } else if (response.status === 401 || response.status === 403) {
-                        showToast('Session expired', 'error'); localStorage.removeItem('jayenware_admin_session'); window.location.href = '/signin?type=admin';
-                    } else throw new Error(data.error || 'Failed to save');
+                    const res = await fetch(url, { method, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(productData) });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        showToast(productId ? 'Product updated' : 'Product created', 'success');
+                        closeProductModal(); loadProducts(currentPage);
+                    } else throw new Error(data.error || 'Failed');
                 } catch(e) { showToast(e.message, 'error'); }
-                finally { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>' + (isEditing ? 'Update Product' : 'Save Product') + '</span>'; }
-            }
-
-            async function loadProducts(page = 1) {
-                const token = getAdminToken();
-                if (!token) return;
-                currentPage = page;
-                const tbody = document.getElementById('productTableBody');
-                const emptyState = document.getElementById('productEmptyState');
-                const pagination = document.getElementById('productPagination');
-                
-                tbody.innerHTML = `<tr><td colspan="7"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>`;
-                emptyState.style.display = 'none'; pagination.innerHTML = '';
-
-                const search = document.getElementById('productSearch')?.value || '';
-                const categoryId = document.getElementById('productCategoryFilter')?.value || '';
-                const gender = document.getElementById('productGenderFilter')?.value || '';
-                
-                let queryUrl = `${API_BASE_URL}${endpoints.products}?page=${page}&limit=15&sort_by=created_at&sort_order=desc`;
-                if (search) queryUrl += `&search=${encodeURIComponent(search)}`;
-                if (categoryId) queryUrl += `&category_id=${categoryId}`;
-                if (gender) queryUrl += `&gender=${gender}`;
-
-                try {
-                    const response = await fetch(queryUrl, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
-                    if (response.status === 401 || response.status === 403) { localStorage.removeItem('jayenware_admin_session'); window.location.href = '/signin?type=admin'; return; }
-                    const data = await response.json();
-                    if (data.success) {
-                        renderProductsTable(data.products || []);
-                        document.getElementById('productTotalCount').textContent = data.pagination?.total || 0;
-                        totalPages = data.pagination?.totalPages || 1;
-                        renderPagination();
-                    }
-                } catch(e) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadProducts()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>`;
-                }
-            }
-
-            function renderProductsTable(products) {
-                const tbody = document.getElementById('productTableBody');
-                const emptyState = document.getElementById('productEmptyState');
-                if (products.length === 0) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
-                emptyState.style.display = 'none';
-
-                tbody.innerHTML = products.map(p => {
-                    let flags = [];
-                    if (p.is_featured) flags.push('<span class="flag-badge featured">Featured</span>');
-                    if (p.is_new_arrival) flags.push('<span class="flag-badge new">New</span>');
-                    if (p.is_on_sale) flags.push('<span class="flag-badge sale">Sale</span>');
-                    if (p.is_hot) flags.push('<span class="flag-badge hot">Hot</span>');
-                    if (p.is_best) flags.push('<span class="flag-badge best">Best</span>');
-                    if (p.is_limited_edition) flags.push('<span class="flag-badge limited">Limited</span>');
-                    if (p.is_out_of_stock) flags.push('<span class="flag-badge oos">OOS</span>');
-                    
-                    return `<tr>
-                        <td>${p.img ? `<img src="${escapeHTML(p.img)}" class="product-thumb" onerror="this.style.display='none';">` : '<div class="product-thumb" style="display:flex;align-items:center;justify-content:center;color:#ccc;"><i class="fa-solid fa-image"></i></div>'}</td>
-                        <td><span style="font-weight:600;display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(p.title)}</span>${p.sku ? `<span style="font-size:11px;color:var(--accent);font-family:'Sora',monospace;">${escapeHTML(p.sku)}</span>` : ''}</td>
-                        <td><span style="font-size:12px;color:var(--accent);">${p.category ? escapeHTML(p.category.name) : '-'}${p.subcategory ? ' / ' + escapeHTML(p.subcategory.name) : ''}</span></td>
-                        <td><span style="font-weight:700;">৳${parseFloat(p.price).toFixed(2)}</span>${p.old_price ? `<span style="font-size:11px;color:#dc2626;text-decoration:line-through;margin-left:6px;">৳${parseFloat(p.old_price).toFixed(2)}</span>` : ''}</td>
-                        <td><div style="display:flex;flex-wrap:wrap;gap:2px;">${flags.join('') || '<span style="color:#d1d1d6;">-</span>'}</div></td>
-                        <td><span class="status-badge ${p.is_out_of_stock ? 'inactive' : 'active'}"><span class="status-dot ${p.is_out_of_stock ? 'inactive' : 'active'}"></span>${p.is_out_of_stock ? 'OOS' : 'Active'}</span></td>
-                        <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
-                            <button class="action-btn edit" onclick="openProductModal(${JSON.stringify(p).replace(/"/g, '&quot;')})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                            <button class="action-btn duplicate" onclick="duplicateProduct(${p.id})" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
-                            <button class="action-btn delete" onclick="openDeleteConfirm(${p.id}, 'product', '${escapeHTML(p.title).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
-                        </div></td>
-                    </tr>`;
-                }).join('');
-            }
-
-            function renderPagination() {
-                const pagination = document.getElementById('productPagination');
-                if (totalPages <= 1) { pagination.innerHTML = ''; return; }
-                let html = `<button ${currentPage === 1 ? 'disabled' : ''} onclick="loadProducts(${currentPage - 1})"><i class="fa-solid fa-chevron-left"></i></button>`;
-                for (let i = 1; i <= totalPages; i++) {
-                    html += `<button class="${i === currentPage ? 'active' : ''}" onclick="loadProducts(${i})">${i}</button>`;
-                }
-                html += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="loadProducts(${currentPage + 1})"><i class="fa-solid fa-chevron-right"></i></button>`;
-                pagination.innerHTML = html;
+                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Product</span>'; }
             }
 
             async function duplicateProduct(id) {
                 const token = getAdminToken();
                 if (!token) return;
                 try {
-                    const response = await fetch(`${API_BASE_URL}${endpoints.products}/${id}/duplicate`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
-                    const data = await response.json();
-                    if (response.ok && data.success) { showToast('Product duplicated', 'success'); loadProducts(); }
-                    else throw new Error(data.error || 'Failed');
+                    const res = await fetch(`${API_BASE_URL}${productsEndpoint}/${id}/duplicate`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (res.ok && data.success) { showToast('Product duplicated', 'success'); loadProducts(currentPage); }
+                    else throw new Error(data.error);
                 } catch(e) { showToast(e.message, 'error'); }
             }
 
-            async function loadProductsForDropdown() {
+            // ==================== VIDEOS ====================
+            async function loadProductVideos() {
                 const token = getAdminToken();
                 if (!token) return;
+                const tbody = document.getElementById('videoTableBody');
+                const emptyState = document.getElementById('videoEmptyState');
+                tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
+                emptyState.style.display = 'none';
+
+                let url = `${API_BASE_URL}${videosEndpoint}`;
+                const productFilter = document.getElementById('videoProductFilter')?.value;
+                // Load all videos - filter on client side or use product-specific endpoint
+                if (productFilter) {
+                    url = `${API_BASE_URL}/api/admin/products/${productFilter}/videos`;
+                }
+
                 try {
-                    const response = await fetch(`${API_BASE_URL}${endpoints.products}/all`, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
-                    const data = await response.json();
+                    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
                     if (data.success) {
-                        const options = '<option value="">Select Product</option>' + (data.products || []).map(p => `<option value="${p.id}">${escapeHTML(p.title)}</option>`).join('');
-                        ['videoProductId', 'bannerProductId', 'videoProductFilter', 'bannerProductFilter'].forEach(id => {
-                            const el = document.getElementById(id);
-                            if (el) el.innerHTML = (id.includes('Filter') ? '<option value="">All Products</option>' : '<option value="">Select Product</option>') + (data.products || []).map(p => `<option value="${p.id}">${escapeHTML(p.title)}</option>`).join('');
-                        });
+                        const videos = data.videos || [];
+                        if (!videos.length) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
+                        tbody.innerHTML = videos.map(v => `<tr>
+                            <td><div class="img-thumb" style="background:#1d1d1f;"><i class="fa-solid fa-play" style="color:#fff;font-size:12px;"></i></div></td>
+                            <td><span style="font-weight:600;">${escapeHTML(v.title || 'Untitled')}</span></td>
+                            <td><span style="font-size:12px;color:var(--accent);">${v.product?.title || 'Unknown'}</span></td>
+                            <td>${v.sort_order || 0}</td>
+                            <td><span class="status-badge ${v.is_active ? 'active' : 'inactive'}"><span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>${v.is_active ? 'Active' : 'Inactive'}</span></td>
+                            <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn edit" onclick="openVideoModal(${v.id})"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="toggleVideoStatus(${v.id})"><i class="fa-solid fa-${v.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'video', '${escapeHTML(v.title||'Untitled').replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
+                            </div></td>
+                        </tr>`).join('');
                     }
-                } catch(e) { console.error('Failed to load products dropdown:', e); }
+                } catch(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadProductVideos()" style="color:#007aff;text-decoration:underline;cursor:pointer;">Retry</button></td></tr>'; }
             }
 
-            // ==================== VIDEOS ====================
-            function openVideoModal(video = null) {
-                editingVideoId = video ? video.id : null;
-                document.getElementById('videoModalTitle').textContent = video ? 'Edit Product Video' : 'Add Product Video';
-                document.getElementById('videoId').value = video ? video.id : '';
-                document.getElementById('videoProductId').value = video ? video.product_id : '';
-                document.getElementById('videoTitle').value = video ? (video.title || '') : '';
-                document.getElementById('videoSubtitle').value = video ? (video.subtitle || '') : '';
-                document.getElementById('videoUrl').value = video ? video.video_url : '';
-                document.getElementById('videoThumbnailUrl').value = video ? (video.thumbnail_url || '') : '';
-                document.getElementById('videoClickLink').value = video ? (video.click_link || '') : '';
-                document.getElementById('videoSortOrder').value = video ? (video.sort_order || 0) : 0;
-                document.getElementById('videoIsActive').checked = video ? video.is_active : true;
-                document.getElementById('videoSaveBtn').innerHTML = video ? '<i class="fa-solid fa-check"></i><span>Update Video</span>' : '<i class="fa-solid fa-check"></i><span>Save Video</span>';
-                updateVideoPreview(video ? video.video_url : '');
+            async function openVideoModal(videoId = null) {
+                await loadProductsDropdown('videoProductId');
+                document.getElementById('videoModalTitle').textContent = videoId ? 'Edit Video' : 'Add Product Video';
+                document.getElementById('videoId').value = videoId || '';
+                if (videoId) {
+                    const token = getAdminToken();
+                    const res = await fetch(`${API_BASE_URL}${videosEndpoint}/${videoId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success) {
+                        const v = data.video;
+                        document.getElementById('videoProductId').value = v.product_id || '';
+                        document.getElementById('videoTitle').value = v.title || '';
+                        document.getElementById('videoSubtitle').value = v.subtitle || '';
+                        document.getElementById('videoUrl').value = v.video_url || '';
+                        document.getElementById('videoThumbnailUrl').value = v.thumbnail_url || '';
+                        document.getElementById('videoClickLink').value = v.click_link || '';
+                        document.getElementById('videoSortOrder').value = v.sort_order || 0;
+                        document.getElementById('videoIsActive').checked = v.is_active;
+                    }
+                } else { document.getElementById('videoForm').reset(); }
                 document.getElementById('videoModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
 
             function closeVideoModal() { document.getElementById('videoModal').classList.remove('show'); document.body.style.overflow = ''; }
 
-            function updateVideoPreview(url) {
-                const container = document.getElementById('videoPreviewContainer');
-                if (url) container.innerHTML = url.match(/\.(mp4|webm|ogg)/i) ? `<video controls style="width:100%;max-height:160px;border-radius:10px;"><source src="${escapeHTML(url)}"></video>` : `<div style="padding:20px;color:#fff;"><i class="fa-brands ${url.includes('youtube') ? 'fa-youtube' : 'fa-video'}" style="font-size:32px;"></i></div>`;
-                else container.innerHTML = '<span style="color:#a1a1a6;font-size:13px;">Video preview will appear here</span>';
-            }
-
             async function saveVideo() {
                 const productId = document.getElementById('videoProductId').value;
                 const videoUrl = document.getElementById('videoUrl').value.trim();
                 if (!productId || !videoUrl) { showToast('Product and video URL required', 'error'); return; }
                 const token = getAdminToken();
-                if (!token) { showToast('Session expired', 'error'); window.location.href = '/signin?type=admin'; return; }
-
                 const videoData = {
                     product_id: parseInt(productId), title: document.getElementById('videoTitle').value.trim() || null,
                     subtitle: document.getElementById('videoSubtitle').value.trim() || null, video_url: videoUrl,
@@ -1305,104 +1276,94 @@
                     sort_order: parseInt(document.getElementById('videoSortOrder').value) || 0,
                     is_active: document.getElementById('videoIsActive').checked
                 };
-
-                const isEditing = !!editingVideoId;
-                const url = isEditing ? `${API_BASE_URL}${endpoints.productVideos}/${editingVideoId}` : `${API_BASE_URL}${endpoints.productVideos}`;
-                const saveBtn = document.getElementById('videoSaveBtn');
-                saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
-
+                const id = document.getElementById('videoId').value;
+                const url = id ? `${API_BASE_URL}${videosEndpoint}/${id}` : `${API_BASE_URL}${videosEndpoint}`;
+                const btn = document.getElementById('videoSaveBtn');
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
                 try {
-                    const response = await fetch(url, { method: isEditing ? 'PUT' : 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(videoData) });
-                    const data = await response.json();
-                    if (response.ok && data.success) { showToast(isEditing ? 'Video updated' : 'Video created', 'success'); closeVideoModal(); loadVideos(); }
-                    else throw new Error(data.error || 'Failed');
+                    const res = await fetch(url, { method: id ? 'PUT' : 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(videoData) });
+                    const data = await res.json();
+                    if (res.ok && data.success) { showToast('Video saved', 'success'); closeVideoModal(); loadProductVideos(); }
+                    else throw new Error(data.error);
                 } catch(e) { showToast(e.message, 'error'); }
-                finally { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>' + (isEditing ? 'Update Video' : 'Save Video') + '</span>'; }
-            }
-
-            async function loadVideos() {
-                const token = getAdminToken();
-                if (!token) return;
-                const tbody = document.getElementById('videoTableBody');
-                const emptyState = document.getElementById('videoEmptyState');
-                tbody.innerHTML = `<tr><td colspan="7"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>`;
-                emptyState.style.display = 'none';
-
-                const productFilter = document.getElementById('videoProductFilter')?.value || '';
-                let queryUrl = `${API_BASE_URL}${endpoints.productVideos}`;
-                if (productFilter) queryUrl = `${API_BASE_URL}/api/admin/products/${productFilter}/videos`;
-
-                try {
-                    const response = await fetch(queryUrl, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
-                    const data = await response.json();
-                    if (data.success) {
-                        const videos = data.videos || [];
-                        if (videos.length === 0) { tbody.innerHTML = ''; emptyState.style.display = 'block'; }
-                        else {
-                            emptyState.style.display = 'none';
-                            tbody.innerHTML = videos.map(v => `<tr>
-                                <td><div class="video-thumb-container">${v.video_url.includes('youtube') ? '<i class="fa-brands fa-youtube"></i>' : '<i class="fa-solid fa-play"></i>'}</div></td>
-                                <td><span style="font-weight:600;">${escapeHTML(v.title || 'Untitled')}</span></td>
-                                <td><span style="font-size:12px;color:var(--accent);">${v.product ? escapeHTML(v.product.title) : 'Unknown'}</span></td>
-                                <td>${v.click_link ? `<span style="font-size:12px;background:#f5f5f7;padding:3px 8px;border-radius:6px;">${escapeHTML(v.click_link.substring(0,30))}...</span>` : '-'}</td>
-                                <td>${v.sort_order || 0}</td>
-                                <td><span class="status-badge ${v.is_active ? 'active' : 'inactive'}"><span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>${v.is_active ? 'Active' : 'Inactive'}</span></td>
-                                <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
-                                    <button class="action-btn edit" onclick="openVideoModal(${JSON.stringify(v).replace(/"/g, '&quot;')})"><i class="fa-solid fa-pen"></i></button>
-                                    <button class="action-btn toggle" onclick="toggleVideoStatus(${v.id})"><i class="fa-solid fa-${v.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                    <button class="action-btn delete" onclick="openDeleteConfirm(${v.id}, 'video', '${escapeHTML(v.title || 'Untitled').replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
-                                </div></td>
-                            </tr>`).join('');
-                        }
-                        document.getElementById('videoTotalCount').textContent = videos.length;
-                    }
-                } catch(e) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadVideos()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>`; }
+                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Video</span>'; }
             }
 
             async function toggleVideoStatus(id) {
                 const token = getAdminToken();
-                if (!token) return;
                 try {
-                    const response = await fetch(`${API_BASE_URL}${endpoints.productVideos}/${id}/toggle`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
-                    const data = await response.json();
-                    if (response.ok && data.success) { showToast(`Video ${data.video.is_active ? 'activated' : 'deactivated'}`, 'success'); loadVideos(); }
-                    else throw new Error(data.error || 'Failed');
+                    const res = await fetch(`${API_BASE_URL}${videosEndpoint}/${id}/toggle`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (res.ok) { showToast('Status updated', 'success'); loadProductVideos(); }
                 } catch(e) { showToast(e.message, 'error'); }
             }
 
             // ==================== BANNERS ====================
-            function openBannerModal(banner = null) {
-                editingBannerId = banner ? banner.id : null;
-                document.getElementById('bannerModalTitle').textContent = banner ? 'Edit Product Banner' : 'Add Product Banner';
-                document.getElementById('bannerId').value = banner ? banner.id : '';
-                document.getElementById('bannerProductId').value = banner ? banner.product_id : '';
-                document.getElementById('bannerTitle').value = banner ? (banner.title || '') : '';
-                document.getElementById('bannerSubtitle').value = banner ? (banner.subtitle || '') : '';
-                document.getElementById('bannerUrl').value = banner ? banner.banner_url : '';
-                document.getElementById('bannerClickLink').value = banner ? (banner.click_link || '') : '';
-                document.getElementById('bannerSortOrder').value = banner ? (banner.sort_order || 0) : 0;
-                document.getElementById('bannerIsActive').checked = banner ? banner.is_active : true;
-                document.getElementById('bannerSaveBtn').innerHTML = banner ? '<i class="fa-solid fa-check"></i><span>Update Banner</span>' : '<i class="fa-solid fa-check"></i><span>Save Banner</span>';
-                updateBannerPreview(banner ? banner.banner_url : '');
+            async function loadProductBanners() {
+                const token = getAdminToken();
+                if (!token) return;
+                const tbody = document.getElementById('bannerTableBody');
+                const emptyState = document.getElementById('bannerEmptyState');
+                tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
+                emptyState.style.display = 'none';
+
+                let url = `${API_BASE_URL}${bannersEndpoint}`;
+                const productFilter = document.getElementById('bannerProductFilter')?.value;
+                if (productFilter) url = `${API_BASE_URL}/api/admin/products/${productFilter}/banners`;
+
+                try {
+                    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success) {
+                        const banners = data.banners || [];
+                        if (!banners.length) { tbody.innerHTML = ''; emptyState.style.display = 'block'; return; }
+                        tbody.innerHTML = banners.map(b => `<tr>
+                            <td><div class="img-thumb">${b.banner_url ? `<img src="${escapeHTML(b.banner_url)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}</div></td>
+                            <td><span style="font-weight:600;">${escapeHTML(b.title || 'Untitled')}</span></td>
+                            <td><span style="font-size:12px;color:var(--accent);">${b.product?.title || 'Unknown'}</span></td>
+                            <td>${b.sort_order || 0}</td>
+                            <td><span class="status-badge ${b.is_active ? 'active' : 'inactive'}"><span class="status-dot ${b.is_active ? 'active' : 'inactive'}"></span>${b.is_active ? 'Active' : 'Inactive'}</span></td>
+                            <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
+                                <button class="action-btn edit" onclick="openBannerModal(${b.id})"><i class="fa-solid fa-pen"></i></button>
+                                <button class="action-btn toggle" onclick="toggleBannerStatus(${b.id})"><i class="fa-solid fa-${b.is_active ? 'eye-slash' : 'eye'}"></i></button>
+                                <button class="action-btn delete" onclick="openDeleteConfirm(${b.id}, 'banner', '${escapeHTML(b.title||'Untitled').replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
+                            </div></td>
+                        </tr>`).join('');
+                    }
+                } catch(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadProductBanners()" style="color:#007aff;text-decoration:underline;cursor:pointer;">Retry</button></td></tr>'; }
+            }
+
+            async function openBannerModal(bannerId = null) {
+                await loadProductsDropdown('bannerProductId');
+                document.getElementById('bannerModalTitle').textContent = bannerId ? 'Edit Banner' : 'Add Product Banner';
+                document.getElementById('bannerId').value = bannerId || '';
+                if (bannerId) {
+                    const token = getAdminToken();
+                    const res = await fetch(`${API_BASE_URL}${bannersEndpoint}/${bannerId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success) {
+                        const b = data.banner;
+                        document.getElementById('bannerProductId').value = b.product_id || '';
+                        document.getElementById('bannerTitle').value = b.title || '';
+                        document.getElementById('bannerSubtitle').value = b.subtitle || '';
+                        document.getElementById('bannerImageUrl').value = b.banner_url || '';
+                        document.getElementById('bannerClickLink').value = b.click_link || '';
+                        document.getElementById('bannerSortOrder').value = b.sort_order || 0;
+                        document.getElementById('bannerIsActive').checked = b.is_active;
+                        updateBannerPreview(b.banner_url);
+                    }
+                } else { document.getElementById('bannerForm').reset(); resetBannerPreview(); }
                 document.getElementById('bannerModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
 
             function closeBannerModal() { document.getElementById('bannerModal').classList.remove('show'); document.body.style.overflow = ''; }
 
-            function updateBannerPreview(url) {
-                const container = document.getElementById('bannerPreviewContainer');
-                if (url) container.innerHTML = `<img src="${escapeHTML(url)}" alt="Preview" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;" onerror="this.parentElement.innerHTML='<span style=color:#dc2626;>Failed to load</span>'">`;
-                else container.innerHTML = '<span style="color:#a1a1a6;font-size:13px;">Banner preview will appear here</span>';
-            }
-
             async function saveBanner() {
                 const productId = document.getElementById('bannerProductId').value;
-                const bannerUrl = document.getElementById('bannerUrl').value.trim();
+                const bannerUrl = document.getElementById('bannerImageUrl').value.trim();
                 if (!productId || !bannerUrl) { showToast('Product and banner URL required', 'error'); return; }
                 const token = getAdminToken();
-                if (!token) { showToast('Session expired', 'error'); window.location.href = '/signin?type=admin'; return; }
-
                 const bannerData = {
                     product_id: parseInt(productId), title: document.getElementById('bannerTitle').value.trim() || null,
                     subtitle: document.getElementById('bannerSubtitle').value.trim() || null, banner_url: bannerUrl,
@@ -1410,165 +1371,171 @@
                     sort_order: parseInt(document.getElementById('bannerSortOrder').value) || 0,
                     is_active: document.getElementById('bannerIsActive').checked
                 };
-
-                const isEditing = !!editingBannerId;
-                const url = isEditing ? `${API_BASE_URL}${endpoints.productBanners}/${editingBannerId}` : `${API_BASE_URL}${endpoints.productBanners}`;
-                const saveBtn = document.getElementById('bannerSaveBtn');
-                saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
-
+                const id = document.getElementById('bannerId').value;
+                const url = id ? `${API_BASE_URL}${bannersEndpoint}/${id}` : `${API_BASE_URL}${bannersEndpoint}`;
+                const btn = document.getElementById('bannerSaveBtn');
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span>';
                 try {
-                    const response = await fetch(url, { method: isEditing ? 'PUT' : 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(bannerData) });
-                    const data = await response.json();
-                    if (response.ok && data.success) { showToast(isEditing ? 'Banner updated' : 'Banner created', 'success'); closeBannerModal(); loadBanners(); }
-                    else throw new Error(data.error || 'Failed');
+                    const res = await fetch(url, { method: id ? 'PUT' : 'POST', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(bannerData) });
+                    const data = await res.json();
+                    if (res.ok && data.success) { showToast('Banner saved', 'success'); closeBannerModal(); loadProductBanners(); }
+                    else throw new Error(data.error);
                 } catch(e) { showToast(e.message, 'error'); }
-                finally { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fa-solid fa-check"></i><span>' + (isEditing ? 'Update Banner' : 'Save Banner') + '</span>'; }
-            }
-
-            async function loadBanners() {
-                const token = getAdminToken();
-                if (!token) return;
-                const tbody = document.getElementById('bannerTableBody');
-                const emptyState = document.getElementById('bannerEmptyState');
-                tbody.innerHTML = `<tr><td colspan="7"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>`;
-                emptyState.style.display = 'none';
-
-                const productFilter = document.getElementById('bannerProductFilter')?.value || '';
-                let queryUrl = `${API_BASE_URL}${endpoints.productBanners}`;
-                if (productFilter) queryUrl = `${API_BASE_URL}/api/admin/products/${productFilter}/banners`;
-
-                try {
-                    const response = await fetch(queryUrl, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
-                    const data = await response.json();
-                    if (data.success) {
-                        const banners = data.banners || [];
-                        if (banners.length === 0) { tbody.innerHTML = ''; emptyState.style.display = 'block'; }
-                        else {
-                            emptyState.style.display = 'none';
-                            tbody.innerHTML = banners.map(b => `<tr>
-                                <td>${b.banner_url ? `<img src="${escapeHTML(b.banner_url)}" class="product-thumb" onerror="this.style.display='none';">` : '<div class="product-thumb" style="display:flex;align-items:center;justify-content:center;color:#ccc;"><i class="fa-solid fa-image"></i></div>'}</td>
-                                <td><span style="font-weight:600;">${escapeHTML(b.title || 'Untitled')}</span></td>
-                                <td><span style="font-size:12px;color:var(--accent);">${b.product ? escapeHTML(b.product.title) : 'Unknown'}</span></td>
-                                <td>${b.click_link ? `<span style="font-size:12px;background:#f5f5f7;padding:3px 8px;border-radius:6px;">${escapeHTML(b.click_link.substring(0,30))}...</span>` : '-'}</td>
-                                <td>${b.sort_order || 0}</td>
-                                <td><span class="status-badge ${b.is_active ? 'active' : 'inactive'}"><span class="status-dot ${b.is_active ? 'active' : 'inactive'}"></span>${b.is_active ? 'Active' : 'Inactive'}</span></td>
-                                <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
-                                    <button class="action-btn edit" onclick="openBannerModal(${JSON.stringify(b).replace(/"/g, '&quot;')})"><i class="fa-solid fa-pen"></i></button>
-                                    <button class="action-btn toggle" onclick="toggleBannerStatus(${b.id})"><i class="fa-solid fa-${b.is_active ? 'eye-slash' : 'eye'}"></i></button>
-                                    <button class="action-btn delete" onclick="openDeleteConfirm(${b.id}, 'banner', '${escapeHTML(b.title || 'Untitled').replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash-can"></i></button>
-                                </div></td>
-                            </tr>`).join('');
-                        }
-                        document.getElementById('bannerTotalCount').textContent = banners.length;
-                    }
-                } catch(e) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626;">Failed to load. <button onclick="loadBanners()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>`; }
+                finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Banner</span>'; }
             }
 
             async function toggleBannerStatus(id) {
                 const token = getAdminToken();
-                if (!token) return;
                 try {
-                    const response = await fetch(`${API_BASE_URL}${endpoints.productBanners}/${id}/toggle`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
-                    const data = await response.json();
-                    if (response.ok && data.success) { showToast(`Banner ${data.banner.is_active ? 'activated' : 'deactivated'}`, 'success'); loadBanners(); }
-                    else throw new Error(data.error || 'Failed');
+                    const res = await fetch(`${API_BASE_URL}${bannersEndpoint}/${id}/toggle`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (res.ok) { showToast('Status updated', 'success'); loadProductBanners(); }
                 } catch(e) { showToast(e.message, 'error'); }
             }
 
-            // ==================== DELETE ====================
-            function openDeleteConfirm(id, type, name) {
-                deleteTargetId = id; deleteTargetType = type;
-                document.getElementById('deleteConfirmTitle').textContent = `Delete ${type === 'product' ? 'Product' : type === 'video' ? 'Video' : 'Banner'}?`;
-                document.getElementById('deleteConfirmText').innerHTML = `Are you sure you want to delete "<span style="font-weight:700;color:var(--primary);">${escapeHTML(name || 'Untitled')}</span>"?`;
-                document.getElementById('deleteConfirm').classList.add('show'); document.body.style.overflow = 'hidden';
+            // ==================== HELPERS ====================
+            async function loadCategoryDropdowns() {
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/categories`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success) {
+                        const options = '<option value="">Select Category</option>' + data.categories.map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('');
+                        document.getElementById('productCategoryFilter').innerHTML = '<option value="">All Categories</option>' + data.categories.map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('');
+                        document.getElementById('productCategoryId').innerHTML = options;
+                    }
+                } catch(e) {}
             }
 
+            async function loadSubcategoriesForProduct() {
+                const catId = document.getElementById('productCategoryId').value;
+                const select = document.getElementById('productSubcategoryId');
+                select.innerHTML = '<option value="">Select Subcategory</option>';
+                if (!catId) return;
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/admin/subcategories?category_id=${catId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success) select.innerHTML = '<option value="">Select Subcategory</option>' + data.subcategories.map(s => `<option value="${s.id}">${escapeHTML(s.name)}</option>`).join('');
+                } catch(e) {}
+            }
+
+            async function loadProductsDropdown(selectId) {
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}${productsEndpoint}/all`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success) {
+                        const options = '<option value="">Select Product</option>' + data.products.map(p => `<option value="${p.id}">${escapeHTML(p.title)}</option>`).join('');
+                        document.getElementById(selectId).innerHTML = options;
+                        const videoFilter = document.getElementById('videoProductFilter');
+                        const bannerFilter = document.getElementById('bannerProductFilter');
+                        if (videoFilter) videoFilter.innerHTML = '<option value="">All Products</option>' + data.products.map(p => `<option value="${p.id}">${escapeHTML(p.title)}</option>`).join('');
+                        if (bannerFilter) bannerFilter.innerHTML = '<option value="">All Products</option>' + data.products.map(p => `<option value="${p.id}">${escapeHTML(p.title)}</option>`).join('');
+                    }
+                } catch(e) {}
+            }
+
+            function updateProductImagePreview(url) {
+                const container = document.getElementById('productImagePreview');
+                if (url) container.innerHTML = `<img src="${escapeHTML(url)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">`;
+                else resetProductImagePreview();
+            }
+
+            function resetProductImagePreview() { document.getElementById('productImagePreview').innerHTML = '<i class="fa-solid fa-image"></i>'; }
+            function updateBannerPreview(url) {
+                const container = document.getElementById('bannerImagePreview');
+                if (url) container.innerHTML = `<img src="${escapeHTML(url)}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">`;
+                else resetBannerPreview();
+            }
+            function resetBannerPreview() { document.getElementById('bannerImagePreview').innerHTML = '<i class="fa-solid fa-image"></i>'; }
+
+            function toggleProductFlags() {
+                productFlagsOpen = !productFlagsOpen;
+                document.getElementById('productFlagsHeader').classList.toggle('open', productFlagsOpen);
+                document.getElementById('productFlagsContent').classList.toggle('open', productFlagsOpen);
+            }
+            function toggleProductSeo() {
+                productSeoOpen = !productSeoOpen;
+                document.getElementById('productSeoHeader').classList.toggle('open', productSeoOpen);
+                document.getElementById('productSeoContent').classList.toggle('open', productSeoOpen);
+            }
+
+            // Delete
+            function openDeleteConfirm(id, type, name) {
+                deleteTargetId = id; deleteTargetType = type;
+                document.getElementById('deleteConfirmTitle').textContent = `Delete ${type==='product'?'Product':type==='video'?'Video':'Banner'}?`;
+                document.getElementById('deleteConfirmText').innerHTML = `Are you sure you want to delete "<strong>${escapeHTML(name||'Untitled')}</strong>"?`;
+                document.getElementById('deleteConfirm').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
             function closeDeleteConfirm() { deleteTargetId = null; deleteTargetType = null; document.getElementById('deleteConfirm').classList.remove('show'); document.body.style.overflow = ''; }
 
             async function confirmDelete() {
                 if (!deleteTargetId || !deleteTargetType) return;
                 const token = getAdminToken();
-                if (!token) { showToast('Session expired', 'error'); window.location.href = '/signin?type=admin'; return; }
-                
-                let endpoint;
-                if (deleteTargetType === 'product') endpoint = `${endpoints.products}/${deleteTargetId}`;
-                else if (deleteTargetType === 'video') endpoint = `${endpoints.productVideos}/${deleteTargetId}`;
-                else endpoint = `${endpoints.productBanners}/${deleteTargetId}`;
-
+                let endpoint = deleteTargetType === 'product' ? productsEndpoint : deleteTargetType === 'video' ? videosEndpoint : bannersEndpoint;
                 try {
-                    const response = await fetch(`${API_BASE_URL}${endpoint}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
-                    const data = await response.json();
-                    if (response.ok && data.success) {
-                        showToast('Deleted successfully', 'success'); closeDeleteConfirm();
-                        if (deleteTargetType === 'product') loadProducts();
-                        else if (deleteTargetType === 'video') loadVideos();
-                        else loadBanners();
+                    const res = await fetch(`${API_BASE_URL}${endpoint}/${deleteTargetId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        showToast('Deleted successfully', 'success');
+                        closeDeleteConfirm();
+                        if (deleteTargetType === 'product') loadProducts(currentPage);
+                        else if (deleteTargetType === 'video') loadProductVideos();
+                        else loadProductBanners();
                     } else throw new Error(data.error || 'Failed');
                 } catch(e) { showToast(e.message, 'error'); closeDeleteConfirm(); }
             }
 
-            // Make functions globally accessible
+            function escapeHTML(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+
+            // Global exposure
             window.switchTab = switchTab;
-            window.handleAddClick = handleAddClick;
+            window.loadProducts = loadProducts;
+            window.debounceLoadProducts = debounceLoadProducts;
             window.openProductModal = openProductModal;
             window.closeProductModal = closeProductModal;
             window.saveProduct = saveProduct;
-            window.loadProducts = loadProducts;
             window.duplicateProduct = duplicateProduct;
-            window.toggleProductFlags = toggleProductFlags;
-            window.toggleProductSeo = toggleProductSeo;
             window.openVideoModal = openVideoModal;
             window.closeVideoModal = closeVideoModal;
             window.saveVideo = saveVideo;
-            window.loadVideos = loadVideos;
             window.toggleVideoStatus = toggleVideoStatus;
             window.openBannerModal = openBannerModal;
             window.closeBannerModal = closeBannerModal;
             window.saveBanner = saveBanner;
-            window.loadBanners = loadBanners;
             window.toggleBannerStatus = toggleBannerStatus;
             window.openDeleteConfirm = openDeleteConfirm;
             window.closeDeleteConfirm = closeDeleteConfirm;
             window.confirmDelete = confirmDelete;
-            window.debounceSearch = debounceSearch;
+            window.toggleProductFlags = toggleProductFlags;
+            window.toggleProductSeo = toggleProductSeo;
+            window.loadSubcategoriesForProduct = loadSubcategoriesForProduct;
+            window.loadProductVideos = loadProductVideos;
+            window.loadProductBanners = loadProductBanners;
 
-            // Initialize
+            // Init
             document.addEventListener('DOMContentLoaded', () => {
                 if (!checkAdminAuth()) return;
-
-                // Category change loads subcategories
-                document.getElementById('productCategoryId').addEventListener('change', function() {
-                    loadSubcategoriesForDropdown(this.value);
-                });
-
-                // Image preview on input
-                document.getElementById('productImage').addEventListener('input', function() {
-                    updateProductImagePreview(this.value.trim());
-                });
-                document.getElementById('videoUrl').addEventListener('input', function() {
-                    updateVideoPreview(this.value.trim());
-                });
-                document.getElementById('bannerUrl').addEventListener('input', function() {
-                    updateBannerPreview(this.value.trim());
-                });
-
-                // Close modals on overlay click
-                ['productModal', 'videoModal', 'bannerModal'].forEach(id => {
-                    document.getElementById(id).addEventListener('click', function(e) { if (e.target === this) { if (id === 'productModal') closeProductModal(); else if (id === 'videoModal') closeVideoModal(); else closeBannerModal(); } });
+                
+                document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+                
+                ['productModal','videoModal','bannerModal'].forEach(id => {
+                    document.getElementById(id).addEventListener('click', function(e) { if (e.target === this) { if(id==='productModal')closeProductModal(); else if(id==='videoModal')closeVideoModal(); else closeBannerModal(); } });
                 });
                 document.getElementById('deleteConfirm').addEventListener('click', function(e) { if (e.target === this) closeDeleteConfirm(); });
+                document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeProductModal(); closeVideoModal(); closeBannerModal(); closeDeleteConfirm(); } });
 
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape') { closeProductModal(); closeVideoModal(); closeBannerModal(); closeDeleteConfirm(); }
-                });
+                document.getElementById('productImage').addEventListener('input', function() { updateProductImagePreview(this.value.trim()); });
+                document.getElementById('bannerImageUrl').addEventListener('input', function() { updateBannerPreview(this.value.trim()); });
 
-                if (window.JAYENWARE && window.JAYENWARE.Components) {
+                if (window.JAYENWARE?.Components) {
                     JAYENWARE.Components.initAll({ sidebarSelector: '#sidebar', topBarSelector: '#topBar' });
-                    JAYENWARE.Components.onLogout(function() { localStorage.removeItem('jayenware_admin_session'); sessionStorage.removeItem('jayenware_admin_session'); window.location.href = '/'; });
+                    JAYENWARE.Components.onLogout(() => { localStorage.removeItem('jayenware_admin_session'); sessionStorage.removeItem('jayenware_admin_session'); window.location.href = '/'; });
                 }
 
-                loadCategoriesForDropdown();
-                loadProductsForDropdown();
+                loadCategoryDropdowns();
                 loadProducts();
             });
         })();
