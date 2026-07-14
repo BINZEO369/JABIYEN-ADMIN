@@ -139,6 +139,7 @@
             font-weight: 400;
         }
 
+        /* Tab Navigation */
         .tab-navigation {
             display: flex;
             gap: 4px;
@@ -173,8 +174,13 @@
             background: rgba(255,255,255,0.5);
         }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
 
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
@@ -191,6 +197,7 @@
         .btn-danger { background: #dc2626; color: #fff; }
         .btn-danger:hover, .btn-danger:active { background: #b91c1c; }
         .btn-sm { padding: 6px 14px; font-size: 12px; min-height: 32px; }
+        .btn-xs { padding: 4px 10px; font-size: 11px; min-height: 26px; border-radius: 20px; }
 
         .content-area {
             flex: 1; padding: 30px 24px; max-width: 1400px;
@@ -209,6 +216,7 @@
             font-size: 13px; color: var(--accent); margin: 4px 0 0;
         }
 
+        /* Filter Bar */
         .filter-bar {
             display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
             margin-bottom: 20px; padding: 14px 18px; background: #fafafa;
@@ -216,11 +224,11 @@
         }
         .filter-bar .form-select {
             width: auto; min-width: 140px; padding: 8px 12px; font-size: 13px;
-            border-radius: 10px; background: #fff; border: 1.5px solid #e5e5ea;
+            border-radius: 10px; background: #fff;
         }
         .filter-bar .form-input {
             width: auto; min-width: 200px; padding: 8px 12px; font-size: 13px;
-            border-radius: 10px; background: #fff; border: 1.5px solid #e5e5ea;
+            border-radius: 10px; background: #fff;
         }
 
         .table-container {
@@ -229,18 +237,12 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
         .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
-        table { width: 100%; border-collapse: collapse; min-width: 950px; }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
         thead { background: #f8f8fa; border-bottom: 1px solid #e5e5ea; }
         th { padding: 14px 16px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); white-space: nowrap; }
         td { padding: 14px 16px; font-size: 13px; color: var(--primary); border-bottom: 1px solid #f0f0f5; vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #fafafa; }
-
-        .id-badge {
-            display: inline-block; padding: 3px 8px; border-radius: 6px;
-            font-family: 'Sora', monospace; font-size: 11px; font-weight: 700;
-            background: #f0f0f5; color: var(--accent);
-        }
 
         .img-thumb {
             width: 48px; height: 48px; border-radius: 10px; 
@@ -248,8 +250,12 @@
             justify-content: center; border: 1px solid #e5e5ea; 
             overflow: hidden; flex-shrink: 0;
         }
-        .img-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .img-thumb i { color: #d1d1d6; font-size: 18px; }
+        .img-thumb img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        .img-thumb i {
+            color: #d1d1d6; font-size: 18px;
+        }
         
         .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
         .status-badge.active { background: #e6fff0; color: #059669; }
@@ -271,6 +277,13 @@
         .flag-badge.best { background: #fefce8; color: #ca8a04; }
         .flag-badge.limited { background: #faf5ff; color: #7c3aed; }
         .flag-badge.oos { background: #f1f5f9; color: #64748b; }
+
+        .product-id-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; background: #f0f0f5; border-radius: 8px;
+            font-family: 'Sora', monospace; font-size: 12px; font-weight: 600;
+            color: var(--primary);
+        }
 
         .actions-cell { display: flex; gap: 8px; align-items: center; }
         .action-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid #e5e5ea; background: #fff; color: #555; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 13px; flex-shrink: 0; }
@@ -421,6 +434,7 @@
                         </div>
                     </div>
 
+                    <!-- Filter Bar -->
                     <div class="filter-bar">
                         <input type="text" class="form-input" id="productSearch" placeholder="Search by title, SKU, barcode..." oninput="debounceLoadProducts()">
                         <select class="form-select" id="productCategoryFilter" onchange="loadProducts()">
@@ -484,9 +498,12 @@
                     <div class="section-header">
                         <div>
                             <h2 class="section-title">Product Videos</h2>
-                            <p class="section-subtitle">Manage video content for individual products</p>
+                            <p class="section-subtitle">Manage video content by Product ID</p>
                         </div>
                         <div style="display:flex;gap:12px;align-items:center;">
+                            <select class="form-select" id="videoProductFilter" style="width:auto;min-width:200px;" onchange="loadProductVideos()">
+                                <option value="">All Products</option>
+                            </select>
                             <button class="btn btn-primary btn-sm" onclick="openVideoModal()">
                                 <i class="fa-solid fa-plus"></i>
                                 <span>Add Video</span>
@@ -529,9 +546,12 @@
                     <div class="section-header">
                         <div>
                             <h2 class="section-title">Product Banners</h2>
-                            <p class="section-subtitle">Manage promotional banners for products</p>
+                            <p class="section-subtitle">Manage promotional banners by Product ID</p>
                         </div>
                         <div style="display:flex;gap:12px;align-items:center;">
+                            <select class="form-select" id="bannerProductFilter" style="width:auto;min-width:200px;" onchange="loadProductBanners()">
+                                <option value="">All Products</option>
+                            </select>
                             <button class="btn btn-primary btn-sm" onclick="openBannerModal()">
                                 <i class="fa-solid fa-plus"></i>
                                 <span>Add Banner</span>
@@ -623,6 +643,7 @@
                         <div class="form-group">
                             <label class="form-label">Old Price</label>
                             <input type="number" class="form-input" id="productOldPrice" placeholder="0.00" min="0" step="0.01">
+                            <p class="form-hint">For showing discount</p>
                         </div>
                     </div>
 
@@ -637,55 +658,121 @@
                         <div class="form-group">
                             <label class="form-label">Additional Images (JSON Array)</label>
                             <textarea class="form-textarea" id="productImages" placeholder='["url1.jpg","url2.jpg"]' rows="2" style="font-family:'Sora',monospace;font-size:12px;"></textarea>
+                            <p class="form-hint">JSON array of image URLs</p>
                         </div>
                     </div>
 
                     <div class="form-row form-row-3">
-                        <div class="form-group"><label class="form-label">Fabric Type</label><input type="text" class="form-input" id="productFabricType" placeholder="e.g., Cotton"></div>
-                        <div class="form-group"><label class="form-label">GSM Type</label><input type="text" class="form-input" id="productGsmType" placeholder="e.g., 180 GSM"></div>
-                        <div class="form-group"><label class="form-label">Fit Type</label><input type="text" class="form-input" id="productFitType" placeholder="e.g., Regular"></div>
+                        <div class="form-group">
+                            <label class="form-label">Fabric Type</label>
+                            <input type="text" class="form-input" id="productFabricType" placeholder="e.g., Cotton, Polyester">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">GSM Type</label>
+                            <input type="text" class="form-input" id="productGsmType" placeholder="e.g., 180 GSM">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fit Type</label>
+                            <input type="text" class="form-input" id="productFitType" placeholder="e.g., Regular, Slim">
+                        </div>
                     </div>
 
                     <div class="form-row form-row-2">
-                        <div class="form-group"><label class="form-label">Print Type</label><input type="text" class="form-input" id="productPrintType" placeholder="e.g., Digital"></div>
-                        <div class="form-group"><label class="form-label">Tags</label><input type="text" class="form-input" id="productTags" placeholder="tag1, tag2, tag3"></div>
+                        <div class="form-group">
+                            <label class="form-label">Print Type</label>
+                            <input type="text" class="form-input" id="productPrintType" placeholder="e.g., Digital, Screen">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tags</label>
+                            <input type="text" class="form-input" id="productTags" placeholder="tag1, tag2, tag3">
+                            <p class="form-hint">Comma-separated</p>
+                        </div>
                     </div>
 
-                    <div class="form-group"><label class="form-label">Short Description</label><textarea class="form-textarea" id="productShortDescription" rows="2" maxlength="500"></textarea></div>
-                    <div class="form-group"><label class="form-label">Full Description</label><textarea class="form-textarea" id="productDescription" rows="3"></textarea></div>
+                    <div class="form-group">
+                        <label class="form-label">Short Description</label>
+                        <textarea class="form-textarea" id="productShortDescription" placeholder="Brief product description" rows="2" maxlength="500"></textarea>
+                    </div>
 
+                    <div class="form-group">
+                        <label class="form-label">Full Description</label>
+                        <textarea class="form-textarea" id="productDescription" placeholder="Detailed product description" rows="3"></textarea>
+                    </div>
+
+                    <!-- Product Flags -->
                     <div class="collapsible-header" id="productFlagsHeader" onclick="toggleProductFlags()">
-                        <h4><i class="fa-solid fa-flag"></i>Product Flags & Status</h4>
+                        <h4>
+                            <i class="fa-solid fa-flag"></i>
+                            Product Flags & Status
+                        </h4>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                     <div class="collapsible-content" id="productFlagsContent">
                         <div class="form-row form-row-4">
-                            <div class="form-check"><input type="checkbox" id="productIsFeatured"><label for="productIsFeatured">Featured</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsNewArrival"><label for="productIsNewArrival">New Arrival</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsOnSale"><label for="productIsOnSale">On Sale</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsBest"><label for="productIsBest">Best Seller</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsHot"><label for="productIsHot">Hot</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsLimitedEdition"><label for="productIsLimitedEdition">Limited Edition</label></div>
-                            <div class="form-check"><input type="checkbox" id="productIsOutOfStock"><label for="productIsOutOfStock">Out of Stock</label></div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsFeatured">
+                                <label for="productIsFeatured">Featured</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsNewArrival">
+                                <label for="productIsNewArrival">New Arrival</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsOnSale">
+                                <label for="productIsOnSale">On Sale</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsBest">
+                                <label for="productIsBest">Best Seller</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsHot">
+                                <label for="productIsHot">Hot</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsLimitedEdition">
+                                <label for="productIsLimitedEdition">Limited Edition</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="productIsOutOfStock">
+                                <label for="productIsOutOfStock">Out of Stock</label>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- SEO Metadata -->
                     <div class="collapsible-header" id="productSeoHeader" onclick="toggleProductSeo()">
-                        <h4><i class="fa-solid fa-magnifying-glass"></i>SEO Metadata</h4>
+                        <h4>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            SEO Metadata
+                        </h4>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                     <div class="collapsible-content" id="productSeoContent">
-                        <div class="form-group"><label class="form-label">SEO Title</label><input type="text" class="form-input" id="productSeoTitle" maxlength="200"></div>
-                        <div class="form-group"><label class="form-label">Google SEO</label><input type="text" class="form-input" id="productGoogleSeo" maxlength="300"></div>
-                        <div class="form-group"><label class="form-label">SEO Description</label><textarea class="form-textarea" id="productSeoDescription" rows="2" maxlength="300"></textarea></div>
-                        <div class="form-group"><label class="form-label">SEO Keywords</label><input type="text" class="form-input" id="productSeoKeywords" maxlength="500"></div>
+                        <div class="form-group">
+                            <label class="form-label">SEO Title</label>
+                            <input type="text" class="form-input" id="productSeoTitle" placeholder="SEO title" maxlength="200">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Google SEO</label>
+                            <input type="text" class="form-input" id="productGoogleSeo" placeholder="Google SEO field" maxlength="300">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">SEO Description</label>
+                            <textarea class="form-textarea" id="productSeoDescription" placeholder="SEO description" rows="2" maxlength="300"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">SEO Keywords</label>
+                            <input type="text" class="form-input" id="productSeoKeywords" placeholder="keyword1, keyword2, keyword3" maxlength="500">
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeProductModal()">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="saveProduct()" id="productSaveBtn">
-                    <i class="fa-solid fa-check"></i><span>Save Product</span>
+                    <i class="fa-solid fa-check"></i>
+                    <span>Save Product</span>
                 </button>
             </div>
         </div>
@@ -707,22 +794,45 @@
                     <div class="form-group">
                         <label class="form-label">Product ID *</label>
                         <input type="number" class="form-input" id="videoProductId" placeholder="Enter Product ID" required min="1">
-                        <p class="form-hint">Enter the Product ID from the products table</p>
+                        <p class="form-hint">Enter the numeric Product ID (e.g., 1, 2, 3)</p>
                     </div>
 
-                    <div class="form-group"><label class="form-label">Video Title</label><input type="text" class="form-input" id="videoTitle" maxlength="200"></div>
-                    <div class="form-group"><label class="form-label">Subtitle</label><input type="text" class="form-input" id="videoSubtitle" maxlength="300"></div>
-                    <div class="form-group"><label class="form-label">Video URL *</label><input type="url" class="form-input" id="videoUrl" required></div>
+                    <div class="form-group">
+                        <label class="form-label">Video Title</label>
+                        <input type="text" class="form-input" id="videoTitle" placeholder="Video title" maxlength="200">
+                    </div>
 
-                    <div class="form-row form-row-2">
-                        <div class="form-group"><label class="form-label">Thumbnail URL</label><input type="url" class="form-input" id="videoThumbnailUrl"></div>
-                        <div class="form-group"><label class="form-label">Click Link</label><input type="text" class="form-input" id="videoClickLink"></div>
+                    <div class="form-group">
+                        <label class="form-label">Subtitle</label>
+                        <input type="text" class="form-input" id="videoSubtitle" placeholder="Video subtitle" maxlength="300">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Video URL *</label>
+                        <input type="url" class="form-input" id="videoUrl" placeholder="https://example.com/video.mp4" required>
                     </div>
 
                     <div class="form-row form-row-2">
-                        <div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="videoSortOrder" value="0" min="0"></div>
+                        <div class="form-group">
+                            <label class="form-label">Thumbnail URL</label>
+                            <input type="url" class="form-input" id="videoThumbnailUrl" placeholder="https://example.com/thumb.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Click Link</label>
+                            <input type="text" class="form-input" id="videoClickLink" placeholder="/product/slug or URL">
+                        </div>
+                    </div>
+
+                    <div class="form-row form-row-2">
+                        <div class="form-group">
+                            <label class="form-label">Sort Order</label>
+                            <input type="number" class="form-input" id="videoSortOrder" placeholder="0" value="0" min="0" max="999">
+                        </div>
                         <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
-                            <div class="form-check"><input type="checkbox" id="videoIsActive" checked><label for="videoIsActive">Active Status</label></div>
+                            <div class="form-check">
+                                <input type="checkbox" id="videoIsActive" checked>
+                                <label for="videoIsActive">Active Status</label>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -730,7 +840,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeVideoModal()">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="saveVideo()" id="videoSaveBtn">
-                    <i class="fa-solid fa-check"></i><span>Save Video</span>
+                    <i class="fa-solid fa-check"></i>
+                    <span>Save Video</span>
                 </button>
             </div>
         </div>
@@ -752,33 +863,51 @@
                     <div class="form-group">
                         <label class="form-label">Product ID *</label>
                         <input type="number" class="form-input" id="bannerProductId" placeholder="Enter Product ID" required min="1">
-                        <p class="form-hint">Enter the Product ID from the products table</p>
+                        <p class="form-hint">Enter the numeric Product ID (e.g., 1, 2, 3)</p>
                     </div>
 
-                    <div class="form-group"><label class="form-label">Banner Title</label><input type="text" class="form-input" id="bannerTitle" maxlength="200"></div>
-                    <div class="form-group"><label class="form-label">Subtitle</label><input type="text" class="form-input" id="bannerSubtitle" maxlength="300"></div>
+                    <div class="form-group">
+                        <label class="form-label">Banner Title</label>
+                        <input type="text" class="form-input" id="bannerTitle" placeholder="Banner title" maxlength="200">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Subtitle</label>
+                        <input type="text" class="form-input" id="bannerSubtitle" placeholder="Banner subtitle" maxlength="300">
+                    </div>
+
                     <div class="form-group">
                         <label class="form-label">Banner Image URL *</label>
-                        <input type="url" class="form-input" id="bannerImageUrl" required>
+                        <input type="url" class="form-input" id="bannerImageUrl" placeholder="https://example.com/banner.jpg" required>
                         <div class="img-thumb" style="width:100%;height:120px;margin-top:8px;border-radius:12px;" id="bannerImagePreview">
                             <i class="fa-solid fa-image"></i>
                         </div>
                     </div>
 
                     <div class="form-row form-row-2">
-                        <div class="form-group"><label class="form-label">Click Link</label><input type="text" class="form-input" id="bannerClickLink"></div>
-                        <div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="bannerSortOrder" value="0" min="0"></div>
+                        <div class="form-group">
+                            <label class="form-label">Click Link</label>
+                            <input type="text" class="form-input" id="bannerClickLink" placeholder="/product/slug or URL">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sort Order</label>
+                            <input type="number" class="form-input" id="bannerSortOrder" placeholder="0" value="0" min="0" max="999">
+                        </div>
                     </div>
 
                     <div class="form-group" style="display:flex;align-items:center;padding-top:16px;">
-                        <div class="form-check"><input type="checkbox" id="bannerIsActive" checked><label for="bannerIsActive">Active Status</label></div>
+                        <div class="form-check">
+                            <input type="checkbox" id="bannerIsActive" checked>
+                            <label for="bannerIsActive">Active Status</label>
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeBannerModal()">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="saveBanner()" id="bannerSaveBtn">
-                    <i class="fa-solid fa-check"></i><span>Save Banner</span>
+                    <i class="fa-solid fa-check"></i>
+                    <span>Save Banner</span>
                 </button>
             </div>
         </div>
@@ -787,16 +916,22 @@
     <!-- Delete Confirmation Modal -->
     <div class="confirm-overlay" id="deleteConfirm">
         <div class="confirm-dialog">
-            <div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
+            <div class="confirm-icon">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
             <h3 class="confirm-title" id="deleteConfirmTitle">Delete Item?</h3>
             <p class="confirm-text" id="deleteConfirmText">Are you sure you want to delete this item? This action cannot be undone.</p>
             <div class="confirm-actions">
                 <button class="btn btn-outline" onclick="closeDeleteConfirm()">Cancel</button>
-                <button class="btn btn-danger" onclick="confirmDelete()"><i class="fa-solid fa-trash-can"></i><span>Delete</span></button>
+                <button class="btn btn-danger" onclick="confirmDelete()">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span>Delete</span>
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="/components.js"></script>
@@ -805,6 +940,7 @@
         (function() {
             const API_BASE_URL = window.location.origin;
             
+            // State
             let activeTab = 'products';
             let deleteTargetId = null;
             let deleteTargetType = null;
@@ -814,10 +950,12 @@
             let totalPages = 1;
             let debounceTimer = null;
 
+            // Endpoints
             const productsEndpoint = '/api/admin/products';
             const videosEndpoint = '/api/admin/product-videos';
             const bannersEndpoint = '/api/admin/product-banners';
 
+            // ✅ Auth
             function getAdminToken() {
                 const stored = localStorage.getItem('jayenware_admin_session');
                 if (stored) { try { const p = JSON.parse(stored); if (p?.access_token) return p.access_token; } catch(e) {} }
@@ -840,6 +978,7 @@
                 setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateY(-20px)'; toast.style.transition='all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3500);
             }
 
+            // Tab Switching
             function switchTab(tabName) {
                 activeTab = tabName;
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -920,7 +1059,7 @@
                     if (p.is_limited_edition) flags.push('<span class="flag-badge limited">Limited</span>');
                     if (p.is_out_of_stock) flags.push('<span class="flag-badge oos">OOS</span>');
                     return `<tr>
-                        <td><span class="id-badge">#${p.id}</span></td>
+                        <td><span class="product-id-badge">#${p.id}</span></td>
                         <td><div class="img-thumb">${p.img ? `<img src="${escapeHTML(p.img)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}</div></td>
                         <td>
                             <span style="font-weight:600;display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(p.title)}</span>
@@ -1076,8 +1215,14 @@
                 tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
                 emptyState.style.display = 'none';
 
+                let url = `${API_BASE_URL}${videosEndpoint}`;
+                const productFilter = document.getElementById('videoProductFilter')?.value;
+                if (productFilter) {
+                    url = `${API_BASE_URL}/api/admin/products/${productFilter}/videos`;
+                }
+
                 try {
-                    const res = await fetch(`${API_BASE_URL}${videosEndpoint}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
                     if (data.success) {
                         const videos = data.videos || [];
@@ -1085,7 +1230,7 @@
                         tbody.innerHTML = videos.map(v => `<tr>
                             <td><div class="img-thumb" style="background:#1d1d1f;"><i class="fa-solid fa-play" style="color:#fff;font-size:12px;"></i></div></td>
                             <td><span style="font-weight:600;">${escapeHTML(v.title || 'Untitled')}</span></td>
-                            <td><span class="id-badge">#${v.product_id}</span></td>
+                            <td><span class="product-id-badge">#${v.product_id}</span></td>
                             <td>${v.sort_order || 0}</td>
                             <td><span class="status-badge ${v.is_active ? 'active' : 'inactive'}"><span class="status-dot ${v.is_active ? 'active' : 'inactive'}"></span>${v.is_active ? 'Active' : 'Inactive'}</span></td>
                             <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
@@ -1116,7 +1261,7 @@
                         document.getElementById('videoSortOrder').value = v.sort_order || 0;
                         document.getElementById('videoIsActive').checked = v.is_active;
                     }
-                } else { document.getElementById('videoForm').reset(); document.getElementById('videoSortOrder').value = 0; document.getElementById('videoIsActive').checked = true; }
+                } else { document.getElementById('videoForm').reset(); document.getElementById('videoSortOrder').value = 0; }
                 document.getElementById('videoModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
@@ -1124,12 +1269,12 @@
             function closeVideoModal() { document.getElementById('videoModal').classList.remove('show'); document.body.style.overflow = ''; }
 
             async function saveVideo() {
-                const productId = document.getElementById('videoProductId').value.trim();
+                const productId = parseInt(document.getElementById('videoProductId').value);
                 const videoUrl = document.getElementById('videoUrl').value.trim();
                 if (!productId || !videoUrl) { showToast('Product ID and video URL required', 'error'); return; }
                 const token = getAdminToken();
                 const videoData = {
-                    product_id: parseInt(productId), title: document.getElementById('videoTitle').value.trim() || null,
+                    product_id: productId, title: document.getElementById('videoTitle').value.trim() || null,
                     subtitle: document.getElementById('videoSubtitle').value.trim() || null, video_url: videoUrl,
                     thumbnail_url: document.getElementById('videoThumbnailUrl').value.trim() || null,
                     click_link: document.getElementById('videoClickLink').value.trim() || null,
@@ -1167,8 +1312,12 @@
                 tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="width:100%;height:60px;"></div></td></tr>';
                 emptyState.style.display = 'none';
 
+                let url = `${API_BASE_URL}${bannersEndpoint}`;
+                const productFilter = document.getElementById('bannerProductFilter')?.value;
+                if (productFilter) url = `${API_BASE_URL}/api/admin/products/${productFilter}/banners`;
+
                 try {
-                    const res = await fetch(`${API_BASE_URL}${bannersEndpoint}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
                     if (data.success) {
                         const banners = data.banners || [];
@@ -1176,7 +1325,7 @@
                         tbody.innerHTML = banners.map(b => `<tr>
                             <td><div class="img-thumb">${b.banner_url ? `<img src="${escapeHTML(b.banner_url)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}</div></td>
                             <td><span style="font-weight:600;">${escapeHTML(b.title || 'Untitled')}</span></td>
-                            <td><span class="id-badge">#${b.product_id}</span></td>
+                            <td><span class="product-id-badge">#${b.product_id}</span></td>
                             <td>${b.sort_order || 0}</td>
                             <td><span class="status-badge ${b.is_active ? 'active' : 'inactive'}"><span class="status-dot ${b.is_active ? 'active' : 'inactive'}"></span>${b.is_active ? 'Active' : 'Inactive'}</span></td>
                             <td style="text-align:right;"><div class="actions-cell" style="justify-content:flex-end;">
@@ -1207,7 +1356,7 @@
                         document.getElementById('bannerIsActive').checked = b.is_active;
                         updateBannerPreview(b.banner_url);
                     }
-                } else { document.getElementById('bannerForm').reset(); document.getElementById('bannerSortOrder').value = 0; document.getElementById('bannerIsActive').checked = true; resetBannerPreview(); }
+                } else { document.getElementById('bannerForm').reset(); resetBannerPreview(); document.getElementById('bannerSortOrder').value = 0; }
                 document.getElementById('bannerModal').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
@@ -1215,12 +1364,12 @@
             function closeBannerModal() { document.getElementById('bannerModal').classList.remove('show'); document.body.style.overflow = ''; }
 
             async function saveBanner() {
-                const productId = document.getElementById('bannerProductId').value.trim();
+                const productId = parseInt(document.getElementById('bannerProductId').value);
                 const bannerUrl = document.getElementById('bannerImageUrl').value.trim();
                 if (!productId || !bannerUrl) { showToast('Product ID and banner URL required', 'error'); return; }
                 const token = getAdminToken();
                 const bannerData = {
-                    product_id: parseInt(productId), title: document.getElementById('bannerTitle').value.trim() || null,
+                    product_id: productId, title: document.getElementById('bannerTitle').value.trim() || null,
                     subtitle: document.getElementById('bannerSubtitle').value.trim() || null, banner_url: bannerUrl,
                     click_link: document.getElementById('bannerClickLink').value.trim() || null,
                     sort_order: parseInt(document.getElementById('bannerSortOrder').value) || 0,
@@ -1275,11 +1424,25 @@
                 } catch(e) {}
             }
 
+            async function loadProductsDropdown(selectId) {
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}${productsEndpoint}/all`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (data.success) {
+                        const options = '<option value="">All Products</option>' + data.products.map(p => `<option value="${p.id}">#${p.id} - ${escapeHTML(p.title)}</option>`).join('');
+                        if (selectId === 'videoProductFilter') document.getElementById('videoProductFilter').innerHTML = options;
+                        else if (selectId === 'bannerProductFilter') document.getElementById('bannerProductFilter').innerHTML = options;
+                    }
+                } catch(e) {}
+            }
+
             function updateProductImagePreview(url) {
                 const container = document.getElementById('productImagePreview');
                 if (url) container.innerHTML = `<img src="${escapeHTML(url)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">`;
                 else resetProductImagePreview();
             }
+
             function resetProductImagePreview() { document.getElementById('productImagePreview').innerHTML = '<i class="fa-solid fa-image"></i>'; }
             function updateBannerPreview(url) {
                 const container = document.getElementById('bannerImagePreview');
@@ -1299,6 +1462,7 @@
                 document.getElementById('productSeoContent').classList.toggle('open', productSeoOpen);
             }
 
+            // Delete
             function openDeleteConfirm(id, type, name) {
                 deleteTargetId = id; deleteTargetType = type;
                 document.getElementById('deleteConfirmTitle').textContent = `Delete ${type==='product'?'Product':type==='video'?'Video':'Banner'}?`;
@@ -1352,6 +1516,7 @@
             window.loadProductVideos = loadProductVideos;
             window.loadProductBanners = loadProductBanners;
 
+            // Init
             document.addEventListener('DOMContentLoaded', () => {
                 if (!checkAdminAuth()) return;
                 
@@ -1372,6 +1537,8 @@
                 }
 
                 loadCategoryDropdowns();
+                loadProductsDropdown('videoProductFilter');
+                loadProductsDropdown('bannerProductFilter');
                 loadProducts();
             });
         })();
