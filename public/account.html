@@ -784,7 +784,7 @@
         try {
           var token = getAdminToken();
           if (token) {
-            await fetch(API_BASE + '/api/admin/logout', {
+            await fetch(API_BASE + '/api/auth/logout', {
               method: 'POST',
               headers: { 'Authorization': 'Bearer ' + token }
             });
@@ -814,7 +814,6 @@
 
         var newFname = document.getElementById('edit-fname').value.trim();
         var newLname = document.getElementById('edit-lname').value.trim();
-        var newPhone = document.getElementById('edit-phone').value.trim();
         var token = getAdminToken();
 
         if (!token) {
@@ -824,15 +823,15 @@
         }
 
         try {
-          var response = await fetch(API_BASE + '/api/admin/profile', {
-            method: 'PUT',
+          var response = await fetch(API_BASE + '/api/admin/me', {
+            method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
             },
             body: JSON.stringify({
-              full_name: (newFname + ' ' + newLname).trim(),
-              phone: newPhone
+              display_name: (newFname + ' ' + newLname).trim(),
+              username: adminData.username || (adminData.email || 'admin').split('@')[0].toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 30)
             })
           });
 
@@ -848,9 +847,10 @@
           }
 
           var result = await response.json();
-          if (result.profile) {
-            adminData.full_name = result.profile.full_name || adminData.full_name;
-            adminData.phone = result.profile.phone || adminData.phone;
+          var payload = result.data || result;
+          if (payload.profile) {
+            adminData.display_name = payload.profile.display_name || adminData.display_name;
+            adminData.username = payload.profile.username || adminData.username;
           }
 
           showToast('Profile updated successfully!');
@@ -886,7 +886,7 @@
             </div>
             <div class="admin-info-item">
               <label>Admin Name</label>
-              <span>${escapeHTML(adminData.full_name || 'N/A')}</span>
+              <span>${escapeHTML(adminData.display_name || adminData.full_name || 'N/A')}</span>
             </div>
             <div class="admin-info-item">
               <label>Admin Email</label>
@@ -900,7 +900,7 @@
         }
 
         // Render avatar
-        var fullName = adminData?.full_name || 'Admin User';
+        var fullName = adminData?.display_name || adminData?.full_name || 'Admin User';
         var nameParts = fullName.split(' ');
         var initials = (nameParts[0]?.charAt(0) || 'A').toUpperCase() + 
                       (nameParts[1]?.charAt(0) || nameParts[0]?.charAt(1) || 'D').toUpperCase();
@@ -924,7 +924,7 @@
           grid.innerHTML = `
             <div class="info-item"><label>First Name</label><input type="text" id="edit-fname" class="edit-input" value="${escapeHTML(nameParts[0] || '')}" placeholder="Enter your first name"></div>
             <div class="info-item"><label>Last Name</label><input type="text" id="edit-lname" class="edit-input" value="${escapeHTML(nameParts.slice(1).join(' ') || '')}" placeholder="Enter your last name"></div>
-            <div class="info-item"><label>Phone Number</label><input type="text" id="edit-phone" class="edit-input" value="${escapeHTML(adminData?.phone || '')}" placeholder="e.g. +1 (555) 000-0000"></div>
+            <div class="info-item"><label>Username</label><input type="text" class="edit-input" value="${escapeHTML(adminData?.username || '')}" disabled title="Username is managed centrally"></div>
             <div class="info-item"><label>Email Address</label><input type="email" class="edit-input" value="${escapeHTML(adminData?.email || '')}" disabled title="Email address cannot be changed"></div>
           `;
           
@@ -936,7 +936,7 @@
           grid.innerHTML = `
             <div class="info-item"><label>First Name</label><span>${escapeHTML(nameParts[0] || '—')}</span></div>
             <div class="info-item"><label>Last Name</label><span>${escapeHTML(nameParts.slice(1).join(' ') || '—')}</span></div>
-            <div class="info-item"><label>Phone Number</label><span>${escapeHTML(adminData?.phone || '—')}</span></div>
+            <div class="info-item"><label>Username</label><span>${escapeHTML(adminData?.username || '—')}</span></div>
             <div class="info-item"><label>Email Address</label><span>${escapeHTML(adminData?.email || '—')}</span></div>
           `;
           
@@ -972,7 +972,7 @@
           console.log('📡 Fetching admin data...');
           
           // Verify admin and get profile
-          var response = await fetch(API_BASE + '/api/admin/profile', {
+          var response = await fetch(API_BASE + '/api/admin/me', {
             headers: {
               'Accept': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -995,7 +995,9 @@
           var result = await response.json();
           console.log('✅ Admin data received:', result);
           
-          adminData = result.profile || result.user || {};
+          var payload = result.data || result;
+          adminData = payload.profile || payload.user || {};
+          if (payload.access) adminData.role = payload.access.roles?.includes('super_admin') ? 'super_admin' : 'admin';
           
           // Show the account grid
           document.getElementById('account-grid').style.display = 'flex';
