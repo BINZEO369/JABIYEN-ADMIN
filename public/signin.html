@@ -850,9 +850,7 @@
 
         try {
           // Choose API endpoint based on login type
-          var apiEndpoint = currentLoginType === 'admin' 
-            ? '/api/admin/login' 
-            : '/api/auth/login';
+          var apiEndpoint = '/api/auth/login';
           
           var response = await fetch(API_BASE + apiEndpoint, {
             method: 'POST',
@@ -867,8 +865,9 @@
           }
 
           // Save session token to localStorage
-          if (result.session) {
-            saveSession(result.session, currentLoginType);
+          var payload = result.data || result;
+          if (payload.session) {
+            saveSession(payload.session, currentLoginType);
           }
 
           // Success

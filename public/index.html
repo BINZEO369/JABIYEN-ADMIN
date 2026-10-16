@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -99,167 +98,55 @@
     </div>
 
     <script>
-        // ১. Supabase ইনিশিয়ালাইজেশন
-        const SUPABASE_URL = "https://eiueitoxxqzkolsouuzy.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpdWVpdG94eHF6a29sc291dXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3NjIxNjIsImV4cCI6MjA5OTMzODE2Mn0.zsmN5P-AXeKT-XLgqkq0Bjx8EfjupJs1mjC26l-g7uA";
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // ২. ইনস্ট্যান্ট সিকিউরিটি চেক (Immediate Execution)
+        const sessionKey = 'jayenware_admin_session';
+        const getToken = () => { try { return JSON.parse(localStorage.getItem(sessionKey) || '{}').access_token || ''; } catch { return ''; } };
+        const api = async (path, options = {}) => {
+            const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+            const token = getToken();
+            if (token) headers.Authorization = `Bearer ${token}`;
+            const response = await fetch(path, { ...options, headers });
+            const body = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(body.error || body.message || `Request failed (${response.status})`);
+            return body;
+        };
         async function checkAuth() {
-            const { data: { session } } = await supabase.auth.getSession();
-            
-            if (!session) {
-                // সেশন না থাকলে সরাসরি login.html এ পাঠিয়ে দেওয়া হবে
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // রোল-বেসড সিকিউরিটি চেক (RLS পলিসি অনুযায়ী admin বা super_admin হতে হবে)
-            const role = session.user.app_metadata?.role;
-            if (role !== 'admin' && role !== 'super_admin') {
-                await supabase.auth.signOut();
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // সেশন এবং রোল ভ্যালিড থাকলে UI ভিজিবল করা এবং ডেটা লোড করা
-            document.addEventListener("DOMContentLoaded", () => {
-                document.getElementById('userEmail').textContent = session.user.email;
-                document.getElementById('bodyCtx').classList.remove('opacity-0');
-                fetchHeroes();
-            });
+            try {
+                const result = await api('/api/admin/me');
+                const user = result.data?.user || result.user || {};
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.getElementById('userEmail').textContent = user.email || '';
+                    document.getElementById('bodyCtx').classList.remove('opacity-0');
+                    fetchHeroes();
+                });
+            } catch { window.location.href = 'login.html'; }
         }
-        
-        // ফাংশনটি সাথে সাথে এক্সিকিউট করা হচ্ছে যাতে DOM লোডের জন্য অপেক্ষা করতে না হয়
         checkAuth();
-
-        // ৩. ড্যাশবোর্ডে ডেটা রিড (Read) করা
         async function fetchHeroes() {
             const tableBody = document.getElementById('heroTableBody');
             try {
-                const { data, error } = await supabase
-                    .from('hero')
-                    .select('*')
-                    .order('sort_order', { ascending: true });
-
-                if (error) throw error;
-
-                if (data.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-gray-500">No banners found. Add one on the left.</td></tr>`;
-                    return;
-                }
-
-                tableBody.innerHTML = '';
-                data.forEach(hero => {
-                    tableBody.innerHTML += `
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="py-4 pr-3">
-                                <img src="${hero.img}" class="w-16 h-10 object-cover rounded border border-gray-200" onerror="this.src='https://placehold.co/100x60?text=No+Image'">
-                            </td>
-                            <td class="py-4">
-                                <div class="font-semibold text-gray-900">${hero.title || 'Untitled'}</div>
-                                <div class="text-xs text-gray-500">${hero.subtitle || 'No Subtitle'}</div>
-                                <div class="text-xs text-blue-600 mt-1">${hero.cta_text ? `${hero.cta_text} -> ${hero.cta_link}` : ''}</div>
-                            </td>
-                            <td class="py-4 text-center font-mono">${hero.sort_order}</td>
-                            <td class="py-4 text-center">
-                                <span class="px-2 py-1 rounded text-xs font-semibold ${hero.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
-                                    ${hero.is_active ? 'Active' : 'Inactive'}
-                                </span>
-                            </td>
-                            <td class="py-4 text-right space-x-2">
-                                <button onclick='editHero(${JSON.stringify(hero)})' class="text-blue-600 hover:text-blue-900 font-medium">Edit</button>
-                                <button onclick="deleteHero(${hero.id})" class="text-red-600 hover:text-red-900 font-medium">Delete</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            } catch (error) {
-                alert("Error fetching data: " + error.message);
-            }
+                const result = await api('/api/admin/hero');
+                const data = result.banners || result.data || [];
+                if (!data.length) { tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-gray-500">No banners found. Add one on the left.</td></tr>'; return; }
+                tableBody.innerHTML = data.map(hero => `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="py-4 pr-3"><img src="${hero.img || ''}" class="w-16 h-10 object-cover rounded border border-gray-200" onerror="this.src='https://placehold.co/100x60?text=No+Image'"></td>
+                        <td class="py-4"><div class="font-semibold text-gray-900">${hero.title || 'Untitled'}</div><div class="text-xs text-gray-500">${hero.subtitle || 'No Subtitle'}</div><div class="text-xs text-blue-600 mt-1">${hero.cta_text ? `${hero.cta_text} -> ${hero.cta_link || ''}` : ''}</div></td>
+                        <td class="py-4 text-center font-mono">${hero.sort_order ?? 0}</td>
+                        <td class="py-4 text-center"><span class="px-2 py-1 rounded text-xs font-semibold ${hero.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">${hero.is_active ? 'Active' : 'Inactive'}</span></td>
+                        <td class="py-4 text-right space-x-2"><button onclick='editHero(${JSON.stringify(hero)})' class="text-blue-600 hover:text-blue-900 font-medium">Edit</button><button onclick="deleteHero(${hero.id})" class="text-red-600 hover:text-red-900 font-medium">Delete</button></td>
+                    </tr>`).join('');
+            } catch (error) { alert('Error fetching data: ' + error.message); }
         }
-
-        // ৪. ডেটা সাবমিট করা (Insert / Update)
         async function handleSubmit(e) {
-            e.preventDefault();
-            const saveBtn = document.getElementById('saveBtn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Saving...';
-
+            e.preventDefault(); const saveBtn = document.getElementById('saveBtn'); saveBtn.disabled = true; saveBtn.textContent = 'Saving...';
             const id = document.getElementById('heroId').value;
-            const payload = {
-                title: document.getElementById('title').value,
-                subtitle: document.getElementById('subtitle').value,
-                img: document.getElementById('img').value,
-                cta_text: document.getElementById('cta_text').value,
-                cta_link: document.getElementById('cta_link').value,
-                sort_order: parseInt(document.getElementById('sort_order').value) || 0,
-                is_active: document.getElementById('is_active').checked
-            };
-
-            try {
-                if (id) {
-                    const { error } = await supabase.from('hero').update(payload).eq('id', id);
-                    if (error) throw error;
-                } else {
-                    const { error } = await supabase.from('hero').insert([payload]);
-                    if (error) throw error;
-                }
-
-                resetForm();
-                fetchHeroes();
-            } catch (error) {
-                alert("Operation failed: " + error.message);
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.textContent = 'Save Banner';
-            }
+            const payload = { title: document.getElementById('title').value, subtitle: document.getElementById('subtitle').value, img: document.getElementById('img').value, cta_text: document.getElementById('cta_text').value, cta_link: document.getElementById('cta_link').value, sort_order: parseInt(document.getElementById('sort_order').value) || 0, is_active: document.getElementById('is_active').checked };
+            try { await api(id ? `/api/admin/hero/${id}` : '/api/admin/hero', { method: id ? 'PUT' : 'POST', body: JSON.stringify(payload) }); resetForm(); await fetchHeroes(); } catch (error) { alert('Operation failed: ' + error.message); } finally { saveBtn.disabled = false; saveBtn.textContent = 'Save Banner'; }
         }
-
-        // ৫. এডিট মুড চালু করা
-        function editHero(hero) {
-            document.getElementById('formTitle').textContent = "Edit Banner Details";
-            document.getElementById('heroId').value = hero.id;
-            document.getElementById('title').value = hero.title || '';
-            document.getElementById('subtitle').value = hero.subtitle || '';
-            document.getElementById('img').value = hero.img || '';
-            document.getElementById('cta_text').value = hero.cta_text || '';
-            document.getElementById('cta_link').value = hero.cta_link || '';
-            document.getElementById('sort_order').value = hero.sort_order;
-            document.getElementById('is_active').checked = hero.is_active;
-
-            document.getElementById('cancelBtn').classList.remove('hidden');
-            document.getElementById('saveBtn').textContent = "Update Banner";
-        }
-
-        // ৬. ফর্ম রিসেট বা ক্লিয়ার করা
-        function resetForm() {
-            document.getElementById('formTitle').textContent = "Add New Banner";
-            document.getElementById('heroId').value = '';
-            document.getElementById('heroForm').reset();
-            document.getElementById('cancelBtn').classList.add('hidden');
-            document.getElementById('saveBtn').textContent = "Save Banner";
-        }
-
-        // ৭. ডিলিট অপারেশন (Delete)
-        async function deleteHero(id) {
-            if (confirm("Are you sure you want to delete this banner?")) {
-                try {
-                    const { error } = await supabase.from('hero').delete().eq('id', id);
-                    if (error) throw error;
-                    fetchHeroes();
-                } catch (error) {
-                    alert("Delete failed: " + error.message);
-                }
-            }
-        }
-
-        // ৮. লগআউট হ্যান্ডেলার
-        async function handleLogout() {
-            await supabase.auth.signOut();
-            window.location.href = 'login.html';
-        }
+        function editHero(hero) { document.getElementById('formTitle').textContent = 'Edit Banner Details'; document.getElementById('heroId').value = hero.id; document.getElementById('title').value = hero.title || ''; document.getElementById('subtitle').value = hero.subtitle || ''; document.getElementById('img').value = hero.img || ''; document.getElementById('cta_text').value = hero.cta_text || ''; document.getElementById('cta_link').value = hero.cta_link || ''; document.getElementById('sort_order').value = hero.sort_order ?? 0; document.getElementById('is_active').checked = !!hero.is_active; document.getElementById('cancelBtn').classList.remove('hidden'); document.getElementById('saveBtn').textContent = 'Update Banner'; }
+        function resetForm() { document.getElementById('formTitle').textContent = 'Add New Banner'; document.getElementById('heroId').value = ''; document.getElementById('heroForm').reset(); document.getElementById('cancelBtn').classList.add('hidden'); document.getElementById('saveBtn').textContent = 'Save Banner'; }
+        async function deleteHero(id) { if (!confirm('Are you sure you want to delete this banner?')) return; try { await api(`/api/admin/hero/${id}`, { method: 'DELETE' }); await fetchHeroes(); } catch (error) { alert('Delete failed: ' + error.message); } }
+        async function handleLogout() { try { await api('/api/auth/logout', { method: 'POST' }); } finally { localStorage.removeItem(sessionKey); window.location.href = 'login.html'; } }
     </script>
 </body>
 </html>
