@@ -113,6 +113,7 @@
             try {
                 const result = await api('/api/admin/me');
                 const user = result.data?.user || result.user || {};
+                void api('/api/project-access/record', { method: 'POST', body: JSON.stringify({ project_key: 'jabiyen', client_key: 'admin', event_type: 'token_verified', outcome: 'success', metadata: { source: 'jabiyen-admin' } }) }).catch(() => {});
                 document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('userEmail').textContent = user.email || '';
                     document.getElementById('bodyCtx').classList.remove('opacity-0');
