@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Completing Admin Sign In | JABIYEN</title>
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #f5f5f7; color: #1d1d1f; font: 500 15px Inter, system-ui, sans-serif; }
+    main { width: min(100%, 440px); padding: 40px 36px; text-align: center; background: #fff; border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,.08); }
+    h1 { margin: 0 0 12px; font-size: 24px; } p { margin: 0; color: #68686d; line-height: 1.6; } .error { color: #b42318; }
+  </style>
+</head>
+<body>
+  <main><h1>Central Auth</h1><p id="message">Completing secure admin sign in…</p></main>
+  <script>
+    (async function () {
+      var message = document.getElementById('message');
+      var params = new URLSearchParams(window.location.search);
+      var code = params.get('code');
+      var returnedState = params.get('state');
+      var expectedState = sessionStorage.getItem('jabiyen_admin_auth_state');
+      var verifier = sessionStorage.getItem('jabiyen_admin_auth_verifier');
+      var redirectUri = sessionStorage.getItem('jabiyen_admin_auth_redirect_uri') || (window.location.origin + '/auth/callback.html');
+      if (!code || !returnedState || !expectedState || returnedState !== expectedState || !verifier) {
+        message.textContent = 'The sign-in response was invalid or expired. Please start again.';
+        message.className = 'error';
+        return;
+      }
+      try {
+        var response = await fetch('/api/auth/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ client_id: 'jabiyen:admin', redirect_uri: redirectUri, code: code, code_verifier: verifier })
+        });
+        var result = await response.json().catch(function () { return {}; });
+        if (!response.ok || !result.success || !result.data || !result.data.session || !result.data.session.access_token) {
+          throw new Error((result.error && result.error.message) || 'Central token exchange failed');
+        }
+        var session = result.data.session;
+        localStorage.setItem('jayenware_admin_session', JSON.stringify({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token || null,
+          expires_at: session.expires_at || null,
+          user_id: session.user && session.user.id || null,
+          login_type: 'admin'
+        }));
+        sessionStorage.removeItem('jabiyen_admin_auth_state');
+        sessionStorage.removeItem('jabiyen_admin_auth_verifier');
+        sessionStorage.removeItem('jabiyen_admin_auth_redirect_uri');
+        window.location.replace('/account');
+      } catch (error) {
+        console.error('[JABIYEN_ADMIN_AUTH_CALLBACK_ERROR]', error);
+        message.textContent = 'Central authentication could not be completed. Please sign in again.';
+        message.className = 'error';
+      }
+    }());
+  </script>
+</body>
+</html>

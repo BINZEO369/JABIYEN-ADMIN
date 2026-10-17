@@ -60,6 +60,10 @@
       "dest": "/public/signin.html"
     },
     {
+      "src": "/auth/callback.html",
+      "dest": "/public/auth/callback.html"
+    },
+    {
       "src": "/login",
       "dest": "/public/signin.html"
     },
