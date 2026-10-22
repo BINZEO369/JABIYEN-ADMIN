@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#f5f6f8" />
+  <title>Table | JABIYEN Admin</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{font-family:Inter,system-ui,sans-serif;color:#182230;background:#f5f6f8;font-synthesis:none;text-rendering:optimizeLegibility}*{box-sizing:border-box}body{margin:0;min-height:100vh}.app{min-height:100vh;display:grid;grid-template-columns:258px minmax(0,1fr)}aside{background:#111827;color:#e5e7eb;padding:22px 16px;display:flex;flex-direction:column;gap:24px}.brand{display:flex;align-items:center;gap:11px;padding:4px 8px 18px;border-bottom:1px solid #263244}.brand img{width:39px;height:39px;border-radius:11px;object-fit:cover}.brand strong{display:block;font-size:14px;letter-spacing:.12em}.brand small{display:block;color:#94a3b8;font-size:11px;margin-top:4px}.nav-title{margin:0 8px 8px;color:#8190a3;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.nav-list{overflow:auto;max-height:calc(100vh - 185px);padding-right:3px}.nav-list::-webkit-scrollbar{width:4px}.nav-list::-webkit-scrollbar-thumb{background:#344155;border-radius:9px}.nav-link{display:flex;align-items:center;gap:10px;color:#cbd5e1;text-decoration:none;border-radius:9px;padding:9px 10px;font-size:12px;line-height:1.35;transition:.16s}.nav-link:hover,.nav-link.active{color:#fff;background:#263244}.nav-icon{width:8px;height:8px;border:1px solid #93a4ba;border-radius:3px;flex:0 0 auto}main{min-width:0;padding:28px clamp(16px,3vw,38px) 50px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:23px}.eyebrow{font-size:11px;font-weight:700;color:#758196;letter-spacing:.1em;text-transform:uppercase}.topbar h1{font-size:25px;letter-spacing:-.04em;margin:5px 0 0;overflow-wrap:anywhere}.user-tools{display:flex;align-items:center;gap:12px;color:#64748b;font-size:12px}.button{border:1px solid #d7dce4;background:#fff;border-radius:9px;padding:9px 12px;font:600 12px Inter,sans-serif;color:#344154;cursor:pointer}.button:hover{background:#f0f3f7}.subnav{display:flex;gap:8px;align-items:center;margin-bottom:17px}.subnav a{font-size:12px;color:#506078;text-decoration:none}.subnav span{color:#a0aabc;font-size:12px}.panel{background:#fff;border:1px solid #e5e9ef;border-radius:14px;overflow:hidden}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #edf0f4}.panel-head p{margin:3px 0 0;color:#79869a;font-size:11px}.actions{display:flex;gap:8px;align-items:center}.table-wrap{width:100%;overflow:auto;max-height:calc(100vh - 250px)}table{border-collapse:separate;border-spacing:0;min-width:100%;width:max-content;font-size:11px}thead{position:sticky;top:0;z-index:1;background:#f6f8fa}th{padding:11px 12px;border-bottom:1px solid #e8ecf1;text-align:left;color:#566579;font-size:10px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}th small{display:block;color:#98a2b2;text-transform:none;letter-spacing:0;font-weight:500;margin-top:4px}td{padding:10px 12px;border-bottom:1px solid #eff1f4;vertical-align:top;color:#273448;max-width:360px;min-width:110px}tbody tr:hover{background:#fafbfd}.cell{white-space:pre-wrap;overflow-wrap:anywhere;max-width:340px;max-height:120px;overflow:auto}.null{color:#a1aab6;font-style:italic}.pager{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 17px;color:#738096;font-size:11px}.pager-group{display:flex;gap:8px}.status{padding:32px;text-align:center;color:#7b8797;font-size:13px}.error{color:#a32121}.count{font-variant-numeric:tabular-nums;font-weight:700;color:#344154}.mobile-nav{display:none}
+    @media(max-width:760px){.app{display:block}aside{padding:12px 14px;gap:12px}.brand{padding:2px 2px 10px}.brand img{width:34px;height:34px}.nav-title{margin:0 2px 6px}.nav-list{display:flex;gap:5px;max-height:none;overflow-x:auto;overflow-y:hidden;padding:0 0 3px}.nav-link{white-space:nowrap;flex:0 0 auto;padding:8px 9px}main{padding:18px 12px 34px}.topbar{align-items:flex-start;margin-bottom:15px}.topbar h1{font-size:21px}.user-tools{flex-direction:column;align-items:flex-end;gap:7px}.panel-head{align-items:flex-start;flex-direction:column;padding:14px}.actions{width:100%;justify-content:space-between}.table-wrap{max-height:calc(100vh - 275px)}th,td{padding:9px 10px}.pager{padding:12px;align-items:flex-start;flex-direction:column}.cell{max-width:260px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <a class="brand" href="/dashboard" style="color:inherit;text-decoration:none"><img src="/logo.png" alt="JABIYEN" /><span><strong>JABIYEN</strong><small>ADMIN CONSOLE</small></span></a>
+      <section><p class="nav-title">Database</p><nav class="nav-list" id="sideNav"><a class="nav-link" href="/dashboard"><span class="nav-icon"></span>Loading tables…</a></nav></section>
+    </aside>
+    <main>
+      <header class="topbar"><div><div class="eyebrow">Database explorer</div><h1 id="title">Loading table…</h1></div><div class="user-tools"><span id="userEmail">Checking secure session…</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>
+      <div class="subnav"><a href="/dashboard">Dashboard</a><span>/</span><span id="breadcrumb">Table</span></div>
+      <section class="panel">
+        <div class="panel-head"><div><strong id="tableName">Loading…</strong><p id="schemaInfo">Loading columns and records…</p></div><div class="actions"><span id="recordCount" class="count"></span><button class="button" id="refreshBtn" type="button">Refresh</button></div></div>
+        <div class="table-wrap" id="tableWrap"><div class="status">Loading table records…</div></div>
+        <footer class="pager"><span id="pageInfo">—</span><div class="pager-group"><button class="button" id="previousBtn" type="button" disabled>Previous</button><button class="button" id="nextBtn" type="button" disabled>Next</button></div></footer>
+      </section>
+    </main>
+  </div>
+  <script>
+    (function () {
+      const SESSION_KEY = 'jayenware_admin_session';
+      const tableName = decodeURIComponent(window.location.pathname.split('/').filter(Boolean).pop() || '');
+      const $ = (id) => document.getElementById(id);
+      const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+      const label = (name) => name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+      let page = 1;
+      let totalPages = 1;
+      let pageSize = 25;
+      function token() { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || '{}').access_token || ''; } catch { return ''; } }
+      async function api(path) {
+        const response = await fetch(path, { headers: { Authorization: `Bearer ${token()}` } });
+        const result = await response.json().catch(() => ({}));
+        if (response.status === 401 || response.status === 403) { localStorage.removeItem(SESSION_KEY); window.location.replace('/signin?type=admin'); throw new Error('Please sign in with an active admin account.'); }
+        if (!response.ok) throw new Error(result.error || result.message || `Request failed (${response.status})`);
+        return result;
+      }
+      function displayCell(value) {
+        if (value === null || value === undefined || value === '') return '<span class="cell null">NULL</span>';
+        const text = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
+        const clipped = text.length > 500 ? `${text.slice(0, 500)}…` : text;
+        return `<div class="cell" title="${esc(text)}">${esc(clipped)}</div>`;
+      }
+      function render(records, columns) {
+        const headers = columns.map((column) => `<th>${esc(column.name)}<small>${esc(column.type || '')}${column.nullable ? ' · nullable' : ''}</small></th>`).join('');
+        const body = records.length ? records.map((row) => `<tr>${columns.map((column) => `<td>${displayCell(row[column.name])}</td>`).join('')}</tr>`).join('') : `<tr><td colspan="${Math.max(columns.length, 1)}" class="status">This table has no records yet.</td></tr>`;
+        $('tableWrap').innerHTML = `<table><thead><tr>${headers || '<th>Columns</th>'}</tr></thead><tbody>${body}</tbody></table>`;
+      }
+      async function loadPage() {
+        $('tableWrap').innerHTML = '<div class="status">Loading table records…</div>';
+        try {
+          const result = await api(`/api/admin/tables/${encodeURIComponent(tableName)}?page=${page}&page_size=${pageSize}`);
+          const columns = result.columns || [];
+          const records = result.rows || [];
+          totalPages = result.totalPages || 1;
+          $('tableName').textContent = tableName;
+          $('schemaInfo').textContent = `${columns.length} columns · page size ${result.pageSize || pageSize}`;
+          $('recordCount').textContent = `${Number(result.total || 0).toLocaleString()} records`;
+          $('pageInfo').textContent = `Page ${result.page || page} of ${totalPages}`;
+          $('previousBtn').disabled = page <= 1;
+          $('nextBtn').disabled = page >= totalPages;
+          render(records, columns);
+        } catch (error) {
+          $('tableWrap').innerHTML = `<div class="status error">${esc(error.message || 'Could not load this table.')}</div>`;
+          $('pageInfo').textContent = 'Table unavailable';
+        }
+      }
+      async function init() {
+        if (!token()) { window.location.replace('/signin?type=admin'); return; }
+        if (!/^[a-z0-9_]+$/.test(tableName)) { $('tableWrap').innerHTML = '<div class="status error">Invalid table name.</div>'; return; }
+        $('title').textContent = label(tableName);
+        $('breadcrumb').textContent = label(tableName);
+        try {
+          const [me, tableList] = await Promise.all([api('/api/admin/me'), api('/api/admin/tables')]);
+          const user = me.data && me.data.user || me.user || {};
+          $('userEmail').textContent = user.email || 'Signed-in administrator';
+          const tables = tableList.tables || [];
+          if (!tables.some((table) => table.name === tableName)) throw new Error('This table is not available to your account.');
+          $('sideNav').innerHTML = `<a class="nav-link" href="/dashboard"><span class="nav-icon"></span>Overview</a>` + tables.map((table) => `<a class="nav-link${table.name === tableName ? ' active' : ''}" href="/tables/${encodeURIComponent(table.name)}"><span class="nav-icon"></span>${esc(label(table.name))}</a>`).join('');
+          await loadPage();
+        } catch (error) {
+          $('tableWrap').innerHTML = `<div class="status error">${esc(error.message || 'Table view could not be loaded.')}</div>`;
+        }
+      }
+      $('previousBtn').addEventListener('click', () => { if (page > 1) { page -= 1; loadPage(); } });
+      $('nextBtn').addEventListener('click', () => { if (page < totalPages) { page += 1; loadPage(); } });
+      $('refreshBtn').addEventListener('click', loadPage);
+      $('logoutBtn').addEventListener('click', async () => { try { await api('/api/auth/logout', { method: 'POST' }); } catch {} finally { localStorage.removeItem(SESSION_KEY); window.location.replace('/signin'); } });
+      init();
+    }());
+  </script>
+</body>
+</html>

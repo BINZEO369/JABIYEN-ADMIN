@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#f5f6f8" />
+  <title>Dashboard | JABIYEN Admin</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{font-family:Inter,system-ui,sans-serif;color:#182230;background:#f5f6f8;font-synthesis:none;text-rendering:optimizeLegibility}*{box-sizing:border-box}body{margin:0;min-height:100vh}.app{min-height:100vh;display:grid;grid-template-columns:258px minmax(0,1fr)}aside{background:#111827;color:#e5e7eb;padding:22px 16px;display:flex;flex-direction:column;gap:24px}.brand{display:flex;align-items:center;gap:11px;padding:4px 8px 18px;border-bottom:1px solid #263244}.brand img{width:39px;height:39px;border-radius:11px;object-fit:cover}.brand strong{display:block;font-size:14px;letter-spacing:.12em}.brand small{display:block;color:#94a3b8;font-size:11px;margin-top:4px}.nav-title{margin:0 8px 8px;color:#8190a3;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.nav-link{display:flex;align-items:center;gap:10px;color:#cbd5e1;text-decoration:none;border-radius:9px;padding:9px 10px;font-size:12px;line-height:1.35;transition:.16s}.nav-link:hover,.nav-link.active{color:#fff;background:#263244}.nav-icon{width:8px;height:8px;border:1px solid #93a4ba;border-radius:3px;flex:0 0 auto}.nav-list{overflow:auto;max-height:calc(100vh - 185px);padding-right:3px}.nav-list::-webkit-scrollbar{width:4px}.nav-list::-webkit-scrollbar-thumb{background:#344155;border-radius:9px}main{min-width:0;padding:28px clamp(16px,3vw,38px) 50px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px}.eyebrow{font-size:11px;font-weight:700;color:#758196;letter-spacing:.1em;text-transform:uppercase}.topbar h1{font-size:26px;letter-spacing:-.04em;margin:5px 0 0}.user-tools{display:flex;align-items:center;gap:12px;color:#64748b;font-size:12px}.button{border:1px solid #d7dce4;background:#fff;border-radius:9px;padding:9px 12px;font:600 12px Inter,sans-serif;color:#344154;cursor:pointer}.button:hover{background:#f0f3f7}.welcome{background:linear-gradient(120deg,#172336,#263b58);color:#fff;border-radius:16px;padding:23px 24px;margin-bottom:20px;box-shadow:0 12px 28px #16243a16}.welcome h2{margin:0;font-size:20px;letter-spacing:-.03em}.welcome p{margin:7px 0 0;color:#c4cfdf;font-size:13px;line-height:1.55}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:32px}.stat{background:#fff;border:1px solid #e7eaf0;border-radius:13px;padding:16px 17px;min-width:0}.stat-label{color:#718096;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}.stat-value{font-size:25px;font-weight:800;letter-spacing:-.04em;margin-top:8px}.stat-note{font-size:11px;color:#94a3b8;margin-top:3px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}.section-head h2{font-size:18px;margin:0;letter-spacing:-.03em}.section-head p{font-size:12px;color:#778397;margin:5px 0 0}.search{width:min(100%,280px);border:1px solid #dce1e8;background:#fff;border-radius:9px;padding:10px 12px;font:13px Inter,sans-serif;outline:none}.search:focus{border-color:#61738e;box-shadow:0 0 0 3px #6b7d971a}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.table-card{display:block;min-width:0;background:#fff;border:1px solid #e7eaf0;border-radius:12px;padding:14px 15px;color:inherit;text-decoration:none;transition:transform .16s,border-color .16s,box-shadow .16s}.table-card:hover{transform:translateY(-2px);border-color:#c4ccd7;box-shadow:0 8px 20px #1522380b}.table-card-title{font-size:13px;font-weight:700;overflow-wrap:anywhere}.table-card-meta{display:flex;justify-content:space-between;gap:8px;margin-top:9px;color:#8190a3;font-size:10px}.pill{border-radius:99px;background:#f0f3f7;padding:3px 7px;color:#58677b;font-weight:700}.status{padding:30px;text-align:center;color:#7b8797;background:#fff;border:1px solid #e7eaf0;border-radius:12px;font-size:13px}.error{color:#a32121}.mobile-nav{display:none}
+    @media(max-width:1100px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:760px){.app{display:block}aside{padding:12px 14px;gap:12px}.brand{padding:2px 2px 10px}.nav-title{margin:0 2px 6px}.nav-list{display:flex;gap:5px;max-height:none;overflow-x:auto;overflow-y:hidden;padding:0 0 3px}.nav-link{white-space:nowrap;flex:0 0 auto;padding:8px 9px}.nav-link:not(:first-child){}.brand img{width:34px;height:34px}main{padding:19px 14px 36px}.topbar{align-items:flex-start;margin-bottom:18px}.topbar h1{font-size:23px}.user-tools{flex-direction:column;align-items:flex-end;gap:7px}.welcome{padding:19px;margin-bottom:13px}.stats{gap:8px;margin-bottom:25px}.stat{padding:13px}.stat-value{font-size:22px}.section-head{align-items:stretch;flex-direction:column}.search{width:100%}.cards{grid-template-columns:1fr;gap:8px}.table-card{padding:13px 14px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <a class="brand" href="/dashboard" style="color:inherit;text-decoration:none"><img src="/logo.png" alt="JABIYEN" /><span><strong>JABIYEN</strong><small>ADMIN CONSOLE</small></span></a>
+      <section><p class="nav-title">Workspace</p><nav class="nav-list" id="sideNav"><a class="nav-link active" href="/dashboard"><span class="nav-icon"></span>Overview</a></nav></section>
+    </aside>
+    <main>
+      <header class="topbar"><div><div class="eyebrow">Store administration</div><h1>Dashboard</h1></div><div class="user-tools"><span id="userEmail">Checking secure session…</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>
+      <section class="welcome"><h2>JABIYEN control center</h2><p>Store snapshot and direct access to every public database table. Choose a table to inspect its columns and records.</p></section>
+      <section class="stats" id="statsGrid" aria-label="Store summary"><article class="stat"><div class="stat-label">Products</div><div class="stat-value">—</div><div class="stat-note">Catalog records</div></article><article class="stat"><div class="stat-label">Categories</div><div class="stat-value">—</div><div class="stat-note">Store sections</div></article><article class="stat"><div class="stat-label">Orders</div><div class="stat-value">—</div><div class="stat-note">Checkout orders</div></article><article class="stat"><div class="stat-label">Customer profiles</div><div class="stat-value">—</div><div class="stat-note">Customer records</div></article></section>
+      <section>
+        <div class="section-head"><div><h2>Database sections</h2><p id="tableCount">Loading table index…</p></div><input class="search" id="tableSearch" type="search" placeholder="Search tables by name…" aria-label="Search tables" /></div>
+        <div class="cards" id="tableCards"><div class="status">Loading table sections…</div></div>
+      </section>
+    </main>
+  </div>
+  <script>
+    (function () {
+      const SESSION_KEY = 'jayenware_admin_session';
+      const $ = (id) => document.getElementById(id);
+      const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+      function token() { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || '{}').access_token || ''; } catch { return ''; } }
+      async function api(path, options) {
+        const response = await fetch(path, { ...(options || {}), headers: { Authorization: `Bearer ${token()}`, ...(options && options.headers || {}) } });
+        const result = await response.json().catch(() => ({}));
+        if (response.status === 401 || response.status === 403) { localStorage.removeItem(SESSION_KEY); window.location.replace('/signin?type=admin'); throw new Error('Please sign in with an active admin account.'); }
+        if (!response.ok) throw new Error(result.error || result.message || `Request failed (${response.status})`);
+        return result;
+      }
+      const label = (name) => name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+      function renderTables(tables) {
+        const needle = $('tableSearch').value.trim().toLowerCase();
+        const rows = tables.filter((table) => table.name.toLowerCase().includes(needle));
+        $('tableCount').textContent = `${tables.length} public tables · ${rows.length} shown`;
+        $('tableCards').innerHTML = rows.length ? rows.map((table) => `<a class="table-card" href="/tables/${encodeURIComponent(table.name)}"><div class="table-card-title">${esc(label(table.name))}</div><div class="table-card-meta"><span>${esc(table.name)}</span><span class="pill">${table.columns.length} columns</span></div></a>`).join('') : '<div class="status">No table names match this search.</div>';
+        $('sideNav').innerHTML = `<a class="nav-link active" href="/dashboard"><span class="nav-icon"></span>Overview</a>` + rows.map((table) => `<a class="nav-link" href="/tables/${encodeURIComponent(table.name)}"><span class="nav-icon"></span>${esc(label(table.name))}</a>`).join('');
+      }
+      async function init() {
+        if (!token()) { window.location.replace('/signin?type=admin'); return; }
+        try {
+          const [me, summary, tableResult] = await Promise.all([api('/api/admin/me'), api('/api/admin/stats'), api('/api/admin/tables')]);
+          const user = me.data && me.data.user || me.user || {};
+          $('userEmail').textContent = user.email || 'Signed-in administrator';
+          const stats = summary.stats || {};
+          [['products', stats.products], ['categories', stats.categories], ['orders', stats.orders], ['customer_profiles', stats.users]].forEach(([key, value], index) => {
+            const card = $('statsGrid').children[index];
+            card.querySelector('.stat-value').textContent = Number(value || 0).toLocaleString();
+          });
+          const tables = tableResult.tables || [];
+          renderTables(tables);
+          $('tableSearch').addEventListener('input', () => renderTables(tables));
+          document.body.dataset.ready = 'true';
+        } catch (error) {
+          if (!document.body.dataset.ready) $('tableCards').innerHTML = `<div class="status error">${esc(error.message || 'Dashboard could not be loaded.')}</div>`;
+        }
+      }
+      $('logoutBtn').addEventListener('click', async () => { try { await api('/api/auth/logout', { method: 'POST' }); } catch {} finally { localStorage.removeItem(SESSION_KEY); window.location.replace('/signin'); } });
+      init();
+    }());
+  </script>
+</body>
+</html>

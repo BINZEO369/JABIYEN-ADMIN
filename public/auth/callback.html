@@ -47,7 +47,7 @@
         sessionStorage.removeItem('jabiyen_admin_auth_state');
         sessionStorage.removeItem('jabiyen_admin_auth_verifier');
         sessionStorage.removeItem('jabiyen_admin_auth_redirect_uri');
-        window.location.replace('/account');
+        window.location.replace('/dashboard');
       } catch (error) {
         console.error('[JABIYEN_ADMIN_AUTH_CALLBACK_ERROR]', error);
         message.textContent = 'Central authentication could not be completed. Please sign in again.';

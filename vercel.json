@@ -8,6 +8,19 @@
   ],
   "routes": [
     {
+      "src": "/admin/dashboard",
+      "status": 308,
+      "dest": "/dashboard"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/public/dashboard.html"
+    },
+    {
+      "src": "/tables/([a-z0-9_]+)",
+      "dest": "/public/table.html?table=$1"
+    },
+    {
       "src": "/api/auth/(.*)",
       "dest": "https://api-binzeo.vercel.app/v1/auth/$1"
     },
