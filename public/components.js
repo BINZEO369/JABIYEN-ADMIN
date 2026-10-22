@@ -195,6 +195,9 @@ function injectSharedStyles() {
             color: #3a3a3c; text-decoration: none; transition: all 0.2s ease;
         }
         .menu-node-sub-item:hover { color: var(--primary); padding-left: 4px; }
+        .menu-section-label { margin: 20px 4px 6px; color: #767676; font: 700 10px/1.4 var(--font-body); letter-spacing: .12em; text-transform: uppercase; }
+        .menu-node-table { padding-top: 10px; padding-bottom: 10px; font-size: 12px; overflow-wrap: anywhere; }
+        .menu-table-status { padding: 8px 4px; color: #767676; font-size: 12px; line-height: 1.5; }
         .side-drawer-footer { padding: 24px; border-top: 1px solid rgba(0,0,0,0.05); background: rgba(255,255,255,0.2); flex-shrink: 0; }
 
         /* ==================== TOAST ==================== */
@@ -237,7 +240,11 @@ function renderHeader() {
             </button>
         </div>
         <div class="side-menu-scroll" id="sideMenuContent">
-            
+            <a href="/dashboard" class="menu-node-item no-underline">
+                <span>Dashboard</span>
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <div class="menu-section-label">Store sections</div>
             <a href="/herobanner" class="menu-node-item no-underline">
                 <span>Hero Banner</span>
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -247,21 +254,19 @@ function renderHeader() {
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
             <a href="/category-menu-item" class="menu-node-item no-underline">
-                <span>Category-menu-item</span>
+                <span>Categories &amp; Menu</span>
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
             <a href="/product" class="menu-node-item no-underline">
-                <span>Product</span>
+                <span>Products</span>
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
             <a href="/product-variant" class="menu-node-item no-underline">
-                <span>Product Variant</span>
+                <span>Product Variants</span>
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
-            <a href="/" class="menu-node-item no-underline">
-                <span>Category-menu-item</span>
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
+            <div class="menu-section-label">Database tables</div>
+            <div id="adminDatabaseTableLinks"><div class="menu-table-status">Loading database sections…</div></div>
         </div>
         <div class="side-drawer-footer">
             <a href="/login" class="block w-full py-3.5 bg-black text-white rounded-xl text-center font-bold uppercase tracking-widest text-[9px] no-underline transition hover:bg-neutral-900">Account Architecture</a>
@@ -286,6 +291,65 @@ function renderHeader() {
     </nav>
     `;
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
+}
+
+function loadAdminTableSections() {
+    const container = document.getElementById('adminDatabaseTableLinks');
+    if (!container) return;
+
+    let accessToken = '';
+    for (const storage of [localStorage, sessionStorage]) {
+        try {
+            const session = JSON.parse(storage.getItem('jayenware_admin_session') || '{}');
+            if (session.access_token) {
+                accessToken = session.access_token;
+                if (storage === sessionStorage) {
+                    localStorage.setItem('jayenware_admin_session', JSON.stringify(session));
+                }
+                break;
+            }
+        } catch (_) {
+            // Try the next supported browser storage.
+        }
+    }
+
+    if (!accessToken) {
+        container.textContent = 'Sign in with an admin account to view database sections.';
+        container.className = 'menu-table-status';
+        return;
+    }
+
+    fetch('/api/admin/tables', { headers: { Authorization: `Bearer ${accessToken}` } })
+        .then((response) => {
+            if (!response.ok) throw new Error('Table list request failed');
+            return response.json();
+        })
+        .then((result) => {
+            const tables = Array.isArray(result.tables) ? result.tables : [];
+            container.replaceChildren();
+            if (!tables.length) {
+                container.className = 'menu-table-status';
+                container.textContent = 'No table sections are available.';
+                return;
+            }
+
+            tables.forEach((table) => {
+                const name = typeof table.name === 'string' ? table.name : '';
+                if (!/^[a-z0-9_]+$/.test(name)) return;
+                const link = document.createElement('a');
+                link.href = `/tables/${encodeURIComponent(name)}`;
+                link.className = 'menu-node-item menu-node-table no-underline';
+                const label = name.replace(/_/g, ' ').replace(/\b\w/g, (character) => character.toUpperCase());
+                const text = document.createElement('span');
+                text.textContent = label;
+                link.appendChild(text);
+                container.appendChild(link);
+            });
+        })
+        .catch(() => {
+            container.className = 'menu-table-status';
+            container.textContent = 'Table links could not load. Open Dashboard to retry.';
+        });
 }
 
 // ============================================================================
@@ -372,6 +436,7 @@ function initSharedComponents() {
     loadFontsConfiguration();
     injectSharedStyles();
     renderHeader();
+    loadAdminTableSections();
     
     window.removeEventListener('scroll', handleNavScroll);
     window.addEventListener('scroll', handleNavScroll);
