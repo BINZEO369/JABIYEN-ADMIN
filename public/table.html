@@ -23,6 +23,10 @@
     <main>
       <header class="topbar"><div><div class="eyebrow">Database explorer</div><h1 id="title">Loading table…</h1></div><div class="user-tools"><span id="userEmail">Checking secure session…</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>
       <div class="subnav"><a href="/dashboard">Dashboard</a><span>/</span><span id="breadcrumb">Table</span></div>
+      <section class="panel" style="margin-bottom:16px">
+        <div class="panel-head"><div><strong>Columns</strong><p id="columnCount">Loading column definitions…</p></div></div>
+        <div id="columnSchema" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:10px;padding:14px"><div class="status">Loading columns…</div></div>
+      </section>
       <section class="panel">
         <div class="panel-head"><div><strong id="tableName">Loading…</strong><p id="schemaInfo">Loading columns and records…</p></div><div class="actions"><span id="recordCount" class="count"></span><button class="button" id="refreshBtn" type="button">Refresh</button></div></div>
         <div class="table-wrap" id="tableWrap"><div class="status">Loading table records…</div></div>
@@ -59,12 +63,21 @@
         const body = records.length ? records.map((row) => `<tr>${columns.map((column) => `<td>${displayCell(row[column.name])}</td>`).join('')}</tr>`).join('') : `<tr><td colspan="${Math.max(columns.length, 1)}" class="status">This table has no records yet.</td></tr>`;
         $('tableWrap').innerHTML = `<table><thead><tr>${headers || '<th>Columns</th>'}</tr></thead><tbody>${body}</tbody></table>`;
       }
+      function renderColumnSchema(columns) {
+        $('columnCount').textContent = `${columns.length} columns`;
+        $('columnSchema').innerHTML = columns.length ? columns.map((column) => {
+          const defaultText = column.default === null || column.default === undefined ? 'No default' : `Default: ${String(column.default)}`;
+          const requirement = column.nullable ? 'Nullable' : 'Required';
+          return `<article style="min-width:0;border:1px solid #e5e9ef;border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:5px;overflow-wrap:anywhere"><strong style="font-size:12px">${esc(column.name)}</strong><span style="font-size:11px;color:#506078">${esc(column.type || 'Unknown type')}</span><small style="font-size:10px;color:#8190a3">${requirement} · ${esc(defaultText)}</small></article>`;
+        }).join('') : '<div class="status">No column definitions are available.</div>';
+      }
       async function loadPage() {
         $('tableWrap').innerHTML = '<div class="status">Loading table records…</div>';
         try {
           const result = await api(`/api/admin/tables/${encodeURIComponent(tableName)}?page=${page}&page_size=${pageSize}`);
           const columns = result.columns || [];
           const records = result.rows || [];
+          renderColumnSchema(columns);
           totalPages = result.totalPages || 1;
           $('tableName').textContent = tableName;
           $('schemaInfo').textContent = `${columns.length} columns · page size ${result.pageSize || pageSize}`;
