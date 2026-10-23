@@ -51,11 +51,14 @@
         button.textContent = 'Checking…';
         status.textContent = 'Checking JABIYEN database credentials…';
         status.className = 'status';
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), 20000);
         try {
           const response = await fetch('/api/admin/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
+            signal: controller.signal,
           });
           const result = await response.json().catch(() => ({}));
           if (!response.ok || result.success !== true || !result.data || !result.data.session || !result.data.session.access_token) {
@@ -69,7 +72,7 @@
             user_id: session.user && session.user.id || result.data.user && result.data.user.id || null,
             login_type: 'jabiyen_admin',
           };
-          const verifyResponse = await fetch('/api/admin/session', { headers: { Authorization: `Bearer ${session.access_token}` } });
+          const verifyResponse = await fetch('/api/admin/session', { headers: { Authorization: `Bearer ${session.access_token}` }, signal: controller.signal });
           const verified = await verifyResponse.json().catch(() => ({}));
           if (!verifyResponse.ok || verified.success !== true) {
             throw new Error(errorMessage(verified) || 'This account does not have active JABIYEN admin access.');
@@ -77,9 +80,11 @@
           localStorage.setItem(sessionKey, JSON.stringify(sessionRecord));
           window.location.replace('/dashboard');
         } catch (error) {
-          showError(error.message || 'Invalid admin credentials or inactive admin account.');
+          showError(error.name === 'AbortError' ? 'Sign-in timed out. Please try again.' : (error.message || 'Invalid admin credentials or inactive admin account.'));
           button.disabled = false;
           button.textContent = 'Sign in';
+        } finally {
+          window.clearTimeout(timeoutId);
         }
       });
     })();
