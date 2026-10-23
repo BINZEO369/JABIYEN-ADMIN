@@ -76,13 +76,12 @@
 
   function renderIndex(user) {
     const groups = [...new Set(state.tables.map((table) => table.group || 'Other'))];
-    const content = `<section class="intro"><div><h2>Browse the JABIYEN database</h2><p>All ${state.tables.length} public tables are grouped below. Website content remains editable where allowed; customer, order and administration tables are view-only.</p></div><a class="button intro-button" href="/dashboard">Dashboard</a></section><section class="stats"><div class="stat"><strong>${state.tables.length}</strong><span>Database tables</span></div><div class="stat"><strong>${groups.length}</strong><span>Management groups</span></div><div class="stat"><strong>Central API</strong><span>One shared backend</span></div></section>${groups.map((group) => `<section class="section-group"><div class="section-head"><div><h2>${esc(group)}</h2><p>Open a table to inspect its records.</p></div></div><div class="cards">${state.tables.filter((table) => table.group === group).map((table) => `<a class="table-card" href="${esc(table.path)}"><div class="table-card-title">${esc(table.title)}</div><p class="card-description">${esc(table.description || '')}</p><div class="table-card-meta"><span class="pill">${table.canWrite ? 'Editable' : 'Read only'}</span></div><span class="card-action">Open table <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`).join('')}`;
+    const content = `<section class="intro"><div><h2>Browse the JABIYEN database</h2><p>All ${state.tables.length} public tables are grouped below. Authenticated admins can see every column, including sensitive fields; editing stays available only for tables with an approved write workflow.</p></div><a class="button intro-button" href="/dashboard">Dashboard</a></section><section class="stats"><div class="stat"><strong>${state.tables.length}</strong><span>Database tables</span></div><div class="stat"><strong>${groups.length}</strong><span>Management groups</span></div><div class="stat"><strong>Central API</strong><span>One shared backend</span></div></section>${groups.map((group) => `<section class="section-group"><div class="section-head"><div><h2>${esc(group)}</h2><p>Open a table to inspect its records.</p></div></div><div class="cards">${state.tables.filter((table) => table.group === group).map((table) => `<a class="table-card" href="${esc(table.path)}"><div class="table-card-title">${esc(table.title)}</div><p class="card-description">${esc(table.description || '')}</p><div class="table-card-meta"><span class="pill">${table.canWrite ? 'Editable' : 'Read only'}</span></div><span class="card-action">Open table <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`).join('')}`;
     shell(user, '', content);
   }
 
   function visibleColumns() {
-    const hidden = new Set([...(state.table?.primaryKeys || []), 'id', 'created_at', 'updated_at']);
-    return state.columns.filter((column) => !hidden.has(column.name));
+    return state.columns;
   }
 
   function displayValue(value) {
