@@ -21,16 +21,25 @@
   async function api(path, options = {}) {
     const headers = { ...(options.headers || {}), Authorization: `Bearer ${session.access_token || ''}` };
     if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
-    const response = await fetch(path, { ...options, headers });
-    const result = await response.json().catch(() => ({}));
-    if (response.status === 401 || response.status === 403) {
-      localStorage.removeItem(sessionKey);
-      sessionStorage.removeItem(sessionKey);
-      window.location.replace('/signin?type=admin');
-      throw new Error('Please sign in with an active JABIYEN administrator account.');
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch(path, { ...options, headers, signal: controller.signal });
+      const result = await response.json().catch(() => ({}));
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem(sessionKey);
+        sessionStorage.removeItem(sessionKey);
+        window.location.replace('/signin?type=admin');
+        throw new Error('Please sign in with an active JABIYEN administrator account.');
+      }
+      if (!response.ok) throw new Error(result.error || result.message || `Request failed (${response.status})`);
+      return result;
+    } catch (error) {
+      if (controller.signal.aborted) throw new Error('This request timed out. Refresh the section to check whether the content saved before trying again.');
+      throw error;
+    } finally {
+      clearTimeout(timeout);
     }
-    if (!response.ok) throw new Error(result.error || result.message || `Request failed (${response.status})`);
-    return result;
   }
 
   function navMarkup(activeName) {
@@ -138,6 +147,7 @@
     submit.disabled = true;
     submit.textContent = 'Saving…';
     status.textContent = '';
+    status.classList.remove('error');
     try {
       await api(`/api/admin/tables/${encodeURIComponent(state.table.name)}${id ? `/${encodeURIComponent(id)}` : ''}`, {
         method: id ? 'PATCH' : 'POST',
@@ -145,7 +155,7 @@
       });
       closeRecordForm();
       if (typeof window.showToast === 'function') window.showToast(id ? 'Changes saved.' : 'Content added.');
-      await loadTablePage();
+      void loadTablePage();
     } catch (error) {
       status.textContent = error.message || 'Content could not be saved.';
       status.classList.add('error');
