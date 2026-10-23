@@ -94,8 +94,8 @@
     const escaped = esc(raw);
     const optionalNote = column.nullable ? '<small>Optional</small>' : '';
     if (type === 'boolean') {
-      const checked = raw === true || raw === 'true' || (!editing && column.default === 'true');
-      return `<label class="form-field form-field-check"><span><strong>${esc(fieldLabel)}</strong>${optionalNote}</span><input type="checkbox" name="${esc(column.name)}" aria-label="${esc(fieldLabel)}"></label>`;
+      const checked = raw === true || raw === 'true' || (!editing && (column.default === true || column.default === 'true'));
+      return `<label class="form-field form-field-check"><span><strong>${esc(fieldLabel)}</strong>${optionalNote}</span><input type="checkbox" name="${esc(column.name)}" aria-label="${esc(fieldLabel)}" ${checked ? 'checked' : ''}></label>`;
     }
     let inputType = 'text';
     if (['smallint', 'integer', 'int2', 'int4', 'bigint', 'int8', 'numeric', 'decimal', 'real', 'double precision', 'float4', 'float8'].includes(type)) inputType = 'number';
