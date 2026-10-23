@@ -1,83 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Secure Admin Sign In | JABIYEN</title>
+  <meta name="theme-color" content="#f5f6f8" />
+  <title>Admin Sign In | JABIYEN</title>
   <link rel="icon" type="image/png" href="/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    :root { color-scheme: light; font-family: Inter, system-ui, sans-serif; }
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #f5f5f7; color: #1d1d1f; }
-    main { width: min(100%, 440px); padding: 40px 36px; text-align: center; background: #fff; border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,.08); }
-    img { width: 56px; height: 56px; border-radius: 15px; margin-bottom: 16px; }
-    h1 { margin: 0 0 10px; font-size: 25px; letter-spacing: -.03em; }
-    p { margin: 0; color: #68686d; line-height: 1.6; font-size: 14px; }
-    .status { margin-top: 24px; color: #86868b; font-size: 14px; }
-    .error { color: #b42318; }
-    a { display: inline-block; margin-top: 18px; color: #0066cc; text-decoration: none; font-size: 14px; }
+    :root{font-family:Inter,system-ui,sans-serif;color:#182230;background:#f5f6f8;font-synthesis:none;text-rendering:optimizeLegibility}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:18px}main{width:min(100%,430px);padding:34px 30px;background:#fff;border:1px solid #e5e9ef;border-radius:18px;box-shadow:0 16px 45px #17233612}header{text-align:center;margin-bottom:25px}img{width:52px;height:52px;border-radius:13px;object-fit:cover}h1{font-size:23px;letter-spacing:-.04em;margin:14px 0 5px}header p{margin:0;color:#758196;font-size:12px;line-height:1.5}.field{margin:15px 0;text-align:left}label{display:block;margin-bottom:6px;font-size:11px;font-weight:700;color:#435167}input{width:100%;min-height:43px;border:1px solid #d8dee7;border-radius:9px;padding:10px 12px;font:13px Inter,system-ui,sans-serif;color:#182230;outline:none}input:focus{border-color:#60728d;box-shadow:0 0 0 3px #60728d1a}.primary{width:100%;min-height:44px;border:0;border-radius:9px;background:#172336;color:#fff;font:700 12px Inter,system-ui,sans-serif;cursor:pointer;margin-top:8px}.primary:disabled{opacity:.55;cursor:wait}.status{min-height:20px;margin-top:13px;font-size:11px;line-height:1.5;color:#68768b;text-align:center}.status.error{color:#a32121}.status.success{color:#1c7a4a}.back{display:block;margin:10px auto 0;border:0;background:none;color:#506078;font:600 11px Inter,system-ui,sans-serif;cursor:pointer}.back[hidden],form[hidden]{display:none}footer{margin-top:20px;padding-top:14px;border-top:1px solid #eef1f5;color:#97a1af;font-size:10px;text-align:center;line-height:1.5}@media(max-width:480px){main{padding:27px 21px}}
   </style>
 </head>
 <body>
   <main>
-    <img src="/logo.png" alt="JABIYEN" />
-    <h1>Secure Admin Sign In</h1>
-    <p>Authentication is handled centrally by BINZEO Auth. Email, OTP, token, QR and passkey verification never run on this admin site.</p>
-    <div id="status" class="status">Opening Central BINZEO Auth…</div>
-    <a id="retry" href="/signin" hidden>Try again</a>
+    <header>
+      <img src="/logo.png" alt="JABIYEN" />
+      <h1>Admin Sign In</h1>
+      <p>Sign in here with your administrator email and password.</p>
+    </header>
+    <form id="passwordForm" novalidate>
+      <div class="field"><label for="email">Admin email</label><input id="email" name="email" type="email" autocomplete="username" required maxlength="254" /></div>
+      <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="72" /></div>
+      <button class="primary" id="passwordSubmit" type="submit">Sign in</button>
+    </form>
+    <form id="twoFactorForm" hidden novalidate>
+      <div class="field"><label for="code">6-digit verification code</label><input id="code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required /></div>
+      <button class="primary" id="codeSubmit" type="submit">Verify and continue</button>
+      <button class="back" id="backButton" type="button">Back to password sign in</button>
+    </form>
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+    <footer>Your password is sent only to the secure sign-in API and is never saved in this browser.</footer>
   </main>
   <script>
-    (function () {
-      var CENTRAL_AUTH = 'https://auth-binzeo.vercel.app/signin';
-      var CLIENT_ID = 'jabiyen:admin';
-      var started = false;
-      var status = document.getElementById('status');
-      var retry = document.getElementById('retry');
-
-      function base64Url(bytes) {
-        var binary = '';
-        bytes.forEach(function (byte) { binary += String.fromCharCode(byte); });
-        return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+    (() => {
+      const sessionKey = 'jayenware_admin_session';
+      const passwordForm = document.getElementById('passwordForm');
+      const twoFactorForm = document.getElementById('twoFactorForm');
+      const status = document.getElementById('status');
+      let challengeId = '';
+      const messageFor = (result, fallback) => {
+        const error = result && result.error;
+        if (typeof error === 'string') return error;
+        return error && error.message || result && result.message || fallback;
+      };
+      function showStatus(message, kind) {
+        status.textContent = message;
+        status.className = `status${kind ? ` ${kind}` : ''}`;
       }
-      function randomValue(length) {
-        var bytes = new Uint8Array(length);
-        window.crypto.getRandomValues(bytes);
-        return base64Url(bytes);
+      function setBusy(form, busy, text) {
+        const button = form.querySelector('button[type="submit"]');
+        button.disabled = busy;
+        if (busy) button.dataset.originalText = button.textContent;
+        button.textContent = busy ? text : (button.dataset.originalText || button.textContent);
       }
-      async function challenge(verifier) {
-        var digest = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
-        return base64Url(new Uint8Array(digest));
+      async function post(path, body) {
+        const response = await fetch(path, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.success === false) throw new Error(messageFor(result, 'Sign in could not be completed.'));
+        return result;
       }
-      async function start() {
-        if (started) return;
-        started = true;
-        try {
-          var redirectUri = window.location.origin + '/auth/callback.html';
-          var state = randomValue(32);
-          var verifier = randomValue(48);
-          var codeChallenge = await challenge(verifier);
-          sessionStorage.setItem('jabiyen_admin_auth_state', state);
-          sessionStorage.setItem('jabiyen_admin_auth_verifier', verifier);
-          sessionStorage.setItem('jabiyen_admin_auth_redirect_uri', redirectUri);
-          var url = new URL(CENTRAL_AUTH);
-          url.searchParams.set('client_id', CLIENT_ID);
-          url.searchParams.set('redirect_uri', redirectUri);
-          url.searchParams.set('state', state);
-          url.searchParams.set('code_challenge', codeChallenge);
-          url.searchParams.set('code_challenge_method', 'S256');
-          window.location.replace(url.toString());
-        } catch (error) {
-          console.error('[JABIYEN_ADMIN_AUTH_REDIRECT_ERROR]', error);
-          status.textContent = 'Central authentication could not be opened. Please try again.';
-          status.className = 'status error';
-          retry.hidden = false;
+      async function verifyAdminAndContinue(session, user) {
+        if (!session || !session.access_token) throw new Error('The secure sign-in did not return an active session.');
+        const response = await fetch('/api/admin/me', { headers: { Authorization: `Bearer ${session.access_token}` } });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.success === false) {
+          throw new Error('This account does not have active JABIYEN Admin access.');
         }
+        localStorage.setItem(sessionKey, JSON.stringify({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token || null,
+          expires_at: session.expires_at || null,
+          user_id: (session.user && session.user.id) || (user && user.id) || null,
+          login_type: 'admin',
+        }));
+        window.location.replace('/dashboard');
       }
-      void start();
-    }());
+      passwordForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        if (!email || !password) { showStatus('Enter your admin email and password.', 'error'); return; }
+        setBusy(passwordForm, true, 'Checking…');
+        showStatus('Checking admin credentials securely…');
+        try {
+          const result = await post('/api/auth/login', { email, password });
+          const data = result.data || {};
+          if (data.requires_two_factor && data.challenge_id) {
+            challengeId = data.challenge_id;
+            passwordForm.hidden = true;
+            twoFactorForm.hidden = false;
+            showStatus('A verification code was sent to your account email.');
+            document.getElementById('code').focus();
+          } else {
+            await verifyAdminAndContinue(data.session, data.user);
+          }
+        } catch (error) {
+          showStatus(error.message || 'Invalid administrator email or password.', 'error');
+          setBusy(passwordForm, false);
+        }
+      });
+      twoFactorForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const code = document.getElementById('code').value.trim();
+        if (!/^\d{6}$/.test(code) || !challengeId) { showStatus('Enter the 6-digit verification code.', 'error'); return; }
+        setBusy(twoFactorForm, true, 'Verifying…');
+        showStatus('Verifying your code…');
+        try {
+          const result = await post('/api/auth/two-factor/verify', { challenge_id: challengeId, code });
+          await verifyAdminAndContinue(result.data && result.data.session, result.data && result.data.user);
+        } catch (error) {
+          showStatus(error.message || 'The code is invalid or expired.', 'error');
+          setBusy(twoFactorForm, false);
+        }
+      });
+      document.getElementById('backButton').addEventListener('click', () => {
+        challengeId = '';
+        twoFactorForm.reset();
+        twoFactorForm.hidden = true;
+        passwordForm.hidden = false;
+        showStatus('');
+        document.getElementById('password').focus();
+      });
+    })();
   </script>
 </body>
 </html>

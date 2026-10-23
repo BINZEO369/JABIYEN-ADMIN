@@ -23,12 +23,8 @@
     </aside>
     <main>
       <header class="topbar"><div><div class="eyebrow">Store administration</div><h1>Dashboard</h1></div><div class="user-tools"><a class="button" href="/advanced" style="text-decoration:none">Advanced Database</a><span id="userEmail">Checking secure session…</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>
-      <section class="welcome"><h2>JABIYEN control center</h2><p>Store snapshot and direct access to every public database table. Choose a table to inspect its columns and records.</p></section>
+      <section class="welcome"><h2>JABIYEN control center</h2><p>Store summary and administrator tools. Open Advanced Database or select a table section from the navigation.</p></section>
       <section class="stats" id="statsGrid" aria-label="Store summary"><article class="stat"><div class="stat-label">Products</div><div class="stat-value">—</div><div class="stat-note">Catalog records</div></article><article class="stat"><div class="stat-label">Categories</div><div class="stat-value">—</div><div class="stat-note">Store sections</div></article><article class="stat"><div class="stat-label">Orders</div><div class="stat-value">—</div><div class="stat-note">Checkout orders</div></article><article class="stat"><div class="stat-label">Customer profiles</div><div class="stat-value">—</div><div class="stat-note">Customer records</div></article></section>
-      <section>
-        <div class="section-head"><div><h2>Database sections</h2><p id="tableCount">Loading table index…</p></div><input class="search" id="tableSearch" type="search" placeholder="Search tables by name…" aria-label="Search tables" /></div>
-        <div class="cards" id="tableCards"><div class="status">Loading table sections…</div></div>
-      </section>
     </main>
   </div>
   <script>
@@ -45,11 +41,7 @@
         return result;
       }
       const label = (name) => name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
-      function renderTables(tables) {
-        const needle = $('tableSearch').value.trim().toLowerCase();
-        const rows = tables.filter((table) => table.name.toLowerCase().includes(needle));
-        $('tableCount').textContent = `${tables.length} public tables · ${rows.length} shown`;
-        $('tableCards').innerHTML = rows.length ? rows.map((table) => `<a class="table-card" href="/admin/database/${encodeURIComponent(table.name)}"><div class="table-card-title">${esc(label(table.name))}</div><div class="table-card-meta"><span>${esc(table.name)}</span><span class="pill">${table.columns.length} columns</span></div></a>`).join('') : '<div class="status">No table names match this search.</div>';
+      function renderNavigation(tables) {
         $('sideNav').innerHTML = `<a class="nav-link active" href="/dashboard"><span class="nav-icon"></span>Dashboard</a><a class="nav-link" href="/advanced"><span class="nav-icon"></span>Advanced Database</a>` + tables.map((table) => `<a class="nav-link" href="/admin/database/${encodeURIComponent(table.name)}"><span class="nav-icon"></span>${esc(label(table.name))}</a>`).join('');
       }
       async function init() {
@@ -64,12 +56,11 @@
             const card = $('statsGrid').children[index];
             card.querySelector('.stat-value').textContent = Number(value || 0).toLocaleString();
           });
-          const tables = tableResult.tables || [];
-          renderTables(tables);
-          $('tableSearch').addEventListener('input', () => renderTables(tables));
+          const tables = Array.isArray(tableResult.tables) ? tableResult.tables : [];
+          renderNavigation(tables);
           document.body.dataset.ready = 'true';
         } catch (error) {
-          if (!document.body.dataset.ready) $('tableCards').innerHTML = `<div class="status error">${esc(error.message || 'Dashboard could not be loaded.')}</div>`;
+          $('sideNav').insertAdjacentHTML('beforeend', `<span class="nav-link">${esc(error.message || 'Database sections could not be loaded.')}</span>`);
         }
       }
       $('logoutBtn').addEventListener('click', async () => { try { await api('/api/auth/logout', { method: 'POST' }); } catch {} finally { localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY); window.location.replace('/signin'); } });
