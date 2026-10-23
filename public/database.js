@@ -2,7 +2,7 @@
   const root = document.getElementById('app');
   const sessionKey = 'jayenware_admin_session';
   const state = { page: 1, totalPages: 1, tables: [], table: null, columns: [], rows: [] };
-  const tableName = document.body.dataset.table || '';
+  const tableName = document.body.dataset.table || new URLSearchParams(window.location.search).get('table') || window.location.pathname.match(/^\/admin\/database\/([a-z0-9_]+)$/)?.[1] || '';
   const isIndex = document.body.dataset.mode === 'index';
   const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const label = (name) => String(name || '').replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
@@ -32,13 +32,14 @@
       const result = await response.json().catch(() => ({}));
       const requestId = response.headers.get('x-request-id') || response.headers.get('x-vercel-id') || null;
       const diagnostic = { method, status: response.status, requestId, elapsedMs: Math.round(performance.now() - startedAt) };
-      if (response.status === 401 || response.status === 403) {
+      if (response.status === 401) {
         if (method !== 'GET') console.error('[JABIYEN_ADMIN_API_ERROR]', { ...diagnostic, message: result.error || 'Admin authorization failed.' });
         localStorage.removeItem(sessionKey);
         sessionStorage.removeItem(sessionKey);
         window.location.replace('/signin?type=admin');
         throw new Error('Please sign in with an active JABIYEN administrator account.');
       }
+      if (response.status === 403) throw new Error(result.error || 'You do not have permission to perform this action.');
       if (!response.ok || result.success === false) {
         if (method !== 'GET') console.error('[JABIYEN_ADMIN_API_ERROR]', { ...diagnostic, message: result.error || result.message || `Request failed (${response.status})` });
         throw new Error(result.error || result.message || `Request failed (${response.status})`);
@@ -60,11 +61,11 @@
   }
 
   function navMarkup(activeName) {
-    return `<a class="nav-link${isIndex ? ' active' : ''}" href="/sections"><span class="nav-icon"></span>All sections</a>${state.tables.map((table) => `<a class="nav-link${table.name === activeName ? ' active' : ''}" href="${esc(table.path)}"><span class="nav-icon"></span>${esc(table.title)}</a>`).join('')}`;
+    return `<a class="nav-link${isIndex ? ' active' : ''}" href="/sections"><span class="nav-icon"></span>All database tables</a>${state.tables.map((table) => `<a class="nav-link${table.name === activeName ? ' active' : ''}" href="${esc(table.path)}"><span class="nav-icon"></span>${esc(table.title)}</a>`).join('')}`;
   }
 
   function shell(user, activeName, content) {
-    root.innerHTML = `<div class="app"><aside><a class="brand" href="/dashboard"><img src="/logo.png" alt="JABIYEN"><span><strong>JABIYEN</strong><small>ADMIN CONSOLE</small></span></a><section><p class="nav-title">Store management · ${state.tables.length} sections</p><nav class="nav-list" aria-label="Store sections"><a class="nav-link" href="/dashboard"><span class="nav-icon"></span>Dashboard</a>${navMarkup(activeName)}</nav></section></aside><main><header class="topbar"><div><div class="eyebrow">${isIndex ? 'Store management' : esc(state.table?.group || 'Store section')}</div><h1>${isIndex ? 'Website Sections' : esc(state.table?.title || label(activeName))}</h1></div><div class="user-tools"><span>${esc(user.email || 'Signed-in administrator')}</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>${content}</main></div>`;
+    root.innerHTML = `<div class="app"><aside><a class="brand" href="/dashboard"><img src="/logo.png" alt="JABIYEN"><span><strong>JABIYEN</strong><small>ADMIN CONSOLE</small></span></a><section><p class="nav-title">Database · ${state.tables.length} tables</p><nav class="nav-list" aria-label="Database tables"><a class="nav-link" href="/dashboard"><span class="nav-icon"></span>Dashboard</a>${navMarkup(activeName)}</nav></section></aside><main><header class="topbar"><div><div class="eyebrow">${isIndex ? 'Database management' : esc(state.table?.group || 'Database table')}</div><h1>${isIndex ? 'Database Tables' : esc(state.table?.title || label(activeName))}</h1></div><div class="user-tools"><span>${esc(user.email || 'Signed-in administrator')}</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>${content}</main></div>`;
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       try { await api('/api/auth/logout', { method: 'POST' }); } catch (_) {}
       localStorage.removeItem(sessionKey);
@@ -75,7 +76,7 @@
 
   function renderIndex(user) {
     const groups = [...new Set(state.tables.map((table) => table.group || 'Other'))];
-    const content = `<section class="intro"><div><h2>Manage your website content</h2><p>Choose a section to update the information displayed on the JABIYEN website.</p></div><a class="button intro-button" href="/dashboard">Dashboard</a></section><section class="stats"><div class="stat"><strong>${state.tables.length}</strong><span>Content sections</span></div><div class="stat"><strong>${groups.length}</strong><span>Management groups</span></div><div class="stat"><strong>Central API</strong><span>One shared backend</span></div></section>${groups.map((group) => `<section class="section-group"><div class="section-head"><div><h2>${esc(group)}</h2><p>Choose a section to manage its content.</p></div></div><div class="cards">${state.tables.filter((table) => table.group === group).map((table) => `<a class="table-card" href="${esc(table.path)}"><div class="table-card-title">${esc(table.title)}</div><p class="card-description">${esc(table.description || '')}</p><div class="table-card-meta"><span class="pill">Website content</span></div><span class="card-action">Open section <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`).join('')}`;
+    const content = `<section class="intro"><div><h2>Browse the JABIYEN database</h2><p>All ${state.tables.length} public tables are grouped below. Website content remains editable where allowed; customer, order and administration tables are view-only.</p></div><a class="button intro-button" href="/dashboard">Dashboard</a></section><section class="stats"><div class="stat"><strong>${state.tables.length}</strong><span>Database tables</span></div><div class="stat"><strong>${groups.length}</strong><span>Management groups</span></div><div class="stat"><strong>Central API</strong><span>One shared backend</span></div></section>${groups.map((group) => `<section class="section-group"><div class="section-head"><div><h2>${esc(group)}</h2><p>Open a table to inspect its records.</p></div></div><div class="cards">${state.tables.filter((table) => table.group === group).map((table) => `<a class="table-card" href="${esc(table.path)}"><div class="table-card-title">${esc(table.title)}</div><p class="card-description">${esc(table.description || '')}</p><div class="table-card-meta"><span class="pill">${table.canWrite ? 'Editable' : 'Read only'}</span></div><span class="card-action">Open table <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`).join('')}`;
     shell(user, '', content);
   }
 
@@ -253,13 +254,13 @@
       state.tables = Array.isArray(result.tables) ? result.tables : [];
       const user = me.data?.user || result.admin || {};
       if (isIndex) {
-        document.title = 'Website Sections | JABIYEN Admin';
+        document.title = 'Database Tables | JABIYEN Admin';
         renderIndex(user);
       }
       else {
         state.table = state.tables.find((table) => table.name === tableName);
         if (!state.table) {
-          root.innerHTML = '<div class="status error">This section is not available. Return to <a href="/sections">all sections</a>.</div>';
+          root.innerHTML = '<div class="status error">This table is not available. Return to <a href="/sections">all database tables</a>.</div>';
           return;
         }
         document.title = `${state.table.title} | JABIYEN Admin`;
