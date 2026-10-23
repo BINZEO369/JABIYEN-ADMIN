@@ -3,67 +3,131 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#f5f6f8" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="robots" content="noindex,nofollow" />
   <title>Dashboard | JABIYEN Admin</title>
   <link rel="icon" type="image/png" href="/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    :root{font-family:Inter,system-ui,sans-serif;color:#182230;background:#f5f6f8;font-synthesis:none;text-rendering:optimizeLegibility}*{box-sizing:border-box}body{margin:0;min-height:100vh}.app{min-height:100vh;display:grid;grid-template-columns:258px minmax(0,1fr)}aside{background:#111827;color:#e5e7eb;padding:22px 16px;display:flex;flex-direction:column;gap:24px}.brand{display:flex;align-items:center;gap:11px;padding:4px 8px 18px;border-bottom:1px solid #263244}.brand img{width:39px;height:39px;border-radius:11px;object-fit:cover}.brand strong{display:block;font-size:14px;letter-spacing:.12em}.brand small{display:block;color:#94a3b8;font-size:11px;margin-top:4px}.nav-title{margin:0 8px 8px;color:#8190a3;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.nav-link{display:flex;align-items:center;gap:10px;color:#cbd5e1;text-decoration:none;border-radius:9px;padding:9px 10px;font-size:12px;line-height:1.35;transition:.16s}.nav-link:hover,.nav-link.active{color:#fff;background:#263244}.nav-icon{width:8px;height:8px;border:1px solid #93a4ba;border-radius:3px;flex:0 0 auto}.nav-list{overflow:auto;max-height:calc(100vh - 185px);padding-right:3px}.nav-list::-webkit-scrollbar{width:4px}.nav-list::-webkit-scrollbar-thumb{background:#344155;border-radius:9px}main{min-width:0;padding:28px clamp(16px,3vw,38px) 50px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px}.eyebrow{font-size:11px;font-weight:700;color:#758196;letter-spacing:.1em;text-transform:uppercase}.topbar h1{font-size:26px;letter-spacing:-.04em;margin:5px 0 0}.user-tools{display:flex;align-items:center;gap:12px;color:#64748b;font-size:12px}.button{border:1px solid #d7dce4;background:#fff;border-radius:9px;padding:9px 12px;font:600 12px Inter,sans-serif;color:#344154;cursor:pointer}.button:hover{background:#f0f3f7}.welcome{background:linear-gradient(120deg,#172336,#263b58);color:#fff;border-radius:16px;padding:23px 24px;margin-bottom:20px;box-shadow:0 12px 28px #16243a16}.welcome h2{margin:0;font-size:20px;letter-spacing:-.03em}.welcome p{margin:7px 0 0;color:#c4cfdf;font-size:13px;line-height:1.55}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:32px}.stat{background:#fff;border:1px solid #e7eaf0;border-radius:13px;padding:16px 17px;min-width:0}.stat-label{color:#718096;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}.stat-value{font-size:25px;font-weight:800;letter-spacing:-.04em;margin-top:8px}.stat-note{font-size:11px;color:#94a3b8;margin-top:3px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}.section-head h2{font-size:18px;margin:0;letter-spacing:-.03em}.section-head p{font-size:12px;color:#778397;margin:5px 0 0}.search{width:min(100%,280px);border:1px solid #dce1e8;background:#fff;border-radius:9px;padding:10px 12px;font:13px Inter,sans-serif;outline:none}.search:focus{border-color:#61738e;box-shadow:0 0 0 3px #6b7d971a}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.table-card{display:block;min-width:0;background:#fff;border:1px solid #e7eaf0;border-radius:12px;padding:14px 15px;color:inherit;text-decoration:none;transition:transform .16s,border-color .16s,box-shadow .16s}.table-card:hover{transform:translateY(-2px);border-color:#c4ccd7;box-shadow:0 8px 20px #1522380b}.table-card-title{font-size:13px;font-weight:700;overflow-wrap:anywhere}.table-card-meta{display:flex;justify-content:space-between;gap:8px;margin-top:9px;color:#8190a3;font-size:10px}.pill{border-radius:99px;background:#f0f3f7;padding:3px 7px;color:#58677b;font-weight:700}.status{padding:30px;text-align:center;color:#7b8797;background:#fff;border:1px solid #e7eaf0;border-radius:12px;font-size:13px}.error{color:#a32121}.mobile-nav{display:none}
-    @media(max-width:1100px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:760px){.app{display:block}aside{padding:12px 14px;gap:12px}.brand{padding:2px 2px 10px}.nav-title{margin:0 2px 6px}.nav-list{display:flex;gap:5px;max-height:none;overflow-x:auto;overflow-y:hidden;padding:0 0 3px}.nav-link{white-space:nowrap;flex:0 0 auto;padding:8px 9px}.nav-link:not(:first-child){}.brand img{width:34px;height:34px}main{padding:19px 14px 36px}.topbar{align-items:flex-start;margin-bottom:18px}.topbar h1{font-size:23px}.user-tools{flex-direction:column;align-items:flex-end;gap:7px}.welcome{padding:19px;margin-bottom:13px}.stats{gap:8px;margin-bottom:25px}.stat{padding:13px}.stat-value{font-size:22px}.section-head{align-items:stretch;flex-direction:column}.search{width:100%}.cards{grid-template-columns:1fr;gap:8px}.table-card{padding:13px 14px}}
+    :root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1d1d1f;background:#fff;font-synthesis:none;text-rendering:optimizeLegibility;--ink:#1d1d1f;--muted:#86868b;--line:#e5e5ea;--soft:#f5f5f7;--sidebar:280px}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:#fff;color:var(--ink);-webkit-font-smoothing:antialiased}a{color:inherit}.app{min-height:100vh}
+    aside{position:fixed;inset:0 auto 0 0;z-index:40;display:flex;width:var(--sidebar);min-height:100vh;flex-direction:column;gap:22px;padding:22px 16px 18px;overflow:hidden;background:#fafafa;border-right:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:11px;padding:3px 8px 17px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}.brand img{width:40px;height:40px;flex:0 0 40px;border:1px solid #e5e5ea;border-radius:11px;object-fit:cover}.brand strong{display:block;font-size:13px;font-weight:800;letter-spacing:.13em}.brand small{display:block;margin-top:4px;color:var(--muted);font-size:9px;font-weight:700;letter-spacing:.11em}
+    .nav-title{margin:0 8px 9px;color:#9a9aa0;font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.nav-list{max-height:calc(100vh - 170px);overflow:auto;padding:0 3px 0 0;scrollbar-width:thin;scrollbar-color:#d5d5da transparent}.nav-link{display:flex;min-height:38px;align-items:center;gap:10px;margin:2px 0;padding:9px 10px;border:1px solid transparent;border-radius:10px;color:#55565a;font-size:11px;font-weight:600;line-height:1.35;text-decoration:none;transition:background .16s,color .16s,border-color .16s}.nav-link:hover{background:#f0f0f2;color:var(--ink)}.nav-link.active{border-color:#e4e4e7;background:#fff;color:var(--ink);box-shadow:0 2px 7px #00000008}.nav-icon{width:8px;height:8px;flex:0 0 8px;border:1.5px solid #9a9aa0;border-radius:3px}.nav-link.active .nav-icon{border-color:var(--ink);background:var(--ink)}
+    .main-content{min-height:100vh;margin-left:var(--sidebar);display:flex;flex-direction:column}.topbar{position:sticky;top:0;z-index:30;display:flex;min-height:72px;align-items:center;justify-content:space-between;gap:16px;padding:13px clamp(18px,3vw,42px);border-bottom:1px solid #e9e9ed;background:rgb(255 255 255 / 91%);backdrop-filter:blur(18px)}.eyebrow{color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.topbar h1{margin:4px 0 0;font-size:clamp(20px,2.2vw,26px);font-weight:750;letter-spacing:-.045em}.user-tools{display:flex;align-items:center;justify-content:flex-end;gap:10px;color:#68686d;font-size:10px}.user-tools span{max-width:min(34vw,290px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.button{display:inline-flex;min-height:36px;align-items:center;justify-content:center;gap:7px;padding:8px 12px;border:1px solid #d8d8dd;border-radius:999px;background:#fff;color:#333338;cursor:pointer;font:700 10px Inter,sans-serif;text-decoration:none;transition:background .16s,border-color .16s,transform .16s}.button:hover{transform:translateY(-1px);border-color:#bcbcc3;background:#f8f8fa}.button:focus-visible,.nav-link:focus-visible,.quick-link:focus-visible{outline:3px solid #007aff55;outline-offset:2px}
+    main{width:100%;max-width:1460px;margin:0 auto;padding:25px clamp(18px,3vw,42px) 50px}.welcome{position:relative;display:flex;min-height:176px;align-items:center;justify-content:space-between;gap:24px;margin-bottom:22px;padding:27px clamp(22px,3vw,34px);overflow:hidden;border:1px solid #2b2b2d;border-radius:18px;background:linear-gradient(112deg,#1d1d1f,#343438);color:#fff}.welcome:after{position:absolute;top:-91px;right:8%;width:260px;height:260px;border:1px solid #ffffff1b;border-radius:50%;content:"";box-shadow:0 0 0 32px #ffffff08,0 0 0 70px #ffffff06;pointer-events:none}.welcome-copy{position:relative;z-index:1}.welcome h2{margin:0;font-size:clamp(21px,2.5vw,29px);font-weight:750;letter-spacing:-.05em}.welcome p{max-width:600px;margin:8px 0 0;color:#c4c4ca;font-size:11px;line-height:1.65}.welcome-action{position:relative;z-index:1;display:inline-flex;min-height:39px;align-items:center;justify-content:center;gap:9px;padding:0 15px;border:1px solid #ffffff46;border-radius:999px;color:#fff;font-size:10px;font-weight:700;text-decoration:none;white-space:nowrap;transition:background .16s,border-color .16s}.welcome-action:hover{border-color:#fff;background:#ffffff13}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:0 0 13px}.section-head h2{margin:0;font-size:16px;font-weight:750;letter-spacing:-.035em}.section-head p{margin:5px 0 0;color:var(--muted);font-size:10px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:30px}.stat{position:relative;min-width:0;padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 3px 12px #00000004}.stat:before{position:absolute;top:16px;right:16px;width:7px;height:7px;border-radius:50%;background:#a7a7ad;content:""}.stat-label{color:#77777d;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.stat-value{margin-top:12px;font-size:26px;font-weight:800;letter-spacing:-.055em}.stat-note{margin-top:4px;color:#9a9aa0;font-size:9px}.stat.loading .stat-value{color:#b6b6bc}
+    .quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.quick-link{display:flex;min-height:86px;align-items:center;justify-content:space-between;gap:12px;padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff;text-decoration:none;transition:transform .16s,border-color .16s,box-shadow .16s}.quick-link:hover{transform:translateY(-2px);border-color:#c8c8cf;box-shadow:0 9px 24px #0000000b}.quick-link strong{display:block;font-size:11px}.quick-link small{display:block;margin-top:5px;color:var(--muted);font-size:9px}.quick-arrow{display:grid;width:30px;height:30px;flex:0 0 30px;place-items:center;border:1px solid var(--line);border-radius:50%;color:#54545a;font-size:13px}
+    .status-message{margin:15px 0;padding:12px 14px;border:1px solid #f0d6d2;border-radius:11px;background:#fff8f7;color:#a32121;font-size:10px;line-height:1.5}.mobile-caption{display:none}
+    @media(max-width:1050px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:760px){aside{position:relative;inset:auto;width:100%;min-height:0;gap:12px;padding:12px 14px 9px;border-right:0;border-bottom:1px solid var(--line)}.brand{padding:2px 2px 10px}.brand img{width:35px;height:35px;flex-basis:35px}.nav-title{margin:0 2px 6px}.nav-list{display:flex;max-height:none;gap:5px;overflow-x:auto;overflow-y:hidden;padding:0 0 4px}.nav-link{min-height:34px;flex:0 0 auto;gap:7px;padding:7px 9px;white-space:nowrap}.nav-icon{display:none}.main-content{min-height:auto;margin-left:0}.topbar{min-height:62px;padding:10px 13px}.topbar h1{font-size:20px}.user-tools{flex-direction:column;align-items:flex-end;gap:5px}.user-tools span{max-width:44vw;font-size:9px}main{padding:17px 13px 30px}.welcome{min-height:160px;align-items:flex-start;flex-direction:column;justify-content:center;gap:14px;padding:21px}.welcome h2{font-size:22px}.welcome p{max-width:94%;font-size:10px}.section-head{align-items:flex-start;flex-direction:column}.stats{gap:8px;margin-bottom:24px}.stat{padding:13px}.stat-value{font-size:23px}.quick-grid{grid-template-columns:1fr;gap:8px}.quick-link{min-height:73px;padding:13px}.button{min-height:33px;padding:7px 10px;font-size:9px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
   </style>
 </head>
 <body>
   <div class="app">
     <aside>
-      <a class="brand" href="/dashboard" style="color:inherit;text-decoration:none"><img src="/logo.png" alt="JABIYEN" /><span><strong>JABIYEN</strong><small>ADMIN CONSOLE</small></span></a>
-      <section><p class="nav-title">Workspace</p><nav class="nav-list" id="sideNav"><a class="nav-link active" href="/dashboard"><span class="nav-icon"></span>Overview</a></nav></section>
+      <a class="brand" href="/dashboard" aria-label="JABIYEN Admin home"><img src="/logo.png" alt="JABIYEN" /><span><strong>JABIYEN</strong><small>ADMIN CONSOLE</small></span></a>
+      <section>
+        <p class="nav-title">Workspace</p>
+        <nav class="nav-list" id="sideNav" aria-label="Admin navigation">
+          <a class="nav-link active" href="/dashboard" aria-current="page"><span class="nav-icon"></span>Dashboard</a>
+          <a class="nav-link" href="/advanced"><span class="nav-icon"></span>Advanced Database</a>
+        </nav>
+      </section>
     </aside>
-    <main>
-      <header class="topbar"><div><div class="eyebrow">Store administration</div><h1>Dashboard</h1></div><div class="user-tools"><a class="button" href="/advanced" style="text-decoration:none">Advanced Database</a><span id="userEmail">Checking secure session…</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>
-      <section class="welcome"><h2>JABIYEN control center</h2><p>Store summary and administrator tools. Open Advanced Database or select a table section from the navigation.</p></section>
-      <section class="stats" id="statsGrid" aria-label="Store summary"><article class="stat"><div class="stat-label">Products</div><div class="stat-value">—</div><div class="stat-note">Catalog records</div></article><article class="stat"><div class="stat-label">Categories</div><div class="stat-value">—</div><div class="stat-note">Store sections</div></article><article class="stat"><div class="stat-label">Orders</div><div class="stat-value">—</div><div class="stat-note">Checkout orders</div></article><article class="stat"><div class="stat-label">Customer profiles</div><div class="stat-value">—</div><div class="stat-note">Customer records</div></article></section>
-    </main>
+    <div class="main-content">
+      <header class="topbar">
+        <div><div class="eyebrow">Store administration</div><h1>Dashboard</h1></div>
+        <div class="user-tools"><span id="userEmail">Checking secure session…</span><button class="button" id="logoutBtn" type="button">Log out</button></div>
+      </header>
+      <main>
+        <section class="welcome">
+          <div class="welcome-copy"><div class="eyebrow" style="color:#b9b9c0">JABIYEN ADMIN</div><h2>Store overview</h2><p>Key catalog, order and customer counts in one place. Open a workspace section to manage store content or inspect database records.</p></div>
+          <a class="welcome-action" href="/advanced">Open database <span aria-hidden="true">↗</span></a>
+        </section>
+        <section aria-labelledby="summaryHeading">
+          <div class="section-head"><div><h2 id="summaryHeading">Important numbers</h2><p>Live totals from the JABIYEN admin API</p></div></div>
+          <div class="stats" id="statsGrid" aria-live="polite">
+            <article class="stat loading"><div class="stat-label">Products</div><div class="stat-value">—</div><div class="stat-note">Catalog records</div></article>
+            <article class="stat loading"><div class="stat-label">Categories</div><div class="stat-value">—</div><div class="stat-note">Store sections</div></article>
+            <article class="stat loading"><div class="stat-label">Orders</div><div class="stat-value">—</div><div class="stat-note">Checkout records</div></article>
+            <article class="stat loading"><div class="stat-label">Customers</div><div class="stat-value">—</div><div class="stat-note">Customer profiles</div></article>
+          </div>
+          <div id="statusMessage" class="status-message" role="status" hidden></div>
+        </section>
+        <section aria-labelledby="quickHeading">
+          <div class="section-head"><div><h2 id="quickHeading">Quick access</h2><p>Jump directly to frequently used database sections</p></div></div>
+          <div class="quick-grid">
+            <a class="quick-link" href="/admin/database/products"><span><strong>Products</strong><small>Catalog and product records</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
+            <a class="quick-link" href="/admin/database/orders"><span><strong>Orders</strong><small>Checkout and order records</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
+            <a class="quick-link" href="/admin/database/customer_profiles"><span><strong>Customer profiles</strong><small>Customer account records</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
+          </div>
+        </section>
+      </main>
+    </div>
   </div>
   <script>
     (function () {
       const SESSION_KEY = 'jayenware_admin_session';
       const $ = (id) => document.getElementById(id);
       const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-      function token() { for (const storage of [localStorage, sessionStorage]) { try { const value = JSON.parse(storage.getItem(SESSION_KEY) || '{}').access_token; if (value) return value; } catch {} } return ''; }
+      function token() {
+        for (const storage of [localStorage, sessionStorage]) {
+          try { const value = JSON.parse(storage.getItem(SESSION_KEY) || '{}').access_token; if (value) return value; } catch (_) {}
+        }
+        return '';
+      }
       async function api(path, options) {
         const response = await fetch(path, { ...(options || {}), headers: { Authorization: `Bearer ${token()}`, ...(options && options.headers || {}) } });
         const result = await response.json().catch(() => ({}));
-        if (response.status === 401 || response.status === 403) { localStorage.removeItem(SESSION_KEY); window.location.replace('/signin?type=admin'); throw new Error('Please sign in with an active admin account.'); }
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY);
+          window.location.replace('/signin?type=admin');
+          throw new Error('Please sign in with an active admin account.');
+        }
         if (!response.ok) throw new Error(result.error || result.message || `Request failed (${response.status})`);
         return result;
       }
       const label = (name) => name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
       function renderNavigation(tables) {
-        $('sideNav').innerHTML = `<a class="nav-link active" href="/dashboard"><span class="nav-icon"></span>Dashboard</a><a class="nav-link" href="/advanced"><span class="nav-icon"></span>Advanced Database</a>` + tables.map((table) => `<a class="nav-link" href="/admin/database/${encodeURIComponent(table.name)}"><span class="nav-icon"></span>${esc(label(table.name))}</a>`).join('');
+        $('sideNav').innerHTML = `<a class="nav-link active" href="/dashboard" aria-current="page"><span class="nav-icon"></span>Dashboard</a><a class="nav-link" href="/advanced"><span class="nav-icon"></span>Advanced Database</a>` + tables.map((table) => `<a class="nav-link" href="/admin/database/${encodeURIComponent(table.name)}"><span class="nav-icon"></span>${esc(label(table.name))}</a>`).join('');
+      }
+      function setCount(index, value) {
+        const card = $('statsGrid').children[index];
+        if (!card || value === null || value === undefined) return;
+        card.querySelector('.stat-value').textContent = Number(value).toLocaleString();
+        card.classList.remove('loading');
       }
       async function init() {
         if (!token()) { window.location.replace('/signin?type=admin'); return; }
         try {
-          const [me, tableResult] = await Promise.all([api('/api/admin/session'), api('/api/admin/tables')]);
-          const summary = await api('/api/admin/stats').catch(() => ({ stats: {} }));
+          const [me, tableResult, summary] = await Promise.all([
+            api('/api/admin/session'),
+            api('/api/admin/tables'),
+            api('/api/admin/stats').catch(() => null)
+          ]);
           const user = me.data && me.data.user || me.user || {};
           $('userEmail').textContent = user.email || 'Signed-in administrator';
-          const stats = summary.stats || {};
-          [['products', stats.products], ['categories', stats.categories], ['orders', stats.orders], ['customer_profiles', stats.users]].forEach(([key, value], index) => {
-            const card = $('statsGrid').children[index];
-            card.querySelector('.stat-value').textContent = Number(value || 0).toLocaleString();
-          });
-          const tables = Array.isArray(tableResult.tables) ? tableResult.tables : [];
-          renderNavigation(tables);
-          document.body.dataset.ready = 'true';
+          const stats = summary && summary.stats || null;
+          const values = stats ? [stats.products, stats.categories, stats.orders, stats.users] : [];
+          values.forEach((value, index) => setCount(index, value));
+          renderNavigation(Array.isArray(tableResult.tables) ? tableResult.tables : []);
+          if (!stats || values.some((value) => value === null || value === undefined)) {
+            $('statusMessage').textContent = 'Some store totals are temporarily unavailable. Your admin session and database navigation are ready.';
+            $('statusMessage').hidden = false;
+          }
         } catch (error) {
-          $('sideNav').insertAdjacentHTML('beforeend', `<span class="nav-link">${esc(error.message || 'Database sections could not be loaded.')}</span>`);
+          $('statusMessage').textContent = error.message || 'Dashboard data could not be loaded.';
+          $('statusMessage').hidden = false;
         }
       }
-      $('logoutBtn').addEventListener('click', async () => { try { await api('/api/auth/logout', { method: 'POST' }); } catch {} finally { localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY); window.location.replace('/signin'); } });
+      $('logoutBtn').addEventListener('click', async () => {
+        try { await api('/api/auth/logout', { method: 'POST' }); } catch (_) {}
+        localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY); window.location.replace('/signin');
+      });
       init();
     }());
   </script>

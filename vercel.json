@@ -21,12 +21,44 @@
       "dest": "/public/advanced.html"
     },
     {
+      "src": "/admin/database/blog",
+      "dest": "/public/database_blog.html"
+    },
+    {
+      "src": "/admin/database/faq",
+      "dest": "/public/database_faq.html"
+    },
+    {
+      "src": "/admin/database/story",
+      "dest": "/public/database_story.html"
+    },
+    {
       "src": "/admin/database/([a-z0-9_]+)",
-      "dest": "/public/admin/database/$1.html"
+      "dest": "/public/$1.html"
+    },
+    {
+      "src": "/admin/database/database.css",
+      "dest": "/public/database.css"
+    },
+    {
+      "src": "/admin/database/database.js",
+      "dest": "/public/database.js"
+    },
+    {
+      "src": "/tables/blog",
+      "dest": "/public/database_blog.html"
+    },
+    {
+      "src": "/tables/faq",
+      "dest": "/public/database_faq.html"
+    },
+    {
+      "src": "/tables/story",
+      "dest": "/public/database_story.html"
     },
     {
       "src": "/tables/([a-z0-9_]+)",
-      "dest": "/public/admin/database/$1.html"
+      "dest": "/public/$1.html"
     },
     {
       "src": "/api/auth/(.*)",
