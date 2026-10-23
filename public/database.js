@@ -48,37 +48,32 @@
   }
 
   function renderIndex(user) {
-    const columnTotal = state.tables.reduce((sum, table) => sum + (Array.isArray(table.columns) ? table.columns.length : 0), 0);
     const groups = [...new Set(state.tables.map((table) => table.group || 'Other'))];
-    const content = `<section class="intro"><div><h2>Manage each store section in its own workspace</h2><p>Open a section to view its physical table name, every column and record, and use the same add, edit and delete workflow throughout the store.</p></div><a class="button intro-button" href="/dashboard">Dashboard</a></section><section class="stats"><div class="stat"><strong>${state.tables.length}</strong><span>Website sections</span></div><div class="stat"><strong>${columnTotal}</strong><span>Registered columns</span></div><div class="stat"><strong>${groups.length}</strong><span>Content groups</span></div></section>${groups.map((group) => `<section class="section-group"><div class="section-head"><div><h2>${esc(group)}</h2><p>Choose a section to manage its content.</p></div></div><div class="cards">${state.tables.filter((table) => table.group === group).map((table) => `<a class="table-card" href="${esc(table.path)}"><div class="table-card-title">${esc(table.title)}</div><p class="card-description">${esc(table.description || '')}</p><div class="table-card-meta"><code>${esc(table.name)}</code><span class="pill">${table.columns.length} columns</span></div><span class="card-action">Open section <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`).join('')}`;
+    const content = `<section class="intro"><div><h2>Manage your website content</h2><p>Choose a section to update the information displayed on the JABIYEN website.</p></div><a class="button intro-button" href="/dashboard">Dashboard</a></section><section class="stats"><div class="stat"><strong>${state.tables.length}</strong><span>Content sections</span></div><div class="stat"><strong>${groups.length}</strong><span>Management groups</span></div><div class="stat"><strong>Central API</strong><span>One shared backend</span></div></section>${groups.map((group) => `<section class="section-group"><div class="section-head"><div><h2>${esc(group)}</h2><p>Choose a section to manage its content.</p></div></div><div class="cards">${state.tables.filter((table) => table.group === group).map((table) => `<a class="table-card" href="${esc(table.path)}"><div class="table-card-title">${esc(table.title)}</div><p class="card-description">${esc(table.description || '')}</p><div class="table-card-meta"><span class="pill">Website content</span></div><span class="card-action">Open section <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`).join('')}`;
     shell(user, '', content);
   }
 
-  function renderSchema(columns, editableColumns, primaryKeys) {
-    if (!columns.length) return '<div class="status">No column definitions available.</div>';
-    return columns.map((column) => {
-      const defaultLabel = column.default === null || column.default === undefined ? 'No default' : `Default: ${String(column.default)}`;
-      const kind = primaryKeys.includes(column.name) ? 'Primary key' : editableColumns.includes(column.name) ? 'Editable' : 'System field';
-      return `<article class="column-card"><div class="column-card-top"><strong>${esc(column.name)}</strong><span class="pill">${esc(kind)}</span></div><span>${esc(column.type || 'Unknown type')}</span><small>${column.nullable ? 'Nullable' : 'Required'} · ${esc(defaultLabel)}</small></article>`;
-    }).join('');
+  function visibleColumns() {
+    const hidden = new Set([...(state.table?.primaryKeys || []), 'id', 'created_at', 'updated_at']);
+    return state.columns.filter((column) => !hidden.has(column.name));
   }
 
   function displayValue(value) {
-    if (value === null || value === undefined || value === '') return '<span class="cell null">NULL</span>';
+    if (value === null || value === undefined || value === '') return '<span class="cell null">Not set</span>';
     const text = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
     if (typeof value === 'boolean') return `<span class="pill ${value ? 'pill-on' : 'pill-off'}">${value ? 'Active' : 'Off'}</span>`;
     return `<div class="cell" title="${esc(text)}">${esc(text.length > 400 ? `${text.slice(0, 400)}…` : text)}</div>`;
   }
 
   function renderRows(rows = state.rows) {
-    const columns = state.columns;
+    const columns = visibleColumns();
     const canWrite = !!state.table?.canWrite;
-    const headers = columns.map((column) => `<th>${esc(column.name)}<small>${esc(column.type || '')}${column.nullable ? ' · nullable' : ''}</small></th>`).join('');
+    const headers = columns.map((column) => `<th>${esc(label(column.name))}</th>`).join('');
     const actionHeader = canWrite ? '<th class="actions-heading">Actions</th>' : '';
     const body = rows.length ? rows.map((row) => {
       const id = row[state.table.primaryKeys[0]];
       return `<tr>${columns.map((column) => `<td>${displayValue(row[column.name])}</td>`).join('')}${canWrite ? `<td class="row-actions"><button class="button button-small" type="button" data-record-action="edit" data-record-id="${esc(id)}">Edit</button><button class="button button-small button-danger" type="button" data-record-action="delete" data-record-id="${esc(id)}">Delete</button></td>` : ''}</tr>`;
-    }).join('') : `<tr><td colspan="${Math.max(columns.length + (canWrite ? 1 : 0), 1)}" class="status">No records yet. Use “Add record” to create the first one.</td></tr>`;
+    }).join('') : `<tr><td colspan="${Math.max(columns.length + (canWrite ? 1 : 0), 1)}" class="status">No content yet. Use “Add content” to create the first entry.</td></tr>`;
     document.getElementById('tableWrap').innerHTML = `<table><thead><tr>${headers}${actionHeader}</tr></thead><tbody>${body}</tbody></table>`;
   }
 
@@ -88,9 +83,10 @@
     const fieldLabel = label(column.name);
     const raw = value === null || value === undefined ? '' : value;
     const escaped = esc(raw);
+    const optionalNote = column.nullable ? '<small>Optional</small>' : '';
     if (type === 'boolean') {
       const checked = raw === true || raw === 'true' || (!editing && column.default === 'true');
-      return `<label class="form-field form-field-check"><span><strong>${esc(fieldLabel)}</strong><small>${esc(column.name)}</small></span><input type="checkbox" name="${esc(column.name)}" ${checked ? 'checked' : ''}></label>`;
+      return `<label class="form-field form-field-check"><span><strong>${esc(fieldLabel)}</strong>${optionalNote}</span><input type="checkbox" name="${esc(column.name)}" aria-label="${esc(fieldLabel)}"></label>`;
     }
     let inputType = 'text';
     if (['smallint', 'integer', 'int2', 'int4', 'bigint', 'int8', 'numeric', 'decimal', 'real', 'double precision', 'float4', 'float8'].includes(type)) inputType = 'number';
@@ -98,21 +94,21 @@
     else if (type === 'date') inputType = 'date';
     const initial = inputType === 'datetime-local' && raw ? (() => { const d = new Date(raw); return Number.isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 16); })() : escaped;
     const longField = /description|address|working_hours|copyright_text|custom_css|video_schema|keywords|subtitle/i.test(column.name);
-    const control = longField ? `<textarea name="${esc(column.name)}" ${required ? 'required' : ''} rows="${/description|custom_css|video_schema/i.test(column.name) ? 4 : 2}">${initial}</textarea>` : `<input name="${esc(column.name)}" type="${inputType}" value="${initial}" ${inputType === 'number' ? 'step="any"' : ''} ${required ? 'required' : ''}>`;
-    return `<label class="form-field"><span><strong>${esc(fieldLabel)}${required ? ' *' : ''}</strong><small>${esc(column.name)} · ${esc(column.type)}${column.nullable ? ' · optional' : ''}</small></span>${control}</label>`;
+    const control = longField ? `<textarea name="${esc(column.name)}" aria-label="${esc(fieldLabel)}" ${required ? 'required' : ''} rows="${/description|custom_css|video_schema/i.test(column.name) ? 4 : 2}">${initial}</textarea>` : `<input name="${esc(column.name)}" type="${inputType}" aria-label="${esc(fieldLabel)}" value="${initial}" ${inputType === 'number' ? 'step="any"' : ''} ${required ? 'required' : ''}>`;
+    return `<label class="form-field"><span><strong>${esc(fieldLabel)}${required ? ' *' : ''}</strong>${optionalNote}</span>${control}</label>`;
   }
 
   function openRecordForm(record) {
     const editing = !!record;
     const modal = document.getElementById('recordModal');
-    document.getElementById('recordModalTitle').textContent = editing ? `Edit ${state.table.title} record` : `Add ${state.table.title} record`;
+    document.getElementById('recordModalTitle').textContent = editing ? `Edit ${state.table.title} content` : `Add ${state.table.title} content`;
     document.getElementById('recordFormFields').innerHTML = state.table.editableColumns.map((name) => {
       const column = state.columns.find((item) => item.name === name);
       return column ? fieldMarkup(column, record ? record[name] : column.default === 'true' ? true : '', editing) : '';
     }).join('');
     document.getElementById('recordFormStatus').textContent = '';
     document.getElementById('recordId').value = editing ? String(record[state.table.primaryKeys[0]]) : '';
-    document.getElementById('recordSubmit').textContent = editing ? 'Save changes' : 'Create record';
+    document.getElementById('recordSubmit').textContent = editing ? 'Save changes' : 'Add content';
     modal.hidden = false;
     document.body.classList.add('modal-open');
     document.querySelector('#recordFormFields input, #recordFormFields textarea')?.focus();
@@ -148,54 +144,55 @@
         body: JSON.stringify(payload),
       });
       closeRecordForm();
-      if (typeof window.showToast === 'function') window.showToast(id ? 'Changes saved.' : 'Record created.');
+      if (typeof window.showToast === 'function') window.showToast(id ? 'Changes saved.' : 'Content added.');
       await loadTablePage();
     } catch (error) {
-      status.textContent = error.message || 'The record could not be saved.';
+      status.textContent = error.message || 'Content could not be saved.';
       status.classList.add('error');
     } finally {
       submit.disabled = false;
-      submit.textContent = id ? 'Save changes' : 'Create record';
+      submit.textContent = id ? 'Save changes' : 'Add content';
     }
   }
 
   async function deleteRecord(id) {
-    if (!window.confirm(`Delete this ${state.table.title} record? This cannot be undone.`)) return;
+    if (!window.confirm(`Remove this ${state.table.title} content? This cannot be undone.`)) return;
     try {
       await api(`/api/admin/tables/${encodeURIComponent(state.table.name)}/${encodeURIComponent(id)}`, { method: 'DELETE' });
-      if (typeof window.showToast === 'function') window.showToast('Record deleted.');
+      if (typeof window.showToast === 'function') window.showToast('Content removed.');
       await loadTablePage();
     } catch (error) {
-      window.alert(error.message || 'The record could not be deleted.');
+      window.alert(error.message || 'Content could not be removed.');
     }
   }
 
   async function loadTablePage() {
     const tableWrap = document.getElementById('tableWrap');
     if (!tableWrap) return;
-    tableWrap.innerHTML = '<div class="status">Loading section records…</div>';
+    tableWrap.innerHTML = '<div class="status">Loading content…</div>';
     try {
       const result = await api(`/api/admin/tables/${encodeURIComponent(tableName)}?page=${state.page}&page_size=25`);
       state.table = { ...state.table, ...result };
       state.columns = result.columns || [];
       state.rows = result.rows || [];
       state.totalPages = result.totalPages || 1;
-      document.getElementById('columnCount').textContent = `${state.columns.length} columns · physical table ${result.name}`;
-      document.getElementById('columnGrid').innerHTML = renderSchema(state.columns, result.editableColumns || [], result.primaryKeys || []);
-      document.getElementById('recordCount').textContent = `${Number(result.total || 0).toLocaleString()} records`;
+      if (state.page > state.totalPages && state.totalPages > 0) {
+        state.page = state.totalPages;
+        return loadTablePage();
+      }
+      document.getElementById('recordCount').textContent = `${Number(result.total || 0).toLocaleString()} items`;
       document.getElementById('pageInfo').textContent = `Page ${result.page || state.page} of ${state.totalPages}`;
       document.getElementById('previousBtn').disabled = state.page <= 1;
       document.getElementById('nextBtn').disabled = state.page >= state.totalPages;
       document.getElementById('addRecordBtn').hidden = !result.canWrite;
       renderRows();
     } catch (error) {
-      tableWrap.innerHTML = `<div class="status error">${esc(error.message || 'Could not load section records.')}</div>`;
-      document.getElementById('columnGrid').innerHTML = `<div class="status error">${esc(error.message || 'Column schema unavailable.')}</div>`;
+      tableWrap.innerHTML = `<div class="status error">${esc(error.message || 'Could not load this content.')}</div>`;
     }
   }
 
   function renderTable(user) {
-    const content = `<section class="section-head page-section-head"><div><h2>${esc(state.table.title)}</h2><p>${esc(state.table.description || 'Manage this website section.')}</p></div><a class="button" href="/sections">All sections</a></section><section class="panel"><div class="panel-head"><div><strong>Table columns</strong><p id="columnCount">Loading column definitions…</p></div><span class="pill">${esc(state.table.name)}</span></div><div class="column-grid" id="columnGrid"><div class="status">Loading columns…</div></div></section><section class="panel"><div class="panel-head records-head"><div><strong>Records</strong><p>Changes are saved through the authenticated Central API.</p></div><div class="record-tools"><span class="pill" id="recordCount">—</span><input class="search compact-search" id="recordSearch" type="search" placeholder="Search this page" aria-label="Search current records"><button class="button" id="refreshBtn" type="button">Refresh</button><button class="button button-primary" id="addRecordBtn" type="button">＋ Add record</button></div></div><div class="table-wrap" id="tableWrap"><div class="status">Loading records…</div></div><footer class="pager"><span id="pageInfo">—</span><div class="pager-group"><button class="button" id="previousBtn" type="button" disabled>Previous</button><button class="button" id="nextBtn" type="button" disabled>Next</button></div></footer></section><div class="modal-backdrop" id="recordModal" hidden><section class="record-modal" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle"><header class="modal-head"><div><div class="eyebrow">${esc(state.table.title)}</div><h2 id="recordModalTitle">Edit record</h2></div><button class="button" id="closeRecordModal" type="button" aria-label="Close">×</button></header><form id="recordForm"><input type="hidden" id="recordId"><div class="modal-fields" id="recordFormFields"></div><p class="form-status" id="recordFormStatus" role="status"></p><footer class="modal-actions"><button class="button" id="cancelRecordModal" type="button">Cancel</button><button class="button button-primary" id="recordSubmit" type="submit">Save changes</button></footer></form></section></div>`;
+    const content = `<section class="section-head page-section-head"><div><h2>${esc(state.table.title)}</h2><p>${esc(state.table.description || 'Manage the information shown on this section.')}</p></div><a class="button" href="/sections">All sections</a></section><section class="panel"><div class="panel-head records-head"><div><strong>Content</strong><p>Manage the information displayed on this section.</p></div><div class="record-tools"><span class="pill" id="recordCount">—</span><input class="search compact-search" id="recordSearch" type="search" placeholder="Search content" aria-label="Search content"><button class="button" id="refreshBtn" type="button">Refresh</button><button class="button button-primary" id="addRecordBtn" type="button">＋ Add content</button></div></div><div class="table-wrap" id="tableWrap"><div class="status">Loading content…</div></div><footer class="pager"><span id="pageInfo">—</span><div class="pager-group"><button class="button" id="previousBtn" type="button" disabled>Previous</button><button class="button" id="nextBtn" type="button" disabled>Next</button></div></footer></section><div class="modal-backdrop" id="recordModal" hidden><section class="record-modal" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle"><header class="modal-head"><div><div class="eyebrow">${esc(state.table.title)}</div><h2 id="recordModalTitle">Edit content</h2></div><button class="button" id="closeRecordModal" type="button" aria-label="Close">×</button></header><form id="recordForm"><input type="hidden" id="recordId"><div class="modal-fields" id="recordFormFields"></div><p class="form-status" id="recordFormStatus" role="status"></p><footer class="modal-actions"><button class="button" id="cancelRecordModal" type="button">Cancel</button><button class="button button-primary" id="recordSubmit" type="submit">Save changes</button></footer></form></section></div>`;
     shell(user, tableName, content);
     document.getElementById('previousBtn').addEventListener('click', () => { if (state.page > 1) { state.page -= 1; loadTablePage(); } });
     document.getElementById('nextBtn').addEventListener('click', () => { if (state.page < state.totalPages) { state.page += 1; loadTablePage(); } });
@@ -206,7 +203,7 @@
     document.getElementById('recordForm').addEventListener('submit', saveRecord);
     document.getElementById('recordSearch').addEventListener('input', (event) => {
       const needle = event.currentTarget.value.trim().toLowerCase();
-      renderRows(needle ? state.rows.filter((row) => state.columns.some((column) => String(row[column.name] ?? '').toLowerCase().includes(needle))) : state.rows);
+      renderRows(needle ? state.rows.filter((row) => visibleColumns().some((column) => String(row[column.name] ?? '').toLowerCase().includes(needle))) : state.rows);
     });
     document.getElementById('tableWrap').addEventListener('click', (event) => {
       const button = event.target.closest('[data-record-action]');
@@ -228,13 +225,17 @@
       const [me, result] = await Promise.all([api('/api/admin/session'), api('/api/admin/tables')]);
       state.tables = Array.isArray(result.tables) ? result.tables : [];
       const user = me.data?.user || result.admin || {};
-      if (isIndex) renderIndex(user);
+      if (isIndex) {
+        document.title = 'Website Sections | JABIYEN Admin';
+        renderIndex(user);
+      }
       else {
         state.table = state.tables.find((table) => table.name === tableName);
         if (!state.table) {
           root.innerHTML = '<div class="status error">This section is not available. Return to <a href="/sections">all sections</a>.</div>';
           return;
         }
+        document.title = `${state.table.title} | JABIYEN Admin`;
         renderTable(user);
       }
     } catch (error) {
