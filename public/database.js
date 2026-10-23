@@ -21,21 +21,38 @@
   async function api(path, options = {}) {
     const headers = { ...(options.headers || {}), Authorization: `Bearer ${session.access_token || ''}` };
     if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
+    const method = String(options.method || 'GET').toUpperCase();
+    const startedAt = performance.now();
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
+    let receivedResponse = false;
     try {
       const response = await fetch(path, { ...options, headers, signal: controller.signal });
+      receivedResponse = true;
       const result = await response.json().catch(() => ({}));
+      const requestId = response.headers.get('x-request-id') || response.headers.get('x-vercel-id') || null;
+      const diagnostic = { method, status: response.status, requestId, elapsedMs: Math.round(performance.now() - startedAt) };
       if (response.status === 401 || response.status === 403) {
+        if (method !== 'GET') console.error('[JABIYEN_ADMIN_API_ERROR]', { ...diagnostic, message: result.error || 'Admin authorization failed.' });
         localStorage.removeItem(sessionKey);
         sessionStorage.removeItem(sessionKey);
         window.location.replace('/signin?type=admin');
         throw new Error('Please sign in with an active JABIYEN administrator account.');
       }
-      if (!response.ok) throw new Error(result.error || result.message || `Request failed (${response.status})`);
+      if (!response.ok || result.success === false) {
+        if (method !== 'GET') console.error('[JABIYEN_ADMIN_API_ERROR]', { ...diagnostic, message: result.error || result.message || `Request failed (${response.status})` });
+        throw new Error(result.error || result.message || `Request failed (${response.status})`);
+      }
+      if (method !== 'GET') console.info('[JABIYEN_ADMIN_API_OK]', { ...diagnostic, success: result.success === true });
       return result;
     } catch (error) {
-      if (controller.signal.aborted) throw new Error('This request timed out. Refresh the section to check whether the content saved before trying again.');
+      if (controller.signal.aborted) {
+        console.error('[JABIYEN_ADMIN_API_TIMEOUT]', { method, elapsedMs: Math.round(performance.now() - startedAt) });
+        throw new Error('This request timed out. Refresh the section to check whether the content saved before trying again.');
+      }
+      if (method !== 'GET' && !receivedResponse) {
+        console.error('[JABIYEN_ADMIN_API_NETWORK_ERROR]', { method, elapsedMs: Math.round(performance.now() - startedAt), message: error instanceof Error ? error.message : 'Network request failed.' });
+      }
       throw error;
     } finally {
       clearTimeout(timeout);
