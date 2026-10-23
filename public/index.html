@@ -13,7 +13,7 @@
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 opacity-0 transition-opacity duration-200" id="bodyCtx">
+<body class="bg-gray-100 text-gray-800 pt-14 lg:pt-16 opacity-0 transition-opacity duration-200" id="bodyCtx">
 
     <nav class="bg-gray-900 text-white px-6 py-4 flex justify-between items-center shadow-md">
         <h1 class="text-xl font-bold tracking-wide">Jayenware Hero Controller</h1>
@@ -97,6 +97,7 @@
         </div>
     </div>
 
+    <script src="/components.js"></script>
     <script>
         const sessionKey = 'jayenware_admin_session';
         const getToken = () => { try { return JSON.parse(localStorage.getItem(sessionKey) || '{}').access_token || ''; } catch { return ''; } };
