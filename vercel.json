@@ -17,8 +17,16 @@
       "dest": "/public/dashboard.html"
     },
     {
+      "src": "/advanced",
+      "dest": "/public/advanced.html"
+    },
+    {
+      "src": "/admin/database/([a-z0-9_]+)",
+      "dest": "/public/admin/database/$1.html"
+    },
+    {
       "src": "/tables/([a-z0-9_]+)",
-      "dest": "/public/table.html?table=$1"
+      "dest": "/public/admin/database/$1.html"
     },
     {
       "src": "/api/auth/(.*)",

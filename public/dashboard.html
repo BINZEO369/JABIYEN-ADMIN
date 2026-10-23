@@ -22,7 +22,7 @@
       <section><p class="nav-title">Workspace</p><nav class="nav-list" id="sideNav"><a class="nav-link active" href="/dashboard"><span class="nav-icon"></span>Overview</a></nav></section>
     </aside>
     <main>
-      <header class="topbar"><div><div class="eyebrow">Store administration</div><h1>Dashboard</h1></div><div class="user-tools"><span id="userEmail">Checking secure session…</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>
+      <header class="topbar"><div><div class="eyebrow">Store administration</div><h1>Dashboard</h1></div><div class="user-tools"><a class="button" href="/advanced" style="text-decoration:none">Advanced Database</a><span id="userEmail">Checking secure session…</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>
       <section class="welcome"><h2>JABIYEN control center</h2><p>Store snapshot and direct access to every public database table. Choose a table to inspect its columns and records.</p></section>
       <section class="stats" id="statsGrid" aria-label="Store summary"><article class="stat"><div class="stat-label">Products</div><div class="stat-value">—</div><div class="stat-note">Catalog records</div></article><article class="stat"><div class="stat-label">Categories</div><div class="stat-value">—</div><div class="stat-note">Store sections</div></article><article class="stat"><div class="stat-label">Orders</div><div class="stat-value">—</div><div class="stat-note">Checkout orders</div></article><article class="stat"><div class="stat-label">Customer profiles</div><div class="stat-value">—</div><div class="stat-note">Customer records</div></article></section>
       <section>
@@ -36,7 +36,7 @@
       const SESSION_KEY = 'jayenware_admin_session';
       const $ = (id) => document.getElementById(id);
       const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-      function token() { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || '{}').access_token || ''; } catch { return ''; } }
+      function token() { for (const storage of [localStorage, sessionStorage]) { try { const value = JSON.parse(storage.getItem(SESSION_KEY) || '{}').access_token; if (value) return value; } catch {} } return ''; }
       async function api(path, options) {
         const response = await fetch(path, { ...(options || {}), headers: { Authorization: `Bearer ${token()}`, ...(options && options.headers || {}) } });
         const result = await response.json().catch(() => ({}));
@@ -49,13 +49,14 @@
         const needle = $('tableSearch').value.trim().toLowerCase();
         const rows = tables.filter((table) => table.name.toLowerCase().includes(needle));
         $('tableCount').textContent = `${tables.length} public tables · ${rows.length} shown`;
-        $('tableCards').innerHTML = rows.length ? rows.map((table) => `<a class="table-card" href="/tables/${encodeURIComponent(table.name)}"><div class="table-card-title">${esc(label(table.name))}</div><div class="table-card-meta"><span>${esc(table.name)}</span><span class="pill">${table.columns.length} columns</span></div></a>`).join('') : '<div class="status">No table names match this search.</div>';
-        $('sideNav').innerHTML = `<a class="nav-link active" href="/dashboard"><span class="nav-icon"></span>Overview</a>` + rows.map((table) => `<a class="nav-link" href="/tables/${encodeURIComponent(table.name)}"><span class="nav-icon"></span>${esc(label(table.name))}</a>`).join('');
+        $('tableCards').innerHTML = rows.length ? rows.map((table) => `<a class="table-card" href="/admin/database/${encodeURIComponent(table.name)}"><div class="table-card-title">${esc(label(table.name))}</div><div class="table-card-meta"><span>${esc(table.name)}</span><span class="pill">${table.columns.length} columns</span></div></a>`).join('') : '<div class="status">No table names match this search.</div>';
+        $('sideNav').innerHTML = `<a class="nav-link active" href="/dashboard"><span class="nav-icon"></span>Dashboard</a><a class="nav-link" href="/advanced"><span class="nav-icon"></span>Advanced Database</a>` + tables.map((table) => `<a class="nav-link" href="/admin/database/${encodeURIComponent(table.name)}"><span class="nav-icon"></span>${esc(label(table.name))}</a>`).join('');
       }
       async function init() {
         if (!token()) { window.location.replace('/signin?type=admin'); return; }
         try {
-          const [me, summary, tableResult] = await Promise.all([api('/api/admin/me'), api('/api/admin/stats'), api('/api/admin/tables')]);
+          const [me, tableResult] = await Promise.all([api('/api/admin/me'), api('/api/admin/tables')]);
+          const summary = await api('/api/admin/stats').catch(() => ({ stats: {} }));
           const user = me.data && me.data.user || me.user || {};
           $('userEmail').textContent = user.email || 'Signed-in administrator';
           const stats = summary.stats || {};
@@ -71,7 +72,7 @@
           if (!document.body.dataset.ready) $('tableCards').innerHTML = `<div class="status error">${esc(error.message || 'Dashboard could not be loaded.')}</div>`;
         }
       }
-      $('logoutBtn').addEventListener('click', async () => { try { await api('/api/auth/logout', { method: 'POST' }); } catch {} finally { localStorage.removeItem(SESSION_KEY); window.location.replace('/signin'); } });
+      $('logoutBtn').addEventListener('click', async () => { try { await api('/api/auth/logout', { method: 'POST' }); } catch {} finally { localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY); window.location.replace('/signin'); } });
       init();
     }());
   </script>

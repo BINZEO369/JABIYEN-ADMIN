@@ -265,6 +265,8 @@ function renderHeader() {
                 <span>Product Variants</span>
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
+            <div class="menu-section-label">Advanced</div>
+            <a href="/advanced" class="menu-node-item no-underline"><span>Advanced Database</span></a>
             <div class="menu-section-label">Database tables</div>
             <div id="adminDatabaseTableLinks"><div class="menu-table-status">Loading database sections…</div></div>
         </div>
@@ -337,7 +339,7 @@ function loadAdminTableSections() {
                 const name = typeof table.name === 'string' ? table.name : '';
                 if (!/^[a-z0-9_]+$/.test(name)) return;
                 const link = document.createElement('a');
-                link.href = `/tables/${encodeURIComponent(name)}`;
+                link.href = `/admin/database/${encodeURIComponent(name)}`;
                 link.className = 'menu-node-item menu-node-table no-underline';
                 const label = name.replace(/_/g, ' ').replace(/\b\w/g, (character) => character.toUpperCase());
                 const text = document.createElement('span');
