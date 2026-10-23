@@ -70,6 +70,7 @@
     { "src": "/account", "dest": "/public/account.html" },
     { "src": "/product", "dest": "/public/product.html" },
     { "src": "/product-variant", "dest": "/public/product-variant.html" },
+    { "src": "/orders", "dest": "/public/orders.html" },
     { "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))", "dest": "/public/$1" },
     { "src": "/products", "dest": "/public/index.html" },
     { "src": "/wishlist", "dest": "/public/index.html" },
