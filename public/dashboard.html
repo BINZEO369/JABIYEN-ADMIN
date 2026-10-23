@@ -47,7 +47,7 @@
       async function init() {
         if (!token()) { window.location.replace('/signin?type=admin'); return; }
         try {
-          const [me, tableResult] = await Promise.all([api('/api/admin/me'), api('/api/admin/tables')]);
+          const [me, tableResult] = await Promise.all([api('/api/admin/session'), api('/api/admin/tables')]);
           const summary = await api('/api/admin/stats').catch(() => ({ stats: {} }));
           const user = me.data && me.data.user || me.user || {};
           $('userEmail').textContent = user.email || 'Signed-in administrator';

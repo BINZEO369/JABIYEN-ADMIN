@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    :root{font-family:Inter,system-ui,sans-serif;color:#182230;background:#f5f6f8;font-synthesis:none;text-rendering:optimizeLegibility}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:18px}main{width:min(100%,430px);padding:34px 30px;background:#fff;border:1px solid #e5e9ef;border-radius:18px;box-shadow:0 16px 45px #17233612}header{text-align:center;margin-bottom:25px}img{width:52px;height:52px;border-radius:13px;object-fit:cover}h1{font-size:23px;letter-spacing:-.04em;margin:14px 0 5px}header p{margin:0;color:#758196;font-size:12px;line-height:1.5}.field{margin:15px 0;text-align:left}label{display:block;margin-bottom:6px;font-size:11px;font-weight:700;color:#435167}input{width:100%;min-height:43px;border:1px solid #d8dee7;border-radius:9px;padding:10px 12px;font:13px Inter,system-ui,sans-serif;color:#182230;outline:none}input:focus{border-color:#60728d;box-shadow:0 0 0 3px #60728d1a}.primary{width:100%;min-height:44px;border:0;border-radius:9px;background:#172336;color:#fff;font:700 12px Inter,system-ui,sans-serif;cursor:pointer;margin-top:8px}.primary:disabled{opacity:.55;cursor:wait}.status{min-height:20px;margin-top:13px;font-size:11px;line-height:1.5;color:#68768b;text-align:center}.status.error{color:#a32121}.status.success{color:#1c7a4a}.back{display:block;margin:10px auto 0;border:0;background:none;color:#506078;font:600 11px Inter,system-ui,sans-serif;cursor:pointer}.back[hidden],form[hidden]{display:none}footer{margin-top:20px;padding-top:14px;border-top:1px solid #eef1f5;color:#97a1af;font-size:10px;text-align:center;line-height:1.5}@media(max-width:480px){main{padding:27px 21px}}
+    :root{font-family:Inter,system-ui,sans-serif;color:#182230;background:#f5f6f8;font-synthesis:none;text-rendering:optimizeLegibility}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:18px}main{width:min(100%,430px);padding:34px 30px;background:#fff;border:1px solid #e5e9ef;border-radius:18px;box-shadow:0 16px 45px #17233612}header{text-align:center;margin-bottom:25px}img{width:52px;height:52px;border-radius:13px;object-fit:cover}h1{font-size:23px;letter-spacing:-.04em;margin:14px 0 5px}header p{margin:0;color:#758196;font-size:12px;line-height:1.5}.field{margin:15px 0;text-align:left}label{display:block;margin-bottom:6px;font-size:11px;font-weight:700;color:#435167}input{width:100%;min-height:43px;border:1px solid #d8dee7;border-radius:9px;padding:10px 12px;font:13px Inter,system-ui,sans-serif;color:#182230;outline:none}input:focus{border-color:#60728d;box-shadow:0 0 0 3px #60728d1a}.primary{width:100%;min-height:44px;border:0;border-radius:9px;background:#172336;color:#fff;font:700 12px Inter,system-ui,sans-serif;cursor:pointer;margin-top:8px}.primary:disabled{opacity:.55;cursor:wait}.status{min-height:20px;margin-top:13px;font-size:11px;line-height:1.5;color:#68768b;text-align:center}.status.error{color:#a32121}footer{margin-top:20px;padding-top:14px;border-top:1px solid #eef1f5;color:#97a1af;font-size:10px;text-align:center;line-height:1.5}@media(max-width:480px){main{padding:27px 21px}}
   </style>
 </head>
 <body>
@@ -18,114 +18,69 @@
     <header>
       <img src="/logo.png" alt="JABIYEN" />
       <h1>Admin Sign In</h1>
-      <p>Sign in here with your administrator email and password.</p>
+      <p>Sign in with the administrator account registered for JABIYEN.</p>
     </header>
-    <form id="passwordForm" novalidate>
+    <form id="loginForm" novalidate>
       <div class="field"><label for="email">Admin email</label><input id="email" name="email" type="email" autocomplete="username" required maxlength="254" /></div>
       <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="72" /></div>
-      <button class="primary" id="passwordSubmit" type="submit">Sign in</button>
-    </form>
-    <form id="twoFactorForm" hidden novalidate>
-      <div class="field"><label for="code">6-digit verification code</label><input id="code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required /></div>
-      <button class="primary" id="codeSubmit" type="submit">Verify and continue</button>
-      <button class="back" id="backButton" type="button">Back to password sign in</button>
+      <button class="primary" id="submitButton" type="submit">Sign in</button>
     </form>
     <div id="status" class="status" role="status" aria-live="polite"></div>
-    <footer>Your password is sent only to the secure sign-in API and is never saved in this browser.</footer>
+    <footer>Password is verified by JABIYEN Database Auth and matched to an active row in the admins table. It is never stored in this browser.</footer>
   </main>
   <script>
     (() => {
-      const sessionKey = 'jayenware_admin_session';
-      const passwordForm = document.getElementById('passwordForm');
-      const twoFactorForm = document.getElementById('twoFactorForm');
+      const form = document.getElementById('loginForm');
+      const button = document.getElementById('submitButton');
       const status = document.getElementById('status');
-      let challengeId = '';
-      const messageFor = (result, fallback) => {
+      const sessionKey = 'jayenware_admin_session';
+      const errorMessage = (result) => {
         const error = result && result.error;
-        if (typeof error === 'string') return error;
-        return error && error.message || result && result.message || fallback;
+        return (typeof error === 'string' ? error : error && error.message) || result && result.message || 'Admin sign-in failed.';
       };
-      function showStatus(message, kind) {
+      function showError(message) {
         status.textContent = message;
-        status.className = `status${kind ? ` ${kind}` : ''}`;
+        status.className = 'status error';
       }
-      function setBusy(form, busy, text) {
-        const button = form.querySelector('button[type="submit"]');
-        button.disabled = busy;
-        if (busy) button.dataset.originalText = button.textContent;
-        button.textContent = busy ? text : (button.dataset.originalText || button.textContent);
-      }
-      async function post(path, body) {
-        const response = await fetch(path, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok || result.success === false) throw new Error(messageFor(result, 'Sign in could not be completed.'));
-        return result;
-      }
-      async function verifyAdminAndContinue(session, user) {
-        if (!session || !session.access_token) throw new Error('The secure sign-in did not return an active session.');
-        const response = await fetch('/api/admin/me', { headers: { Authorization: `Bearer ${session.access_token}` } });
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok || result.success === false) {
-          throw new Error('This account does not have active JABIYEN Admin access.');
-        }
-        localStorage.setItem(sessionKey, JSON.stringify({
-          access_token: session.access_token,
-          refresh_token: session.refresh_token || null,
-          expires_at: session.expires_at || null,
-          user_id: (session.user && session.user.id) || (user && user.id) || null,
-          login_type: 'admin',
-        }));
-        window.location.replace('/dashboard');
-      }
-      passwordForm.addEventListener('submit', async (event) => {
+      form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
-        if (!email || !password) { showStatus('Enter your admin email and password.', 'error'); return; }
-        setBusy(passwordForm, true, 'Checking…');
-        showStatus('Checking admin credentials securely…');
+        if (!email || !password) { showError('Enter your admin email and password.'); return; }
+        button.disabled = true;
+        button.textContent = 'Checking…';
+        status.textContent = 'Checking JABIYEN database credentials…';
+        status.className = 'status';
         try {
-          const result = await post('/api/auth/login', { email, password });
-          const data = result.data || {};
-          if (data.requires_two_factor && data.challenge_id) {
-            challengeId = data.challenge_id;
-            passwordForm.hidden = true;
-            twoFactorForm.hidden = false;
-            showStatus('A verification code was sent to your account email.');
-            document.getElementById('code').focus();
-          } else {
-            await verifyAdminAndContinue(data.session, data.user);
+          const response = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok || result.success !== true || !result.data || !result.data.session || !result.data.session.access_token) {
+            throw new Error(errorMessage(result));
           }
+          const session = result.data.session;
+          const sessionRecord = {
+            access_token: session.access_token,
+            refresh_token: session.refresh_token || null,
+            expires_at: session.expires_at || null,
+            user_id: session.user && session.user.id || result.data.user && result.data.user.id || null,
+            login_type: 'jabiyen_admin',
+          };
+          const verifyResponse = await fetch('/api/admin/session', { headers: { Authorization: `Bearer ${session.access_token}` } });
+          const verified = await verifyResponse.json().catch(() => ({}));
+          if (!verifyResponse.ok || verified.success !== true) {
+            throw new Error(errorMessage(verified) || 'This account does not have active JABIYEN admin access.');
+          }
+          localStorage.setItem(sessionKey, JSON.stringify(sessionRecord));
+          window.location.replace('/dashboard');
         } catch (error) {
-          showStatus(error.message || 'Invalid administrator email or password.', 'error');
-          setBusy(passwordForm, false);
+          showError(error.message || 'Invalid admin credentials or inactive admin account.');
+          button.disabled = false;
+          button.textContent = 'Sign in';
         }
-      });
-      twoFactorForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const code = document.getElementById('code').value.trim();
-        if (!/^\d{6}$/.test(code) || !challengeId) { showStatus('Enter the 6-digit verification code.', 'error'); return; }
-        setBusy(twoFactorForm, true, 'Verifying…');
-        showStatus('Verifying your code…');
-        try {
-          const result = await post('/api/auth/two-factor/verify', { challenge_id: challengeId, code });
-          await verifyAdminAndContinue(result.data && result.data.session, result.data && result.data.user);
-        } catch (error) {
-          showStatus(error.message || 'The code is invalid or expired.', 'error');
-          setBusy(twoFactorForm, false);
-        }
-      });
-      document.getElementById('backButton').addEventListener('click', () => {
-        challengeId = '';
-        twoFactorForm.reset();
-        twoFactorForm.hidden = true;
-        passwordForm.hidden = false;
-        showStatus('');
-        document.getElementById('password').focus();
       });
     })();
   </script>

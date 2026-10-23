@@ -104,7 +104,7 @@
     if (!session.access_token) { window.location.replace('/signin?type=admin'); return; }
     if (!isIndex && !/^[a-z0-9_]+$/.test(tableName)) { root.innerHTML = '<div class="status error">Invalid table section.</div>'; return; }
     try {
-      const [me, result] = await Promise.all([api('/api/admin/me'), api('/api/admin/tables')]);
+      const [me, result] = await Promise.all([api('/api/admin/session'), api('/api/admin/tables')]);
       tables = Array.isArray(result.tables) ? result.tables : [];
       const user = me.data && me.data.user || me.user || {};
       if (isIndex) renderIndex(user);
