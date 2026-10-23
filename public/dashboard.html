@@ -36,7 +36,7 @@
         <p class="nav-title">Workspace</p>
         <nav class="nav-list" id="sideNav" aria-label="Admin navigation">
           <a class="nav-link active" href="/dashboard" aria-current="page"><span class="nav-icon"></span>Dashboard</a>
-          <a class="nav-link" href="/advanced"><span class="nav-icon"></span>Advanced Database</a>
+          <a class="nav-link" href="/sections"><span class="nav-icon"></span>Website Sections</a>
         </nav>
       </section>
     </aside>
@@ -47,8 +47,8 @@
       </header>
       <main>
         <section class="welcome">
-          <div class="welcome-copy"><div class="eyebrow" style="color:#b9b9c0">JABIYEN ADMIN</div><h2>Store overview</h2><p>Key catalog, order and customer counts in one place. Open a workspace section to manage store content or inspect database records.</p></div>
-          <a class="welcome-action" href="/advanced">Open database <span aria-hidden="true">↗</span></a>
+          <div class="welcome-copy"><div class="eyebrow" style="color:#b9b9c0">JABIYEN ADMIN</div><h2>Store overview</h2><p>Review key store totals, then open a dedicated section to manage products, navigation, banners, page content and store settings.</p></div>
+          <a class="welcome-action" href="/sections">Manage website sections <span aria-hidden="true">↗</span></a>
         </section>
         <section aria-labelledby="summaryHeading">
           <div class="section-head"><div><h2 id="summaryHeading">Important numbers</h2><p>Live totals from the JABIYEN admin API</p></div></div>
@@ -61,11 +61,12 @@
           <div id="statusMessage" class="status-message" role="status" hidden></div>
         </section>
         <section aria-labelledby="quickHeading">
-          <div class="section-head"><div><h2 id="quickHeading">Quick access</h2><p>Jump directly to frequently used database sections</p></div></div>
+          <div class="section-head"><div><h2 id="quickHeading">Quick access</h2><p>Open the same dedicated management workspaces used for products and banners.</p></div></div>
           <div class="quick-grid">
-            <a class="quick-link" href="/admin/database/products"><span><strong>Products</strong><small>Catalog and product records</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
-            <a class="quick-link" href="/admin/database/orders"><span><strong>Orders</strong><small>Checkout and order records</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
-            <a class="quick-link" href="/admin/database/customer_profiles"><span><strong>Customer profiles</strong><small>Customer account records</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
+            <a class="quick-link" href="/product"><span><strong>Products</strong><small>Catalog, variants and product media</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
+            <a class="quick-link" href="/category-menu-item"><span><strong>Categories &amp; Menu</strong><small>Store categories and navigation</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
+            <a class="quick-link" href="/herobanner"><span><strong>Hero Banner</strong><small>Homepage banner management</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
+            <a class="quick-link" href="/sections"><span><strong>Website Sections</strong><small>Pages, footer and store settings</small></span><span class="quick-arrow" aria-hidden="true">↗</span></a>
           </div>
         </section>
       </main>
@@ -96,7 +97,7 @@
       }
       const label = (name) => name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
       function renderNavigation(tables) {
-        $('sideNav').innerHTML = `<a class="nav-link active" href="/dashboard" aria-current="page"><span class="nav-icon"></span>Dashboard</a><a class="nav-link" href="/advanced"><span class="nav-icon"></span>Advanced Database</a>` + tables.map((table) => `<a class="nav-link" href="/admin/database/${encodeURIComponent(table.name)}"><span class="nav-icon"></span>${esc(label(table.name))}</a>`).join('');
+        $('sideNav').innerHTML = `<a class="nav-link active" href="/dashboard" aria-current="page"><span class="nav-icon"></span>Dashboard</a><a class="nav-link" href="/sections"><span class="nav-icon"></span>Website Sections</a>` + tables.map((table) => `<a class="nav-link" href="${esc(table.path || '/sections')}"><span class="nav-icon"></span>${esc(table.title || label(table.name))}</a>`).join('');
       }
       function setCount(index, value) {
         const card = $('statsGrid').children[index];
@@ -119,7 +120,7 @@
           values.forEach((value, index) => setCount(index, value));
           renderNavigation(Array.isArray(tableResult.tables) ? tableResult.tables : []);
           if (!stats || values.some((value) => value === null || value === undefined)) {
-            $('statusMessage').textContent = 'Some store totals are temporarily unavailable. Your admin session and database navigation are ready.';
+            $('statusMessage').textContent = 'Some store totals are temporarily unavailable. Your admin session and section navigation are ready.';
             $('statusMessage').hidden = false;
           }
         } catch (error) {

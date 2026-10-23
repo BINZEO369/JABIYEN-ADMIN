@@ -21,7 +21,7 @@ function loadFontsConfiguration() {
 }
 
 function applyFontVariables() {
-    const fonts = window.JABIYEN_FONTS;
+    const fonts = window.JABIYEN_FONTS || window.JAYENWARE_FONTS;
     if (!fonts) return;
     const root = document.documentElement;
     const vars = fonts.cssVariables;
@@ -244,9 +244,9 @@ function renderHeader() {
                 <span>Dashboard</span>
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-30"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
-            <div class="menu-section-label">Advanced</div>
-            <a href="/advanced" class="menu-node-item no-underline"><span>Advanced Database</span></a>
-            <div class="menu-section-label">Database tables</div>
+            <div class="menu-section-label">Store sections</div>
+            <a href="/sections" class="menu-node-item no-underline"><span>All website sections</span></a>
+            <div class="menu-section-label">Content &amp; store settings</div>
             <div id="adminDatabaseTableLinks"><div class="menu-table-status">Loading database sections…</div></div>
             <div class="menu-section-label">Store sections</div>
             <a href="/herobanner" class="menu-node-item no-underline">
@@ -337,11 +337,12 @@ function loadAdminTableSections() {
 
             tables.forEach((table) => {
                 const name = typeof table.name === 'string' ? table.name : '';
-                if (!/^[a-z0-9_]+$/.test(name)) return;
+                const path = typeof table.path === 'string' && /^\/(?!\/)[a-z0-9/_-]+$/.test(table.path) ? table.path : '';
+                if (!/^[a-z0-9_]+$/.test(name) || !path) return;
                 const link = document.createElement('a');
-                link.href = `/admin/database/${encodeURIComponent(name)}`;
+                link.href = path;
                 link.className = 'menu-node-item menu-node-table no-underline';
-                const label = name.replace(/_/g, ' ').replace(/\b\w/g, (character) => character.toUpperCase());
+                const label = typeof table.title === 'string' ? table.title : name.replace(/_/g, ' ').replace(/\b\w/g, (character) => character.toUpperCase());
                 const text = document.createElement('span');
                 text.textContent = label;
                 link.appendChild(text);

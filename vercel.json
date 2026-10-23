@@ -7,206 +7,121 @@
     }
   ],
   "routes": [
-    {
-      "src": "/admin/dashboard",
-      "status": 308,
-      "dest": "/dashboard"
-    },
-    {
-      "src": "/dashboard",
-      "dest": "/public/dashboard.html"
-    },
-    {
-      "src": "/advanced",
-      "dest": "/public/advanced.html"
-    },
-    {
-      "src": "/admin/database/blog",
-      "dest": "/public/database_blog.html"
-    },
-    {
-      "src": "/admin/database/faq",
-      "dest": "/public/database_faq.html"
-    },
-    {
-      "src": "/admin/database/story",
-      "dest": "/public/database_story.html"
-    },
-    {
-      "src": "/admin/database/([a-z0-9_]+)",
-      "dest": "/public/$1.html"
-    },
-    {
-      "src": "/admin/database/database.css",
-      "dest": "/public/database.css"
-    },
-    {
-      "src": "/admin/database/database.js",
-      "dest": "/public/database.js"
-    },
-    {
-      "src": "/tables/blog",
-      "dest": "/public/database_blog.html"
-    },
-    {
-      "src": "/tables/faq",
-      "dest": "/public/database_faq.html"
-    },
-    {
-      "src": "/tables/story",
-      "dest": "/public/database_story.html"
-    },
-    {
-      "src": "/tables/([a-z0-9_]+)",
-      "dest": "/public/$1.html"
-    },
-    {
-      "src": "/api/auth/(.*)",
-      "dest": "https://api-binzeo.vercel.app/v1/auth/$1"
-    },
-    {
-      "src": "/api/user/(.*)",
-      "dest": "https://api-binzeo.vercel.app/v1/user/$1"
-    },
-    {
-      "src": "/api/admin/me",
-      "dest": "https://api-binzeo.vercel.app/v1/admin/me"
-    },
-    {
-      "src": "/api/admin/(.*)",
-      "dest": "https://api-binzeo.vercel.app/api/v1/projects/jabiyen/admin/admin/$1"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "https://api-binzeo.vercel.app/api/v1/projects/jabiyen/admin/admin/$1"
-    },
-    {
-      "src": "/components.js",
-      "dest": "/public/components.js"
-    },
-    {
-      "src": "/fonts.js",
-      "dest": "/public/fonts.js"
-    },
-    {
-      "src": "/herobanner",
-      "dest": "/public/herobanner.html"
-    },
-    {
-      "src": "/herovideo",
-      "dest": "/public/herovideo.html"
-    },
-    {
-      "src": "/category-menu-item",
-      "dest": "/public/category-menu-item.html"
-    },
-    {
-      "src": "/logo.png",
-      "dest": "/public/logo.png"
-    },
-    {
-      "src": "/signup",
-      "dest": "/public/signup.html"
-    },
-    {
-      "src": "/signin",
-      "dest": "/public/signin.html"
-    },
-    {
-      "src": "/auth/callback.html",
-      "dest": "/public/auth/callback.html"
-    },
-    {
-      "src": "/login",
-      "dest": "/public/signin.html"
-    },
-    {
-      "src": "/account",
-      "dest": "/public/account.html"
-    },
-    {
-      "src": "/product",
-      "dest": "/public/product.html"
-    },
-    {
-      "src": "/product-variant",
-      "dest": "/public/product-variant.html"
-    },
-    {
-      "src": "/story",
-      "dest": "/public/story.html"
-    },
-    {
-      "src": "/faq",
-      "dest": "/public/faq.html"
-    },
-    {
-      "src": "/about",
-      "dest": "/public/about.html"
-    },
-    {
-      "src": "/shipping-policy",
-      "dest": "/public/shipping-policy.html"
-    },
-    {
-      "src": "/return-policy",
-      "dest": "/public/return-policy.html"
-    },
-    {
-      "src": "/blog",
-      "dest": "/public/blog.html"
-    },
-    {
-      "src": "/privacy-policy",
-      "dest": "/public/privacy-policy.html"
-    },
-    {
-      "src": "/terms-and-conditions",
-      "dest": "/public/terms-and-conditions.html"
-    },
-    {
-      "src": "/refund-policy",
-      "dest": "/public/refund-policy.html"
-    },
-    {
-      "src": "/cookie-policy",
-      "dest": "/public/cookie-policy.html"
-    },
-    {
-      "src": "/store-locator",
-      "dest": "/public/store-locator.html"
-    },
-    {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))",
-      "dest": "/public/$1"
-    },
-    {
-      "src": "/products",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/wishlist",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/checkout",
-      "dest": "/public/checkout.html"
-    },
-    {
-      "src": "/journal",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/search",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/",
-      "dest": "/public/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/index.html"
-    }
+    { "src": "/admin/dashboard", "status": 308, "dest": "/dashboard" },
+    { "src": "/advanced", "status": 308, "dest": "/sections" },
+    { "src": "/database", "status": 308, "dest": "/sections" },
+    { "src": "/admin/database", "status": 308, "dest": "/sections" },
+    { "src": "/database/(.*)", "status": 308, "dest": "/sections" },
+    { "src": "/tables", "status": 308, "dest": "/sections" },
+    { "src": "/tables/(.*)", "status": 308, "dest": "/sections" },
+
+    { "src": "/admin/database/about_us", "status": 308, "dest": "/about" },
+    { "src": "/admin/database/blog", "status": 308, "dest": "/blog" },
+    { "src": "/admin/database/cookie_policy", "status": 308, "dest": "/cookie-policy" },
+    { "src": "/admin/database/faq", "status": 308, "dest": "/faq" },
+    { "src": "/admin/database/privacy_policy", "status": 308, "dest": "/privacy-policy" },
+    { "src": "/admin/database/refund_policy", "status": 308, "dest": "/refund-policy" },
+    { "src": "/admin/database/return_policy", "status": 308, "dest": "/return-policy" },
+    { "src": "/admin/database/shipping_policy", "status": 308, "dest": "/shipping-policy" },
+    { "src": "/admin/database/store_locator", "status": 308, "dest": "/store-locator" },
+    { "src": "/admin/database/story", "status": 308, "dest": "/story" },
+    { "src": "/admin/database/terms_conditions", "status": 308, "dest": "/terms-and-conditions" },
+    { "src": "/admin/database/announcement_bar", "status": 308, "dest": "/announcement-bar" },
+    { "src": "/admin/database/hero_secondary", "status": 308, "dest": "/hero-secondary" },
+    { "src": "/admin/database/home_showcase_header", "status": 308, "dest": "/home-showcase" },
+    { "src": "/admin/database/home_showcase_items", "status": 308, "dest": "/home-showcase-items" },
+    { "src": "/admin/database/footer_content", "status": 308, "dest": "/footer/content" },
+    { "src": "/admin/database/footer_menus", "status": 308, "dest": "/footer/menus" },
+    { "src": "/admin/database/footer_quick_links", "status": 308, "dest": "/footer/quick-links" },
+    { "src": "/admin/database/footer_social_links", "status": 308, "dest": "/footer/social-links" },
+    { "src": "/admin/database/footer_payment_methods", "status": 308, "dest": "/footer/payment-methods" },
+    { "src": "/admin/database/footer_shipping_partners", "status": 308, "dest": "/footer/shipping-partners" },
+    { "src": "/admin/database/footer_certifications", "status": 308, "dest": "/footer/certifications" },
+    { "src": "/admin/database/footer_app_links", "status": 308, "dest": "/footer/app-links" },
+    { "src": "/admin/database/footer_country_selector", "status": 308, "dest": "/footer/countries" },
+    { "src": "/admin/database/footer_trust_badges", "status": 308, "dest": "/footer/trust-badges" },
+    { "src": "/admin/database/footer_settings", "status": 308, "dest": "/footer/settings" },
+    { "src": "/admin/database/shipping_fees", "status": 308, "dest": "/shipping-fees" },
+    { "src": "/admin/database/currency_rates", "status": 308, "dest": "/currency-rates" },
+    { "src": "/admin/database/products", "status": 308, "dest": "/product" },
+    { "src": "/admin/database/categories", "status": 308, "dest": "/category-menu-item" },
+    { "src": "/admin/database/subcategories", "status": 308, "dest": "/category-menu-item" },
+    { "src": "/admin/database/menu_items", "status": 308, "dest": "/category-menu-item" },
+    { "src": "/admin/database/hero", "status": 308, "dest": "/herobanner" },
+    { "src": "/admin/database/hero_videos", "status": 308, "dest": "/herovideo" },
+    { "src": "/admin/database/product_variants", "status": 308, "dest": "/product-variant" },
+    { "src": "/admin/database/product_banners", "status": 308, "dest": "/product" },
+    { "src": "/admin/database/product_videos", "status": 308, "dest": "/product" },
+    { "src": "/admin/database/product_colors", "status": 308, "dest": "/product-variant" },
+    { "src": "/admin/database/color_sizes", "status": 308, "dest": "/product-variant" },
+    { "src": "/admin/database/orders", "status": 308, "dest": "/dashboard" },
+    { "src": "/admin/database/checkout_sessions", "status": 308, "dest": "/dashboard" },
+    { "src": "/admin/database/order_items", "status": 308, "dest": "/dashboard" },
+    { "src": "/admin/database/order_payments", "status": 308, "dest": "/dashboard" },
+    { "src": "/admin/database/order_status_history", "status": 308, "dest": "/dashboard" },
+    { "src": "/admin/database/profiles", "status": 308, "dest": "/dashboard" },
+    { "src": "/admin/database/customer_profiles", "status": 308, "dest": "/dashboard" },
+    { "src": "/admin/database/admins", "status": 308, "dest": "/dashboard" },
+    { "src": "/admin/database/([a-z0-9_]+)", "status": 308, "dest": "/sections" },
+    { "src": "/admin/database/(.*)", "status": 308, "dest": "/sections" },
+
+    { "src": "/sections", "dest": "/public/advanced.html" },
+    { "src": "/dashboard", "dest": "/public/dashboard.html" },
+    { "src": "/about", "dest": "/public/about_us.html" },
+    { "src": "/blog", "dest": "/public/database_blog.html" },
+    { "src": "/cookie-policy", "dest": "/public/cookie_policy.html" },
+    { "src": "/faq", "dest": "/public/database_faq.html" },
+    { "src": "/privacy-policy", "dest": "/public/privacy_policy.html" },
+    { "src": "/refund-policy", "dest": "/public/refund_policy.html" },
+    { "src": "/return-policy", "dest": "/public/return_policy.html" },
+    { "src": "/shipping-policy", "dest": "/public/shipping_policy.html" },
+    { "src": "/store-locator", "dest": "/public/store_locator.html" },
+    { "src": "/story", "dest": "/public/database_story.html" },
+    { "src": "/terms-and-conditions", "dest": "/public/terms_conditions.html" },
+    { "src": "/announcement-bar", "dest": "/public/announcement_bar.html" },
+    { "src": "/hero-secondary", "dest": "/public/hero_secondary.html" },
+    { "src": "/home-showcase", "dest": "/public/home_showcase_header.html" },
+    { "src": "/home-showcase-items", "dest": "/public/home_showcase_items.html" },
+    { "src": "/footer/content", "dest": "/public/footer_content.html" },
+    { "src": "/footer/menus", "dest": "/public/footer_menus.html" },
+    { "src": "/footer/quick-links", "dest": "/public/footer_quick_links.html" },
+    { "src": "/footer/social-links", "dest": "/public/footer_social_links.html" },
+    { "src": "/footer/payment-methods", "dest": "/public/footer_payment_methods.html" },
+    { "src": "/footer/shipping-partners", "dest": "/public/footer_shipping_partners.html" },
+    { "src": "/footer/certifications", "dest": "/public/footer_certifications.html" },
+    { "src": "/footer/app-links", "dest": "/public/footer_app_links.html" },
+    { "src": "/footer/countries", "dest": "/public/footer_country_selector.html" },
+    { "src": "/footer/trust-badges", "dest": "/public/footer_trust_badges.html" },
+    { "src": "/footer/settings", "dest": "/public/footer_settings.html" },
+    { "src": "/shipping-fees", "dest": "/public/shipping_fees.html" },
+    { "src": "/currency-rates", "dest": "/public/currency_rates.html" },
+
+    { "src": "/api/auth/(.*)", "dest": "https://api-binzeo.vercel.app/v1/auth/$1" },
+    { "src": "/api/user/(.*)", "dest": "https://api-binzeo.vercel.app/v1/user/$1" },
+    { "src": "/api/admin/me", "dest": "https://api-binzeo.vercel.app/v1/admin/me" },
+    { "src": "/api/admin/(.*)", "dest": "https://api-binzeo.vercel.app/api/v1/projects/jabiyen/admin/admin/$1" },
+    { "src": "/api/(.*)", "dest": "https://api-binzeo.vercel.app/api/v1/projects/jabiyen/admin/admin/$1" },
+
+    { "src": "/components.js", "dest": "/public/components.js" },
+    { "src": "/fonts.js", "dest": "/public/fonts.js" },
+    { "src": "/herobanner", "dest": "/public/herobanner.html" },
+    { "src": "/herovideo", "dest": "/public/herovideo.html" },
+    { "src": "/category-menu-item", "dest": "/public/category-menu-item.html" },
+    { "src": "/logo.png", "dest": "/public/logo.png" },
+    { "src": "/signup", "status": 308, "dest": "/signin" },
+    { "src": "/signin", "dest": "/public/signin.html" },
+    { "src": "/auth/callback.html", "dest": "/public/auth/callback.html" },
+    { "src": "/login", "dest": "/public/signin.html" },
+    { "src": "/account", "dest": "/public/account.html" },
+    { "src": "/product", "dest": "/public/product.html" },
+    { "src": "/product-variant", "dest": "/public/product-variant.html" },
+    { "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp|mp4|webm|json|xml|txt))", "dest": "/public/$1" },
+    { "src": "/products", "dest": "/public/index.html" },
+    { "src": "/wishlist", "dest": "/public/index.html" },
+    { "src": "/checkout", "status": 308, "dest": "/dashboard" },
+    { "src": "/journal", "dest": "/public/index.html" },
+    { "src": "/search", "dest": "/public/index.html" },
+    { "src": "/", "dest": "/public/index.html" },
+    { "src": "/(.*)", "dest": "/public/index.html" }
   ]
 }

@@ -1,13 +1,12 @@
 (() => {
   const root = document.getElementById('app');
+  const sessionKey = 'jayenware_admin_session';
+  const state = { page: 1, totalPages: 1, tables: [], table: null, columns: [], rows: [] };
   const tableName = document.body.dataset.table || '';
   const isIndex = document.body.dataset.mode === 'index';
-  const sessionKey = 'jayenware_admin_session';
-  let page = 1;
-  let totalPages = 1;
-  let tables = [];
-  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const label = (name) => name.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const label = (name) => String(name || '').replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
   function readSession() {
     for (const storage of [localStorage, sessionStorage]) {
       try {
@@ -17,24 +16,29 @@
     }
     return {};
   }
+
   let session = readSession();
   async function api(path, options = {}) {
-    const response = await fetch(path, { ...options, headers: { ...(options.headers || {}), Authorization: `Bearer ${session.access_token || ''}` } });
+    const headers = { ...(options.headers || {}), Authorization: `Bearer ${session.access_token || ''}` };
+    if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
+    const response = await fetch(path, { ...options, headers });
     const result = await response.json().catch(() => ({}));
     if (response.status === 401 || response.status === 403) {
       localStorage.removeItem(sessionKey);
       sessionStorage.removeItem(sessionKey);
       window.location.replace('/signin?type=admin');
-      throw new Error('Please sign in with an active administrator account.');
+      throw new Error('Please sign in with an active JABIYEN administrator account.');
     }
     if (!response.ok) throw new Error(result.error || result.message || `Request failed (${response.status})`);
     return result;
   }
+
   function navMarkup(activeName) {
-    return `<a class="nav-link" href="/dashboard"><span class="nav-icon"></span>Dashboard</a><a class="nav-link${isIndex ? ' active' : ''}" href="/advanced"><span class="nav-icon"></span>Advanced Database</a>${tables.map((table) => `<a class="nav-link${table.name === activeName ? ' active' : ''}" href="/admin/database/${encodeURIComponent(table.name)}"><span class="nav-icon"></span>${esc(label(table.name))}</a>`).join('')}`;
+    return `<a class="nav-link${isIndex ? ' active' : ''}" href="/sections"><span class="nav-icon"></span>All sections</a>${state.tables.map((table) => `<a class="nav-link${table.name === activeName ? ' active' : ''}" href="${esc(table.path)}"><span class="nav-icon"></span>${esc(table.title)}</a>`).join('')}`;
   }
+
   function shell(user, activeName, content) {
-    root.innerHTML = `<div class="app"><aside><a class="brand" href="/dashboard"><img src="/logo.png" alt="JABIYEN"><span><strong>JABIYEN</strong><small>ADMIN CONSOLE</small></span></a><section><p class="nav-title">Advanced · ${tables.length} tables</p><nav class="nav-list">${navMarkup(activeName)}</nav></section></aside><main><header class="topbar"><div><div class="eyebrow">JABIYEN database</div><h1>${isIndex ? 'Advanced Database' : esc(label(activeName))}</h1></div><div class="user-tools"><span>${esc(user.email || 'Signed-in administrator')}</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>${content}</main></div>`;
+    root.innerHTML = `<div class="app"><aside><a class="brand" href="/dashboard"><img src="/logo.png" alt="JABIYEN"><span><strong>JABIYEN</strong><small>ADMIN CONSOLE</small></span></a><section><p class="nav-title">Store management · ${state.tables.length} sections</p><nav class="nav-list" aria-label="Store sections"><a class="nav-link" href="/dashboard"><span class="nav-icon"></span>Dashboard</a>${navMarkup(activeName)}</nav></section></aside><main><header class="topbar"><div><div class="eyebrow">${isIndex ? 'Store management' : esc(state.table?.group || 'Store section')}</div><h1>${isIndex ? 'Website Sections' : esc(state.table?.title || label(activeName))}</h1></div><div class="user-tools"><span>${esc(user.email || 'Signed-in administrator')}</span><button class="button" id="logoutBtn" type="button">Log out</button></div></header>${content}</main></div>`;
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       try { await api('/api/auth/logout', { method: 'POST' }); } catch (_) {}
       localStorage.removeItem(sessionKey);
@@ -42,77 +46,201 @@
       window.location.replace('/signin');
     });
   }
+
   function renderIndex(user) {
-    const columnTotal = tables.reduce((sum, table) => sum + (Array.isArray(table.columns) ? table.columns.length : 0), 0);
-    const content = `<section class="intro"><h2>Complete database access</h2><p>Choose a table section to inspect every available column and browse its records. Access is protected by the signed-in admin session.</p></section><section class="stats"><div class="stat"><strong>${tables.length}</strong><span>Database tables</span></div><div class="stat"><strong>${columnTotal}</strong><span>Registered columns</span></div></section><section><div class="section-head"><div><h2>All table sections</h2><p id="tableCount">${tables.length} tables</p></div><input class="search" id="tableSearch" type="search" placeholder="Search tables…" aria-label="Search database tables"></div><div class="cards" id="tableCards"></div></section>`;
+    const columnTotal = state.tables.reduce((sum, table) => sum + (Array.isArray(table.columns) ? table.columns.length : 0), 0);
+    const groups = [...new Set(state.tables.map((table) => table.group || 'Other'))];
+    const content = `<section class="intro"><div><h2>Manage each store section in its own workspace</h2><p>Open a section to view its physical table name, every column and record, and use the same add, edit and delete workflow throughout the store.</p></div><a class="button intro-button" href="/dashboard">Dashboard</a></section><section class="stats"><div class="stat"><strong>${state.tables.length}</strong><span>Website sections</span></div><div class="stat"><strong>${columnTotal}</strong><span>Registered columns</span></div><div class="stat"><strong>${groups.length}</strong><span>Content groups</span></div></section>${groups.map((group) => `<section class="section-group"><div class="section-head"><div><h2>${esc(group)}</h2><p>Choose a section to manage its content.</p></div></div><div class="cards">${state.tables.filter((table) => table.group === group).map((table) => `<a class="table-card" href="${esc(table.path)}"><div class="table-card-title">${esc(table.title)}</div><p class="card-description">${esc(table.description || '')}</p><div class="table-card-meta"><code>${esc(table.name)}</code><span class="pill">${table.columns.length} columns</span></div><span class="card-action">Open section <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`).join('')}`;
     shell(user, '', content);
-    const input = document.getElementById('tableSearch');
-    const renderCards = () => {
-      const needle = input.value.trim().toLowerCase();
-      const filtered = tables.filter((table) => table.name.toLowerCase().includes(needle));
-      document.getElementById('tableCount').textContent = `${tables.length} tables · ${filtered.length} shown`;
-      document.getElementById('tableCards').innerHTML = filtered.length ? filtered.map((table) => `<a class="table-card" href="/admin/database/${encodeURIComponent(table.name)}"><div class="table-card-title">${esc(label(table.name))}</div><div class="table-card-meta"><span>${esc(table.name)}</span><span class="pill">${Array.isArray(table.columns) ? table.columns.length : 0} columns</span></div></a>`).join('') : '<div class="status">No table names match this search.</div>';
-    };
-    input.addEventListener('input', renderCards);
-    renderCards();
   }
-  function renderSchema(columns) {
-    return columns.length ? columns.map((column) => {
+
+  function renderSchema(columns, editableColumns, primaryKeys) {
+    if (!columns.length) return '<div class="status">No column definitions available.</div>';
+    return columns.map((column) => {
       const defaultLabel = column.default === null || column.default === undefined ? 'No default' : `Default: ${String(column.default)}`;
-      return `<article class="column-card"><strong>${esc(column.name)}</strong><span>${esc(column.type || 'Unknown type')}</span><small>${column.nullable ? 'Nullable' : 'Required'} · ${esc(defaultLabel)}</small></article>`;
-    }).join('') : '<div class="status">No column definitions available.</div>';
+      const kind = primaryKeys.includes(column.name) ? 'Primary key' : editableColumns.includes(column.name) ? 'Editable' : 'System field';
+      return `<article class="column-card"><div class="column-card-top"><strong>${esc(column.name)}</strong><span class="pill">${esc(kind)}</span></div><span>${esc(column.type || 'Unknown type')}</span><small>${column.nullable ? 'Nullable' : 'Required'} · ${esc(defaultLabel)}</small></article>`;
+    }).join('');
   }
-  function renderRows(columns, rows) {
+
+  function displayValue(value) {
+    if (value === null || value === undefined || value === '') return '<span class="cell null">NULL</span>';
+    const text = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
+    if (typeof value === 'boolean') return `<span class="pill ${value ? 'pill-on' : 'pill-off'}">${value ? 'Active' : 'Off'}</span>`;
+    return `<div class="cell" title="${esc(text)}">${esc(text.length > 400 ? `${text.slice(0, 400)}…` : text)}</div>`;
+  }
+
+  function renderRows(rows = state.rows) {
+    const columns = state.columns;
+    const canWrite = !!state.table?.canWrite;
     const headers = columns.map((column) => `<th>${esc(column.name)}<small>${esc(column.type || '')}${column.nullable ? ' · nullable' : ''}</small></th>`).join('');
-    const body = rows.length ? rows.map((row) => `<tr>${columns.map((column) => {
-      const value = row[column.name];
-      if (value === null || value === undefined || value === '') return '<td><span class="cell null">NULL</span></td>';
-      const text = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
-      return `<td><div class="cell" title="${esc(text)}">${esc(text.length > 500 ? `${text.slice(0, 500)}…` : text)}</div></td>`;
-    }).join('')}</tr>`).join('') : `<tr><td colspan="${Math.max(columns.length, 1)}" class="status">This table has no records yet.</td></tr>`;
-    document.getElementById('tableWrap').innerHTML = `<table><thead><tr>${headers || '<th>Columns</th>'}</tr></thead><tbody>${body}</tbody></table>`;
+    const actionHeader = canWrite ? '<th class="actions-heading">Actions</th>' : '';
+    const body = rows.length ? rows.map((row) => {
+      const id = row[state.table.primaryKeys[0]];
+      return `<tr>${columns.map((column) => `<td>${displayValue(row[column.name])}</td>`).join('')}${canWrite ? `<td class="row-actions"><button class="button button-small" type="button" data-record-action="edit" data-record-id="${esc(id)}">Edit</button><button class="button button-small button-danger" type="button" data-record-action="delete" data-record-id="${esc(id)}">Delete</button></td>` : ''}</tr>`;
+    }).join('') : `<tr><td colspan="${Math.max(columns.length + (canWrite ? 1 : 0), 1)}" class="status">No records yet. Use “Add record” to create the first one.</td></tr>`;
+    document.getElementById('tableWrap').innerHTML = `<table><thead><tr>${headers}${actionHeader}</tr></thead><tbody>${body}</tbody></table>`;
   }
-  async function loadTablePage() {
-    document.getElementById('tableWrap').innerHTML = '<div class="status">Loading records…</div>';
+
+  function fieldMarkup(column, value, editing) {
+    const type = String(column.type || '').toLowerCase();
+    const required = !column.nullable && (column.default === null || column.default === undefined) && column.name !== state.table.primaryKeys[0];
+    const fieldLabel = label(column.name);
+    const raw = value === null || value === undefined ? '' : value;
+    const escaped = esc(raw);
+    if (type === 'boolean') {
+      const checked = raw === true || raw === 'true' || (!editing && column.default === 'true');
+      return `<label class="form-field form-field-check"><span><strong>${esc(fieldLabel)}</strong><small>${esc(column.name)}</small></span><input type="checkbox" name="${esc(column.name)}" ${checked ? 'checked' : ''}></label>`;
+    }
+    let inputType = 'text';
+    if (['smallint', 'integer', 'int2', 'int4', 'bigint', 'int8', 'numeric', 'decimal', 'real', 'double precision', 'float4', 'float8'].includes(type)) inputType = 'number';
+    else if (type.includes('timestamp')) inputType = 'datetime-local';
+    else if (type === 'date') inputType = 'date';
+    const initial = inputType === 'datetime-local' && raw ? (() => { const d = new Date(raw); return Number.isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 16); })() : escaped;
+    const longField = /description|address|working_hours|copyright_text|custom_css|video_schema|keywords|subtitle/i.test(column.name);
+    const control = longField ? `<textarea name="${esc(column.name)}" ${required ? 'required' : ''} rows="${/description|custom_css|video_schema/i.test(column.name) ? 4 : 2}">${initial}</textarea>` : `<input name="${esc(column.name)}" type="${inputType}" value="${initial}" ${inputType === 'number' ? 'step="any"' : ''} ${required ? 'required' : ''}>`;
+    return `<label class="form-field"><span><strong>${esc(fieldLabel)}${required ? ' *' : ''}</strong><small>${esc(column.name)} · ${esc(column.type)}${column.nullable ? ' · optional' : ''}</small></span>${control}</label>`;
+  }
+
+  function openRecordForm(record) {
+    const editing = !!record;
+    const modal = document.getElementById('recordModal');
+    document.getElementById('recordModalTitle').textContent = editing ? `Edit ${state.table.title} record` : `Add ${state.table.title} record`;
+    document.getElementById('recordFormFields').innerHTML = state.table.editableColumns.map((name) => {
+      const column = state.columns.find((item) => item.name === name);
+      return column ? fieldMarkup(column, record ? record[name] : column.default === 'true' ? true : '', editing) : '';
+    }).join('');
+    document.getElementById('recordFormStatus').textContent = '';
+    document.getElementById('recordId').value = editing ? String(record[state.table.primaryKeys[0]]) : '';
+    document.getElementById('recordSubmit').textContent = editing ? 'Save changes' : 'Create record';
+    modal.hidden = false;
+    document.body.classList.add('modal-open');
+    document.querySelector('#recordFormFields input, #recordFormFields textarea')?.focus();
+  }
+
+  function closeRecordForm() {
+    document.getElementById('recordModal').hidden = true;
+    document.body.classList.remove('modal-open');
+  }
+
+  async function saveRecord(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const submit = document.getElementById('recordSubmit');
+    const status = document.getElementById('recordFormStatus');
+    const id = document.getElementById('recordId').value;
+    const payload = {};
+    for (const name of state.table.editableColumns) {
+      const column = state.columns.find((item) => item.name === name);
+      const input = form.elements.namedItem(name);
+      if (!column || !input) continue;
+      if (String(column.type).toLowerCase() === 'boolean') payload[name] = input.checked;
+      else if (input.value === '' && column.nullable) payload[name] = null;
+      else if (String(column.type).toLowerCase().includes('timestamp') && input.value) payload[name] = new Date(input.value).toISOString();
+      else payload[name] = input.value;
+    }
+    submit.disabled = true;
+    submit.textContent = 'Saving…';
+    status.textContent = '';
     try {
-      const result = await api(`/api/admin/tables/${encodeURIComponent(tableName)}?page=${page}&page_size=25`);
-      const columns = result.columns || [];
-      const rows = result.rows || [];
-      totalPages = result.totalPages || 1;
-      document.getElementById('columnCount').textContent = `${columns.length} columns · page size ${result.pageSize || 25}`;
-      document.getElementById('columnGrid').innerHTML = renderSchema(columns);
-      document.getElementById('recordCount').textContent = `${Number(result.total || 0).toLocaleString()} records`;
-      document.getElementById('pageInfo').textContent = `Page ${result.page || page} of ${totalPages}`;
-      document.getElementById('previousBtn').disabled = page <= 1;
-      document.getElementById('nextBtn').disabled = page >= totalPages;
-      renderRows(columns, rows);
+      await api(`/api/admin/tables/${encodeURIComponent(state.table.name)}${id ? `/${encodeURIComponent(id)}` : ''}`, {
+        method: id ? 'PATCH' : 'POST',
+        body: JSON.stringify(payload),
+      });
+      closeRecordForm();
+      if (typeof window.showToast === 'function') window.showToast(id ? 'Changes saved.' : 'Record created.');
+      await loadTablePage();
     } catch (error) {
-      document.getElementById('tableWrap').innerHTML = `<div class="status error">${esc(error.message || 'Could not load records.')}</div>`;
+      status.textContent = error.message || 'The record could not be saved.';
+      status.classList.add('error');
+    } finally {
+      submit.disabled = false;
+      submit.textContent = id ? 'Save changes' : 'Create record';
+    }
+  }
+
+  async function deleteRecord(id) {
+    if (!window.confirm(`Delete this ${state.table.title} record? This cannot be undone.`)) return;
+    try {
+      await api(`/api/admin/tables/${encodeURIComponent(state.table.name)}/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      if (typeof window.showToast === 'function') window.showToast('Record deleted.');
+      await loadTablePage();
+    } catch (error) {
+      window.alert(error.message || 'The record could not be deleted.');
+    }
+  }
+
+  async function loadTablePage() {
+    const tableWrap = document.getElementById('tableWrap');
+    if (!tableWrap) return;
+    tableWrap.innerHTML = '<div class="status">Loading section records…</div>';
+    try {
+      const result = await api(`/api/admin/tables/${encodeURIComponent(tableName)}?page=${state.page}&page_size=25`);
+      state.table = { ...state.table, ...result };
+      state.columns = result.columns || [];
+      state.rows = result.rows || [];
+      state.totalPages = result.totalPages || 1;
+      document.getElementById('columnCount').textContent = `${state.columns.length} columns · physical table ${result.name}`;
+      document.getElementById('columnGrid').innerHTML = renderSchema(state.columns, result.editableColumns || [], result.primaryKeys || []);
+      document.getElementById('recordCount').textContent = `${Number(result.total || 0).toLocaleString()} records`;
+      document.getElementById('pageInfo').textContent = `Page ${result.page || state.page} of ${state.totalPages}`;
+      document.getElementById('previousBtn').disabled = state.page <= 1;
+      document.getElementById('nextBtn').disabled = state.page >= state.totalPages;
+      document.getElementById('addRecordBtn').hidden = !result.canWrite;
+      renderRows();
+    } catch (error) {
+      tableWrap.innerHTML = `<div class="status error">${esc(error.message || 'Could not load section records.')}</div>`;
       document.getElementById('columnGrid').innerHTML = `<div class="status error">${esc(error.message || 'Column schema unavailable.')}</div>`;
     }
   }
+
   function renderTable(user) {
-    const content = `<div class="section-head"><div><h2>Database / ${esc(label(tableName))}</h2><p>Full column schema and paginated records</p></div><a class="button" href="/advanced">All tables</a></div><section class="panel"><div class="panel-head"><div><strong>Columns</strong><p id="columnCount">Loading column definitions…</p></div></div><div class="column-grid" id="columnGrid"><div class="status">Loading columns…</div></div></section><section class="panel"><div class="panel-head"><div><strong>Records</strong><p>Read-only paginated view</p></div><div class="user-tools"><span class="pill" id="recordCount">—</span><button class="button" id="refreshBtn" type="button">Refresh</button></div></div><div class="table-wrap" id="tableWrap"><div class="status">Loading records…</div></div><footer class="pager"><span id="pageInfo">—</span><div class="pager-group"><button class="button" id="previousBtn" type="button" disabled>Previous</button><button class="button" id="nextBtn" type="button" disabled>Next</button></div></footer></section>`;
+    const content = `<section class="section-head page-section-head"><div><h2>${esc(state.table.title)}</h2><p>${esc(state.table.description || 'Manage this website section.')}</p></div><a class="button" href="/sections">All sections</a></section><section class="panel"><div class="panel-head"><div><strong>Table columns</strong><p id="columnCount">Loading column definitions…</p></div><span class="pill">${esc(state.table.name)}</span></div><div class="column-grid" id="columnGrid"><div class="status">Loading columns…</div></div></section><section class="panel"><div class="panel-head records-head"><div><strong>Records</strong><p>Changes are saved through the authenticated Central API.</p></div><div class="record-tools"><span class="pill" id="recordCount">—</span><input class="search compact-search" id="recordSearch" type="search" placeholder="Search this page" aria-label="Search current records"><button class="button" id="refreshBtn" type="button">Refresh</button><button class="button button-primary" id="addRecordBtn" type="button">＋ Add record</button></div></div><div class="table-wrap" id="tableWrap"><div class="status">Loading records…</div></div><footer class="pager"><span id="pageInfo">—</span><div class="pager-group"><button class="button" id="previousBtn" type="button" disabled>Previous</button><button class="button" id="nextBtn" type="button" disabled>Next</button></div></footer></section><div class="modal-backdrop" id="recordModal" hidden><section class="record-modal" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle"><header class="modal-head"><div><div class="eyebrow">${esc(state.table.title)}</div><h2 id="recordModalTitle">Edit record</h2></div><button class="button" id="closeRecordModal" type="button" aria-label="Close">×</button></header><form id="recordForm"><input type="hidden" id="recordId"><div class="modal-fields" id="recordFormFields"></div><p class="form-status" id="recordFormStatus" role="status"></p><footer class="modal-actions"><button class="button" id="cancelRecordModal" type="button">Cancel</button><button class="button button-primary" id="recordSubmit" type="submit">Save changes</button></footer></form></section></div>`;
     shell(user, tableName, content);
-    document.getElementById('previousBtn').addEventListener('click', () => { if (page > 1) { page -= 1; loadTablePage(); } });
-    document.getElementById('nextBtn').addEventListener('click', () => { if (page < totalPages) { page += 1; loadTablePage(); } });
+    document.getElementById('previousBtn').addEventListener('click', () => { if (state.page > 1) { state.page -= 1; loadTablePage(); } });
+    document.getElementById('nextBtn').addEventListener('click', () => { if (state.page < state.totalPages) { state.page += 1; loadTablePage(); } });
     document.getElementById('refreshBtn').addEventListener('click', loadTablePage);
+    document.getElementById('addRecordBtn').addEventListener('click', () => openRecordForm(null));
+    document.getElementById('closeRecordModal').addEventListener('click', closeRecordForm);
+    document.getElementById('cancelRecordModal').addEventListener('click', closeRecordForm);
+    document.getElementById('recordForm').addEventListener('submit', saveRecord);
+    document.getElementById('recordSearch').addEventListener('input', (event) => {
+      const needle = event.currentTarget.value.trim().toLowerCase();
+      renderRows(needle ? state.rows.filter((row) => state.columns.some((column) => String(row[column.name] ?? '').toLowerCase().includes(needle))) : state.rows);
+    });
+    document.getElementById('tableWrap').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-record-action]');
+      if (!button) return;
+      const record = state.rows.find((item) => String(item[state.table.primaryKeys[0]]) === button.dataset.recordId);
+      if (button.dataset.recordAction === 'edit' && record) openRecordForm(record);
+      if (button.dataset.recordAction === 'delete') deleteRecord(button.dataset.recordId);
+    });
+    document.getElementById('recordModal').addEventListener('click', (event) => {
+      if (event.target.id === 'recordModal') closeRecordForm();
+    });
     loadTablePage();
   }
+
   async function init() {
     session = readSession();
     if (!session.access_token) { window.location.replace('/signin?type=admin'); return; }
-    if (!isIndex && !/^[a-z0-9_]+$/.test(tableName)) { root.innerHTML = '<div class="status error">Invalid table section.</div>'; return; }
     try {
       const [me, result] = await Promise.all([api('/api/admin/session'), api('/api/admin/tables')]);
-      tables = Array.isArray(result.tables) ? result.tables : [];
-      const user = me.data && me.data.user || me.user || {};
+      state.tables = Array.isArray(result.tables) ? result.tables : [];
+      const user = me.data?.user || result.admin || {};
       if (isIndex) renderIndex(user);
-      else if (!tables.some((table) => table.name === tableName)) root.innerHTML = '<div class="status error">This table is not available to this admin account.</div>';
-      else renderTable(user);
+      else {
+        state.table = state.tables.find((table) => table.name === tableName);
+        if (!state.table) {
+          root.innerHTML = '<div class="status error">This section is not available. Return to <a href="/sections">all sections</a>.</div>';
+          return;
+        }
+        renderTable(user);
+      }
     } catch (error) {
-      root.innerHTML = `<div class="status error">${esc(error.message || 'Database sections could not be loaded.')}</div>`;
+      root.innerHTML = `<div class="status error">${esc(error.message || 'Website sections could not be loaded.')}</div>`;
     }
   }
+
   init();
 })();
