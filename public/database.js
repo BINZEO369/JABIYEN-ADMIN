@@ -6,6 +6,7 @@
   const isIndex = document.body.dataset.mode === 'index';
   const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const label = (name) => String(name || '').replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const isWritable = (section = state.table) => section?.canWrite === true || (Array.isArray(section?.editableColumns) && section.editableColumns.length > 0 && Array.isArray(section?.primaryKeys) && section.primaryKeys.length === 1);
 
   function readSession() {
     for (const storage of [localStorage, sessionStorage]) {
@@ -76,7 +77,7 @@
 
   function renderIndex(user) {
     const groups = [...new Set(state.tables.map((table) => table.group || 'Other'))];
-    const content = `<section class="intro"><div><h2>Browse the JABIYEN database</h2><p>All ${state.tables.length} public tables are grouped below. Authenticated admins can see every column, including sensitive fields; editing stays available only for tables with an approved write workflow.</p></div><a class="button intro-button" href="/dashboard">Dashboard</a></section><section class="stats"><div class="stat"><strong>${state.tables.length}</strong><span>Database tables</span></div><div class="stat"><strong>${groups.length}</strong><span>Management groups</span></div><div class="stat"><strong>Central API</strong><span>One shared backend</span></div></section>${groups.map((group) => `<section class="section-group"><div class="section-head"><div><h2>${esc(group)}</h2><p>Open a table to inspect its records.</p></div></div><div class="cards">${state.tables.filter((table) => table.group === group).map((table) => `<a class="table-card" href="${esc(table.path)}"><div class="table-card-title">${esc(table.title)}</div><p class="card-description">${esc(table.description || '')}</p><div class="table-card-meta"><span class="pill">${table.canWrite ? 'Editable' : 'Read only'}</span></div><span class="card-action">Open table <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`).join('')}`;
+    const content = `<section class="intro"><div><h2>Browse JABIYEN sections</h2><p>Manage website content and open dedicated product, category, hero and variant editors. Sensitive account and order records stay protected from generic changes.</p></div><a class="button intro-button" href="/dashboard">Dashboard</a></section><section class="stats"><div class="stat"><strong>${state.tables.length}</strong><span>Sections</span></div><div class="stat"><strong>${groups.length}</strong><span>Management groups</span></div><div class="stat"><strong>Central API</strong><span>One shared backend</span></div></section>${groups.map((group) => `<section class="section-group"><div class="section-head"><div><h2>${esc(group)}</h2><p>Open a section to manage its content.</p></div></div><div class="cards">${state.tables.filter((table) => table.group === group).map((table) => `<a class="table-card" href="${esc(table.path)}"><div class="table-card-title">${esc(table.title)}</div><p class="card-description">${esc(table.description || '')}</p><div class="table-card-meta"><span class="pill">${table.canWrite ? 'Editable' : table.path.startsWith('/admin/database/') ? 'Read only' : 'Open editor'}</span></div><span class="card-action">${table.path.startsWith('/admin/database/') ? 'Open records' : 'Manage section'} <b aria-hidden="true">↗</b></span></a>`).join('')}</div></section>`).join('')}`;
     shell(user, '', content);
   }
 
@@ -93,7 +94,7 @@
 
   function renderRows(rows = state.rows) {
     const columns = visibleColumns();
-    const canWrite = !!state.table?.canWrite;
+    const canWrite = isWritable();
     const headers = columns.map((column) => `<th>${esc(label(column.name))}</th>`).join('');
     const actionHeader = canWrite ? '<th class="actions-heading">Actions</th>' : '';
     const body = rows.length ? rows.map((row) => {
@@ -211,7 +212,7 @@
       document.getElementById('pageInfo').textContent = `Page ${result.page || state.page} of ${state.totalPages}`;
       document.getElementById('previousBtn').disabled = state.page <= 1;
       document.getElementById('nextBtn').disabled = state.page >= state.totalPages;
-      document.getElementById('addRecordBtn').hidden = !result.canWrite;
+      document.getElementById('addRecordBtn').hidden = !isWritable(state.table);
       renderRows();
     } catch (error) {
       tableWrap.innerHTML = `<div class="status error">${esc(error.message || 'Could not load this content.')}</div>`;

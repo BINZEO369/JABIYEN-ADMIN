@@ -433,6 +433,11 @@
                         <option value="Kids">Kids</option>
                         <option value="Babies">Babies</option>
                     </select>
+                    <select class="form-select" id="productStatusFilter" onchange="loadProducts(1)" aria-label="Product status">
+                        <option value="active">Active Products</option>
+                        <option value="archived">Archived Products</option>
+                        <option value="all">All Products</option>
+                    </select>
                     <select class="form-select" id="productFlagFilter" onchange="loadProducts()">
                         <option value="">All Flags</option>
                         <option value="is_featured">Featured</option>
@@ -892,6 +897,7 @@
                     gender: document.getElementById('productGenderFilter')?.value || '',
                     sort_by: 'created_at', sort_order: 'desc'
                 });
+                params.set('product_status', document.getElementById('productStatusFilter')?.value || 'active');
                 const flagFilter = document.getElementById('productFlagFilter')?.value;
                 if (flagFilter) params.set(flagFilter, 'true');
 
@@ -959,13 +965,12 @@
                                 <span class="count-badge" style="cursor:pointer;" onclick="openProductDetailModal(${p.id}, 'banners')" title="View Banners"><i class="fa-solid fa-image"></i> ${p.banner_count || 0}</span>
                             </div>
                         </td>
-                        <td><span class="status-badge ${p.is_out_of_stock ? 'warning' : 'active'}"><span class="status-dot ${p.is_out_of_stock ? 'inactive' : 'active'}"></span>${p.is_out_of_stock ? 'Out of Stock' : 'Available'}</span></td>
+                        <td><span class="status-badge ${p.is_active === false || p.is_out_of_stock ? 'warning' : 'active'}"><span class="status-dot ${p.is_active === false || p.is_out_of_stock ? 'inactive' : 'active'}"></span>${p.is_active === false ? 'Archived' : p.is_out_of_stock ? 'Out of Stock' : 'Available'}</span></td>
                         <td style="text-align:right;">
                             <div class="actions-cell" style="justify-content:flex-end;">
                                 <button class="action-btn view" onclick="openProductDetailModal(${p.id})" title="Media"><i class="fa-solid fa-photo-film"></i></button>
                                 <button class="action-btn edit" onclick="openProductModal(${p.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="action-btn toggle" onclick="duplicateProduct(${p.id})" title="Duplicate"><i class="fa-solid fa-copy"></i></button>
-                                <button class="action-btn delete" onclick="openDeleteConfirm(${p.id}, 'product', '${escapeHTML(p.title).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                                ${p.is_active === false ? `<button class="action-btn toggle" onclick="restoreProduct(${p.id})" title="Restore to storefront"><i class="fa-solid fa-rotate-left"></i></button>` : `<button class="action-btn toggle" onclick="duplicateProduct(${p.id})" title="Duplicate"><i class="fa-solid fa-copy"></i></button><button class="action-btn delete" onclick="openDeleteConfirm(${p.id}, 'product', '${escapeHTML(p.title).replace(/'/g, "\\'")}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>`}
                             </div>
                         </td>
                     </tr>`;
@@ -1455,7 +1460,7 @@
                     const res = await fetch(`${API_BASE_URL}${endpoint}/${deleteTargetId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
                     if (res.ok && data.success) {
-                        showToast('Deleted successfully', 'success');
+                        showToast(data.archived ? 'Archived from the storefront; order history is preserved.' : 'Deleted successfully', 'success');
                         closeDeleteConfirm();
                         if (deleteTargetType === 'product') loadProducts(currentPage);
                         else if (activeProductId) {
@@ -1465,6 +1470,19 @@
                         }
                     } else throw new Error(data.error || 'Failed');
                 } catch(e) { showToast(e.message, 'error'); closeDeleteConfirm(); }
+            }
+
+            async function restoreProduct(id) {
+                const token = getAdminToken();
+                try {
+                    const res = await fetch(`${API_BASE_URL}${productsEndpoint}/${id}/restore`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
+                    const data = await res.json();
+                    if (!res.ok || !data.success) throw new Error(data.error || 'Product could not be restored.');
+                    showToast('Product restored to the storefront.', 'success');
+                    await loadProducts(currentPage);
+                } catch (error) {
+                    showToast(error.message || 'Product could not be restored.', 'error');
+                }
             }
 
             function escapeHTML(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
@@ -1493,6 +1511,7 @@
             window.openDeleteConfirm = openDeleteConfirm;
             window.closeDeleteConfirm = closeDeleteConfirm;
             window.confirmDelete = confirmDelete;
+            window.restoreProduct = restoreProduct;
             window.toggleProductFlags = toggleProductFlags;
             window.toggleProductSeo = toggleProductSeo;
             window.loadSubcategoriesForProduct = loadSubcategoriesForProduct;
