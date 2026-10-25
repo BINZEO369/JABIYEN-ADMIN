@@ -259,7 +259,7 @@
     <div class="modal-overlay" id="sizeModal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="sizeModalTitle">Add Size</h3><button class="modal-close" onclick="closeSizeModal()"><i class="fa-solid fa-times"></i></button></div><div class="modal-body"><form id="sizeForm" onsubmit="return false;"><input type="hidden" id="sizeId"><div class="form-group"><label class="form-label">Color *</label><select class="form-select" id="sizeColorId" required><option value="">Select Color</option></select></div><div class="form-group"><label class="form-label">Size Name *</label><input type="text" class="form-input" id="sizeName" placeholder="e.g., S, M, L, XL, XXL" required maxlength="50"><p class="form-hint">Standard: XS, S, M, L, XL, XXL, XXXL, 4XL, 5XL</p></div><div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="sizeSortOrder" value="0" min="0"></div></form></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeSizeModal()">Cancel</button><button class="btn btn-primary" onclick="saveSize()" id="sizeSaveBtn"><i class="fa-solid fa-check"></i><span>Save Size</span></button></div></div></div>
 
     <!-- VARIANT MODAL -->
-    <div class="modal-overlay" id="variantModal"><div class="modal wide"><div class="modal-header"><h3 class="modal-title" id="variantModalTitle">Add Variant</h3><button class="modal-close" onclick="closeVariantModal()"><i class="fa-solid fa-times"></i></button></div><div class="modal-body"><form id="variantForm" onsubmit="return false;"><input type="hidden" id="variantId"><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Color *</label><select class="form-select" id="variantColorId" required onchange="onVariantColorChange()"><option value="">Select Color</option></select></div><div class="form-group"><label class="form-label">Size *</label><select class="form-select" id="variantSizeId" required><option value="">Select Size</option></select></div></div><div class="form-row form-row-3"><div class="form-group"><label class="form-label">Price *</label><input type="number" class="form-input" id="variantPrice" placeholder="0.00" min="0" step="0.01" required></div><div class="form-group"><label class="form-label">Old Price</label><input type="number" class="form-input" id="variantOldPrice" placeholder="0.00" min="0" step="0.01"></div><div class="form-group"><label class="form-label">Stock</label><input type="number" class="form-input" id="variantStock" value="0" min="0"></div></div><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Material</label><input type="text" class="form-input" id="variantMaterial" placeholder="e.g., Cotton"></div><div class="form-group"><label class="form-label">Weight</label><input type="number" class="form-input" id="variantWeight" value="0" min="0" step="0.01"></div></div><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="variantSortOrder" value="0" min="0"></div><div class="form-group"><div class="form-check"><input type="checkbox" id="variantIsActive" checked><label for="variantIsActive">Active</label></div></div></div></form></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeVariantModal()">Cancel</button><button class="btn btn-primary" onclick="saveVariant()" id="variantSaveBtn"><i class="fa-solid fa-check"></i><span>Save Variant</span></button></div></div></div>
+    <div class="modal-overlay" id="variantModal"><div class="modal wide"><div class="modal-header"><h3 class="modal-title" id="variantModalTitle">Add Variant</h3><button class="modal-close" onclick="closeVariantModal()"><i class="fa-solid fa-times"></i></button></div><div class="modal-body"><form id="variantForm" onsubmit="saveVariant(); return false;"><input type="hidden" id="variantId"><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Color *</label><select class="form-select" id="variantColorId" required onchange="onVariantColorChange()"><option value="">Select Color</option></select></div><div class="form-group"><label class="form-label">Size *</label><select class="form-select" id="variantSizeId" required><option value="">Select Size</option></select></div></div><div class="form-row form-row-3"><div class="form-group"><label class="form-label">Price *</label><input type="number" class="form-input" id="variantPrice" placeholder="0.00" min="0" step="0.01" required></div><div class="form-group"><label class="form-label">Old Price</label><input type="number" class="form-input" id="variantOldPrice" placeholder="0.00" min="0" step="0.01"></div><div class="form-group"><label class="form-label">Stock</label><input type="number" class="form-input" id="variantStock" value="0" min="0"></div></div><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Material</label><input type="text" class="form-input" id="variantMaterial" placeholder="e.g., Cotton"></div><div class="form-group"><label class="form-label">Weight</label><input type="number" class="form-input" id="variantWeight" value="0" min="0" step="0.01"></div></div><div class="form-row form-row-2"><div class="form-group"><label class="form-label">Sort Order</label><input type="number" class="form-input" id="variantSortOrder" value="0" min="0"></div><div class="form-group"><div class="form-check"><input type="checkbox" id="variantIsActive" checked><label for="variantIsActive">Active</label></div></div></div></form></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeVariantModal()">Cancel</button><button class="btn btn-primary" onclick="saveVariant()" id="variantSaveBtn"><i class="fa-solid fa-check"></i><span>Save Variant</span></button></div></div></div>
 
     <!-- DELETE CONFIRM -->
     <div class="confirm-overlay" id="deleteConfirm"><div class="confirm-dialog"><div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div><h3 class="confirm-title" id="delTitle">Delete?</h3><p class="confirm-text" id="delText">This cannot be undone.</p><div class="confirm-actions"><button class="btn btn-outline" onclick="closeDeleteConfirm()">Cancel</button><button class="btn btn-danger" onclick="confirmDelete()"><i class="fa-solid fa-trash-can"></i><span>Delete</span></button></div></div></div>
@@ -617,7 +617,7 @@
                 } catch(e) { toast(e.message, 'error'); }
             }
 
-            function openVariantModal(id = null) {
+            async function openVariantModal(id = null) {
                 if (!activeProductId) { toast('Enter Product ID first', 'error'); return; }
                 document.getElementById('variantId').value = id || '';
                 document.getElementById('variantModalTitle').textContent = id ? 'Edit Variant' : 'Add Variant';
@@ -625,8 +625,8 @@
                     const v = allVariants.find(x => x.id === id);
                     if (v) {
                         document.getElementById('variantColorId').value = v.color_id;
-                        onVariantColorChange();
-                        setTimeout(() => { document.getElementById('variantSizeId').value = v.size_id; }, 400);
+                        await onVariantColorChange();
+                        document.getElementById('variantSizeId').value = v.size_id;
                         document.getElementById('variantPrice').value = v.price||0;
                         document.getElementById('variantOldPrice').value = v.old_price||'';
                         document.getElementById('variantStock').value = v.stock||0;
@@ -723,23 +723,21 @@
                 } catch(e) { wrapper.innerHTML = '<p style="text-align:center;padding:30px;color:#dc2626;">Error</p>'; }
             }
 
-            function openVariantForMatrix(colorId, sizeName) {
+            async function openVariantForMatrix(colorId, sizeName) {
                 document.getElementById('variantId').value = '';
                 document.getElementById('variantForm').reset();
                 document.getElementById('variantColorId').value = colorId;
                 document.getElementById('variantStock').value = 0; document.getElementById('variantWeight').value = 0;
                 document.getElementById('variantSortOrder').value = 0; document.getElementById('variantIsActive').checked = true;
-                onVariantColorChange();
-                setTimeout(() => {
-                    const sel = document.getElementById('variantSizeId');
-                    for (let o of sel.options) { if (o.text === sizeName) { sel.value = o.value; break; } }
-                }, 500);
+                await onVariantColorChange();
+                const sel = document.getElementById('variantSizeId');
+                for (let o of sel.options) { if (o.text === sizeName) { sel.value = o.value; break; } }
                 document.getElementById('variantModalTitle').textContent = 'Create Variant';
                 document.getElementById('variantModal').classList.add('show');
             }
 
             // ==================== DELETE ====================
-            function openDelete(id, type, name) { delId = id; delType = type; document.getElementById('delTitle').textContent = `Delete ${type}?`; document.getElementById('delText').innerHTML = `Delete "<strong>${esc(name||'Untitled')}</strong>"? Related items will also be deleted.`; document.getElementById('deleteConfirm').classList.add('show'); }
+            function openDelete(id, type, name) { delId = id; delType = type; document.getElementById('delTitle').textContent = `Delete ${type}?`; document.getElementById('delText').innerHTML = `Delete "<strong>${esc(name||'Untitled')}</strong>"? This action cannot be undone.`; document.getElementById('deleteConfirm').classList.add('show'); }
             function closeDeleteConfirm() { delId = null; delType = null; document.getElementById('deleteConfirm').classList.remove('show'); }
             async function confirmDelete() {
                 if (!delId || !delType) return;
@@ -747,9 +745,9 @@
                 try {
                     const res = await fetch(urls[delType], { method: 'DELETE', headers: { 'Authorization': `Bearer ${token()}` } });
                     const data = await res.json();
-                    if (res.ok) { toast('Deleted', 'success'); closeDeleteConfirm(); await refreshAll(); }
-                    else throw new Error(data.error);
-                } catch(e) { toast(e.message, 'error'); closeDeleteConfirm(); }
+                    if (res.ok && data.success) { toast(data.message || 'Deleted', 'success'); closeDeleteConfirm(); await refreshAll(); }
+                    else throw new Error(data.error || 'Delete failed');
+                } catch(e) { toast(e.message || 'Delete failed', 'error'); closeDeleteConfirm(); }
             }
 
             // ==================== INIT ====================
