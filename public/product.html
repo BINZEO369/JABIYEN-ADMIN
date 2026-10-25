@@ -452,7 +452,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Image</th>
-                                    <th>Title / SKU</th>
+                                    <th>Title / SKU / Barcode</th>
                                     <th>Category</th>
                                     <th>Price</th>
                                     <th>Media</th>
@@ -496,6 +496,19 @@
                     <div class="form-group">
                         <label class="form-label">Product Title *</label>
                         <input type="text" class="form-input" id="productTitle" placeholder="Enter product title" maxlength="300" required>
+                    </div>
+
+                    <div class="form-row form-row-2">
+                        <div class="form-group">
+                            <label class="form-label">SKU</label>
+                            <input type="text" class="form-input" id="productSku" placeholder="e.g., JBY-TSHIRT-001" maxlength="100" autocomplete="off">
+                            <p class="form-hint">Unique stock keeping unit</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Barcode</label>
+                            <input type="text" class="form-input" id="productBarcode" placeholder="e.g., 8901234567890" maxlength="100" inputmode="numeric" autocomplete="off">
+                            <p class="form-hint">Product barcode or scan value</p>
+                        </div>
                     </div>
 
                     <div class="form-row form-row-2">
@@ -932,7 +945,8 @@
                         <td><div class="img-thumb">${p.img ? `<img src="${escapeHTML(p.img)}" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-image\\'></i>'">` : '<i class="fa-solid fa-image"></i>'}</div></td>
                         <td>
                             <span style="font-weight:600;display:block;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHTML(p.title)}</span>
-                            ${p.sku ? `<span style="font-size:11px;color:var(--accent);font-family:'Sora',monospace;">${escapeHTML(p.sku)}</span>` : ''}
+                            ${p.sku ? `<span style="font-size:11px;color:var(--accent);font-family:'Sora',monospace;display:block;">SKU: ${escapeHTML(p.sku)}</span>` : '<span style="font-size:11px;color:#b0b0b5;display:block;">SKU: —</span>'}
+                            ${p.barcode ? `<span style="font-size:11px;color:#2563eb;font-family:'Sora',monospace;display:block;">Barcode: ${escapeHTML(p.barcode)}</span>` : '<span style="font-size:11px;color:#b0b0b5;display:block;">Barcode: —</span>'}
                         </td>
                         <td><span style="font-size:12px;color:var(--accent);">${p.category?.name || '-'}</span></td>
                         <td>
@@ -971,6 +985,8 @@
                     if (data.success) {
                         const p = data.product;
                         document.getElementById('productTitle').value = p.title || '';
+                        document.getElementById('productSku').value = p.sku || '';
+                        document.getElementById('productBarcode').value = p.barcode || '';
                         document.getElementById('productCategoryId').value = p.category_id || '';
                         await loadSubcategoriesForProduct();
                         document.getElementById('productSubcategoryId').value = p.subcategory_id || '';
@@ -1001,6 +1017,8 @@
                     }
                 } else {
                     document.getElementById('productForm').reset();
+                    document.getElementById('productSku').value = '';
+                    document.getElementById('productBarcode').value = '';
                     document.getElementById('productGender').value = 'Unisex';
                     document.getElementById('productPrice').value = '';
                     document.getElementById('productOldPrice').value = '';
@@ -1025,6 +1043,8 @@
 
                 const productData = {
                     title, category_id: document.getElementById('productCategoryId').value ? parseInt(document.getElementById('productCategoryId').value) : null,
+                    sku: document.getElementById('productSku').value.trim() || null,
+                    barcode: document.getElementById('productBarcode').value.trim() || null,
                     subcategory_id: document.getElementById('productSubcategoryId').value ? parseInt(document.getElementById('productSubcategoryId').value) : null,
                     gender: document.getElementById('productGender').value,
                     price: parseFloat(document.getElementById('productPrice').value) || 0,
