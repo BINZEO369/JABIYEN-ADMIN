@@ -856,12 +856,35 @@
             const videosEndpoint = '/api/admin/product-videos';
             const bannersEndpoint = '/api/admin/product-banners';
 
+            const ADMIN_SESSION_KEY = 'jayenware_admin_session';
+
+            function readAdminToken(storage, key = ADMIN_SESSION_KEY) {
+                try {
+                    const value = storage.getItem(key);
+                    if (!value) return null;
+                    const parsed = JSON.parse(value);
+                    return parsed?.access_token || null;
+                } catch (e) {
+                    return value;
+                }
+            }
+
             function getAdminToken() {
-                const stored = localStorage.getItem('jayenware_admin_session');
-                if (stored) { try { const p = JSON.parse(stored); if (p?.access_token) return p.access_token; } catch(e) {} }
-                const ss = sessionStorage.getItem('jayenware_admin_session');
-                if (ss) { try { const p = JSON.parse(ss); if (p?.access_token) { localStorage.setItem('jayenware_admin_session', JSON.stringify(p)); return p.access_token; } } catch(e) {} }
+                const localToken = readAdminToken(localStorage);
+                if (localToken) return localToken;
+
+                const sessionToken = readAdminToken(sessionStorage);
+                if (sessionToken) {
+                    try { localStorage.setItem(ADMIN_SESSION_KEY, sessionStorage.getItem(ADMIN_SESSION_KEY)); } catch (e) {}
+                    return sessionToken;
+                }
+
                 return null;
+            }
+
+            function clearAdminSession() {
+                localStorage.removeItem(ADMIN_SESSION_KEY);
+                sessionStorage.removeItem(ADMIN_SESSION_KEY);
             }
 
             function checkAdminAuth() {
@@ -903,15 +926,14 @@
 
                 try {
                     const res = await fetch(`${API_BASE_URL}${productsEndpoint}?${params}`, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } });
-                    if (res.status === 401 || res.status === 403) { localStorage.removeItem('jayenware_admin_session'); window.location.href = '/signin?type=admin'; return; }
+                    if (res.status === 401 || res.status === 403) { clearAdminSession(); window.location.href = '/signin?type=admin&message=session_expired'; return; }
                     const data = await res.json();
-                    if (data.success) {
-                        renderProductsTable(data.products || []);
-                        document.getElementById('productTotalCount').textContent = data.pagination?.total || 0;
-                        renderPagination(data.pagination);
-                    }
+                    if (!res.ok || data.success !== true) throw new Error(data.error || data.message || `Product request failed (${res.status})`);
+                    renderProductsTable(data.products || []);
+                    document.getElementById('productTotalCount').textContent = data.pagination?.total || 0;
+                    renderPagination(data.pagination);
                 } catch(e) {
-                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#dc2626;">Failed to load products. <button onclick="loadProducts()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:#dc2626;">${escapeHTML(e.message || 'Failed to load products.')} <button onclick="loadProducts()" style="color:#007aff;text-decoration:underline;cursor:pointer;font-weight:600;background:none;border:none;">Retry</button></td></tr>`;
                 }
             }
 
